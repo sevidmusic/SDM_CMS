@@ -1,0 +1,89 @@
+/*
+    Document   : dragNDropGatekeeper
+    Created on : Jan 22, 2015, 6:21:55 PM
+    Author     : seviforeman
+    Description:
+        Styles for the main elements of the dragNDropGatekeeper. This
+        stylesheet can be considered a "theme", and can be used as the base
+        for creating other themes, or you can simply edit the styles here.
+*/
+
+/* Styles for the main wrapper of all dragNDropGatekeeper elements */
+#dragNDropGatekeeperWrapper {
+    background: #ccffff;
+    border: 2px solid #cccccc;
+    border-radius: 5px;
+    height: 200px;
+    overflow: hidden; /* Use hidden to keep dragFrom elements from displaying outside of the #dragNDropgatekeeper div. | Use to visible or auto if you want dragFrom elements to be visible outside the #dragNDropGatekeeper div. */
+    position: relative;
+    width: 920px;
+    margin: 0 auto;
+}
+
+/**
+ * Styles for the child that functions as the left wrapper
+ * of the dragNDropGatekeeper dragFrom elements.
+ * i.e., wraps the element dragFrom elements are dragged from.
+ */
+#dragNDropGatekeeperLeft {
+    background: #ccffff;
+    float:left;
+    height: 100%;
+    width: 50%;
+}
+
+/**
+ * Styles for the child that functions as the right wrapper
+ * of the dragNDropGatekeeper dragTo element.
+ * i.e., wraps the element dragFrom elements are dragged to.
+ */
+#dragNDropGatekeeperRight {
+    background: #1c94c4;
+    float:left;
+    height: 100%;
+    width: 50%;
+}
+
+/**
+ * Styles applied to all elements of the dragNDropGatekeeper except the "parentDiv".
+ * i.e., styles are applied to dragNDropGateKeeperWrapper and it's children.
+ * Note: If a style does seem to effect one of the dragNDropGatekeeper elements, check
+ *       dragNDropGatekeeper.js file to make sure the elment in question has the
+ *       class "dragNDropGatekeeper" applied to it.
+ *
+ */
+.dragNDropGatekeeper {
+    color: orange;
+    font-family: fantasy;
+    font-size: .7em;
+}
+/**
+ * Styles applied to all dragFrom elements
+ */
+.dragFromElement {
+    background:#99E0E0;
+    border: 2px solid #99E0E0;
+    border-radius: 7px;
+    font-size: .1em;
+    height: 4.2em;
+    margin: .7em;
+    overflow: hidden;
+    width: 4.9em;
+    z-index:1;
+}
+/**
+ * Styles applied to all dragTo elements.
+ * Note: Normally there is only one dragTo element. However more complex configurations
+ *       may require more then one dragTo element so styles are applied via a CLASS instead
+ *       of an ID.
+ * Note: Setting a background for this class may result if covering up the background of the
+ *       dragNDropGatekeeperRight wrapper since this wrapper fills the eintirety of
+ *       the dragNDropGatekeeperRight wrapper.
+ */
+.dragToElement {
+    height: 100%;
+    padding: 1.7em 0 0 4em;
+    position: absolute;
+    vertical-align: middle;
+    width: 100%;
+}

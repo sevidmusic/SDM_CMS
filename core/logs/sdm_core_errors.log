@@ -1,0 +1,10 @@
+[11-Feb-2015 07:00:28 America/Los_Angeles] PHP Notice:  Undefined property: stdClass::$navigationManagerAddMenu in /Applications/MAMP/htdocs/sdm_cms/core/apps/navigationManager/navigationManager.php on line 36
+[11-Feb-2015 07:00:28 America/Los_Angeles] PHP Notice:  Trying to get property of non-object in /Applications/MAMP/htdocs/sdm_cms/core/apps/navigationManager/navigationManager.php on line 36
+[11-Feb-2015 07:00:28 America/Los_Angeles] PHP Warning:  Creating default object from empty value in /Applications/MAMP/htdocs/sdm_cms/core/apps/navigationManager/navigationManager.php on line 36
+[11-Feb-2015 07:08:58 America/Los_Angeles] PHP Notice:  Undefined property: stdClass::$navigationManagerAddMenu in /Applications/MAMP/htdocs/sdm_cms/core/apps/navigationManager/navigationManager.php on line 36
+[11-Feb-2015 07:08:58 America/Los_Angeles] PHP Notice:  Trying to get property of non-object in /Applications/MAMP/htdocs/sdm_cms/core/apps/navigationManager/navigationManager.php on line 36
+[11-Feb-2015 07:08:58 America/Los_Angeles] PHP Warning:  Creating default object from empty value in /Applications/MAMP/htdocs/sdm_cms/core/apps/navigationManager/navigationManager.php on line 36
+[11-Feb-2015 07:18:52 America/Los_Angeles] PHP Warning:  DOMDocument::loadHTML(): htmlParseEntityRef: no name in Entity, line: 11 in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCms.php on line 52
+[11-Feb-2015 07:18:52 America/Los_Angeles] PHP Warning:  DOMDocument::loadHTML(): htmlParseEntityRef: no name in Entity, line: 11 in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCms.php on line 52
+[11-Feb-2015 07:18:57 America/Los_Angeles] PHP Warning:  DOMDocument::loadHTML(): htmlParseEntityRef: no name in Entity, line: 11 in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCms.php on line 52
+[11-Feb-2015 07:18:57 America/Los_Angeles] PHP Warning:  DOMDocument::loadHTML(): htmlParseEntityRef: no name in Entity, line: 11 in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCms.php on line 52
