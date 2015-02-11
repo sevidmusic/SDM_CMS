@@ -1,0 +1,2 @@
+# SDM_CMS
+A unique json driven CMS that comes packed with a solid API, and some cool technologies such as jQuery and jQuery UI. Is themeable and can be extended by developeduser apps. Comes with a UI for content management, however if you don't like the UI provided you can create your own UI by creating your own Content Management app. The SDM CMS will eventually also be Database compatible, but for now JSON is enough.
