@@ -43,7 +43,8 @@ class SdmCore {
          *  'http://example.com//////index.php?page=homepage' <- this is not ok obviously
          * by removing the /FILENAME we solve this problem
          */
-        $this->RootDirectoryUrl = str_replace(array('/index.php', '/reset.php'), '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']);
+        // @todo: Find a way to autmoatically determine which .php files are in root, and ignore all of them
+        $this->RootDirectoryUrl = str_replace(array('/index.php', '/reset.php', '/clearErrorLog.php'), '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']);
         // the following properties rely on what is determined to be the Root Directory Path and URL
         $this->CoreDirectoryPath = $this->getRootDirectoryPath() . '/core';
         $this->CoreDirectoryUrl = $this->getRootDirectoryUrl() . '/core';

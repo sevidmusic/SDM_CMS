@@ -4,7 +4,7 @@ if (typeof jQuery != 'undefined') {
     if (typeof jQuery.ui != 'undefined') {
         $("document").ready(function() {
             /* VARIABLE INIT */
-            alert("Hello World!");
+            alert('jQuery version "' + $.fn.jquery + '" and jQuery UI version "' + $.ui.version + '" are working on this page.');
         }); // end of $("document").ready(function()
     }
     else { // if jQuery UI is missing, alert user

@@ -139,6 +139,20 @@ class SdmNms extends SdmCore {
 
     /**
      * update a menu
+     * @todo May not need this, it may be best to use the rename the
+     * add sdmNmsAddMenu() to sdmNmsUpdateMenu so that adding and
+     * updateing are handled the same. Just as in the SdmCms class
+     * the update method checks if the Additions match an object
+     * that already exists, if it does it loads in the original object
+     * and modifies the values that are changed leaving the others in
+     * tact, if it does not exist it creates a new object.
+     * This would make it easier because the decision to create
+     * or update will always be based on if the object already exists,
+     * while this may introdce the risk of overwriting values it also
+     * prevents duplicate objects from being created.
+     * The major con is if anything changes in how objects are added
+     * or updated then you may end  up needing to have seperate methods
+     * anyway.
      */
     public function updateMenu() {
 

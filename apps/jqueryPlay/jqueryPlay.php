@@ -1,17 +1,16 @@
 <?php
 
-switch ($sdmcore->determineRequestedPage()) {
-    case 'jqueryPlay':
-        $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '<!-- jqueryplay user app appended content -->';
-        $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '<div id="jqueryplay" class="jqueryplay">';
-        $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '<!-- jquery code for jqueryPlay app -->';
-        // Add our jQuery code to the page
-        $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '<script type="text/javascript">' . trim(file_get_contents($sdmcore->getUserAppDirectoryPath() . '/jqueryPlay/jqueryPlay.js')) . '</script>';
-        $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '</div><!-- end jqueryplay -->';
-        $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '<!-- end jqueryplay user app appended content -->';
-        break;
-
-    default:
-        // do nothing | we dont want this apps output appearing on pages other than the jqueryPlay page | if the jqueryPlay page does not exist you can create it with from the UI in the content manager app
-        break;
-}
+/**
+ * Example of onw way an app can make use of javascript.
+ * Though there are many solutions, this one is very straightforward.
+ * The app simply appends a <script> tag whose src attribute points
+ * to the javascript file we wish execute from.
+ *
+ * This app can also be used to test if the core jQuery and jQuery UI
+ * libraries are working. If the arent an alert message will pop up
+ * on every page until you wither turn this app off, or fix the issue.
+ */
+$sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '<!-- jqueryPlay user app appended content -->';
+// add a <script> tag whose src attribute points to the javascript file we wish execute from
+$sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '<script type="text/javascript">' . trim(file_get_contents($sdmcore->getUserAppDirectoryPath() . '/jqueryPlay/jqueryPlay.js')) . '</script>';
+$sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '<!-- end jqueryplay user app appended content -->';
