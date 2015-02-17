@@ -1,0 +1,28 @@
+[16-Feb-2015 23:16:51 America/New_York] PHP Notice:  Undefined property: stdClass::$clearErrorLog in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SDMDevTools/SDMDevTools.php on line 16
+[16-Feb-2015 23:16:51 America/New_York] PHP Warning:  Creating default object from empty value in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SDMDevTools/SDMDevTools.php on line 16
+[16-Feb-2015 23:16:51 America/New_York] PHP Notice:  Undefined property: stdClass::$main_content in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SDMDevTools/SDMDevTools.php on line 16
+[16-Feb-2015 23:16:53 America/New_York] PHP Notice:  Undefined property: stdClass::$errors in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SDMDevTools/SDMDevTools.php on line 13
+[16-Feb-2015 23:16:53 America/New_York] PHP Warning:  Creating default object from empty value in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SDMDevTools/SDMDevTools.php on line 13
+[16-Feb-2015 23:16:53 America/New_York] PHP Notice:  Undefined property: stdClass::$main_content in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SDMDevTools/SDMDevTools.php on line 13
+[16-Feb-2015 23:17:04 America/New_York] PHP Notice:  Undefined property: stdClass::$contentManager in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SDMDevTools/SDMDevTools.php on line 24
+[16-Feb-2015 23:17:04 America/New_York] PHP Warning:  Creating default object from empty value in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SDMDevTools/SDMDevTools.php on line 24
+[16-Feb-2015 23:17:04 America/New_York] PHP Notice:  Undefined property: stdClass::$main_content in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SDMDevTools/SDMDevTools.php on line 24
+[16-Feb-2015 23:17:07 America/New_York] PHP Notice:  Undefined property: stdClass::$contentManagerAddContentForm in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SDMDevTools/SDMDevTools.php on line 24
+[16-Feb-2015 23:17:07 America/New_York] PHP Warning:  Creating default object from empty value in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SDMDevTools/SDMDevTools.php on line 24
+[16-Feb-2015 23:17:07 America/New_York] PHP Notice:  Undefined property: stdClass::$main_content in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SDMDevTools/SDMDevTools.php on line 24
+[16-Feb-2015 23:17:07 America/New_York] PHP Warning:  DOMDocument::loadHTML(): htmlParseEntityRef: no name in Entity, line: 11 in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCms.php on line 52
+[16-Feb-2015 23:17:07 America/New_York] PHP Warning:  DOMDocument::loadHTML(): htmlParseEntityRef: no name in Entity, line: 11 in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCms.php on line 52
+[16-Feb-2015 23:18:09 America/New_York] PHP Notice:  Undefined property: stdClass::$contentManager in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SDMDevTools/SDMDevTools.php on line 24
+[16-Feb-2015 23:18:09 America/New_York] PHP Warning:  Creating default object from empty value in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SDMDevTools/SDMDevTools.php on line 24
+[16-Feb-2015 23:18:09 America/New_York] PHP Notice:  Undefined property: stdClass::$main_content in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SDMDevTools/SDMDevTools.php on line 24
+[16-Feb-2015 23:18:11 America/New_York] PHP Notice:  Undefined property: stdClass::$contentManagerAdministerAppsForm in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SDMDevTools/SDMDevTools.php on line 24
+[16-Feb-2015 23:18:11 America/New_York] PHP Warning:  Creating default object from empty value in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SDMDevTools/SDMDevTools.php on line 24
+[16-Feb-2015 23:18:11 America/New_York] PHP Notice:  Undefined property: stdClass::$main_content in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SDMDevTools/SDMDevTools.php on line 24
+[16-Feb-2015 23:18:37 America/New_York] PHP Notice:  Undefined property: stdClass::$contentManagerAdministerAppsFormSubmission in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SDMDevTools/SDMDevTools.php on line 24
+[16-Feb-2015 23:18:37 America/New_York] PHP Warning:  Creating default object from empty value in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SDMDevTools/SDMDevTools.php on line 24
+[16-Feb-2015 23:18:37 America/New_York] PHP Notice:  Undefined property: stdClass::$main_content in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SDMDevTools/SDMDevTools.php on line 24
+[16-Feb-2015 23:19:06 America/New_York] PHP Notice:  Undefined property: stdClass::$jamie in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SDMDevTools/SDMDevTools.php on line 24
+[16-Feb-2015 23:19:06 America/New_York] PHP Warning:  Creating default object from empty value in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SDMDevTools/SDMDevTools.php on line 24
+[16-Feb-2015 23:19:06 America/New_York] PHP Notice:  Undefined property: stdClass::$main_content in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SDMDevTools/SDMDevTools.php on line 24
+[16-Feb-2015 23:19:06 America/New_York] PHP Notice:  Undefined variable: value in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 190
+[17-Feb-2015 09:51:21 America/New_York] PHP Notice:  Undefined variable: value in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 190

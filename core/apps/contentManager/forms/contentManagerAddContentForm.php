@@ -42,4 +42,4 @@ foreach ($sdmcms->sdmCmsDetermineAvailableWrappers() as $displayValue => $machin
 }
 $editcontentform->__build_form($sdmcore->getRootDirectoryUrl());
 // add form to content
-$sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '<!-- contentManager Edit Content Form -->' . $editcontentform->__get_form() . '<!-- End contentManager Edit Content Form -->';
+$sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= '<!-- contentManager Edit Content Form -->' . $editcontentform->__get_form() . '<!-- End contentManager Edit Content Form -->';

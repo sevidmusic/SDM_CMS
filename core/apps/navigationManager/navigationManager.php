@@ -15,13 +15,13 @@ $sdmnms = SdmNms::sdmInitializeNms();
 switch ($sdmcore->determineRequestedPage()) {
     case 'navigationManager':
         // display navigation manager links
-        $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content = '<p><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=navigationManagerAddMenu">Add Menu</a></p>' . $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content;
+        $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content = '<p><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=navigationManagerAddMenu">Add Menu</a></p>' . $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content;
 
 
         break;
     case 'navigationManagerAddMenu':
         // initialize NMS
-        $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content = '<h1>Add Menu</h1>' . $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content;
+        $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content = '<h1>Add Menu</h1>' . $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content;
         // Handlers | Split into files once out of dev
         // create a menu object
         $menu = new SdmMenu();

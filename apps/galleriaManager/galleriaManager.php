@@ -21,53 +21,53 @@ switch ($sdmcore->determineRequestedPage()) {
         if ($_GET['image_set']) {
             // determine what pics are in the imgs folder
             $images = $sdmcore->sdmCoreGetDirectoryListing('/galleriaManager/imgs/' . $_GET['image_set'], 'apps');
-            $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '<!-- galleria core app appended content -->';
-            $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= $links; // links are place outside galleria main wrapper so they do nto get overwritten by galleria.js | also allows stylesheets to effect this div without altering the galleria div
-            $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '<div id="galleria_main_wrapper">';
-            $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '<script src="' . $sdmcore->getUserAppDirectoryUrl() . '/galleriaManager/galleria/galleria-1.4.2.min.js"></script>';
-            $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '<div id="galleria" class="galleria" style="height:650px;">';
+            $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= '<!-- galleria core app appended content -->';
+            $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= $links; // links are place outside galleria main wrapper so they do nto get overwritten by galleria.js | also allows stylesheets to effect this div without altering the galleria div
+            $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= '<div id="galleria_main_wrapper">';
+            $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= '<script src="' . $sdmcore->getUserAppDirectoryUrl() . '/galleriaManager/galleria/galleria-1.4.2.min.js"></script>';
+            $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= '<div id="galleria" class="galleria" style="height:650px;">';
             $ignore = array('.', '..', '.DS_Store');
             foreach ($images as $value) {
                 if (!in_array($value, $ignore)) {
-                    $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '<img src="' . $sdmcore->getUserAppDirectoryUrl() . '/galleriaManager/imgs/' . $_GET['image_set'] . '/' . $value . '">';
+                    $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= '<img src="' . $sdmcore->getUserAppDirectoryUrl() . '/galleriaManager/imgs/' . $_GET['image_set'] . '/' . $value . '">';
                 }
             }
 
-            $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '</div><!-- end galleria -->';
-            $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '
+            $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= '</div><!-- end galleria -->';
+            $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= '
         <script>
             Galleria.loadTheme(\'' . $sdmcore->getUserAppDirectoryUrl() . '/galleriaManager/galleria/themes/classic/galleria.classic.min.js\');
             Galleria.run(\'.galleria\');
         </script>
         ';
-            $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '</div><!-- end galleria_main_wrapper -->';
+            $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= '</div><!-- end galleria_main_wrapper -->';
         } else {
             // determine what pics are in the imgs folder
             $images = $sdmcore->sdmCoreGetDirectoryListing('/galleriaManager/imgs/default', 'apps');
-            $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '<!-- galleria core app appended content -->';
-            $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= $links; // links are place outside galleria main wrapper so they do nto get overwritten by galleria.js | also allows stylesheets to effect this div without altering the galleria div
-            $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '<div id="galleria_main_wrapper">';
-            $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '<script src="' . $sdmcore->getUserAppDirectoryUrl() . '/galleriaManager/galleria/galleria-1.4.2.min.js"></script>';
-            $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '<div id="galleria" class="galleria" style="height:650px;">';
+            $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= '<!-- galleria core app appended content -->';
+            $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= $links; // links are place outside galleria main wrapper so they do nto get overwritten by galleria.js | also allows stylesheets to effect this div without altering the galleria div
+            $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= '<div id="galleria_main_wrapper">';
+            $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= '<script src="' . $sdmcore->getUserAppDirectoryUrl() . '/galleriaManager/galleria/galleria-1.4.2.min.js"></script>';
+            $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= '<div id="galleria" class="galleria" style="height:650px;">';
             $ignore = array('.', '..', '.DS_Store');
             foreach ($images as $value) {
                 if (!in_array($value, $ignore)) {
-                    $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '<img src="' . $sdmcore->getUserAppDirectoryUrl() . '/galleriaManager/imgs/default/' . $value . '">';
+                    $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= '<img src="' . $sdmcore->getUserAppDirectoryUrl() . '/galleriaManager/imgs/default/' . $value . '">';
                 }
             }
 
-            $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '</div><!-- end galleria -->';
-            $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '
+            $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= '</div><!-- end galleria -->';
+            $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= '
         <script>
             Galleria.loadTheme(\'' . $sdmcore->getUserAppDirectoryUrl() . '/galleriaManager/galleria/themes/classic/galleria.classic.min.js\');
             Galleria.run(\'.galleria\');
         </script>
         ';
-            $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '</div><!-- end galleria_main_wrapper -->';
+            $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= '</div><!-- end galleria_main_wrapper -->';
         }
         break;
     case 'galleriaManager':
-        $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= 'Galleria Manager still under construction.';
+        $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= 'Galleria Manager still under construction.';
         break;
     default:
         // do nothing

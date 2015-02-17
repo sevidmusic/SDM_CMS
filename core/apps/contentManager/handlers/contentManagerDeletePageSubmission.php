@@ -5,7 +5,7 @@ if ($_POST['sdm_form']['content_manager_form_submitted'] === 'content_manager_fo
     $sdmcms->sdmCmsDeletePage($_POST['sdm_form']['page_to_delete']);
 
 
-    $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '
+    $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= '
                     <!-- contentManager div -->
                     <div id"contentManager">
                         <p>Form has been submitted with the following values.
@@ -17,7 +17,7 @@ if ($_POST['sdm_form']['content_manager_form_submitted'] === 'content_manager_fo
 }
 // form submitted but error occured
 else {
-    $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '
+    $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= '
                 <div id="contentManager">
                     <p>And error occured and the form could not be submitted</p>
                 </div>
