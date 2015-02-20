@@ -67,7 +67,7 @@ class SdmAssembler extends SdmCore {
      */
     public function loadAndAssembleContentObject() {
         $page = $this->determineRequestedPage();
-        // end dev content creation
+        // load our data object
         $sdmassembler_dataObject = $this->sdmCoreLoadDataObject();
         // load and assemble apps
         $this->loadCoreApps($sdmassembler_dataObject);
@@ -196,19 +196,27 @@ class SdmAssembler extends SdmCore {
      *          in such a case that the developer meant to ignore a page if the developer passes
      *          a page to both the 'incpages' and 'ignorepages' arrays.</b>
      * </p>
+     * @todo Replace $dataObject->content->$requestedPage->main_content for $dataObject->content->$requestedPage->NAMEOFWRAPPER
      * @return object The modified data object.
      */
     public function incorporateAppOutput(stdClass $dataObject, $output, array $options = array()) {
         $calledby = ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', str_replace(array('/', '.php'), '', strrchr(debug_backtrace()[0]['file'], '/')))); // trys to determine which app called this method using debug_backtrace() @see http://php.net/manual/en/function.debug-backtrace.php | basically were just filtering the name path of the file that this method was called to so it displays in a format that is easy to read, we know that the calling file will contain the app name since all apps must name their main php file according to this case insensitive naming convention : APPNAME.php
         $requestedPage = $this->determineRequestedPage();
+        // if no page exists for app (such as for apps that are meant to show on all pages) then create a placeholder object for it to avoid any PHP Errors, Notices, or Warnings
+        if (!isset($dataObject->content->$requestedPage)) {
+            $dataObject->content->$requestedPage = new stdClass();
+        }
+        // if target wrapper doesn't exist then create a placeholder for it to avoid any PHP Errors, Notices, or Warnings
+        if (!isset($dataObject->content->$requestedPage->main_content)) {
+            $dataObject->content->$requestedPage->main_content = '';
+        }
         switch (!empty($options)) {
             case TRUE:
-                $dataObject->content->$requestedPage->main_content .= '<div style="padding: 20px;background:black; color: white; border: 3px solid black; border-radius: 20px;"><h4 style="color:lightgreen;">incorporateAppOutput() is working!</h4><p>Incorporated app content from app <i><b style="color:aqua;">' . $calledby . '</b></i> onto page <b style="color:aqua;">' . $requestedPage . '</b></p><p>App Output: ' . $output . '</p><p>The $options array() was set</div>';
-                $this->sdm_read_array($options);
+                $dataObject->content->$requestedPage->main_content .= '<div style = "overflow:auto;padding: 12px;background:black; color: white; border: 3px solid black; border-radius: 20px;"><h4 style = "color:lightgreen;">incorporateAppOutput() is working!</h4><p>Incorporated app content from app <i><b style = "color:aqua;">' . $calledby . '</b></i> onto page <b style = "color:aqua;">' . $requestedPage . '</b></p><p>App Output: <br /><b>code</b><br /><xmp>' . $output . '</xmp><br /></p></div>';
                 break;
 
             default: // default is to append the $output.
-                $dataObject->content->$requestedPage->main_content .= '<div style="padding: 20px;background:black; color: white; border: 3px solid black; border-radius: 20px;"><h4 style="color:lightgreen;">incorporateAppOutput() is working!</h4><p>Incorporated app content from app <i><b style="color:aqua;">' . $calledby . '</b></i> onto page <b style="color:aqua;">' . $requestedPage . '</b></p><p>App Output: ' . $output . '</p></div>';
+                $dataObject->content->$requestedPage->main_content .= $output;
                 break;
         }
         return $dataObject;
