@@ -7,7 +7,7 @@ if ($_POST['sdm_form']['content_manager_form_submitted'] === 'content_manager_fo
         $sdmcms->sdmCmsSwitchAppState($app, $_POST['sdm_form'][$app]);
     }
     //$sdmcms->sdmCmsSwitchAppState('contentManager', 'off');
-    $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '
+    $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= '
                     <!-- contentManager div -->
                     <div id"contentManager">
                         <p>Form has been submitted.</p>
@@ -16,7 +16,7 @@ if ($_POST['sdm_form']['content_manager_form_submitted'] === 'content_manager_fo
 }
 // form submitted but error occured
 else {
-    $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '
+    $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= '
                 <div id="contentManager">
                     <p>And error occured and the form could not be submitted</p>
                 </div>

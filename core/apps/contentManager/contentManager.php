@@ -49,7 +49,7 @@ if (substr($sdmcore->determineRequestedPage(), 0, 14) === 'contentManager') {
             break;
         default:
             // present content manager menu
-            $sdmassembler_contentObject->content->$sdmassembler_requestedpage->main_content .= '
+            $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= '
                 <div id="contentManager">
                 <p>Welcome to the Content Manager. Here you can create, edit, delete, and restore content</p>
                     <ul>

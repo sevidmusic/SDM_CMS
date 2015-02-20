@@ -68,15 +68,15 @@ class SdmAssembler extends SdmCore {
     public function loadAndAssembleContentObject() {
         $page = $this->determineRequestedPage();
         // end dev content creation
-        $sdmassembler_contentObject = $this->sdmCoreLoadDataObject();
+        $sdmassembler_dataObject = $this->sdmCoreLoadDataObject();
         // load and assemble apps
-        $this->loadCoreApps($sdmassembler_contentObject);
+        $this->loadCoreApps($sdmassembler_dataObject);
         // make sure content exists, if it does return it, if not, print a content not found message
-        switch (isset($sdmassembler_contentObject->content->$page)) {
+        switch (isset($sdmassembler_dataObject->content->$page)) {
             case TRUE:
-                //var_dump($sdmassembler_contentObject->content->$page);
-                $sdmassembler_contentObject = $this->preparePageForDisplay($sdmassembler_contentObject->content->$page);
-                return $sdmassembler_contentObject;
+                //var_dump($sdmassembler_dataObject->content->$page);
+                $sdmassembler_dataObject = $this->preparePageForDisplay($sdmassembler_dataObject->content->$page);
+                return $sdmassembler_dataObject;
                 break;
             default:
                 return json_decode(json_encode(array('main_content' => '<p>The requested content could not be found. Check the url to for typos. If error persists and your sure this content should exist contact the site admin to report the error.</p>')));
@@ -87,8 +87,10 @@ class SdmAssembler extends SdmCore {
      * <p>Prepares the $page for display in a theme. Basically, when
      * a page is created it's content is filtered to insure no bad
      * chars are included and that the encoding is UTF-8.
-     * In order to insure html tags are interpreted as html and we need to
-     * reverse some of the filtering that was done on the page data.</p>
+     * In order to insure html tags are interpreted as html we need to
+     * reverse some of the filtering that was done when the page was created
+     * by the SdmCms() class. @see SdmCms::sdmCmsUpdateContent() for
+     * more information on how data is filtered on page creation</p>
      * <p>This method should only be used internally by the SdmAssembler and should be kept <i>private</i>.</p>
      * @param object $page <p>The page object to prepare.</p>
      * @return object <p>The prepared page object.</p>
@@ -105,9 +107,9 @@ class SdmAssembler extends SdmCore {
      * Loads enabled core apps.
      * @todo Change name to loadApps, more accurate description b/c this method is responsible for
      * loading all apps
-     * @param object $sdmassembler_contentObject <p>The Content object for the requested page.</p>
+     * @param object $sdmassembler_dataObject <p>The Content object for the requested page.</p>
      */
-    private function loadCoreApps($sdmassembler_contentObject) {
+    private function loadCoreApps($sdmassembler_dataObject) {
         // store parent (i.e. SdmCore) in an appropriatly named var to give apps easy access
         $sdmcore = new parent;
         // store object in an appropriatly named var to give apps easy access
@@ -115,7 +117,7 @@ class SdmAssembler extends SdmCore {
         // store requested page (determined by core) in an appropriatly named var to give apps easy access
         $sdmassembler_requestedpage = $this->determineRequestedPage();
         // store requested page (determined by core) in an appropriatly named var to give apps easy access
-        $sdmassembler_contentObject = $sdmassembler_contentObject;
+        $sdmassembler_dataObject = $sdmassembler_dataObject;
         $settings = $sdmcore->sdmCoreLoadDataObject()->settings;
         $coreapps = $sdmcore->sdmCoreGetDirectoryListing('', 'coreapps');
         $userapps = $sdmcore->sdmCoreGetDirectoryListing('', 'userapps');
@@ -158,14 +160,57 @@ class SdmAssembler extends SdmCore {
     ';
     }
 
+    /**
+     * <p>Incorporates app output into the page.</p>
+     * <p>This method is intended for use by Core and User apps. It provides
+     * a simple method for incorporating an app's output into the page. It is
+     * ok to call this method multiple times within an app.</p>
+     * <p>If provided, the $options array is used to specify how the app's output
+     * is to be incorporated.</p>
+     * @param object $dataObject <p>The sites data object. (This is most likely the
+     * $sdmassembler_dataObject var provided by the SDM_Assembler.<br />
+     * Note: We need to typehint for security, however PHP has no common
+     * object ancestor so we cant specify <i>object</i> because most likely
+     * the type of this argument will be an instance of stdClass, which is
+     * technically an object but will not neccessarily return as type object
+     * when checked with typehinting.<br />
+     * @see http://stackoverflow.com/questions/13287593/stdclass-and-type-hinting for more
+     * info on why this happens.<br />@TODO: It may be best NOT to typehint the $dataObject
+     * argument as it may introduce bugs if an actual object is passed to this method.</p>
+     * @param string $output <p>A plain text or HTML string to be used as the apps output.</p>
+     * @param array $options (optional) <p>Array of options that determine how an app's
+     * output is incorporated. If not specified, then the app will be incorporated into
+     * all pages and will be assigned to the 'main_content' wrapper that is part of, and,
+     * required by SDM CORE.<br />
+     * <h3><b>Overview of $options ARRAY:</b></h3>
+     * <ul>
+     *   <li>'wrapper' : The content wrapper the app is to be incorporated into.
+     *                   If not specified then 'main_content' is assumed</li>
+     *   <li>'incmethod' : Determines how app out put should be incorporated.<br />
+     *                     Options for 'incmethod' are <b><i>append</i></b>, <b><i>prepend</i></b>, and <b><i>overwrite</i></b>.</li>
+     *   <li>'incpages' : Array of pages to incorporate the app output into.</li>
+     *   <li>'ignorepages' : Array of pages NOT to incoporate the app output into.</li>
+     * </ul>
+     * <b>NOTE: If a page is found in both the 'incpages' and 'ignorepages' arrays then
+     *          the app output will be ignored on that page. This is for security, best to assume
+     *          in such a case that the developer meant to ignore a page if the developer passes
+     *          a page to both the 'incpages' and 'ignorepages' arrays.</b>
+     * </p>
+     */
+    public function incorporateAppOutput(stdClass $dataObject, $output, array $options = array()) {
+        $calledby = ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', str_replace(array('/', '.php'), '', strrchr(debug_backtrace()[0]['file'], '/')))); // trys to determine which app called this method using debug_backtrace() @see http://php.net/manual/en/function.debug-backtrace.php | basically were just filtering the name path of the file that this method was called to so it displays in a format that is easy to read, we know that the calling file will contain the app name since all apps must name their main php file according to this case insensitive naming convention : APPNAME.php
+        switch (!empty($options)) {
+            case TRUE:
+                $output = 'Options array defined | output: ' . $output;
+                break;
+
+            default:
+                $requestedPage = $this->determineRequestedPage();
+                $dataObject->menus = '<h1>incorporateAppOutput() is working! Incorporated app content from app <i><b>' . $calledby . '</b></i> onto <b>' . $requestedPage . '</b></h1>';
+                break;
+        }
+        return $calledby;
+    }
+
 }
 
-/**
- * Still need the following methods:
- * assembleNavigation() : in a simialr way to how apps are
- *                      added to the page, navigation objects
- *                      stored in our JOSN or DB will need to be
- *                      added to the page. The assembleNavigation()
- *                      method will be resposibile for this task.
- *
- */

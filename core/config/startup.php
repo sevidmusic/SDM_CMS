@@ -14,5 +14,5 @@ $sdmcore = new SdmCore;
 $sdmcore->configureCore();
 // initialize assembler
 $sdmassembler = SdmAssembler::sdmInitializeAssembler();
-// load and assemble content
-$sdmassembler_contentObject = $sdmassembler->loadAndAssembleContentObject();
+// load and assemble content | this var is used excluisively by the current themes page.php
+$sdmassembler_themeContentObject = $sdmassembler->loadAndAssembleContentObject();

@@ -7,14 +7,15 @@
  * These objects are dependent on each other, and the
  * order in which the extend each other is important.
  *
- * The SdmMenuItem creates an object
+ * The SdmMenuItem defines an object
  * that can be used as a single menu item.
  *
  * The SdmMenu extends the SdmMenuItem and can be used
- * as a single menu object.
+ * to define a single menu object.
  *
- * Finally the SdmNav also extends SdmCore and provides methods
- * for handling the menu objects.
+ * Finally the SdmNav extends SdmCore and provides methods
+ * for creating and handling the menu objects.
+ *
  */
 class SdmMenuItem {
 
@@ -29,12 +30,32 @@ class SdmMenuItem {
     public $destination;
     public $arguments;
     public $menuItemKeyholders;
+    public $menuItemEnabled;
+
+    public function __construct() {
+        $this->menuItemId = (isset($this->menuItemId) ? $this->menuItemId : rand(100000000000, 999999999999));
+        $this->menuItemMachineName = (isset($this->menuItemMachineName) ? $this->menuItemMachineName : rand(10000, 99999) . '_' . rand(100, 999) . '_' . rand(1000000, 9999999));
+        $this->menuItemDisplayName = (isset($this->menuItemDisplayName) ? $this->menuItemDisplayName : 'S ' . rand(100, 999) . ' D ' . rand(100, 999) . ' M');
+        $this->menuItemWrappingTagType = (isset($this->menuItemWrappingTagType) ? $this->menuItemWrappingTagType : '');
+        $this->menuItemPosition = (isset($this->menuItemPosition) ? $this->menuItemPosition : rand(-100, 100));
+        $this->menuItemCssId = (isset($this->menuItemCssId) ? $this->menuItemCssId : $this->menuItemMachineName);
+        $this->menuItemCssClasses = (isset($this->menuItemCssClasses) ? $this->menuItemCssClasses : array('sdm-menu-item', $this->menuItemMachineName));
+        $this->destinationType = (isset($this->destinationType) ? $this->destinationType : 'internal');
+        $this->destination = (isset($this->destination) ? $this->destination : 'homepage');
+        $this->arguments = (isset($this->arguments) ? $this->arguments : array('linkedby' => $this->menuItemMachineName));
+        $this->menuItemKeyholders = (isset($this->menuItemKeyholders) ? $this->menuItemKeyholders : array('root'));
+        $this->menuItemEnabled = (isset($this->menuItemEnabled) ? $this->menuItemEnabled : TRUE);
+    }
+
+    public static function generateMenuItem() {
+        return new Self;
+    }
 
 }
 
 class SdmMenu extends SdmMenuItem {
 
-    // define properties needed for a menu
+    // initialize properties needed for a menu
     public $menuId;
     public $menuMachineName;
     public $menuDisplayName;
@@ -46,6 +67,34 @@ class SdmMenu extends SdmMenuItem {
     public $displaypages;
     public $menuKeyholders;
     public $menuItems;
+
+    public function __construct() {
+        // unset parent properties
+        unset($this->menuItemId);
+        unset($this->menuItemMachineName);
+        unset($this->menuItemDisplayName);
+        unset($this->menuItemWrappingTagType);
+        unset($this->menuItemPosition);
+        unset($this->menuItemCssId);
+        unset($this->menuItemCssClasses);
+        unset($this->destinationType);
+        unset($this->destination);
+        unset($this->arguments);
+        unset($this->menuItemKeyholders);
+        unset($this->menuItemEnabled);
+        // define menu object properties
+        $this->menuId = (isset($this->menuId) ? $this->menuId : rand(100000000000, 999999999999));
+        $this->menuMachineName = (isset($this->menuMachineName) ? $this->menuMachineName : rand(100000000000, 999999999999));
+        $this->menuDisplayName = (isset($this->menuDisplayName) ? $this->menuDisplayName : rand(1000, 9999));
+        $this->wrapper = (isset($this->wrapper) ? $this->wrapper : 'main_content');
+        $this->menuWrappingTagType = (isset($this->menuWrappingTagType) ? $this->menuWrappingTagType : '');
+        $this->menuPlacement = (isset($this->menuPlacement) ? $this->menuPlacement : 'prepend');
+        $this->menuCssId = (isset($this->menuCssId) ? $this->menuCssId : $this->menuMachineName);
+        $this->menuCssClasses = (isset($this->menuCssClasses) ? $this->menuCssClasses : array('sdm-menu', $this->menuMachineName));
+        $this->displaypages = (isset($this->displaypages) ? $this->displaypages : array('all'));
+        $this->menuKeyholders = (isset($this->menuKeyholders) ? $this->menuKeyholders : array('root'));
+        $this->menuItems = (isset($this->menuItems) ? $this->menuItems : array(SdmMenuItem::generateMenuItem(), SdmMenuItem::generateMenuItem(), SdmMenuItem::generateMenuItem()));
+    }
 
 }
 
@@ -74,20 +123,36 @@ class SdmNms extends SdmCore {
     }
 
     /**
-     * add a menu
-     * @param $menu mixed Can be an object or an array. If it an array it will be converted internally into an object.
+     * Add a menu to our site.
+     * It is suggested that you pass in an instance of the SdmMenu
+     * @param $menu mixed Can be an object or an array. If it an array it will be converted internally into an object for processing.
      */
-    public function addMenu($menu) {
-        $menuObject = json_decode(json_encode($menu));
+    public function sdmNmsAddMenu($menu) {
+        if (gettype($menu) != 'object') {
+            $menu = json_decode(json_encode($menu));
+        }
         $data = $this->sdmCoreLoadDataObject();
-        $data->menus->{$menuObject->menuMachineName} = $menu;
+        array_push($data->menus, $menu);
         $json = json_encode($data);
-        //return $data->menus;
         return file_put_contents($this->getDataDirectoryPath() . '/data.json', $json, LOCK_EX);
     }
 
     /**
      * update a menu
+     * @todo May not need this, it may be best to use the rename the
+     * add sdmNmsAddMenu() to sdmNmsUpdateMenu so that adding and
+     * updateing are handled the same. Just as in the SdmCms class
+     * the update method checks if the Additions match an object
+     * that already exists, if it does it loads in the original object
+     * and modifies the values that are changed leaving the others in
+     * tact, if it does not exist it creates a new object.
+     * This would make it easier because the decision to create
+     * or update will always be based on if the object already exists,
+     * while this may introdce the risk of overwriting values it also
+     * prevents duplicate objects from being created.
+     * The major con is if anything changes in how objects are added
+     * or updated then you may end  up needing to have seperate methods
+     * anyway.
      */
     public function updateMenu() {
 

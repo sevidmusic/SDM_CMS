@@ -1,7 +1,7 @@
 <div id="lockedwrapper">
     <div id='main_content'>
         <?php
-        echo $sdmassembler_contentObject->main_content;
+        echo $sdmassembler_themeContentObject->main_content;
         ?>
         <h3>Menus:</h3>
         <?php
