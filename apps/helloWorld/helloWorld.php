@@ -10,4 +10,4 @@ $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content = '
 $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= '<h1>Appended Hello World</h1><p><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=contentManager">Content Manager</a></p><p><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=errors">Error Log</a></p><p><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=core">Core</a></p>';
 
 
-$sdmcore->sdm_read_array(array($sdmassembler->incorporateAppOutput($sdmassembler_dataObject, 'test', array('wrapper' => 'main_content', 'incmethod' => 'append', 'incpages' => array(), 'ignorepages' => array()))));
+$sdmcore->sdm_read_array(array($sdmassembler->incorporateAppOutput($sdmassembler_dataObject, 'test')));

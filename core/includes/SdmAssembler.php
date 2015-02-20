@@ -167,7 +167,17 @@ class SdmAssembler extends SdmCore {
      * ok to call this method multiple times within an app.</p>
      * <p>If provided, the $options array is used to specify how the app's output
      * is to be incorporated.</p>
-     * @param string $output A plain text or HTML string to be used as the apps output.
+     * @param object $dataObject <p>The sites data object. (This is most likely the
+     * $sdmassembler_dataObject var provided by the SDM_Assembler.<br />
+     * Note: We need to typehint for security, however PHP has no common
+     * object ancestor so we cant specify <i>object</i> because most likely
+     * the type of this argument will be an instance of stdClass, which is
+     * technically an object but will not neccessarily return as type object
+     * when checked with typehinting.<br />
+     * @see http://stackoverflow.com/questions/13287593/stdclass-and-type-hinting for more
+     * info on why this happens.<br />@TODO: It may be best NOT to typehint the $dataObject
+     * argument as it may introduce bugs if an actual object is passed to this method.</p>
+     * @param string $output <p>A plain text or HTML string to be used as the apps output.</p>
      * @param array $options (optional) <p>Array of options that determine how an app's
      * output is incorporated. If not specified, then the app will be incorporated into
      * all pages and will be assigned to the 'main_content' wrapper that is part of, and,
@@ -177,25 +187,29 @@ class SdmAssembler extends SdmCore {
      *   <li>'wrapper' : The content wrapper the app is to be incorporated into.
      *                   If not specified then 'main_content' is assumed</li>
      *   <li>'incmethod' : Determines how app out put should be incorporated.<br />
-     *                     Options for 'incmethod' are append, prepend, and overwrite.</li>
+     *                     Options for 'incmethod' are <b><i>append</i></b>, <b><i>prepend</i></b>, and <b><i>overwrite</i></b>.</li>
      *   <li>'incpages' : Array of pages to incorporate the app output into.</li>
      *   <li>'ignorepages' : Array of pages NOT to incoporate the app output into.</li>
      * </ul>
      * <b>NOTE: If a page is found in both the 'incpages' and 'ignorepages' arrays then
-     *          the app output will be ignored on that page.</b>
+     *          the app output will be ignored on that page. This is for security, best to assume
+     *          in such a case that the developer meant to ignore a page if the developer passes
+     *          a page to both the 'incpages' and 'ignorepages' arrays.</b>
      * </p>
      */
-    public function incorporateAppOutput($dataObject, $output, array $options) {
+    public function incorporateAppOutput(stdClass $dataObject, $output, array $options = array()) {
+        $calledby = ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', str_replace(array('/', '.php'), '', strrchr(debug_backtrace()[0]['file'], '/')))); // trys to determine which app called this method using debug_backtrace() @see http://php.net/manual/en/function.debug-backtrace.php | basically were just filtering the name path of the file that this method was called to so it displays in a format that is easy to read, we know that the calling file will contain the app name since all apps must name their main php file according to this case insensitive naming convention : APPNAME.php
         switch (!empty($options)) {
-            case $value:
+            case TRUE:
                 $output = 'Options array defined | output: ' . $output;
                 break;
 
             default:
-                $output = 'Options array not defined | output: ' . $output;
+                $requestedPage = $this->determineRequestedPage();
+                $dataObject->menus = '<h1>incorporateAppOutput() is working! Incorporated app content from app <i><b>' . $calledby . '</b></i> onto <b>' . $requestedPage . '</b></h1>';
                 break;
         }
-        return $output;
+        return $calledby;
     }
 
 }
