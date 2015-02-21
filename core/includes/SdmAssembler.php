@@ -200,6 +200,13 @@ class SdmAssembler extends SdmCore {
      * @return object The modified data object.
      */
     public function incorporateAppOutput(stdClass $dataObject, $output, array $options = array()) {
+        // dev $options array | remove one this method is complete
+        $options = array(
+            'wrapper' => 'main_content',
+            'incmethod' => 'prepend',
+            'incpages' => array(),
+            'ignorepages' => array('contentManager'),
+        );
         $calledby = ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', str_replace(array('/', '.php'), '', strrchr(debug_backtrace()[0]['file'], '/')))); // trys to determine which app called this method using debug_backtrace() @see http://php.net/manual/en/function.debug-backtrace.php | basically were just filtering the name path of the file that this method was called to so it displays in a format that is easy to read, we know that the calling file will contain the app name since all apps must name their main php file according to this case insensitive naming convention : APPNAME.php
         $requestedPage = $this->determineRequestedPage();
         // if no page exists for app (such as for apps that are meant to show on all pages) then create a placeholder object for it to avoid any PHP Errors, Notices, or Warnings
@@ -212,7 +219,9 @@ class SdmAssembler extends SdmCore {
         }
         switch (!empty($options)) {
             case TRUE:
-                $dataObject->content->$requestedPage->main_content .= '<div style = "overflow:auto;padding: 12px;background:black; color: white; border: 3px solid black; border-radius: 20px;"><h4 style = "color:lightgreen;">incorporateAppOutput() is working!</h4><p>Incorporated app content from app <i><b style = "color:aqua;">' . $calledby . '</b></i> onto page <b style = "color:aqua;">' . $requestedPage . '</b></p><p>App Output: <br /><b>code</b><br /><xmp>' . $output . '</xmp><br /></p></div>';
+                if (!in_array($requestedPage, $options['ignorepages'])) {
+                    $dataObject->content->$requestedPage->main_content .= $output;
+                } // do nothing if in requested page is in ignore pages
                 break;
 
             default: // default is to append the $output.
