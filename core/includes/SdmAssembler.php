@@ -201,12 +201,12 @@ class SdmAssembler extends SdmCore {
      */
     public function incorporateAppOutput(stdClass $dataObject, $output, array $options = array()) {
         // dev $options array | remove one this method is complete
-        $options = array(
-            'wrapper' => 'main_content',
-            'incmethod' => 'append',
-            'incpages' => array('homepage'),
-            'ignorepages' => array('contentManager', 'navigationManager'),
-        );
+//        $options = array(
+//            'wrapper' => 'main_content',
+//            'incmethod' => 'append',
+//            'incpages' => array('homepage'),
+//            'ignorepages' => array('contentManager', 'navigationManager'),
+//        );
         $calledby = ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', str_replace(array('/', '.php'), '', strrchr(debug_backtrace()[0]['file'], '/')))); // trys to determine which app called this method using debug_backtrace() @see http://php.net/manual/en/function.debug-backtrace.php | basically were just filtering the name path of the file that this method was called to so it displays in a format that is easy to read, we know that the calling file will contain the app name since all apps must name their main php file according to this case insensitive naming convention : APPNAME.php
         $requestedPage = $this->determineRequestedPage();
         // if no page exists for app (such as for apps that are meant to show on all pages) then create a placeholder object for it to avoid any PHP Errors, Notices, or Warnings

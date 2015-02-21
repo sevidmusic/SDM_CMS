@@ -5,12 +5,18 @@
  * that can be used to inspect the SDM CMS, including core,
  * site errors, and more.
  */
+$options = array(
+    'wrapper' => 'main_content',
+    'incmethod' => 'overwrite',
+    'incpages' => array('errors'),
+    'ignorepages' => array('contentManager', 'navigationManager'),
+);
 switch ($sdmcore->determineRequestedPage()) {
     case 'core': // dispaly current core configuration
         $sdmcore->sdm_read_array($sdmcore->sdmCoreLoadDataObject());
         break;
     case 'errors': // display recent errors
-        $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, trim('<h1>Site Errors</h1>' . str_replace('[', '<p style="font-size: .8em;overflow:auto;border: 2px solid #CC0066;border-radius: 3px;background: black;color: #CC0066; margin: 3px 3px 3px 3px; padding: 23px 23px 23px 23px;">', str_replace('<br />', '</p>', nl2br(file_get_contents($sdmcore->getCoreDirectoryPath() . '/logs/sdm_core_errors.log'))))));
+        $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, trim('<h1>Site Errors</h1>' . str_replace('[', '<p style="font-size: .8em;overflow:auto;border: 2px solid #CC0066;border-radius: 3px;background: black;color: #CC0066; margin: 3px 3px 3px 3px; padding: 23px 23px 23px 23px;">', str_replace('<br />', '</p>', nl2br(file_get_contents($sdmcore->getCoreDirectoryPath() . '/logs/sdm_core_errors.log'))))), $options);
         break;
     case 'clearErrorLog': // reset site to default configuration | This will erase all site data includeing content, error logs, and site settings.
         $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $sdmcore->sdmCoreCurlGrabContent($sdmcore->getRootDirectoryUrl() . '/clearErrorLog.php'));
