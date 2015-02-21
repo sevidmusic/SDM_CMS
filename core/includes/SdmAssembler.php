@@ -204,8 +204,8 @@ class SdmAssembler extends SdmCore {
         $options = array(
             'wrapper' => 'main_content',
             'incmethod' => 'prepend',
-            'incpages' => array(),
-            'ignorepages' => array('contentManager'),
+            'incpages' => array('contentManager', 'navigationManager'),
+            'ignorepages' => array('homepage'),
         );
         $calledby = ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', str_replace(array('/', '.php'), '', strrchr(debug_backtrace()[0]['file'], '/')))); // trys to determine which app called this method using debug_backtrace() @see http://php.net/manual/en/function.debug-backtrace.php | basically were just filtering the name path of the file that this method was called to so it displays in a format that is easy to read, we know that the calling file will contain the app name since all apps must name their main php file according to this case insensitive naming convention : APPNAME.php
         $requestedPage = $this->determineRequestedPage();
@@ -220,7 +220,14 @@ class SdmAssembler extends SdmCore {
         switch (!empty($options)) {
             case TRUE:
                 if (!in_array($requestedPage, $options['ignorepages'])) {
-                    $dataObject->content->$requestedPage->main_content .= $output;
+                    // if not in ignore array and incpages is empty assume any page not in ignore array can incorporate app output
+                    if (empty($options['incpages'])) {
+                        $dataObject->content->$requestedPage->main_content .= $output;
+                    }
+                    // else if inpages array is not empty only incorporate app output into pages in the incpages array
+                    else if (in_array($requestedPage, $options['incpages'])) {
+                        $dataObject->content->$requestedPage->main_content .= $output;
+                    }
                 } // do nothing if in requested page is in ignore pages
                 break;
 
