@@ -217,6 +217,7 @@ class SdmAssembler extends SdmCore {
         if (!isset($dataObject->content->$requestedPage->main_content)) {
             $dataObject->content->$requestedPage->main_content = '';
         }
+        //$this->sdm_read_array(array('DEV ARRAY FOR' => 'incorporateAppOutput()', 'method called by' => $calledby, 'Data Object State Before Incorporation of App Output' => $dataObject));
         switch (!empty($options)) {
             case TRUE:
                 if (!in_array($requestedPage, $options['ignorepages'])) {
@@ -241,10 +242,12 @@ class SdmAssembler extends SdmCore {
                         }
                     }
                 } // do nothing if in requested page is in ignore pages
+                //$this->sdm_read_array(array('DEV ARRAY FOR' => 'incorporateAppOutput()', 'method called by' => $calledby, 'Data Object State' => $dataObject));
                 break;
 
             default: // default is to append the $output.
                 $dataObject->content->$requestedPage->main_content .= $output;
+                //$this->sdm_read_array(array('DEV ARRAY FOR' => 'incorporateAppOutput()', 'method called by' => $calledby, 'Data Object State' => $dataObject));
                 break;
         }
         return $dataObject;
