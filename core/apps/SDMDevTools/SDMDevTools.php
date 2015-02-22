@@ -36,7 +36,7 @@ $options = array(
 $output = '';
 switch ($sdmcore->determineRequestedPage()) {
     case 'core': // dispaly current core configuration
-        $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $sdmcore->sdmCoreCurlGrabContent($sdmcore->getRootDirectoryUrl() . '/coreoverview.php'), array('incmethod' => 'overwrite', 'ignorepages' => array(), 'incpages' => array('core')));
+        $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<h1>SDM CMS CORE</h1><p>Below is a visual representation of the current state of CORE</p>' . $sdmcore->sdmCoreCurlGrabContent($sdmcore->getRootDirectoryUrl() . '/coreoverview.php'), array('incmethod' => 'append', 'ignorepages' => array(), 'incpages' => array('core')));
         break;
     case 'errors': // display recent errors
         $output .= trim('<h1>Site Errors</h1>' . str_replace('[', '<p style="font-size: .8em;overflow:auto;border: 2px solid #CC0066;border-radius: 3px;background: black;color: #CC0066; margin: 3px 3px 3px 3px; padding: 23px 23px 23px 23px;">[', str_replace('<br />', '</p>', nl2br(file_get_contents($sdmcore->getCoreDirectoryPath() . '/logs/sdm_core_errors.log')))));
