@@ -1,4 +1,9 @@
 <div id="lockedwrapper">
+    <div id="topmenu">
+        <?php
+        echo $sdmassembler_themeContentObject->topmenu;
+        ?>
+    </div>
     <div id='main_content'>
         <?php
         echo $sdmassembler_themeContentObject->main_content;
