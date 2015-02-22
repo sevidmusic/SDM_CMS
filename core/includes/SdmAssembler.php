@@ -196,10 +196,12 @@ class SdmAssembler extends SdmCore {
      *          in such a case that the developer meant to ignore a page if the developer passes
      *          a page to both the 'incpages' and 'ignorepages' arrays.</b>
      * </p>
+     * @param bool $devmode <p>If set to true, information about the $dataobject as it is processed by this method
+     * will be displayed at the top of the page for the most recent call to this method. This is usefule when developing apps.</p>
      * @todo Replace $dataObject->content->$requestedPage->main_content for $dataObject->content->$requestedPage->NAMEOFWRAPPER
      * @return object The modified data object.
      */
-    public function incorporateAppOutput(stdClass $dataObject, $output, array $options = array()) {
+    public function incorporateAppOutput(stdClass $dataObject, $output, array $options = array(), $devmode = FALSE) {
         // determine which app this output came from
         $calledby = ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', str_replace(array('/', '.php'), '', strrchr(debug_backtrace()[0]['file'], '/')))); // trys to determine which app called this method using debug_backtrace() @see http://php.net/manual/en/function.debug-backtrace.php | basically were just filtering the name path of the file that this method was called to so it displays in a format that is easy to read, we know that the calling file will contain the app name since all apps must name their main php file according to this case insensitive naming convention : APPNAME.php
         // determine the requested page
@@ -226,7 +228,9 @@ class SdmAssembler extends SdmCore {
         if (!isset($dataObject->content->$requestedPage->$options['wrapper'])) {
             $dataObject->content->$requestedPage->$options['wrapper'] = '';
         }
-        //$this->sdm_read_array(array('DEV ARRAY FOR' => 'incorporateAppOutput()', 'method called by' => $calledby, 'Data Object State Before Incorporation of App Output' => $dataObject));
+        if ($devmode === TRUE) {
+            $this->sdm_read_array(array('STAGE' => '1', 'DEV ARRAY FOR' => 'incorporateAppOutput()', 'method called by app' => $calledby, 'App Output' => $output, 'Data Object State Before Incorporation of App Output' => $dataObject, 'debug_backtrace' => debug_backtrace()));
+        }
         switch (!empty($options)) {
             case TRUE:
                 if (!in_array($requestedPage, $options['ignorepages'])) {
@@ -251,12 +255,16 @@ class SdmAssembler extends SdmCore {
                         }
                     }
                 } // do nothing if in requested page is in ignore pages
-                //$this->sdm_read_array(array('DEV ARRAY FOR' => 'incorporateAppOutput()', 'method called by' => $calledby, 'Data Object State' => $dataObject));
+                if ($devmode === TRUE) {
+                    $this->sdm_read_array(array('STAGE' => '2', 'DEV ARRAY FOR' => 'incorporateAppOutput()', 'method called by app' => $calledby, 'App Output' => $output, 'Data Object State After Incorporation of App Output' => $dataObject, 'debug_backtrace' => debug_backtrace()));
+                }
                 break;
 
             default: // default is to append the $output.
                 $dataObject->content->$requestedPage->$options['wrapper'] .= $output;
-                //$this->sdm_read_array(array('DEV ARRAY FOR' => 'incorporateAppOutput()', 'method called by' => $calledby, 'Data Object State' => $dataObject));
+                if ($devmode === TRUE) {
+                    $this->sdm_read_array(array('STAGE' => '2', 'DEV ARRAY FOR' => 'incorporateAppOutput()', 'method called by app' => $calledby, 'App Output' => $output, 'Data Object State After Incorporation of App Output' => $dataObject, 'debug_backtrace' => debug_backtrace()));
+                }
                 break;
         }
         return $dataObject;
