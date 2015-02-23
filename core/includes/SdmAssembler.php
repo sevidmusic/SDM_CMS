@@ -210,6 +210,10 @@ class SdmAssembler extends SdmCore {
         if (!isset($options['wrapper'])) {
             $options['wrapper'] = 'main_content';
         }
+        // if incmethod was not passed to the $options array create it
+        if (!isset($options['ignorepages'])) {
+            $options['incmethod'] = 'append';
+        }
         // if ingorepages array was not passed to the $options array create it
         if (!isset($options['ignorepages'])) {
             $options['ignorepages'] = array();
@@ -218,6 +222,7 @@ class SdmAssembler extends SdmCore {
         if (!isset($options['ignorepages'])) {
             $options['incpages'] = array();
         }
+
         /* DATAOBJECT check | Make sure the properties we are modifying exist to prevent throwing any PHP errors */
         // if no page exists for app in the core, then create a placeholder object for it to avoid PHP Errors, Notices, and Warnings
         if (!isset($dataObject->content->$requestedPage)) {

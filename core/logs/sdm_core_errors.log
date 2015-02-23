@@ -1,21 +1,2 @@
-[22-Feb-2015 21:09:59 America/New_York] PHP Notice:  Undefined index: incmethod in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 238
-[22-Feb-2015 21:09:59 America/New_York] PHP Notice:  Undefined index: incmethod in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 243
-[22-Feb-2015 21:10:01 America/New_York] PHP Warning:  DOMDocument::loadHTML(): htmlParseEntityRef: no name in Entity, line: 16 in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCms.php on line 52
-[22-Feb-2015 21:10:01 America/New_York] PHP Warning:  DOMDocument::loadHTML(): htmlParseEntityRef: no name in Entity, line: 16 in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCms.php on line 52
-[22-Feb-2015 21:10:02 America/New_York] PHP Notice:  Undefined index: incmethod in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 238
-[22-Feb-2015 21:10:02 America/New_York] PHP Notice:  Undefined index: incmethod in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 243
-[22-Feb-2015 21:10:03 America/New_York] PHP Notice:  Undefined index: incmethod in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 257
-[22-Feb-2015 21:10:03 America/New_York] PHP Notice:  Undefined index: incmethod in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 262
-[22-Feb-2015 21:10:16 America/New_York] PHP Notice:  Undefined index: incmethod in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 257
-[22-Feb-2015 21:10:16 America/New_York] PHP Notice:  Undefined index: incmethod in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 262
-[22-Feb-2015 21:10:39 America/New_York] PHP Notice:  Undefined index: incmethod in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 238
-[22-Feb-2015 21:10:39 America/New_York] PHP Notice:  Undefined index: incmethod in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 243
-[22-Feb-2015 21:10:40 America/New_York] PHP Warning:  DOMDocument::loadHTML(): htmlParseEntityRef: no name in Entity, line: 16 in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCms.php on line 52
-[22-Feb-2015 21:10:40 America/New_York] PHP Warning:  DOMDocument::loadHTML(): htmlParseEntityRef: no name in Entity, line: 16 in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCms.php on line 52
-[22-Feb-2015 21:11:40 America/New_York] PHP Warning:  in_array() expects parameter 2 to be array, string given in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 256
-[22-Feb-2015 21:12:28 America/New_York] PHP Notice:  Undefined index: incmethod in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 257
-[22-Feb-2015 21:12:28 America/New_York] PHP Notice:  Undefined index: incmethod in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 262
-[22-Feb-2015 21:12:31 America/New_York] PHP Notice:  Undefined index: incmethod in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 257
-[22-Feb-2015 21:12:31 America/New_York] PHP Notice:  Undefined index: incmethod in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 262
-[22-Feb-2015 21:12:41 America/New_York] PHP Notice:  Undefined index: incmethod in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 257
-[22-Feb-2015 21:12:41 America/New_York] PHP Notice:  Undefined index: incmethod in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 262
+[22-Feb-2015 21:23:59 America/New_York] PHP Warning:  DOMDocument::loadHTML(): htmlParseEntityRef: no name in Entity, line: 16 in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCms.php on line 52
+[22-Feb-2015 21:23:59 America/New_York] PHP Warning:  DOMDocument::loadHTML(): htmlParseEntityRef: no name in Entity, line: 16 in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCms.php on line 52
