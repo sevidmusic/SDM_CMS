@@ -1,5 +1,7 @@
 <?php
 
+$options = array();
+$output = '';
 // form submitted successfully
 if ($_POST['sdm_form']['content_manager_form_submitted'] === 'content_manager_form_submitted') {
     $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= '
@@ -27,3 +29,5 @@ else {
                 </div>
                 ';
 }
+
+$sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $output, $options);

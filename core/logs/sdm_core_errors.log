@@ -1,1 +1,0 @@
-[22-Feb-2015 21:38:03 America/New_York] PHP Notice:  Undefined property: stdClass::$topmenu in /Applications/MAMP/htdocs/SDM_CMS/core/apps/contentManager/forms/contentManagerEditContentForm.php on line 40
