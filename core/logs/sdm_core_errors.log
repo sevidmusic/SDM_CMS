@@ -1,2 +1,1 @@
-[22-Feb-2015 21:30:02 America/New_York] PHP Warning:  DOMDocument::loadHTML(): htmlParseEntityRef: no name in Entity, line: 16 in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCms.php on line 52
-[22-Feb-2015 21:30:02 America/New_York] PHP Warning:  DOMDocument::loadHTML(): htmlParseEntityRef: no name in Entity, line: 16 in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCms.php on line 52
+[22-Feb-2015 21:38:03 America/New_York] PHP Notice:  Undefined property: stdClass::$topmenu in /Applications/MAMP/htdocs/SDM_CMS/core/apps/contentManager/forms/contentManagerEditContentForm.php on line 40
