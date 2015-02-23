@@ -49,7 +49,8 @@ class SdmCms extends SdmCore {
     public function sdmCmsDetermineAvailableWrappers() {
         $html = file_get_contents($this->getCurrentThemeDirectoryPath() . '/page.php');
         $dom = new DOMDocument();
-        $dom->loadHTML($html);
+        // for now we are surpressing any errors thrown by loadHTML() because it complains when malformed xml and html is loaded, and the errors were clogging up the error log during other development branches. Howver it is very important that a fix is found for this issue as it could lead to unknown bugs.
+        @$dom->loadHTML($html);
         $xpath = new DOMXPath($dom);
         $tags = $xpath->query('//div[@id]');
         $data = array();

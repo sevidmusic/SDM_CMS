@@ -1,2 +1,2 @@
-[22-Feb-2015 21:23:59 America/New_York] PHP Warning:  DOMDocument::loadHTML(): htmlParseEntityRef: no name in Entity, line: 16 in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCms.php on line 52
-[22-Feb-2015 21:23:59 America/New_York] PHP Warning:  DOMDocument::loadHTML(): htmlParseEntityRef: no name in Entity, line: 16 in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCms.php on line 52
+[22-Feb-2015 21:30:02 America/New_York] PHP Warning:  DOMDocument::loadHTML(): htmlParseEntityRef: no name in Entity, line: 16 in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCms.php on line 52
+[22-Feb-2015 21:30:02 America/New_York] PHP Warning:  DOMDocument::loadHTML(): htmlParseEntityRef: no name in Entity, line: 16 in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCms.php on line 52
