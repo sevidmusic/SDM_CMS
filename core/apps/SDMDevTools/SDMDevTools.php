@@ -1,6 +1,6 @@
 <?php
 
-$sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<p><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=homepage">Homepage</a></p>', array('wrapper' => 'topmenu', 'incmethod' => 'prepend'));
+$sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<p><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=homepage">Homepage</a><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=core">SDM DEV TOOLS</a><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=contentManager">Manage Content</a></p>', array('wrapper' => 'topmenu', 'incmethod' => 'prepend'));
 // add a dev menu to all pages related to this app | options array is used to determine which pages this app will output to
 $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, trim('
     <p><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=core">Core</a></p>
