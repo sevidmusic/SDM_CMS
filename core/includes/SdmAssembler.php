@@ -69,8 +69,12 @@ class SdmAssembler extends SdmCore {
         $page = $this->determineRequestedPage();
         // load our data object
         $sdmassembler_dataObject = $this->sdmCoreLoadDataObject();
+        // @TODO : Fix a bug that is preventing us from recognizing a non existent page as non existent. For some reason any page you enter even if it does not exist winds up in the data object. This seems to have something to do with the incorporation of apps.
+        $this->sdm_read_array(array('Requested Page "' . $page . '" Exists Before Incorporation Of Apps : ' => (isset($sdmassembler_dataObject->content->$page) === TRUE ? 'TRUE' : 'FALSE'), /* 'Data Object' => $sdmassembler_dataObject */));
         // load and assemble apps
         $this->loadCoreApps($sdmassembler_dataObject);
+        // dev line for while debugging this method
+        $this->sdm_read_array(array('Requested Page "' . $page . '" Exists After Incorporation Of Apps : ' => (isset($sdmassembler_dataObject->content->$page) === TRUE ? 'TRUE' : 'FALSE'), /* 'Data Object' => $sdmassembler_dataObject */));
         // make sure content exists, if it does return it, if not, print a content not found message
         switch (isset($sdmassembler_dataObject->content->$page)) {
             case TRUE:
@@ -114,9 +118,9 @@ class SdmAssembler extends SdmCore {
         $sdmcore = new parent;
         // store object in an appropriatly named var to give apps easy access
         $sdmassembler = $this;
-        // store requested page (determined by core) in an appropriatly named var to give apps easy access
+        // @TOD : Unless you find good reason to keep it, the $sdmassembler_requestedpage var should be depreceated because SDM CORE provides a method for determining the requested page... store requested page (determined by core) in an appropriatly named var to give apps easy access
         $sdmassembler_requestedpage = $this->determineRequestedPage();
-        // store requested page (determined by core) in an appropriatly named var to give apps easy access
+        // store data object in an appropriatly named for to give apps easy access
         $sdmassembler_dataObject = $sdmassembler_dataObject;
         $settings = $sdmcore->sdmCoreLoadDataObject()->settings;
         $coreapps = $sdmcore->sdmCoreGetDirectoryListing('', 'coreapps');
