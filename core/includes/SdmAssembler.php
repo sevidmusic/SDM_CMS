@@ -69,11 +69,11 @@ class SdmAssembler extends SdmCore {
         $page = $this->determineRequestedPage();
         // load our data object
         $sdmassembler_dataObject = $this->sdmCoreLoadDataObject();
-        // @TODO : Fix a bug that is preventing us from recognizing a non existent page as non existent. For some reason any page you enter even if it does not exist winds up in the data object. This seems to have something to do with the incorporation of apps.
+        // dev line
         $this->sdm_read_array(array('Requested Page "' . $page . '" Exists Before Incorporation Of Apps : ' => (isset($sdmassembler_dataObject->content->$page) === TRUE ? 'TRUE' : 'FALSE'), /* 'Data Object' => $sdmassembler_dataObject */));
         // load and assemble apps
         $this->loadCoreApps($sdmassembler_dataObject);
-        // dev line for while debugging this method
+        // dev line
         $this->sdm_read_array(array('Requested Page "' . $page . '" Exists After Incorporation Of Apps : ' => (isset($sdmassembler_dataObject->content->$page) === TRUE ? 'TRUE' : 'FALSE'), /* 'Data Object' => $sdmassembler_dataObject */));
         // make sure content exists, if it does return it, if not, print a content not found message
         switch (isset($sdmassembler_dataObject->content->$page)) {
@@ -205,94 +205,97 @@ class SdmAssembler extends SdmCore {
      * @return object The modified data object.
      */
     public function incorporateAppOutput(stdClass $dataObject, $output, array $options = array(), $devmode = FALSE) {
-        // determine which app this output came from
-        $calledby = ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', str_replace(array('/', '.php'), '', strrchr(debug_backtrace()[0]['file'], '/')))); // trys to determine which app called this method using debug_backtrace() @see http://php.net/manual/en/function.debug-backtrace.php | basically were just filtering the name path of the file that this method was called to so it displays in a format that is easy to read, we know that the calling file will contain the app name since all apps must name their main php file according to this case insensitive naming convention : APPNAME.php
-        // determine the requested page
-        $requestedPage = $this->determineRequestedPage();
-        /* OPTIONS ARRAY check| Review $options array values to insure they exist in prep checks that determine app how app should be incorporated | If they werent passed in via the $options argument then they will be assigned a default value */
-        // if $options['wrapper'] is not set
-        if (!isset($options['wrapper'])) {
-            $options['wrapper'] = 'main_content';
-        }
-        // if incmethod was not passed to the $options array create it
-        if (!isset($options['ignorepages'])) {
-            $options['incmethod'] = 'append';
-        }
-        // if ingorepages array was not passed to the $options array create it
-        if (!isset($options['ignorepages'])) {
-            $options['ignorepages'] = array();
-        }
-        // if incpages array was not passed to the $options array create it
-        if (!isset($options['ignorepages'])) {
-            $options['incpages'] = array();
-        }
+        // Check that $requested page exists in CORE or shares the same name as an enabledApps | We actually just need to check the requested page against the names in the enabled apps array to see if the requested page mathces the begining of any of the enalbed apps, i.e., if an app named helloWorld is enabled and the the requested page is helloWorldHelloUniverse then this check should pass because apps may generate other pages
+        if (in_array($this->determineRequestedPage(), array('contentManager')) === TRUE || $this->determineRequestedPage() === 'homepage') {
+            // determine which app this output came from
+            $calledby = ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', str_replace(array('/', '.php'), '', strrchr(debug_backtrace()[0]['file'], '/')))); // trys to determine which app called this method using debug_backtrace() @see http://php.net/manual/en/function.debug-backtrace.php | basically were just filtering the name path of the file that this method was called to so it displays in a format that is easy to read, we know that the calling file will contain the app name since all apps must name their main php file according to this case insensitive naming convention : APPNAME.php
+            // determine the requested page
+            $requestedPage = $this->determineRequestedPage();
+            /* OPTIONS ARRAY check| Review $options array values to insure they exist in prep checks that determine app how app should be incorporated | If they werent passed in via the $options argument then they will be assigned a default value */
+            // if $options['wrapper'] is not set
+            if (!isset($options['wrapper'])) {
+                $options['wrapper'] = 'main_content';
+            }
+            // if incmethod was not passed to the $options array create it
+            if (!isset($options['ignorepages'])) {
+                $options['incmethod'] = 'append';
+            }
+            // if ingorepages array was not passed to the $options array create it
+            if (!isset($options['ignorepages'])) {
+                $options['ignorepages'] = array();
+            }
+            // if incpages array was not passed to the $options array create it
+            if (!isset($options['ignorepages'])) {
+                $options['incpages'] = array();
+            }
 
-        /* DATAOBJECT check | Make sure the properties we are modifying exist to prevent throwing any PHP errors */
-        // if no page exists for app in the core, then create a placeholder object for it to avoid PHP Errors, Notices, and Warnings
-        if (!isset($dataObject->content->$requestedPage)) {
-            $dataObject->content->$requestedPage = new stdClass();
-        }
-        // if target wrapper doesn't exist then create a placeholder for it to avoid any PHP Errors, Notices, or Warnings
-        if (!isset($dataObject->content->$requestedPage->$options['wrapper'])) {
-            $dataObject->content->$requestedPage->$options['wrapper'] = '';
-        }
-//        if ($devmode === TRUE) {
-//            $this->sdm_read_array(array('STAGE' => '1', 'DEV ARRAY FOR' => 'incorporateAppOutput()', 'method called by app' => $calledby, 'App Output' => $output, 'Data Object State Before Incorporation of App Output' => $dataObject, 'debug_backtrace' => debug_backtrace()));
-//        }
-        switch (!empty($options)) {
-            case TRUE:
-                if (!in_array($requestedPage, $options['ignorepages'])) {
-                    // if not in ignorepages array and incpages is empty assume any page not in ignore array can incorporate app output
-                    if (empty($options['incpages'])) {
-                        if ($options['incmethod'] === 'prepend') {
-                            $dataObject->content->$requestedPage->$options['wrapper'] = $output . $dataObject->content->$requestedPage->$options['wrapper'];
-                            if ($devmode === TRUE) {
-                                $this->sdm_read_array(array('incorporateAppOutput()', 'method called by app' => $calledby, 'App Output' => $output, 'Data Object State After Incorporation of App Output' => $dataObject, '$options' => $options));
-                            }
-                        } else if ($options['incmethod'] === 'overwrite') {
-                            $dataObject->content->$requestedPage->$options['wrapper'] = $output;
-                            if ($devmode === TRUE) {
-                                $this->sdm_read_array(array('incorporateAppOutput()', 'method called by app' => $calledby, 'App Output' => $output, 'Data Object State After Incorporation of App Output' => $dataObject, '$options' => $options));
-                            }
-                        } else { // default is to append
-                            $dataObject->content->$requestedPage->$options['wrapper'] .= $output;
-                            if ($devmode === TRUE) {
-                                $this->sdm_read_array(array('incorporateAppOutput()', 'method called by app' => $calledby, 'App Output' => $output, 'Data Object State After Incorporation of App Output' => $dataObject, '$options' => $options));
+            /* DATAOBJECT check | Make sure the properties we are modifying exist to prevent throwing any PHP errors */
+            // if no page exists for app in the core, then create a placeholder object for it to avoid PHP Errors, Notices, and Warnings
+            if (!isset($dataObject->content->$requestedPage)) {
+                $dataObject->content->$requestedPage = new stdClass();
+            }
+            // if target wrapper doesn't exist then create a placeholder for it to avoid any PHP Errors, Notices, or Warnings
+            if (!isset($dataObject->content->$requestedPage->$options['wrapper'])) {
+                $dataObject->content->$requestedPage->$options['wrapper'] = '';
+            }
+            if ($devmode === TRUE) {
+                $this->sdm_read_array(array('STAGE' => '1', 'DEV ARRAY FOR' => 'incorporateAppOutput()', 'method called by app' => $calledby, 'App Output' => $output, 'Data Object State Before Incorporation of App Output' => $dataObject, 'debug_backtrace' => debug_backtrace()));
+            }
+            switch (!empty($options)) {
+                case TRUE:
+                    if (!in_array($requestedPage, $options['ignorepages'])) {
+                        // if not in ignorepages array and incpages is empty assume any page not in ignore array can incorporate app output
+                        if (empty($options['incpages'])) {
+                            if ($options['incmethod'] === 'prepend') {
+                                $dataObject->content->$requestedPage->$options['wrapper'] = $output . $dataObject->content->$requestedPage->$options['wrapper'];
+                                if ($devmode === TRUE) {
+                                    $this->sdm_read_array(array('incorporateAppOutput()', 'method called by app' => $calledby, 'App Output' => $output, 'Data Object State After Incorporation of App Output' => $dataObject, '$options' => $options));
+                                }
+                            } else if ($options['incmethod'] === 'overwrite') {
+                                $dataObject->content->$requestedPage->$options['wrapper'] = $output;
+                                if ($devmode === TRUE) {
+                                    $this->sdm_read_array(array('incorporateAppOutput()', 'method called by app' => $calledby, 'App Output' => $output, 'Data Object State After Incorporation of App Output' => $dataObject, '$options' => $options));
+                                }
+                            } else { // default is to append
+                                $dataObject->content->$requestedPage->$options['wrapper'] .= $output;
+                                if ($devmode === TRUE) {
+                                    $this->sdm_read_array(array('incorporateAppOutput()', 'method called by app' => $calledby, 'App Output' => $output, 'Data Object State After Incorporation of App Output' => $dataObject, '$options' => $options));
+                                }
                             }
                         }
-                    }
-                    // else if incpages array is not empty only incorporate app output into pages in the incpages array
-                    else if (in_array($requestedPage, $options['incpages'])) {
-                        if ($options['incmethod'] === 'prepend') {
-                            $dataObject->content->$requestedPage->$options['wrapper'] = $output . $dataObject->content->$requestedPage->$options['wrapper'];
-                            if ($devmode === TRUE) {
-                                $this->sdm_read_array(array('incorporateAppOutput()', 'method called by app' => $calledby, 'App Output' => $output, 'Data Object State After Incorporation of App Output' => $dataObject, '$options' => $options));
-                            }
-                        } else if ($options['incmethod'] === 'overwrite') {
-                            $dataObject->content->$requestedPage->$options['wrapper'] = $output;
-                            if ($devmode === TRUE) {
-                                $this->sdm_read_array(array('incorporateAppOutput()', 'method called by app' => $calledby, 'App Output' => $output, 'Data Object State After Incorporation of App Output' => $dataObject, '$options' => $options));
-                            }
-                        } else { // default is to append
-                            $dataObject->content->$requestedPage->$options['wrapper'] .= $output;
-                            if ($devmode === TRUE) {
-                                $this->sdm_read_array(array('incorporateAppOutput()', 'method called by app' => $calledby, 'App Output' => $output, 'Data Object State After Incorporation of App Output' => $dataObject, '$options' => $options));
+                        // else if incpages array is not empty only incorporate app output into pages in the incpages array
+                        else if (in_array($requestedPage, $options['incpages'])) {
+                            if ($options['incmethod'] === 'prepend') {
+                                $dataObject->content->$requestedPage->$options['wrapper'] = $output . $dataObject->content->$requestedPage->$options['wrapper'];
+                                if ($devmode === TRUE) {
+                                    $this->sdm_read_array(array('incorporateAppOutput()', 'method called by app' => $calledby, 'App Output' => $output, 'Data Object State After Incorporation of App Output' => $dataObject, '$options' => $options));
+                                }
+                            } else if ($options['incmethod'] === 'overwrite') {
+                                $dataObject->content->$requestedPage->$options['wrapper'] = $output;
+                                if ($devmode === TRUE) {
+                                    $this->sdm_read_array(array('incorporateAppOutput()', 'method called by app' => $calledby, 'App Output' => $output, 'Data Object State After Incorporation of App Output' => $dataObject, '$options' => $options));
+                                }
+                            } else { // default is to append
+                                $dataObject->content->$requestedPage->$options['wrapper'] .= $output;
+                                if ($devmode === TRUE) {
+                                    $this->sdm_read_array(array('incorporateAppOutput()', 'method called by app' => $calledby, 'App Output' => $output, 'Data Object State After Incorporation of App Output' => $dataObject, '$options' => $options));
+                                }
                             }
                         }
+                    } // do nothing if in requested page is in ignore pages
+                    if ($devmode === TRUE) {
+                        $this->sdm_read_array(array('STAGE' => '2', 'DEV ARRAY FOR' => 'incorporateAppOutput()', 'method called by app' => $calledby, 'App Output' => $output, 'Data Object State After Incorporation of App Output' => $dataObject, 'debug_backtrace' => debug_backtrace()));
                     }
-                } // do nothing if in requested page is in ignore pages
-//                if ($devmode === TRUE) {
-//                    $this->sdm_read_array(array('STAGE' => '2', 'DEV ARRAY FOR' => 'incorporateAppOutput()', 'method called by app' => $calledby, 'App Output' => $output, 'Data Object State After Incorporation of App Output' => $dataObject, 'debug_backtrace' => debug_backtrace()));
-//                }
-                break;
+                    break;
 
-            default: // default is to append the $output.
-                $dataObject->content->$requestedPage->$options['wrapper'] .= $output;
-                if ($devmode === TRUE) {
-                    $this->sdm_read_array(array('incorporateAppOutput()', 'method called by app' => $calledby, 'App Output' => $output, 'Data Object State After Incorporation of App Output' => $dataObject, '$options' => $options));
-                }
-                break;
-        }
+                default: // default is to append the $output.
+                    $dataObject->content->$requestedPage->$options['wrapper'] .= $output;
+                    if ($devmode === TRUE) {
+                        $this->sdm_read_array(array('incorporateAppOutput()', 'method called by app' => $calledby, 'App Output' => $output, 'Data Object State After Incorporation of App Output' => $dataObject, '$options' => $options));
+                    }
+                    break;
+            }
+        } // end check if requested page exists in CORE or as an enabled app
         return $dataObject;
     }
 
