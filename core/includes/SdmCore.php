@@ -312,7 +312,7 @@ class SdmCore {
     final public function sdm_read_array($array, $sub = FALSE, $parent = '') {
         $style = 'border:1px dashed limegreen;border-radius:3px;margin:25px;padding:12px;width:90%;overflow:auto;background:#000000;color:#ffffff;';
         echo '<div style="' . $style . '">';
-        echo ($sub === FALSE ? '' : "<i style='color:#00CCFF;'>{$parent} => </i>");
+        echo ($sub === FALSE ? '' : "<i style='color:#00CCFF;'>{$parent} (<i style='color:aqua;'>" . gettype($array) . "</i>)=> </i>");
         if (is_bool($array) || is_string($array) || is_integer($array)) {
             $v = $array;
             unset($array);
@@ -328,7 +328,7 @@ class SdmCore {
                         echo ($sub === FALSE ? '<p>Object() | <b style="color:#00CCFF;"><i>' . (isset($key) ? strval($key) : '<i>unknown_object</i>') . '</i></b></p>' : '<p><ul><li>Object() | <b style="color:#00FF99;"><i>' . (isset($key) ? strval($key) : '<i>unknown_object</i>') . '</i></b></li></ul></p>');
                         self::sdm_read_array(json_decode(json_encode($value), TRUE));
                     } else {
-                        echo ($sub === FALSE ? "<p><xmp style='display:inline;color:#00CCFF'>{$key}</xmp> => <xmp style='display:inline;color:#00CC99'>{$value}</xmp></p>" : "<p><ul><li><xmp style='display:inline;color:#00CC99'>{$key}</xmp> => <xmp style='display:inline;color:#00CC99'>{$value}</xmp></li></ul></p>");
+                        echo ($sub === FALSE ? "<p><xmp style='display:inline;color:#00CCFF'>{$key}</xmp> (<i style='color:aqua;'>" . gettype($value) . "</i>) => <xmp style='display:inline;color:#00CC99'>{$value}</xmp></p>" : "<p><ul><li><xmp style='display:inline;color:#00CC99'>{$key}</xmp> (<i style='color:aqua;'>" . gettype($value) . "</i>) => <xmp style='display:inline;color:#00CC99'>{$value}</xmp></li></ul></p>");
                     }
                     break;
             }
