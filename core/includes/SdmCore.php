@@ -325,7 +325,7 @@ class SdmCore {
                     break;
                 default:
                     if (is_object($value)) {
-                        echo ($sub === FALSE ? '<p>Object() | <b style="color:#00CCFF;"><i>' . (isset($key) ? strval($key) : '<i>unknown_object</i>') . '</i></b></p>' : '<p><ul><li>Object() | <b style="color:#00FF99;"><i>' . (isset($key) ? strval($key) : '<i>unknown_object</i>') . '</i></b></li></ul></p>');
+                        echo ($sub === FALSE ? '<p><b style="color:#00CCFF;"><i>' . (isset($key) ? strval($key) : 'unknown_object') . '</i></b> (<i style="color:aqua;">object</i>)</p>' : '<p><ul><li><b style="color:#00FF99;"><i>' . (isset($key) ? strval($key) : 'unknown_object') . '</i></b>(<i style="color:aqua;">object</i>)</li></ul></p>');
                         self::sdm_read_array(json_decode(json_encode($value), TRUE));
                     } else {
                         echo ($sub === FALSE ? "<p><xmp style='display:inline;color:#00CCFF'>{$key}</xmp> (<i style='color:aqua;'>" . gettype($value) . "</i>) => <xmp style='display:inline;color:#00CC99'>{$value}</xmp></p>" : "<p><ul><li><xmp style='display:inline;color:#00CC99'>{$key}</xmp> (<i style='color:aqua;'>" . gettype($value) . "</i>) => <xmp style='display:inline;color:#00CC99'>{$value}</xmp></li></ul></p>");
