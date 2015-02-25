@@ -1,6 +1,5 @@
 <?php
 
-$options = array();
 $ouptut = '';
 // form submitted successfully
 if ($_POST['sdm_form']['content_manager_form_submitted'] === 'content_manager_form_submitted') {

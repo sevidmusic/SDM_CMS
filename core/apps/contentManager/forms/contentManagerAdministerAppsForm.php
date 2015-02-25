@@ -44,4 +44,4 @@ foreach ($available_apps as $displayValue => $machineValue) {
 
 $editcontentform->__build_form($sdmcore->getRootDirectoryUrl());
 // add form to content
-$sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<!-- contentManager Edit Content Form -->' . $editcontentform->__get_form() . '<!-- End contentManager Edit Content Form -->');
+$sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<!-- contentManager Edit Content Form -->' . $editcontentform->__get_form() . '<!-- End contentManager Edit Content Form -->', $options);

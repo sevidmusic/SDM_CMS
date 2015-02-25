@@ -69,12 +69,8 @@ class SdmAssembler extends SdmCore {
         $page = $this->determineRequestedPage();
         // load our data object
         $sdmassembler_dataObject = $this->sdmCoreLoadDataObject();
-        // dev line
-        $this->sdm_read_array(array('Requested Page "' . $page . '" Exists Before Incorporation Of Apps : ' => (isset($sdmassembler_dataObject->content->$page) === TRUE ? 'TRUE' : 'FALSE'), /* 'Data Object' => $sdmassembler_dataObject */));
         // load and assemble apps
         $this->loadCoreApps($sdmassembler_dataObject);
-        // dev line
-        $this->sdm_read_array(array('Requested Page "' . $page . '" Exists After Incorporation Of Apps : ' => (isset($sdmassembler_dataObject->content->$page) === TRUE ? 'TRUE' : 'FALSE'), /* 'Data Object' => $sdmassembler_dataObject */));
         // make sure content exists, if it does return it, if not, print a content not found message
         switch (isset($sdmassembler_dataObject->content->$page)) {
             case TRUE:
@@ -171,14 +167,25 @@ class SdmAssembler extends SdmCore {
      * ok to call this method multiple times within an app.</p>
      * <p>If provided, the $options array is used to specify how the app's output
      * is to be incorporated.</p>
+     * <p><b>NOTE</b>: If the requested page (determined internally) does not exist
+     * in CORE or in the $options array's 'incpages' array then the dataObject will not be modifed
+     * and the apps output will not be incorporated. This is for security, and prevents requests to
+     * non-existent pages from succsesfully taking user to a dynamicaly generated page.
+     * This method, in order to allow apps to function without creating a page for their output in core,
+     * creates a place holder page in the datObject for when the requested page does not exist in CORE.
+     * So, if the requested page does not exist in core, it must at least exist as a on of the
+     * pages specified in the $options array's 'incpages' array. Without this check we could pass anything
+     * to the page argument in the url and the SDM CMS would gnereate a page for it.
+     * <br /><br />i.e, http://example.com/index.php?page=NonExistentPage would work if we did not check for it in CORE
+     * and in the 'incpages' array</p>
      * @param object $dataObject <p>The sites data object. (This is most likely the
-     * $sdmassembler_dataObject var provided by the SDM_Assembler.<br />
+     * $sdmassembler_dataObject var provided by the SDM_Assembler)<br />
      * Note: We need to typehint for security, however PHP has no common
      * object ancestor so we cant specify <i>object</i> because most likely
      * the type of this argument will be an instance of stdClass, which is
      * technically an object but will not neccessarily return as type object
-     * when checked with typehinting.<br />
-     * @see http://stackoverflow.com/questions/13287593/stdclass-and-type-hinting for more
+     * when checked with typehinting.<b>*</b><br />
+     * @see <b>*</b>http://stackoverflow.com/questions/13287593/stdclass-and-type-hinting for more
      * info on why this happens.<br />@TODO: It may be best NOT to typehint the $dataObject
      * argument as it may introduce bugs if an actual object is passed to this method.</p>
      * @param string $output <p>A plain text or HTML string to be used as the apps output.</p>
@@ -186,12 +193,14 @@ class SdmAssembler extends SdmCore {
      * output is incorporated. If not specified, then the app will be incorporated into
      * all pages and will be assigned to the 'main_content' wrapper that is part of, and,
      * required by SDM CORE.<br />
-     * <h3><b>Overview of $options ARRAY:</b></h3>
+     * <br /><b>Overview of $options ARRAY:</b>
      * <ul>
      *   <li>'wrapper' : The content wrapper the app is to be incorporated into.
      *                   If not specified then 'main_content' is assumed</li>
-     *   <li>'incmethod' : Determines how app out put should be incorporated.<br />
-     *                     Options for 'incmethod' are <b><i>append</i></b>, <b><i>prepend</i></b>, and <b><i>overwrite</i></b>.</li>
+     *   <li>'incmethod' : Determines how app output should be incorporated.<br />
+     *                     Options for 'incmethod' are <b><i>append</i></b>,
+     *                     <b><i>prepend</i></b>, and <b><i>overwrite</i></b>. Defaults to <b>append</b>.
+     *   </li>
      *   <li>'incpages' : Array of pages to incorporate the app output into.</li>
      *   <li>'ignorepages' : Array of pages NOT to incoporate the app output into.</li>
      * </ul>
@@ -205,12 +214,12 @@ class SdmAssembler extends SdmCore {
      * @return object The modified data object.
      */
     public function incorporateAppOutput(stdClass $dataObject, $output, array $options = array(), $devmode = FALSE) {
-        // Check that $requested page exists in CORE or shares the same name as an enabledApps | We actually just need to check the requested page against the names in the enabled apps array to see if the requested page mathces the begining of any of the enalbed apps, i.e., if an app named helloWorld is enabled and the the requested page is helloWorldHelloUniverse then this check should pass because apps may generate other pages
-        if (in_array($this->determineRequestedPage(), array('contentManager')) === TRUE || $this->determineRequestedPage() === 'homepage') {
-            // determine which app this output came from
-            $calledby = ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', str_replace(array('/', '.php'), '', strrchr(debug_backtrace()[0]['file'], '/')))); // trys to determine which app called this method using debug_backtrace() @see http://php.net/manual/en/function.debug-backtrace.php | basically were just filtering the name path of the file that this method was called to so it displays in a format that is easy to read, we know that the calling file will contain the app name since all apps must name their main php file according to this case insensitive naming convention : APPNAME.php
-            // determine the requested page
-            $requestedPage = $this->determineRequestedPage();
+        // determine which app this output came from
+        $calledby = ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', str_replace(array('/', '.php'), '', strrchr(debug_backtrace()[0]['file'], '/')))); // trys to determine which app called this method using debug_backtrace() @see http://php.net/manual/en/function.debug-backtrace.php | basically were just filtering the name path of the file that this method was called to so it displays in a format that is easy to read, we know that the calling file will contain the app name since all apps must name their main php file according to this case insensitive naming convention : APPNAME.php
+        // determine the requested page
+        $requestedPage = $this->determineRequestedPage();
+        // Check that $requested page exists in CORE or or is passed in as an option via the options array's incpages array
+        if (in_array($requestedPage, $this->sdmCoreDetermineAvailablePages()) === TRUE || in_array($requestedPage, $options['incpages']) === TRUE) {
             /* OPTIONS ARRAY check| Review $options array values to insure they exist in prep checks that determine app how app should be incorporated | If they werent passed in via the $options argument then they will be assigned a default value */
             // if $options['wrapper'] is not set
             if (!isset($options['wrapper'])) {
@@ -228,7 +237,6 @@ class SdmAssembler extends SdmCore {
             if (!isset($options['ignorepages'])) {
                 $options['incpages'] = array();
             }
-
             /* DATAOBJECT check | Make sure the properties we are modifying exist to prevent throwing any PHP errors */
             // if no page exists for app in the core, then create a placeholder object for it to avoid PHP Errors, Notices, and Warnings
             if (!isset($dataObject->content->$requestedPage)) {

@@ -1,5 +1,20 @@
 <?php
 
+// this otpions array will be passed to incorporateAppOutput() wherever this app outputs data.
+$options = array(
+    'incpages' => array(
+        'contentManagerAddContentForm',
+        'contentManagerEditContentForm',
+        'contentManagerSelectPageToEditForm',
+        'contentManagerUpdateContentFormSubmission',
+        'contentManagerSelectPageToDeleteForm',
+        'contentManagerDeletePageSubmission',
+        'contentManagerSelectThemeForm',
+        'contentManagerSelectThemeFormSubmission',
+        'contentManagerAdministerAppsForm',
+        'contentManagerAdministerAppsFormSubmission',
+    ),
+);
 //contentManagerSelectThemeForm.php
 $sdmcore = $sdmcore; // see SdmAssembler.php and the app loading methods
 if (substr($sdmcore->determineRequestedPage(), 0, 14) === 'contentManager') {

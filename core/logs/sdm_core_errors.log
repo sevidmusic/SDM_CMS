@@ -1,25 +1,19 @@
-[24-Feb-2015 10:06:40 America/New_York] PHP Notice:  Undefined property: stdClass::$topmenu in /Applications/MAMP/htdocs/SDM_CMS/themes/sdmDemoTheme1/page.php on line 4
-[24-Feb-2015 10:10:09 America/New_York] PHP Notice:  Undefined property: stdClass::$topmenu in /Applications/MAMP/htdocs/SDM_CMS/themes/sdmDemoTheme1/page.php on line 4
-[24-Feb-2015 10:10:10 America/New_York] PHP Notice:  Undefined property: stdClass::$topmenu in /Applications/MAMP/htdocs/SDM_CMS/themes/sdmDemoTheme1/page.php on line 4
-[24-Feb-2015 10:11:33 America/New_York] PHP Notice:  Undefined property: stdClass::$navigationManager in /Applications/MAMP/htdocs/SDM_CMS/core/apps/navigationManager/navigationManager.php on line 18
-[24-Feb-2015 10:11:33 America/New_York] PHP Notice:  Trying to get property of non-object in /Applications/MAMP/htdocs/SDM_CMS/core/apps/navigationManager/navigationManager.php on line 18
-[24-Feb-2015 10:11:33 America/New_York] PHP Warning:  Creating default object from empty value in /Applications/MAMP/htdocs/SDM_CMS/core/apps/navigationManager/navigationManager.php on line 18
-[24-Feb-2015 10:11:33 America/New_York] PHP Notice:  Undefined property: stdClass::$topmenu in /Applications/MAMP/htdocs/SDM_CMS/themes/sdmDemoTheme1/page.php on line 4
-[24-Feb-2015 10:11:54 America/New_York] PHP Notice:  Undefined property: stdClass::$topmenu in /Applications/MAMP/htdocs/SDM_CMS/themes/sdmDemoTheme1/page.php on line 4
-[24-Feb-2015 10:11:58 America/New_York] PHP Notice:  Undefined property: stdClass::$navigationManager in /Applications/MAMP/htdocs/SDM_CMS/core/apps/navigationManager/navigationManager.php on line 18
-[24-Feb-2015 10:11:58 America/New_York] PHP Notice:  Trying to get property of non-object in /Applications/MAMP/htdocs/SDM_CMS/core/apps/navigationManager/navigationManager.php on line 18
-[24-Feb-2015 10:11:58 America/New_York] PHP Warning:  Creating default object from empty value in /Applications/MAMP/htdocs/SDM_CMS/core/apps/navigationManager/navigationManager.php on line 18
-[24-Feb-2015 10:11:58 America/New_York] PHP Notice:  Undefined property: stdClass::$topmenu in /Applications/MAMP/htdocs/SDM_CMS/themes/sdmDemoTheme1/page.php on line 4
-[24-Feb-2015 10:32:57 America/New_York] PHP Notice:  Undefined property: stdClass::$navigationManager in /Applications/MAMP/htdocs/SDM_CMS/core/apps/navigationManager/navigationManager.php on line 18
-[24-Feb-2015 10:32:57 America/New_York] PHP Notice:  Trying to get property of non-object in /Applications/MAMP/htdocs/SDM_CMS/core/apps/navigationManager/navigationManager.php on line 18
-[24-Feb-2015 10:32:57 America/New_York] PHP Warning:  Creating default object from empty value in /Applications/MAMP/htdocs/SDM_CMS/core/apps/navigationManager/navigationManager.php on line 18
-[24-Feb-2015 10:32:57 America/New_York] PHP Notice:  Undefined property: stdClass::$topmenu in /Applications/MAMP/htdocs/SDM_CMS/themes/sdmDemoTheme1/page.php on line 4
-[24-Feb-2015 10:33:00 America/New_York] PHP Notice:  Undefined property: stdClass::$topmenu in /Applications/MAMP/htdocs/SDM_CMS/themes/sdmDemoTheme1/page.php on line 4
-[24-Feb-2015 10:34:10 America/New_York] PHP Notice:  Undefined property: stdClass::$topmenu in /Applications/MAMP/htdocs/SDM_CMS/themes/sdmDemoTheme1/page.php on line 4
-[24-Feb-2015 10:34:16 America/New_York] PHP Notice:  Undefined property: stdClass::$topmenu in /Applications/MAMP/htdocs/SDM_CMS/themes/sdmDemoTheme1/page.php on line 4
-[24-Feb-2015 10:35:44 America/New_York] PHP Notice:  Undefined property: stdClass::$topmenu in /Applications/MAMP/htdocs/SDM_CMS/themes/sdmDemoTheme1/page.php on line 4
-[24-Feb-2015 10:41:50 America/New_York] PHP Notice:  Undefined property: stdClass::$topmenu in /Applications/MAMP/htdocs/SDM_CMS/themes/sdmDemoTheme1/page.php on line 4
-[24-Feb-2015 10:42:00 America/New_York] PHP Notice:  Undefined property: stdClass::$topmenu in /Applications/MAMP/htdocs/SDM_CMS/themes/sdmDemoTheme1/page.php on line 4
-[24-Feb-2015 11:14:16 America/New_York] PHP Notice:  Undefined property: stdClass::$topmenu in /Applications/MAMP/htdocs/SDM_CMS/themes/sdmDemoTheme1/page.php on line 4
-[24-Feb-2015 11:19:28 America/New_York] PHP Notice:  Undefined property: stdClass::$topmenu in /Applications/MAMP/htdocs/SDM_CMS/themes/sdmDemoTheme1/page.php on line 4
-[24-Feb-2015 11:21:47 America/New_York] PHP Notice:  Undefined property: stdClass::$topmenu in /Applications/MAMP/htdocs/SDM_CMS/themes/sdmDemoTheme1/page.php on line 4
+[24-Feb-2015 13:00:38 America/New_York] PHP Notice:  Undefined index: incpages in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 222
+[24-Feb-2015 13:00:42 America/New_York] PHP Notice:  Undefined index: incpages in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 222
+[24-Feb-2015 13:00:42 America/New_York] PHP Warning:  in_array() expects parameter 2 to be array, object given in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 224
+[24-Feb-2015 13:00:42 America/New_York] PHP Notice:  Undefined index: incpages in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 224
+[24-Feb-2015 13:00:42 America/New_York] PHP Warning:  in_array() expects parameter 2 to be array, null given in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 224
+[24-Feb-2015 13:00:42 America/New_York] PHP Warning:  in_array() expects parameter 2 to be array, object given in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 224
+[24-Feb-2015 13:00:42 America/New_York] PHP Notice:  Undefined index: incpages in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 222
+[24-Feb-2015 13:00:42 America/New_York] PHP Warning:  in_array() expects parameter 2 to be array, object given in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 224
+[24-Feb-2015 13:00:42 America/New_York] PHP Notice:  Undefined property: stdClass::$topmenu in /Applications/MAMP/htdocs/SDM_CMS/themes/sdmDemoTheme1/page.php on line 4
+[24-Feb-2015 20:35:57 America/New_York] PHP Notice:  Undefined index: incpages in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 222
+[24-Feb-2015 20:36:02 America/New_York] PHP Notice:  Undefined index: incpages in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 222
+[24-Feb-2015 20:36:02 America/New_York] PHP Notice:  Undefined index: incpages in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 224
+[24-Feb-2015 20:36:02 America/New_York] PHP Warning:  in_array() expects parameter 2 to be array, null given in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 224
+[24-Feb-2015 20:36:02 America/New_York] PHP Notice:  Undefined index: incpages in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 222
+[24-Feb-2015 20:36:02 America/New_York] PHP Notice:  Undefined property: stdClass::$topmenu in /Applications/MAMP/htdocs/SDM_CMS/themes/sdmDemoTheme1/page.php on line 4
+[24-Feb-2015 20:36:10 America/New_York] PHP Notice:  Undefined index: incpages in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 222
+[24-Feb-2015 20:36:10 America/New_York] PHP Notice:  Undefined index: incpages in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 224
+[24-Feb-2015 20:36:10 America/New_York] PHP Warning:  in_array() expects parameter 2 to be array, null given in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 224
+[24-Feb-2015 20:36:10 America/New_York] PHP Notice:  Undefined property: stdClass::$topmenu in /Applications/MAMP/htdocs/SDM_CMS/themes/sdmDemoTheme1/page.php on line 4

@@ -437,4 +437,15 @@ class SdmCore {
         return $available_pages;
     }
 
+    /**
+     * <p>Determines what apps are enabled by checking the property
+     * values of the Enabled Apps object</p>
+     * @return object An object whose properties are apps that are currently enabled.
+     */
+    final public function sdmCmsDetermineEnabledApps() {
+        $data = $this->sdmCoreLoadDataObject();
+        $enabled_apps = $data->settings->enabledapps;
+        return $enabled_apps;
+    }
+
 }
