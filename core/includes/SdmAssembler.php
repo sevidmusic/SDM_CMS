@@ -218,25 +218,25 @@ class SdmAssembler extends SdmCore {
         $calledby = ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', str_replace(array('/', '.php'), '', strrchr(debug_backtrace()[0]['file'], '/')))); // trys to determine which app called this method using debug_backtrace() @see http://php.net/manual/en/function.debug-backtrace.php | basically were just filtering the name path of the file that this method was called to so it displays in a format that is easy to read, we know that the calling file will contain the app name since all apps must name their main php file according to this case insensitive naming convention : APPNAME.php
         // determine the requested page
         $requestedPage = $this->determineRequestedPage();
+        /* OPTIONS ARRAY check| Review $options array values to insure they exist in prep for checks that determine how app should be incorporated | If they werent passed in via the $options argument then they will be assigned a default value and stored in the $options array */
+        // if $options['wrapper'] is not set
+        if (!isset($options['wrapper'])) {
+            $options['wrapper'] = 'main_content';
+        }
+        // if incmethod was not passed to the $options array create it
+        if (!isset($options['ignorepages'])) {
+            $options['incmethod'] = 'append';
+        }
+        // if ingorepages array was not passed to the $options array create it
+        if (!isset($options['ignorepages'])) {
+            $options['ignorepages'] = array();
+        }
+        // if incpages array was not passed to the $options array create it
+        if (!isset($options['incpages'])) {
+            $options['incpages'] = array();
+        }
         // Check that $requested page exists in CORE or or is passed in as an option via the options array's incpages array
         if (in_array($requestedPage, $this->sdmCoreDetermineAvailablePages()) === TRUE || in_array($requestedPage, $options['incpages']) === TRUE) {
-            /* OPTIONS ARRAY check| Review $options array values to insure they exist in prep checks that determine app how app should be incorporated | If they werent passed in via the $options argument then they will be assigned a default value */
-            // if $options['wrapper'] is not set
-            if (!isset($options['wrapper'])) {
-                $options['wrapper'] = 'main_content';
-            }
-            // if incmethod was not passed to the $options array create it
-            if (!isset($options['ignorepages'])) {
-                $options['incmethod'] = 'append';
-            }
-            // if ingorepages array was not passed to the $options array create it
-            if (!isset($options['ignorepages'])) {
-                $options['ignorepages'] = array();
-            }
-            // if incpages array was not passed to the $options array create it
-            if (!isset($options['ignorepages'])) {
-                $options['incpages'] = array();
-            }
             /* DATAOBJECT check | Make sure the properties we are modifying exist to prevent throwing any PHP errors */
             // if no page exists for app in the core, then create a placeholder object for it to avoid PHP Errors, Notices, and Warnings
             if (!isset($dataObject->content->$requestedPage)) {

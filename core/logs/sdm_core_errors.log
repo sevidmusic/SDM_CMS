@@ -1,4 +1,0 @@
-[25-Feb-2015 18:37:43 America/New_York] PHP Notice:  Undefined property: stdClass::$topmenu in /Applications/MAMP/htdocs/SDM_CMS/themes/sdmDemoTheme1/page.php on line 4
-[25-Feb-2015 18:37:46 America/New_York] PHP Notice:  Undefined index: incpages in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 222
-[25-Feb-2015 18:37:46 America/New_York] PHP Warning:  in_array() expects parameter 2 to be array, null given in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 222
-[25-Feb-2015 18:37:46 America/New_York] PHP Notice:  Undefined property: stdClass::$topmenu in /Applications/MAMP/htdocs/SDM_CMS/themes/sdmDemoTheme1/page.php on line 4
