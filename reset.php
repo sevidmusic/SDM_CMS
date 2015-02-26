@@ -11,64 +11,11 @@ $config = array(
         'homepage' => array(
             'main_content' => 'Welcome To The SDM CMS',
         ),
-    /* Working on makeing it unnecessary to require pages for apps.
-     * If you cant find a solution, then continue to make setting up
-     * core app pages part of the reset.php file.
-     *
-     *
-      'contentManager' => array(
-      'main_content' => 'Manage Content',
-      ),
-      'contentManagerAddContentForm' => array(
-      'main_content' => 'Add Content',
-      ),
-      'contentManagerSelectPageToEditForm' => array(
-      'main_content' => 'Select Page To Edit',
-      ),
-      'contentManagerEditContentForm' => array(
-      'main_content' => 'Edit Content',
-      ),
-      'contentManagerSelectThemeForm' => array(
-      'main_content' => 'Select Site Theme',
-      ),
-      'contentManagerSelectThemeFormSubmission' => array(
-      'main_content' => 'Theme Selected',
-      ),
-      'contentManagerSelectPageToDeleteForm' => array(
-      'main_content' => 'Delete Page',
-      ),
-      'contentManagerDeletePageSubmission' => array(
-      'main_content' => 'Page Deleted',
-      ),
-      'contentManagerUpdateContentFormSubmission' => array(
-      'main_content' => 'Content Updated',
-      ),
-      'contentManagerAdministerAppsForm' => array(
-      'main_content' => 'Administer Apps',
-      ),
-      'contentManagerAdministerAppsFormSubmission' => array(
-      'main_content' => 'Administer Apps Form Submittied',
-      ),
-      'contentManagerAdministerAppsFormSubmission' => array(
-      'main_content' => 'Administer Apps Form Submittied',
-      ),
-      'navigationManager' => array(
-      'main_content' => 'Navigation Manager',
-      ),
-      'navigationManagerAddMenu' => array(
-      'main_content' => 'Add Menu. Note: At the moment internally generated dev menus are only possible. The menu system will soon be complete, and you will be able to add and congifure menus custom to your needs.',
-      ),
-      'core' => array(
-      'main_content' => 'Overview of SDM Core.',
-      ),
-      'errors' => array(
-      'main_content' => 'Overview of recent site errors.',
-      ), */
     ),
     'menus' => array(), // end 'menus' array
     'settings' => array(
         'theme' => 'sdmDemoTheme1',
-        'enabledapps' => array('contentManager' => 'contentManager', 'navigationManager' => 'navigationManager', 'SDMDevTools' => 'SDMDevTools'),
+        'enabledapps' => array('contentManager' => 'contentManager'),
     ), // end 'settings' array
 ); // end $config array
 
