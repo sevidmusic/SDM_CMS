@@ -18,8 +18,6 @@ $config = array(
         'enabledapps' => array('contentManager' => 'contentManager'),
     ), // end 'settings' array
 ); // end $config array
-
-
 $data = utf8_encode(trim(json_encode($config)));
 echo (file_put_contents($sdmcore->getDataDirectoryPath() . '/data.json', $data, LOCK_EX) != FALSE ? '<h4 style="color:#33CC33">Site configuration reset to defaults succsessfully</h4><p><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=homepage">Click Here</a> to view your new SDM CMS powered site</p>' : '<h2 style="color:red;">Could not configure site!Check config.php to determine the cause of the error.</h2>');
 echo '<h3>Site Configuration:</h3><p>The following data was written to: <b style="color:#999999"><i>' . $sdmcore->getDataDirectoryPath() . '/data.json</i></b></p>';
