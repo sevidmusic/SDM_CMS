@@ -1,6 +1,6 @@
 <?php
 
-$ouptut = '';
+$output = '';
 // form submitted successfully
 if ($_POST['sdm_form']['content_manager_form_submitted'] === 'content_manager_form_submitted') {
     //$sdmcore->sdm_read_array($_POST['sdm_form']);
