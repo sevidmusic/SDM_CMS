@@ -17,7 +17,7 @@ $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, trim('
     <p><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=errors">Error Log</a></p>
     <p><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=clearErrorLog">Clear Error Log</a></p>
     <div style="border:3px solid red; border-radius:25px;background: black; color: #CC0066; padding: 20px; margin: 3px 3px 3px 3px;"><p><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=reset">Reset Site</a></p><p><i><b>NOTE: THIS WILL ERASE ALL SITE DATA AND SITE SETTINGS RESTORIENG THE SDM CMS TO ITS DEFAULT CONFIGURATION!</b></i><p></div>
-'), array('incmethod' => 'prepend', 'incpages' => array('sdmDevTools', 'core', 'errors', 'clearErrorLog', 'reset')));
+'), array('incmethod' => 'prepend', 'incpages' => array('SDMDevTools', 'core', 'errors', 'clearErrorLog', 'reset')));
 
 
 switch ($sdmcore->determineRequestedPage()) {
@@ -44,7 +44,7 @@ switch ($sdmcore->determineRequestedPage()) {
         break;
     default :
         $output = '<h3>SDM DEV TOOLS</h3>';
-        $options = array('incpages' => array('sdmDevTools', 'core', 'errors', 'clearErrorLog', 'reset'));
+        $options = array('incpages' => array('SDMDevTools', 'core', 'errors', 'clearErrorLog', 'reset'));
         $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $output, $options);
         break;
 }
