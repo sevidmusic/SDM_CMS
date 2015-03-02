@@ -13,38 +13,39 @@ $devMenu .= '</ul></div><!-- End Dev Menu -->';
 $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $devMenu, array('wrapper' => 'topmenu', 'incmethod' => 'prepend', 'incpages' => $availablePages)); // use the links array we genertated that lists all available pages and enabled apps as the incpages array so all pages incroporate this menu
 // add a dev tools menu to all pages related to this app
 $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, trim('
-    <p><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=core">Core</a></p>
-    <p><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=errors">Error Log</a></p>
-    <p><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=clearErrorLog">Clear Error Log</a></p>
+    <p><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=SDMDevTools&SDMDevToolsSection=core">Core</a></p>
+    <p><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=SDMDevTools&SDMDevToolsSection=errors">Error Log</a></p>
+    <p><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=SDMDevTools&SDMDevToolsSection=clearErrorLog">Clear Error Log</a></p>
     <div style="border:3px solid red; border-radius:25px;background: black; color: #CC0066; padding: 20px; margin: 3px 3px 3px 3px;"><p><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=reset">Reset Site</a></p><p><i><b>NOTE: THIS WILL ERASE ALL SITE DATA AND SITE SETTINGS RESTORIENG THE SDM CMS TO ITS DEFAULT CONFIGURATION!</b></i><p></div>
 '), array('incmethod' => 'prepend', 'incpages' => array('SDMDevTools', 'core', 'errors', 'clearErrorLog', 'reset')));
 
-
-switch ($sdmcore->determineRequestedPage()) {
-    case 'core': // dispaly current core configuration
-        $output = '<h1>SDM CMS CORE</h1><p>Below is a visual representation of the current state of CORE</p>' . $sdmcore->sdmCoreCurlGrabContent($sdmcore->getRootDirectoryUrl() . '/coreoverview.php');
-        $options = array('incmethod' => 'overwrite', 'incpages' => array('core'));
-        $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $output, $options);
-        break;
-    case 'errors': // display recent errors
-        $output = trim('<h1>Site Errors</h1>' . str_replace('[', '<p style="font-size: .8em;overflow:auto;border: 2px solid #CC0066;border-radius: 3px;background: black;color: #CC0066; margin: 3px 3px 3px 3px; padding: 23px 23px 23px 23px;">[', str_replace('<br />', '</p>', nl2br(file_get_contents($sdmcore->getCoreDirectoryPath() . '/logs/sdm_core_errors.log')))));
-        $options = array('incmethod' => 'overwrite', 'incpages' => array('errors'));
-        $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $output, $options);
-        break;
-    case 'clearErrorLog': // clear error log
-        $output = $sdmcore->sdmCoreCurlGrabContent($sdmcore->getRootDirectoryUrl() . '/clearErrorLog.php');
-        $options = array('incmethod' => 'overwrite', 'incpages' => array('clearErrorLog'));
-        $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $output, $options);
-        break;
-    case 'reset': // reset site to default configuration | This will erase all site data includeing content, error logs, and site settings.
-        // make an independant cal to incorporateAppOutput() so we can overwrite the target wrapper
-        $output = $sdmcore->sdmCoreCurlGrabContent($sdmcore->getRootDirectoryUrl() . '/reset.php');
-        $options = array('incmethod' => 'overwrite', 'incpages' => array('reset'));
-        $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $output, $options);
-        break;
-    default :
-        $output = '<h3>SDM DEV TOOLS</h3>';
-        $options = array('incpages' => array('SDMDevTools', 'core', 'errors', 'clearErrorLog', 'reset'));
-        $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $output, $options);
-        break;
+$sdmcore->sdm_read_array($_GET);
+if (isset($_GET['SDMDevToolsSection']) === TRUE) {
+    switch ($_GET['SDMDevToolsSection']) {
+        case 'core': // dispaly current core configuration
+            $output = '<h1 style="color:aqua;>SDMDevTools - CORE</h1><p>Below is a visual representation of the current state of CORE</p>' . $sdmcore->sdmCoreCurlGrabContent($sdmcore->getRootDirectoryUrl() . '/coreoverview.php');
+            $options = array('incmethod' => 'overwrite', 'incpages' => array('core'));
+            $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $output, $options, TRUE);
+            break;
+        case 'errors': // display recent errors
+            $output = trim('<h1 style="color:red;>SDMDevTools - Site Errors</h1>' . str_replace('[', '<p style="font-size: .8em;overflow:auto;border: 2px solid #CC0066;border-radius: 3px;background: black;color: #CC0066; margin: 3px 3px 3px 3px; padding: 23px 23px 23px 23px;">[', str_replace('<br />', '</p>', nl2br(file_get_contents($sdmcore->getCoreDirectoryPath() . '/logs/sdm_core_errors.log')))));
+            $options = array('incmethod' => 'overwrite', 'incpages' => array('errors'));
+            $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $output, $options);
+            break;
+        case 'clearErrorLog': // clear error log
+            $output = '<h1 style="color:lightgreen;">SDMDevTools - Clear Error Log</h1>' . $sdmcore->sdmCoreCurlGrabContent($sdmcore->getRootDirectoryUrl() . '/clearErrorLog.php');
+            $options = array('incmethod' => 'overwrite', 'incpages' => array('clearErrorLog'));
+            $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $output, $options);
+            break;
+        case 'reset': // reset site to default configuration | This will erase all site data includeing content, error logs, and site settings.
+            // make an independant cal to incorporateAppOutput() so we can overwrite the target wrapper
+            $output = '<h1 style="color:orange;"><b style="color:red;">Reset</b> Site</h1>' . $sdmcore->sdmCoreCurlGrabContent($sdmcore->getRootDirectoryUrl() . '/reset.php');
+            $options = array('incmethod' => 'overwrite', 'incpages' => array('reset'));
+            $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $output, $options);
+            break;
+    }
+} else {
+    $output = '<h3 style="color:#303030;">SDM DEV TOOLS</h3><p>GET VAR SET : ' . strval($_GET['SDMDevToolsSection']);
+    $options = array('incpages' => array('SDMDevTools'));
+    $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $output, $options);
 }
