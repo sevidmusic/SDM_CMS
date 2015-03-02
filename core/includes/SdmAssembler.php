@@ -258,7 +258,7 @@ class SdmAssembler extends SdmCore {
              * Also note that if inpages is empty then it will be assumed the developer
              * does NOT want to incorporate app output into any page.
              * i.e.,
-             *   incorporateAppOutput($dataObject, $output, array());// app out put will NOT be incorporated into any pages because incpages is empty
+             *   incorporateAppOutput($dataObject, $output, array('incpages' => array());// app out put will NOT be incorporated into any pages because incpages is empty
              *   incorporateAppOutput($dataObject, $output);// app out put will be incorporated into all pages because incpages does not exist, and will therefore be created and configured with pre-determined internal default values
              */
             $pages = $this->sdmCoreDetermineAvailablePages();

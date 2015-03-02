@@ -1,0 +1,4 @@
+[02-Mar-2015 13:50:32 America/New_York] PHP Notice:  Undefined property: stdClass::$contentManagerUpdateContentFormSubmission in /Applications/MAMP/htdocs/SDM_CMS/core/apps/contentManager/handlers/contentManagerUpdateContentFormSubmission.php on line 6
+[02-Mar-2015 13:50:32 America/New_York] PHP Warning:  Creating default object from empty value in /Applications/MAMP/htdocs/SDM_CMS/core/apps/contentManager/handlers/contentManagerUpdateContentFormSubmission.php on line 6
+[02-Mar-2015 13:50:32 America/New_York] PHP Notice:  Undefined property: stdClass::$main_content in /Applications/MAMP/htdocs/SDM_CMS/core/apps/contentManager/handlers/contentManagerUpdateContentFormSubmission.php on line 6
+[02-Mar-2015 13:50:32 America/New_York] PHP Warning:  Creating default object from empty value in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCms.php on line 38
