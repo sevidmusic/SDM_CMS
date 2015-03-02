@@ -1,5 +1,7 @@
 <?php
 
+// app description page | if you visit YOURSITE.com/index.php?page=SdmDevMenu this output will be dsiplayed
+$sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<h2>DEV MENU</h2><p>The SDM DEV MENU app outputs a menu that has links to all pages available in core, and any page that matches the name of an enabled app.</p>', array('wrapper' => 'main_content', 'incmethod' => 'overwrite', 'incpages' => array('SdmDevMenu')));
 // add a dev menu to all pages that includes links to all pages and enabled apps
 $pages = $sdmcore->sdmCoreDetermineAvailablePages();
 // Possibly incorporate the following few lines that put together a list of available apps and pages into one array into the sdmCoreDetermineAvailablePages() method
@@ -11,4 +13,4 @@ foreach ($availablePages as $link) {
 }
 $devMenu .= '</ul></div><!-- End Dev Menu -->';
 // incorporate devmenu
-$sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $devMenu, array('wrapper' => 'topmenu', 'incmethod' => 'prepend', 'incpages' => $availablePages));
+$sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $devMenu, array('wrapper' => 'main_content', 'incmethod' => 'prepend', 'incpages' => $availablePages));
