@@ -1,0 +1,21 @@
+[03-Mar-2015 13:50:29 America/New_York] PHP Notice:  Undefined index: sdm_form in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SdmErrorLog/SdmErrorLog.php on line 35
+[03-Mar-2015 13:50:29 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCore.php on line 321
+[03-Mar-2015 13:51:00 America/New_York] PHP Notice:  Undefined index: sdm_form in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SdmErrorLog/SdmErrorLog.php on line 35
+[03-Mar-2015 13:51:00 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCore.php on line 321
+[03-Mar-2015 13:51:05 America/New_York] PHP Notice:  Undefined index: sdm_form in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SdmErrorLog/SdmErrorLog.php on line 35
+[03-Mar-2015 13:51:05 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCore.php on line 321
+[03-Mar-2015 13:51:05 America/New_York] PHP Notice:  Undefined index: sdm_form in /Applications/MAMP/htdocs/SDM_CMS/core/apps/contentManager/handlers/contentManagerAdministerAppsFormSubmission.php on line 5
+[03-Mar-2015 13:51:08 America/New_York] PHP Notice:  Undefined index: sdm_form in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SdmErrorLog/SdmErrorLog.php on line 35
+[03-Mar-2015 13:51:08 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCore.php on line 321
+[03-Mar-2015 13:51:09 America/New_York] PHP Notice:  Undefined index: sdm_form in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SdmErrorLog/SdmErrorLog.php on line 35
+[03-Mar-2015 13:51:09 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCore.php on line 321
+[03-Mar-2015 13:51:21 America/New_York] PHP Notice:  Undefined index: sdm_form in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SdmErrorLog/SdmErrorLog.php on line 35
+[03-Mar-2015 13:51:21 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCore.php on line 321
+[03-Mar-2015 13:51:24 America/New_York] PHP Notice:  Undefined index: sdm_form in /Applications/MAMP/htdocs/SDM_CMS/core/apps/SdmErrorLog/SdmErrorLog.php on line 35
+[03-Mar-2015 13:51:24 America/New_York] PHP Warning:  Invalid argument supplied for foreach() in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCore.php on line 321
+[03-Mar-2015 13:56:34 America/New_York] PHP Notice:  Undefined property: stdClass::$navigationManagerAddMenu in /Applications/MAMP/htdocs/SDM_CMS/core/apps/navigationManager/navigationManager.php on line 24
+[03-Mar-2015 13:56:34 America/New_York] PHP Notice:  Trying to get property of non-object in /Applications/MAMP/htdocs/SDM_CMS/core/apps/navigationManager/navigationManager.php on line 24
+[03-Mar-2015 13:56:34 America/New_York] PHP Warning:  Creating default object from empty value in /Applications/MAMP/htdocs/SDM_CMS/core/apps/navigationManager/navigationManager.php on line 24
+[03-Mar-2015 13:56:42 America/New_York] PHP Notice:  Undefined property: stdClass::$navigationManagerAddMenu in /Applications/MAMP/htdocs/SDM_CMS/core/apps/navigationManager/navigationManager.php on line 24
+[03-Mar-2015 13:56:42 America/New_York] PHP Notice:  Trying to get property of non-object in /Applications/MAMP/htdocs/SDM_CMS/core/apps/navigationManager/navigationManager.php on line 24
+[03-Mar-2015 13:56:42 America/New_York] PHP Warning:  Creating default object from empty value in /Applications/MAMP/htdocs/SDM_CMS/core/apps/navigationManager/navigationManager.php on line 24
