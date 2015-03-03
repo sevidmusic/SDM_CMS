@@ -1,7 +1,7 @@
 <?php
 
 // app description page | if you visit YOURSITE.com/index.php?page=SdmDevMenu this output will be dsiplayed
-$sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<h2>Site Errors</h2><p>The SDM Erro Log app displays the sites error log</p>', array('wrapper' => 'main_content', 'incmethod' => 'overwrite', 'incpages' => array('SdmErrorLog')));
+$sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<h2>Site Errors</h2><p>The SDM Error Log app displays the sites error log</p>', array('wrapper' => 'main_content', 'incmethod' => 'overwrite', 'incpages' => array('SdmErrorLog')));
 // get the error log with file() so we have each line as an array item. gives us some formating flexablitly later on
 $loaded_error_log = file($sdmcore->getCoreDirectoryUrl() . '/logs/sdm_core_errors.log');
 // reverse the order of the elements because we want the newest errors to be at the top of the list
