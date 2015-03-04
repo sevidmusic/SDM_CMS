@@ -1,5 +1,0 @@
-[04-Mar-2015 09:14:39 America/New_York] PHP Notice:  Undefined variable: available_pages in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCore.php on line 437
-[04-Mar-2015 09:14:39 America/New_York] PHP Warning:  array_merge(): Argument #1 is not an array in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 266
-[04-Mar-2015 09:14:39 America/New_York] PHP Notice:  Undefined variable: available_pages in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmCore.php on line 437
-[04-Mar-2015 09:14:39 America/New_York] PHP Warning:  in_array() expects parameter 2 to be array, null given in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 269
-[04-Mar-2015 09:14:39 America/New_York] PHP Warning:  in_array() expects parameter 2 to be array, null given in /Applications/MAMP/htdocs/SDM_CMS/core/includes/SdmAssembler.php on line 269
