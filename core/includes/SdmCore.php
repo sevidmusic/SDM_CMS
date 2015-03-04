@@ -431,6 +431,8 @@ class SdmCore {
         // attempt to format the array so the KEYS can be used for display, and the VALUES can be used in code | "pageName" will become "Page Name" and will be used as a key
         // Note: Pages not named with the camelCase convention may not display intuitivly...
         // @todo create a method that formats page names into camel case on page creation...
+        // intialize $available_pages array | will prevent PHP erros if no pages exist in CORE
+        $available_pages = array();
         foreach ($pages as $page) {
             $available_pages[ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', $page))] = $page;
         }
