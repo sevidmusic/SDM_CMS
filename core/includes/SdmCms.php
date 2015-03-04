@@ -35,6 +35,10 @@ class SdmCms extends SdmCore {
         $filtered_html = iconv("UTF-8", "UTF-8//IGNORE", $html);
         $filtered_html2 = iconv("UTF-8", "ISO-8859-1//IGNORE", $filtered_html);
         $filtered_html3 = iconv("ISO-8859-1", "UTF-8", $filtered_html2);
+        // if the page does not already exist in CORE create a placeholder object for it
+        if (!isset($content->content->$page) === TRUE) {
+            $content->content->$page = new stdClass();
+        }
         $content->content->$page->$id = htmlentities(utf8_encode(trim($filtered_html3)), ENT_SUBSTITUTE | ENT_DISALLOWED | ENT_HTML5, 'UTF-8');
         $data = json_encode($content);
         return file_put_contents($this->getDataDirectoryPath() . '/data.json', $data, LOCK_EX);
