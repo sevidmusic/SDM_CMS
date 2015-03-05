@@ -1,5 +1,20 @@
 <?php
 
+// this otpions array will be passed to incorporateAppOutput() wherever this app outputs data.
+$options = array(
+    'incpages' => array(
+        'contentManagerAddContentForm',
+        'contentManagerEditContentForm',
+        'contentManagerSelectPageToEditForm',
+        'contentManagerUpdateContentFormSubmission',
+        'contentManagerSelectPageToDeleteForm',
+        'contentManagerDeletePageSubmission',
+        'contentManagerSelectThemeForm',
+        'contentManagerSelectThemeFormSubmission',
+        'contentManagerAdministerAppsForm',
+        'contentManagerAdministerAppsFormSubmission',
+    ),
+);
 //contentManagerSelectThemeForm.php
 $sdmcore = $sdmcore; // see SdmAssembler.php and the app loading methods
 if (substr($sdmcore->determineRequestedPage(), 0, 14) === 'contentManager') {
@@ -49,7 +64,7 @@ if (substr($sdmcore->determineRequestedPage(), 0, 14) === 'contentManager') {
             break;
         default:
             // present content manager menu
-            $sdmassembler_dataObject->content->$sdmassembler_requestedpage->main_content .= '
+            $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '
                 <div id="contentManager">
                 <p>Welcome to the Content Manager. Here you can create, edit, delete, and restore content</p>
                     <ul>
@@ -60,7 +75,7 @@ if (substr($sdmcore->determineRequestedPage(), 0, 14) === 'contentManager') {
                         <li><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=contentManagerAdministerAppsForm">Administer Apps</a></li>
                     </ul>
                 </div>
-                ';
+                ', array('incpages' => array('contentManager')));
             break;
     }
 }

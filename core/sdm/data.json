@@ -1,1 +1,1 @@
-{"content":{"homepage":{"main_content":"Welcome To The SDM CMS"},"errors":{"main_content":""},"clearErrorLog":{"main_content":""}},"menus":[],"settings":{"theme":"sdmDemoTheme1","enabledapps":{"contentManager":"contentManager","navigationManager":"navigationManager","SDMDevTools":"SDMDevTools","helloWorld":"helloWorld"}}}
+{"content":{"homepage":{"main_content":"Welcome To The SDM CMS"}},"menus":[],"settings":{"theme":"sdmDemoTheme1","enabledapps":{"contentManager":"contentManager","SdmDevMenu":"SdmDevMenu"}}}

@@ -1,9 +1,13 @@
 <div id="lockedwrapper">
+    <div id="topmenu">
+        <?php
+        echo (isset($sdmassembler_themeContentObject->topmenu) ? $sdmassembler_themeContentObject->topmenu : '<!-- No Content -->');
+        ?>
+    </div>
     <div id='main_content'>
         <?php
-        echo $sdmassembler_themeContentObject->main_content;
+        echo (isset($sdmassembler_themeContentObject->main_content) ? $sdmassembler_themeContentObject->main_content : '<!-- No Content -->');
         ?>
-        <h3>Menus:</h3>
         <?php
         $menus = $sdmcore->sdmCoreLoadDataObject()->menus;
         // display menus who bleong to the main_content wrapper

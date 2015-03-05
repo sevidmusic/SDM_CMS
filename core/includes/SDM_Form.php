@@ -8,6 +8,7 @@ class SDM_Form {
     public $form_handler;
     public $form_elements;
     public $method;
+    public $submitLabel;
 
     /**
      * Creates an HTML form based on the defined property values.
@@ -69,6 +70,7 @@ class SDM_Form {
         $this->method = (isset($this->method) ? $this->method : 'post');
         $this->form_handler = (isset($this->form_handler) ? $this->form_handler : '');
         $this->form = (isset($this->form) ? $this->form : $this->__build_form(str_replace('/index.php', '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'])));
+        $this->submitLabel = (isset($this->submitLabel) ? $this->submitLabel : 'Submit');
     }
 
     /**
@@ -118,7 +120,7 @@ class SDM_Form {
         }
         // add hidden element to store form id
         $form_html .= '<!-- built-in form element "form_id" --><input type="hidden" name="sdm_form[form_id]" value="' . $this->__get_form_id() . '"><!-- close built-in form element "form_id" -->';
-        $this->form = $form_html . '<input type="submit"></form><!-- close form ' . $this->__get_form_id() . ' -->';
+        $this->form = $form_html . '<input value="' . $this->submitLabel . '" type="submit"></form><!-- close form ' . $this->__get_form_id() . ' -->';
         return $this->form;
     }
 

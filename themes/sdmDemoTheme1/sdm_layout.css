@@ -8,10 +8,11 @@
 */
 
 body {
-    background: #1c94c4;
+    background: #000000;
 }
 .sdmDemoTheme1 {
     color: #000000;
+    font-family: monospace;
     font-size: 1em;
 }
 
@@ -48,14 +49,15 @@ a:hover {
 .sdmDemoTheme1 input, textarea {
     border: 2px solid;
     border-radius: 9px;
-    margin: 20px;
 }
 
 .sdmDemoTheme1 input {
+    margin: 0px 0px 0px 10px;
     padding: 5px;
 }
 .sdmDemoTheme1 textarea {
     padding: 20px;
-    width: 50%;
+    width: 88%;
     height: 300px;
+    margin: 10px 0px 0px 0px;
 }

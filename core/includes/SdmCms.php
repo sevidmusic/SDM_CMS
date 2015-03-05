@@ -35,6 +35,10 @@ class SdmCms extends SdmCore {
         $filtered_html = iconv("UTF-8", "UTF-8//IGNORE", $html);
         $filtered_html2 = iconv("UTF-8", "ISO-8859-1//IGNORE", $filtered_html);
         $filtered_html3 = iconv("ISO-8859-1", "UTF-8", $filtered_html2);
+        // if the page does not already exist in CORE create a placeholder object for it
+        if (!isset($content->content->$page) === TRUE) {
+            $content->content->$page = new stdClass();
+        }
         $content->content->$page->$id = htmlentities(utf8_encode(trim($filtered_html3)), ENT_SUBSTITUTE | ENT_DISALLOWED | ENT_HTML5, 'UTF-8');
         $data = json_encode($content);
         return file_put_contents($this->getDataDirectoryPath() . '/data.json', $data, LOCK_EX);
@@ -49,7 +53,8 @@ class SdmCms extends SdmCore {
     public function sdmCmsDetermineAvailableWrappers() {
         $html = file_get_contents($this->getCurrentThemeDirectoryPath() . '/page.php');
         $dom = new DOMDocument();
-        $dom->loadHTML($html);
+        // for now we are surpressing any errors thrown by loadHTML() because it complains when malformed xml and html is loaded, and the errors were clogging up the error log during other development branches. Howver it is very important that a fix is found for this issue as it could lead to unknown bugs.
+        @$dom->loadHTML($html);
         $xpath = new DOMXPath($dom);
         $tags = $xpath->query('//div[@id]');
         $data = array();
@@ -143,16 +148,16 @@ class SdmCms extends SdmCore {
         return $available_apps;
     }
 
-    /**
+    /** MOVED TO CORE
      * <p>Determines what apps are enabled by checking the property
      * values of the Enabled Apps object</p>
      * @return object An object whose properties are apps that are currently enabled.
      */
-    public function sdmCmsDetermineEnabledApps() {
-        $data = $this->sdmCoreLoadDataObject();
-        $enabled_apps = $data->settings->enabledapps;
-        return $enabled_apps;
-    }
+//    public function sdmCmsDetermineEnabledApps() {
+//        $data = $this->sdmCoreLoadDataObject();
+//        $enabled_apps = $data->settings->enabledapps;
+//        return $enabled_apps;
+//    }
 
     /**
      * Switches an app from on to off.

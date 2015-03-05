@@ -312,7 +312,7 @@ class SdmCore {
     final public function sdm_read_array($array, $sub = FALSE, $parent = '') {
         $style = 'border:1px dashed limegreen;border-radius:3px;margin:25px;padding:12px;width:90%;overflow:auto;background:#000000;color:#ffffff;';
         echo '<div style="' . $style . '">';
-        echo ($sub === FALSE ? '' : "<i style='color:#00CCFF;'>{$parent} => </i>");
+        echo ($sub === FALSE ? '' : "<i style='color:#00CCFF;'>{$parent} (<i style='color:aqua;'>" . gettype($array) . "</i>)=> </i>");
         if (is_bool($array) || is_string($array) || is_integer($array)) {
             $v = $array;
             unset($array);
@@ -325,10 +325,10 @@ class SdmCore {
                     break;
                 default:
                     if (is_object($value)) {
-                        echo ($sub === FALSE ? '<p>Object() | <b style="color:#00CCFF;"><i>' . (isset($key) ? strval($key) : '<i>unknown_object</i>') . '</i></b></p>' : '<p><ul><li>Object() | <b style="color:#00FF99;"><i>' . (isset($key) ? strval($key) : '<i>unknown_object</i>') . '</i></b></li></ul></p>');
+                        echo ($sub === FALSE ? '<p><b style="color:#00CCFF;"><i>' . (isset($key) ? strval($key) : 'unknown_object') . '</i></b> (<i style="color:aqua;">object</i>)</p>' : '<p><ul><li><b style="color:#00FF99;"><i>' . (isset($key) ? strval($key) : 'unknown_object') . '</i></b>(<i style="color:aqua;">object</i>)</li></ul></p>');
                         self::sdm_read_array(json_decode(json_encode($value), TRUE));
                     } else {
-                        echo ($sub === FALSE ? "<p><xmp style='display:inline;color:#00CCFF'>{$key}</xmp> => <xmp style='display:inline;color:#00CC99'>{$value}</xmp></p>" : "<p><ul><li><xmp style='display:inline;color:#00CC99'>{$key}</xmp> => <xmp style='display:inline;color:#00CC99'>{$value}</xmp></li></ul></p>");
+                        echo ($sub === FALSE ? "<p><xmp style='display:inline;color:#00CCFF'>{$key}</xmp> (<i style='color:aqua;'>" . gettype($value) . "</i>) => <xmp style='display:inline;color:#00CC99'>{$value}</xmp></p>" : "<p><ul><li><xmp style='display:inline;color:#00CC99'>{$key}</xmp> (<i style='color:aqua;'>" . gettype($value) . "</i>) => <xmp style='display:inline;color:#00CC99'>{$value}</xmp></li></ul></p>");
                     }
                     break;
             }
@@ -431,10 +431,23 @@ class SdmCore {
         // attempt to format the array so the KEYS can be used for display, and the VALUES can be used in code | "pageName" will become "Page Name" and will be used as a key
         // Note: Pages not named with the camelCase convention may not display intuitivly...
         // @todo create a method that formats page names into camel case on page creation...
+        // intialize $available_pages array | will prevent PHP erros if no pages exist in CORE
+        $available_pages = array();
         foreach ($pages as $page) {
             $available_pages[ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', $page))] = $page;
         }
         return $available_pages;
+    }
+
+    /**
+     * <p>Determines what apps are enabled by checking the property
+     * values of the Enabled Apps object</p>
+     * @return object An object whose properties are apps that are currently enabled.
+     */
+    final public function sdmCmsDetermineEnabledApps() {
+        $data = $this->sdmCoreLoadDataObject();
+        $enabled_apps = $data->settings->enabledapps;
+        return $enabled_apps;
     }
 
 }
