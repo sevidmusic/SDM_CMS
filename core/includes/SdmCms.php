@@ -19,7 +19,11 @@ class SdmCms extends SdmCore {
 
     /**
      * <p>Creates content for a specific page ($page) and content wrapper ($id)</p>
-     * <p><b>Warning: This method will overwrite content if it already exists.</b></p>
+     * <p><b>Warning: This method will overwrite content if it already exists.
+     * @TODO we may need to split the update and add processes into 2 methods to prevent
+     * overwriting of content. Though at the moment the contentManager app does this check for
+     * us but it could make it hard when developing other content manager like apps to sperate
+     * add and update if they arent seperate in thsi core class.</b></p>
      * @param string $page <p>The <b>name</b> of the page this content belongs to.</p>
      * @param string $id <p>Machine safe string that correlates to the css id associated
      * with the div used in the <i>current themes</i> page.php to display this content.
