@@ -46,18 +46,20 @@ a:hover {
     color: #777777;
 }
 
-.sdmDemoTheme1 input, textarea {
-    border: 2px solid;
+.sdmDemoTheme1 input, textarea, select {
+    border: 2px solid #777777;
     border-radius: 9px;
+    display: block;
+    position: relative;
+    margin: 10px 0px 0px 0px;
 }
 
 .sdmDemoTheme1 input {
-    margin: 0px 0px 0px 10px;
+    min-width: 11%;
     padding: 5px;
 }
 .sdmDemoTheme1 textarea {
     padding: 20px;
     width: 88%;
     height: 300px;
-    margin: 10px 0px 0px 0px;
 }
