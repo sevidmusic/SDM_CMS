@@ -24,6 +24,7 @@ $options = array(
         'navigationManagerAddMenuStage1',
         'navigationManagerAddMenuStage2',
         'navigationManagerAddMenuStage3',
+        'navigationManagerAddMenuStage4',
     ),
 );
 //navigationManagerSelectThemeForm.php
@@ -46,99 +47,152 @@ if (substr($sdmcore->determineRequestedPage(), 0, 17) === 'navigationManager') {
                     'value' => rangeArray(1, 50),
                     'place' => '1',
                 ),
+                array(
+                    'id' => 'menuItem',
+                    'type' => 'hidden',
+                    'element' => 'Menu Item',
+                    'value' => 1, // the first menu item form will always set the properties of the first menu item
+                    'place' => '0',
+                ),
             );
             $addMenuFormStage1->__build_form($sdmcore->getRootDirectoryUrl());
             $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<h3>How many menu items will this menu have?</h3>' . $addMenuFormStage1->__get_form(), array('incpages' => array('navigationManagerAddMenuStage1')));
             break;
         case 'navigationManagerAddMenuStage2': // configure the menu items
             $sdmcore->sdm_read_array($_POST);
-            $addMenuFormStage2 = new SDM_Form();
-            $addMenuFormStage2->form_handler = 'navigationManagerAddMenuStage3';
-            $addMenuFormStage2->submitLabel = 'Proceed to Edit Menu Settings';
-            $addMenuFormStage2->form_elements = array(
+            // check to make sure the menuItem number is set, if it doesnt report an error since we cant proceed without it
+            switch (isset($_POST['sdm_form']['menuItem'])) {
+                case TRUE:
+                    $addMenuFormStage2 = new SDM_Form();
+                    $addMenuFormStage2->form_handler = ($_POST['sdm_form']['menuItem'] === $_POST['sdm_form']['number_of_menu_items'] ? 'navigationManagerAddMenuStage3' : 'navigationManagerAddMenuStage2');
+                    $addMenuFormStage2->submitLabel = 'Proceed to Edit Menu Settings';
+                    $addMenuFormStage2->form_elements = array(
+                        array(// store number of menu items so each menu item form can reference it
+                            'id' => 'number_of_menu_items',
+                            'type' => 'hidden',
+                            'element' => 'Number Of Menu Items',
+                            'value' => $_POST['sdm_form']['number_of_menu_items'],
+                            'place' => '1000',
+                        ),
+                        array(// store and increase menuItem so each form knows what menu item we are configuring
+                            'id' => 'menuItem',
+                            'type' => 'hidden',
+                            'element' => 'Menu Item',
+                            'value' => ($_POST['sdm_form']['menuItem'] === $_POST['sdm_form']['number_of_menu_items'] ? null : intval($_POST['sdm_form']['menuItem']) + 1), // increase the menuItem value until it is equal to the number_of_menu_items value || If we have cycled through all the menu items set this to null
+                            'place' => '100',
+                        ),
+                        array(
+                            'id' => 'arguments',
+                            'type' => 'hidden',
+                            'element' => 'URL Arguments',
+                            'value' => array('dev' => 'NMS'),
+                            'place' => '0',
+                        ),
+                        array(
+                            'id' => 'destination',
+                            'type' => 'text',
+                            'element' => 'Destination (a page name or a url)',
+                            'value' => 'homepage', // default to homepage so no broken links are added to our menu system
+                            'place' => '1',
+                        ),
+                        array(
+                            'id' => 'destinationType',
+                            'type' => 'hidden',
+                            'element' => 'Destination Type',
+                            'value' => 'internal',
+                            'place' => '2',
+                        ),
+                        array(
+                            'id' => 'menuItemCssClasses',
+                            'type' => 'hidden',
+                            'element' => 'Menu Item Css Classes',
+                            'value' => array('dev', 'NMS'),
+                            'place' => '3',
+                        ),
+                        array(
+                            'id' => 'menuItemCssId',
+                            'type' => 'text',
+                            'element' => 'An id to use as the CSS id',
+                            'value' => 'dev-NMS',
+                            'place' => '4',
+                        ),
+                        array(
+                            'id' => 'menuItemDisplayName',
+                            'type' => 'text',
+                            'element' => 'Menu Item Display Name (will be the text shown for the link)',
+                            'value' => rand(1000, 9999),
+                            'place' => '5',
+                        ),
+                        array(
+                            'id' => 'menuItemEnabled',
+                            'type' => 'hidden',
+                            'element' => 'Enabled',
+                            'value' => TRUE,
+                            'place' => '6',
+                        ),
+                        array(
+                            'id' => 'menuItemKeyholders',
+                            'type' => 'hidden',
+                            'element' => 'Menu Item Keyholders',
+                            'value' => array('root'),
+                            'place' => '7',
+                        ),
+                        array(
+                            'id' => 'menuItemMachineName',
+                            'type' => 'hidden',
+                            'element' => 'Menu Item Machine Name',
+                            'value' => rand(10000, 99999),
+                            'place' => '8',
+                        ),
+                        array(
+                            'id' => 'menuItemPosition',
+                            'type' => 'select',
+                            'element' => 'Menu Item Position',
+                            'value' => rangeArray(1, 50),
+                            'place' => '8',
+                        ),
+                        array(
+                            'id' => 'menuItemWrappingTagType',
+                            'type' => 'text',
+                            'element' => 'Wrapping Tag Type',
+                            'value' => rand(10000, 99999),
+                            'place' => '8',
+                        ),
+                    );
+                    // if it does not already exist create our menu items array
+                    if (!isset($_POST['sdm_form']['submittedMenuItems']) === TRUE) {
+                        array_push($addMenuFormStage2->form_elements, 'MENU ITEM' . $_POST['sdm_form']['menuItem']);
+                    }
+                    // add the last submitted menu item to our menu items array
+                    $addMenuFormStage2->__build_form($sdmcore->getRootDirectoryUrl());
+                    $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<h3>Configure Menu Items</h3>' . $addMenuFormStage2->__get_form(), array('incpages' => array('navigationManagerAddMenuStage2')));
+
+                    break;
+
+                default:
+                    $sdmcore->sdm_read_array($_POST);
+                    $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<p>An error occured and the form could not be submitted. Please report this to the site admin. <a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=homepage">Return to the Homepage</a></p>', array('incpages' => array('navigationManagerAddMenuStage2')));
+                    break;
+            }
+
+            break;
+        case 'navigationManagerAddMenuStage3':
+            $sdmcore->sdm_read_array($_POST);
+            $addMenuFormStage3 = new SDM_Form();
+            $addMenuFormStage3->form_handler = 'navigationManagerAddMenuStage4';
+            $addMenuFormStage3->form_method = 'post';
+            $addMenuFormStage3->submitLabel = 'Create Menu';
+            $addMenuFormStage3->form_elements = array(
                 array(
-                    'id' => 'arguments',
+                    'id' => 'formElements',
                     'type' => 'hidden',
-                    'element' => 'URL Arguments',
-                    'value' => array('dev' => 'NMS'),
-                    'place' => '0',
-                ),
-                array(
-                    'id' => 'destination',
-                    'type' => 'text',
-                    'element' => 'Destination (a page name or a url)',
-                    'value' => 'homepage', // default to homepage so no broken links are added to our menu system
-                    'place' => '1',
-                ),
-                array(
-                    'id' => 'destinationType',
-                    'type' => 'hidden',
-                    'element' => 'Destination Type',
-                    'value' => 'internal',
-                    'place' => '2',
-                ),
-                array(
-                    'id' => 'menuItemCssClasses',
-                    'type' => 'hidden',
-                    'element' => 'Menu Item Css Classes',
-                    'value' => array('dev', 'NMS'),
-                    'place' => '3',
-                ),
-                array(
-                    'id' => 'menuItemCssId',
-                    'type' => 'text',
-                    'element' => 'An id to use as the CSS id',
-                    'value' => 'dev-NMS',
-                    'place' => '4',
-                ),
-                array(
-                    'id' => 'menuItemDisplayName',
-                    'type' => 'text',
-                    'element' => 'Menu Item Display Name (will be the text shown for the link)',
-                    'value' => rand(1000, 9999),
-                    'place' => '5',
-                ),
-                array(
-                    'id' => 'menuItemEnabled',
-                    'type' => 'hidden',
-                    'element' => 'Enabled',
-                    'value' => TRUE,
-                    'place' => '6',
-                ),
-                array(
-                    'id' => 'menuItemKeyholders',
-                    'type' => 'hidden',
-                    'element' => 'Menu Item Keyholders',
-                    'value' => array('root'),
-                    'place' => '7',
-                ),
-                array(
-                    'id' => 'menuItemMachineName',
-                    'type' => 'hidden',
-                    'element' => 'Menu Item Machine Name',
-                    'value' => rand(10000, 99999),
-                    'place' => '8',
-                ),
-                array(
-                    'id' => 'menuItemPosition',
-                    'type' => 'select',
-                    'element' => 'Menu Item Position',
-                    'value' => rangeArray(1, 50),
-                    'place' => '8',
-                ),
-                array(
-                    'id' => 'menuItemWrappingTagType',
-                    'type' => 'text',
-                    'element' => 'Wrapping Tag Type',
+                    'element' => 'Form Elements',
                     'value' => rand(10000, 99999),
                     'place' => '8',
                 ),
             );
-            $addMenuFormStage2->__build_form($sdmcore->getRootDirectoryUrl());
-            $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<h3>Configure Menu Items</h3>' . $addMenuFormStage2->__get_form(), array('incpages' => array('navigationManagerAddMenuStage2')));
-            break;
-        case 'navigationManagerAddMenuStage3':
-            $sdmcore->sdm_read_array($_POST);
+            $addMenuFormStage3->__build_form($sdmcore->getRootDirectoryUrl());
+            $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $addMenuFormStage3->__get_form(), array('incpages' => array('navigationManagerAddMenuStage3')));
             /*
               // create a few menu items
               $newMenuItem = new SdmMenuItem();
@@ -170,6 +224,9 @@ if (substr($sdmcore->determineRequestedPage(), 0, 17) === 'navigationManager') {
 //            $menu->wrapper = 'main_content';
             //$sdmnms->sdmNmsAddMenu($menu);
             $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<h3>Configure Menu</h3>', array('incpages' => array('navigationManagerAddMenuStage3')));
+            break;
+        case 'navigationManagerAddMenuStage4':
+            $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<p>Menu Added Successfully (Still in Dev, Does not necessarily indicate succsessful menu add yet)</p>', array('incpages' => array('navigationManagerAddMenuStage4')));
             break;
         default:
             // present content manager menu
