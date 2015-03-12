@@ -74,22 +74,6 @@ class SDM_Form {
     }
 
     /**
-     * This method is meant to be used as a callback to
-     * functions like array_map()
-     * At the moment it is used internally by the SDM Form
-     * to allow hidden form elements to handle arrays.
-     * The code is:
-     * implode('&amp;', array_map(array($this, 'urlify'), array_keys($value['value']), $value['value'], array('arrayName' => $value['id'])))
-     * @param type $key The array item key
-     * @param type $val The array item value
-     * @param type $arrayName The name for the array
-     * @return string Url encoded array
-     */
-    private function urlify($key, $val, $arrayName) {
-        return $arrayName . '[' . urlencode($key) . ']=' . urlencode($val);
-    }
-
-    /**
      * Builds the form.
      * @var string $rootUrl the sites root url. Insures requests are made from site of origin.
      * @return The Form html
@@ -128,7 +112,7 @@ class SDM_Form {
                     }
                     break;
                 case 'hidden':
-                    $form_html = $form_html . '<!-- form element "sdm_form[' . $value['id'] . ']" --><input name="sdm_form[' . $value['id'] . ']" type="hidden" value="' . (is_array($value['value']) ? implode('&amp;', array_map(array($this, 'urlify'), array_keys($value['value']), $value['value'], array('arrayName' => $value['id']))) : $value['value']) . '"><!-- close form element "sdm_form[' . $value['id'] . ']" -->';
+                    $form_html = $form_html . '<!-- form element "sdm_form[' . $value['id'] . ']" --><input name="sdm_form[' . $value['id'] . ']" type="hidden" value="' . base64_encode(serialize($value['value'])) . '"><!-- close form element "sdm_form[' . $value['id'] . ']" -->';
                     break;
                 default:
                     break;
@@ -184,6 +168,10 @@ class SDM_Form {
             $string = $string . $alphabet[$i];
         }
         return $string;
+    }
+
+    public static function get_submitted_form_value($key) {
+        return unserialize(base64_decode($_POST['sdm_form'][$key]));
     }
 
 }
