@@ -2,10 +2,10 @@
 
 $output = '';
 // form submitted successfully
-if ($_POST['sdm_form']['content_manager_form_submitted'] === 'content_manager_form_submitted') {
+if (SDM_Form::get_submitted_form_value('content_manager_form_submitted') === 'content_manager_form_submitted') {
     //$sdmcore->sdm_read_array($_POST['sdm_form']);
     foreach ($sdmcms->sdmCmsDetermineAvailableApps() as $app) {
-        $sdmcms->sdmCmsSwitchAppState($app, $_POST['sdm_form'][$app]);
+        $sdmcms->sdmCmsSwitchAppState($app, SDM_Form::get_submitted_form_value($app));
     }
     //$sdmcms->sdmCmsSwitchAppState('contentManager', 'off');
     $output .= '

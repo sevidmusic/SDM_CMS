@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @todo finsih utilizeing base64_encode(serialize()) in the __build_form() method to filter all form values so the get_submitted_form_value() method can be used to get submitted form values.
+ */
 class SDM_Form {
 
     // properties //
@@ -101,14 +104,14 @@ class SDM_Form {
                 case 'select':
                     $form_html = $form_html . '<!-- form element "sdm_form[' . $value['id'] . ']" --><label for="sdm_form[' . $value['id'] . ']">' . $value['element'] . '</label><select name="sdm_form[' . $value['id'] . ']">';
                     foreach ($value['value'] as $option => $option_value) {
-                        $form_html = $form_html . '<option value="' . (substr($option_value, 0, 8) === 'default_' ? str_replace('default_', '', $option_value) . '" selected="selected"' : $option_value . '"') . '>' . $option . '</option>';
+                        $form_html = $form_html . '<option value="' . (substr($option_value, 0, 8) === 'default_' ? base64_encode(serialize(str_replace('default_', '', $option_value))) . '" selected="selected"' : base64_encode(serialize($option_value)) . '"') . '>' . $option . '</option>';
                     }
                     $form_html = $form_html . '</select><!-- close form element "sdm_form[' . $value['id'] . ']" -->';
                     break;
                 case 'radio':
                     $form_html = $form_html . '<!-- form element "sdm_form[' . $value['id'] . ']" --><p id="label-for-sdm_form[' . $value['id'] . ']">' . $value['element'] . '</p>';
                     foreach ($value['value'] as $radio => $radio_value) {
-                        $form_html = $form_html . '<label  for="sdm_form[' . $value['id'] . ']">' . $radio . '</label><input type="radio" name="sdm_form[' . $value['id'] . ']" value="' . (substr($radio_value, 0, 8) === 'default_' ? str_replace('default_', '', $radio_value) . '" checked="checked"' : $radio_value . '"') . '><!-- close form element "sdm_form[' . $value['id'] . ']" -->';
+                        $form_html = $form_html . '<label  for="sdm_form[' . $value['id'] . ']">' . $radio . '</label><input type="radio" name="sdm_form[' . $value['id'] . ']" value="' . (substr($radio_value, 0, 8) === 'default_' ? base64_encode(serialize(str_replace('default_', '', $radio_value))) . '" checked="checked"' : base64_encode(serialize($radio_value)) . '"') . '><!-- close form element "sdm_form[' . $value['id'] . ']" -->';
                     }
                     break;
                 case 'hidden':

@@ -37,7 +37,6 @@ if (substr($sdmcore->determineRequestedPage(), 0, 17) === 'navigationManager') {
     switch ($sdmcore->determineRequestedPage()) {
         // edit content form
         case 'navigationManagerAddMenuStage1': // determine how many meni items this menu will have
-            // $sdmcore->sdm_read_array(array('PRE-PROCESSING $_POST @ STAGE 1 : SELECT NUMEBER OF MENU ITEMS ' => $_POST));
             $addMenuFormStage1 = new SDM_Form();
             $addMenuFormStage1->form_method = 'post';
             $addMenuFormStage1->form_handler = 'navigationManagerAddMenuStage2';
@@ -60,30 +59,28 @@ if (substr($sdmcore->determineRequestedPage(), 0, 17) === 'navigationManager') {
             );
             $addMenuFormStage1->__build_form($sdmcore->getRootDirectoryUrl());
             $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<h3>How many menu items will this menu have?</h3>' . $addMenuFormStage1->__get_form(), array('incpages' => array('navigationManagerAddMenuStage1')));
-            // // // $sdmcore->sdm_read_array(array('POST-PROCESSING $_POST @ STAGE 1 : SELECT NUMEBER OF MENU ITEMS ' => $_POST, /* 'STAGE 1 FORM OBJECT' => $addMenuFormStage1 */));
             break;
         case 'navigationManagerAddMenuStage2': // configure the menu items
             // check to make sure the menuItem number is set, if it doesnt report an error since we cant proceed without it
-            switch (isset($_POST['sdm_form']['menuItem'])) {
+            switch (SDM_Form::get_submitted_form_value('menuItem') !== null) {
                 case TRUE:
-                    // // // $sdmcore->sdm_read_array(array('PRE-PROCESSING $_POST @ STAGE 2 MENU ITEM ' . $_POST['sdm_form']['menuItem'] => $_POST));
                     $addMenuFormStage2 = new SDM_Form();
                     $addMenuFormStage2->form_method = 'post';
-                    $addMenuFormStage2->form_handler = ($_POST['sdm_form']['menuItem'] === $_POST['sdm_form']['number_of_menu_items'] ? 'navigationManagerAddMenuStage3' : 'navigationManagerAddMenuStage2');
+                    $addMenuFormStage2->form_handler = (SDM_Form::get_submitted_form_value('menuItem') === SDM_Form::get_submitted_form_value('number_of_menu_items') ? 'navigationManagerAddMenuStage3' : 'navigationManagerAddMenuStage2');
                     $addMenuFormStage2->submitLabel = 'Proceed to Edit Menu Settings';
                     $addMenuFormStage2->form_elements = array(
                         array(// store number of menu items so each menu item form can reference it
                             'id' => 'number_of_menu_items',
                             'type' => 'hidden',
                             'element' => 'Number Of Menu Items',
-                            'value' => $_POST['sdm_form']['number_of_menu_items'],
+                            'value' => SDM_Form::get_submitted_form_value('number_of_menu_items'),
                             'place' => '1000',
                         ),
                         array(// store and increase menuItem so each form knows what menu item we are configuring
                             'id' => 'menuItem',
                             'type' => 'hidden',
                             'element' => 'Menu Item',
-                            'value' => ($_POST['sdm_form']['menuItem'] === $_POST['sdm_form']['number_of_menu_items'] ? null : intval($_POST['sdm_form']['menuItem']) + 1), // increase the menuItem value until it is equal to the number_of_menu_items value || If we have cycled through all the menu items set this to null
+                            'value' => (SDM_Form::get_submitted_form_value('menuItem') === SDM_Form::get_submitted_form_value('number_of_menu_items') ? null : intval(SDM_Form::get_submitted_form_value('menuItem')) + 1), // increase the menuItem value until it is equal to the number_of_menu_items value || If we have cycled through all the menu items set this to null
                             'place' => '100',
                         ),
                         array(
@@ -164,25 +161,14 @@ if (substr($sdmcore->determineRequestedPage(), 0, 17) === 'navigationManager') {
                             'place' => '8',
                         ),
                     );
-                    // if it does not already exist create our menu items array form element
-                    if (!isset($_POST['sdm_form']['menuItems']) === TRUE) {
-                        $mi = array(
-                            'id' => 'menuItems',
-                            'type' => 'hidden',
-                            'element' => 'Menu Items',
-                            'value' => array('placeholder'),
-                            'place' => '8',
-                        );
-                        array_push($addMenuFormStage2->form_elements, $mi);
-                    } else { // if menuItems already exits add the last sumitted form element to the menuItems array
-                        // retrieve any menu items already store in the menuItems array
+                    if (isset($_POST['sdm_form']['menuItems'])) {
+                        // retrieve any menu items already stored in the menuItems array
                         $menuItems = SDM_Form::get_submitted_form_value('menuItems');
                         // create menu item object using last submitted menu items data
                         $lastSubmittedMenuItem = SdmMenuItem::generateMenuItem();
-                        $sdmcore->sdm_read_array($menuItems);
                         // add the last submitted menu item to our menu items array
                         array_push($menuItems, $lastSubmittedMenuItem);
-                        $sdmcore->sdm_read_array($menuItems);
+                        // re-create menuItems form element with new menu items stored as its value
                         $mi = array(
                             'id' => 'menuItems',
                             'type' => 'hidden',
@@ -190,23 +176,28 @@ if (substr($sdmcore->determineRequestedPage(), 0, 17) === 'navigationManager') {
                             'value' => $menuItems,
                             'place' => '8',
                         );
-                        //$sdmcore->sdm_read_array($mi);
-                        // array_push($addMenuFormStage2->form_elements, $mi);
+                        // add the last submitted menu item to our menu items array
+                        array_push($addMenuFormStage2->form_elements, $mi);
+                    } else {
+                        $mi = array(
+                            'id' => 'menuItems',
+                            'type' => 'hidden',
+                            'element' => 'Menu Items',
+                            'value' => array(),
+                            'place' => '8',
+                        );
+                        array_push($addMenuFormStage2->form_elements, $mi);
                     }
-                    // add the last submitted menu item to our menu items array
                     $addMenuFormStage2->__build_form($sdmcore->getRootDirectoryUrl());
                     $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<h3>Configure Menu Items</h3>' . $addMenuFormStage2->__get_form(), array('incpages' => array('navigationManagerAddMenuStage2')));
                     break;
 
                 default:
-                    // $sdmcore->sdm_read_array($_POST);
                     $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<p>An error occured and the form could not be submitted. Please report this to the site admin. <a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=homepage">Return to the Homepage</a></p>', array('incpages' => array('navigationManagerAddMenuStage2')));
                     break;
             }
-            // $sdmcore->sdm_read_array(array('POST-PROCESSING $_POST @ STAGE 2 MENU ITEM ' . $_POST['sdm_form']['menuItem'] => $_POST, /* 'STAGE 2 FORM OBJECT' => $addMenuFormStage2 */));
             break;
         case 'navigationManagerAddMenuStage3':
-            // $sdmcore->sdm_read_array(array('PRE-PROCESSING $_POST @ STAGE 3 MENU ITEM ' . $_POST['sdm_form']['menuItem'] => $_POST));
             $addMenuFormStage3 = new SDM_Form();
             $addMenuFormStage3->form_handler = 'navigationManagerAddMenuStage4';
             $addMenuFormStage3->form_method = 'post';
@@ -253,12 +244,9 @@ if (substr($sdmcore->determineRequestedPage(), 0, 17) === 'navigationManager') {
 //            $menu->wrapper = 'main_content';
             //$sdmnms->sdmNmsAddMenu($menu);
             $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<h3>Configure Menu</h3>', array('incpages' => array('navigationManagerAddMenuStage3')));
-            // $sdmcore->sdm_read_array(array('POST-PROCESSING $_POST @ STAGE 3 MENU ITEM ' . $_POST['sdm_form']['menuItem'] => $_POST, /* 'STAGE 3 FORM OBJECT' => $addMenuFormStage3 */));
             break;
         case 'navigationManagerAddMenuStage4':
-            // $sdmcore->sdm_read_array(array('PRE-PROCESSING $_POST @ STAGE 4 MENU ITEM ' . $_POST['sdm_form']['menuItem'] => $_POST));
             $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<p>Menu Added Successfully (Still in Dev, Does not necessarily indicate succsessful menu add yet)</p>', array('incpages' => array('navigationManagerAddMenuStage4')));
-            // $sdmcore->sdm_read_array(array('POST-PROCESSING $_POST @ STAGE 4 MENU ITEM ' . $_POST['sdm_form']['menuItem'] => $_POST, 'STAGE 4 : FINAL STAGE'));
             break;
         default:
             // present content manager menu
