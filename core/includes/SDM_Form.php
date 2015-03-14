@@ -174,7 +174,31 @@ class SDM_Form {
     }
 
     public static function get_submitted_form_value($key) {
-        return unserialize(base64_decode($_POST['sdm_form'][$key]));
+        // while in dev include core so we can use sdm read array
+        $sdmc = new SdmCore();
+        if (isset($_POST['sdm_form'][$key])) {
+            //Check if $key length is a multiple of 4, this is the first check used to determine if the $key is base64 encoded since all base64 encoded string lengths are multiples of 4
+            if (strlen($_POST['sdm_form'][$key]) % 4 == 0) { // if data is base64 then we need to decode it
+                // $sdmc->sdm_read_array(array('$key' => $key, 'case' => 'MULTIPLE OF 4', 'value' => $_POST['sdm_form'][$key]));
+                if (unserialize(base64_decode($_POST['sdm_form'][$key], TRUE)) !== FALSE) { // check if data is serialized, if it is unserialize it
+                    // $sdmc->sdm_read_array(array('$key' => $key, 'case' => 'SERIALIZED BASE 64', 'value' => $_POST['sdm_form'][$key]));
+                    $data = unserialize(base64_decode($_POST['sdm_form'][$key]));
+                } else { // if data not serialized then just return the decoded data
+                    // $sdmc->sdm_read_array(array('$key' => $key, 'case' => 'BASE 64', 'value' => $_POST['sdm_form'][$key]));
+                    $data = base64_decode($_POST['sdm_form'][$key]);
+                }
+            } else if (unserialize($key) === TRUE) { // if data is not base64 check if serialized, if it is unserialize it
+                // $sdmc->sdm_read_array(array('$key' => $key, 'case' => 'SERIALIZED', 'value' => $_POST['sdm_form'][$key]));
+                $data = unserialize($_POST['sdm_form'][$key]);
+            } else { // $key not base64 or serialized, just use it as is
+                // $sdmc->sdm_read_array(array('$key' => $key, 'case' => 'UNFILTERD', 'value' => $_POST['sdm_form'][$key]));
+                $data = $_POST['sdm_form'][$key];
+            }
+            //// $sdmc->sdm_read_array(array('key' => $key, 'unfiltered data' => $_POST['sdm_form'][$key], 'base64_decode' => base64_decode($_POST['sdm_form'][$key]), 'unserialize return type' => gettype($data),)); //'$data' => $data));
+        } else {
+            $data = null;
+        }
+        return $data;
     }
 
 }
