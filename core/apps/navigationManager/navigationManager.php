@@ -197,11 +197,12 @@ if (substr($sdmcore->determineRequestedPage(), 0, 17) === 'navigationManager') {
                         // add the last submitted menu item to our menu items array
                         array_push($addMenuFormStage2->form_elements, $mi);
                     } else {
+                        $menuItems = array();
                         $mi = array(
                             'id' => 'menuItems',
                             'type' => 'hidden',
                             'element' => 'Menu Items',
-                            'value' => array(),
+                            'value' => $menuItems,
                             'place' => '8',
                         );
                         array_push($addMenuFormStage2->form_elements, $mi);
