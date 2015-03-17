@@ -173,30 +173,63 @@ class SDM_Form {
         return $string;
     }
 
-    public static function get_submitted_form_value($key) {
-        // while in dev include core so we can use sdm read array
-        $sdmc = new SdmCore();
-        if (isset($_POST['sdm_form'][$key])) {
-            //Check if $key length is a multiple of 4, this is the first check used to determine if the $key is base64 encoded since all base64 encoded string lengths are multiples of 4
-            if (strlen($_POST['sdm_form'][$key]) % 4 == 0) { // if data is base64 then we need to decode it
-                // $sdmc->sdm_read_array(array('$key' => $key, 'case' => 'MULTIPLE OF 4', 'value' => $_POST['sdm_form'][$key]));
-                if (unserialize(base64_decode($_POST['sdm_form'][$key], TRUE)) !== FALSE) { // check if data is serialized, if it is unserialize it
-                    // $sdmc->sdm_read_array(array('$key' => $key, 'case' => 'SERIALIZED BASE 64', 'value' => $_POST['sdm_form'][$key]));
-                    $data = unserialize(base64_decode($_POST['sdm_form'][$key]));
-                } else { // if data not serialized then just return the decoded data
-                    // $sdmc->sdm_read_array(array('$key' => $key, 'case' => 'BASE 64', 'value' => $_POST['sdm_form'][$key]));
-                    $data = base64_decode($_POST['sdm_form'][$key]);
-                }
-            } else if (unserialize($key) === TRUE) { // if data is not base64 check if serialized, if it is unserialize it
-                // $sdmc->sdm_read_array(array('$key' => $key, 'case' => 'SERIALIZED', 'value' => $_POST['sdm_form'][$key]));
-                $data = unserialize($_POST['sdm_form'][$key]);
-            } else { // $key not base64 or serialized, just use it as is
-                // $sdmc->sdm_read_array(array('$key' => $key, 'case' => 'UNFILTERD', 'value' => $_POST['sdm_form'][$key]));
-                $data = $_POST['sdm_form'][$key];
-            }
-            //// $sdmc->sdm_read_array(array('key' => $key, 'unfiltered data' => $_POST['sdm_form'][$key], 'base64_decode' => base64_decode($_POST['sdm_form'][$key]), 'unserialize return type' => gettype($data),)); //'$data' => $data));
+    public static function get_submitted_form_value($key, $devmode = FALSE) {
+        $sdmcore = new SdmCore();
+        // if $key is not a string then just return the $key as the data
+        if (!is_string($key)) {
+            $data = $key;
         } else {
-            $data = null;
+            if (isset($_POST['sdm_form'][$key])) {
+                // store the unfiltered value in a var to get ready for our checks
+                $value = $_POST['sdm_form'][$key];
+                ($devmode === TRUE ? $sdmcore->sdm_read_array(array('GETTING $_POST[\'sdm_form\'][\'' . $key . '\']' => $value)) : null);
+                // if the key string length is a multiple of 4 then it may be base64 encoded, if it is it will have to be decoded
+                if (strlen($value) % 4 == 0) {
+                    ($devmode === TRUE ? $sdmcore->sdm_read_array(array('$_POST[\'sdm_form\'][\'' . $key . '\'] STRING LENGTH IS MULTIPLE OF 4' => $value)) : null);
+                    // check if base64  encoded
+                    switch (base64_decode($value, TRUE)) {
+                        case FALSE: // not base64
+                            ($devmode === TRUE ? $sdmcore->sdm_read_array(array('$_POST[\'sdm_form\'][\'' . $key . '\'] IS NOT BASE 64' => $value)) : null);
+                            // check if serialized | we need to surpress any errors resulting from the check, this is ok because if any errors occure we do not proceed through this part of the statement
+                            if (@unserialize($value) === FALSE) { // if not serialized use as is
+                                $data = $value;
+                                ($devmode === TRUE ? $sdmcore->sdm_read_array(array('$_POST[\'sdm_form\'][\'' . $key . '\'] NOT BASE 64 AND IS NOT SERIALIZED' => $value, '$data' => $data)) : null);
+                            } else { // if it is serialized unserialize it
+                                $data = unserialize($value);
+                                ($devmode === TRUE ? $sdmcore->sdm_read_array(array('$_POST[\'sdm_form\'][\'' . $key . '\'] NOT BASE 64 AND IS SERIALIZED' => $value, '$data' => $data)) : null);
+                            }
+
+                            break;
+
+                        case TRUE: // is base 64
+                            ($devmode === TRUE ? $sdmcore->sdm_read_array(array('$_POST[\'sdm_form\'][\'' . $key . '\'] IS  MOST LIKELY BASE 64' => $value)) : null);
+                            // check if serialized | we need to surpress any errors resulting from the check, this is ok because if any errors occure we do not proceed through this part of the statement
+                            if (@unserialize(base64_decode($value, TRUE)) !== FALSE) { // serialized, decode and unserialize
+                                $data = unserialize(base64_decode($value, TRUE));
+                                ($devmode === TRUE ? $sdmcore->sdm_read_array(array('$_POST[\'sdm_form\'][\'' . $key . '\'] IS BASE 64 AND IS SERIALIZED' => $value, '$data' => $data)) : null);
+                            } else if (strlen(base64_decode($value, TRUE)) >= strlen($value)) { // not serialized, but we should double check that this is for sure base64 encoded, we can do this by checking if the length of the decoded string is less then the length of the original data. If it is then we can assume the string is NOT base64 because if the decoded string has fewer chars then the original value most likely the string should not be decoded... @todo do some more testing by chcking a few encoded strings against their original values , do this in the hello world app
+                                $data = base64_decode($value, TRUE);
+                                ($devmode === TRUE ? $sdmcore->sdm_read_array(array('$_POST[\'sdm_form\'][\'' . $key . '\'] IS BASE 64 BUT IS NOT SERIALIZED' => $value, '$data' => $data, 'base64_decode($value, TRUE) !== FALSE' => (base64_decode($value, TRUE) !== FALSE ? 'TRUE' : 'FALSE'))) : null);
+                            } else { // not base64
+                                $data = $value;
+                                ($devmode === TRUE ? $sdmcore->sdm_read_array(array('$_POST[\'sdm_form\'][\'' . $key . '\'] IS ACTUALLY NOT BASE 64, THIS WAS DETERMINED BECAUSE THE LENGTH OF THE DECODED STRING WAS LESS THEN THE ORGININAL INDICATING A DECODING PROPBLEM MOST LIKELY RESULTING FROM THE ORIGINAL STRING NOT ACTUALLY BEING BASE 64' => $value, '$data' => $data, 'base64_decode($value, TRUE) !== FALSE' => (base64_decode($value, TRUE) !== FALSE ? 'TRUE' : 'FALSE'), 'strlen(base64_decode($value, TRUE)) >= strlen($value)' => (strlen(base64_decode($value, TRUE)) >= strlen($value) ? 'TRUE' : 'FALSE'))) : null);
+                            }
+                            break;
+                    }
+                } else { // string length is NOT a multiple of 4
+                    // check if serialized
+                    if (@unserialize($value) === FALSE) { // if not serialized use as is | we need to surpress any errors resulting from the check, this is ok because if any errors occure we do not proceed through this part of the statement
+                        $data = $value;
+                        ($devmode === TRUE ? $sdmcore->sdm_read_array(array('$_POST[\'sdm_form\'][\'' . $key . '\'] STRING LENGTH NOT A MULTIPLE OF 4 AND VALUE IS NOT BASE 64 AND IS NOT SERIALIZED' => $value, '$data' => $data)) : null);
+                    } else { // if it is serialized unserialize it
+                        $data = unserialize($value);
+                        ($devmode === TRUE ? $sdmcore->sdm_read_array(array('$_POST[\'sdm_form\'][\'' . $key . '\'] STRING LENGTH NOT A MULTIPLE OF 4 AND VALUE IS NOT BASE 64. VALUE IS SERIALIZED' => $value, '$data' => $data)) : null);
+                    }
+                }
+            } else {
+                $data = null;
+                ($devmode === TRUE ? $sdmcore->sdm_read_array(array('$_POST[\'sdm_form\'][\'' . $key . '\'] DOES NOT EXIST OR IS NULL' => $value)) : null);
+            }
         }
         return $data;
     }
