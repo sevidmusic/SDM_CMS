@@ -32,7 +32,7 @@
         <?php
         // display menus who bleong to the main_content wrapper
         foreach ($menus as $menu) {
-            if (isset($menu->wrapper) && $menu->wrapper === 'topmenu') {
+            if (isset($menu->wrapper) && $menu->wrapper === 'main_content') {
                 echo '<' . $menu->menuWrappingTagType . '>';
                 foreach ($menu->menuItems as $menuItem) {
                     switch ($menuItem->destinationType) {

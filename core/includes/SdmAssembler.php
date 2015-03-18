@@ -71,6 +71,8 @@ class SdmAssembler extends SdmCore {
         $sdmassembler_dataObject = $this->sdmCoreLoadDataObject();
         // load and assemble apps
         $this->loadCoreApps($sdmassembler_dataObject);
+        // load menus | we load them after the apps so apps have a chance to modify the menu obects before they are incorporated into the page. This makes it easier for apps to do such things as disable menu items in specific menu items before they are incorporated into the page, if we loaded the menus before apps then apps would have to sift through the pages html looking for the menu they want to modify, which is a much more convulted approach, better to work with real objects
+        $this->incorporateMenuObject($sdmassembler_dataObject);
         // make sure content exists, if it does return it, if not, print a content not found message
         switch (isset($sdmassembler_dataObject->content->$page)) {
             case TRUE:
@@ -309,6 +311,10 @@ class SdmAssembler extends SdmCore {
             } // do nothing if in requested page is in ignore pages
         } // end check if requested page exists in CORE or as an enabled app
         return $dataObject;
+    }
+
+    public function incorporateMenuObject(stdClass $dataObject) {
+        //$this->sdm_read_array($dataObject);
     }
 
 }

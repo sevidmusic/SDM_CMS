@@ -99,7 +99,7 @@ if (substr($sdmcore->determineRequestedPage(), 0, 17) === 'navigationManager') {
                         array(
                             'id' => 'destination',
                             'type' => 'text',
-                            'element' => 'Destination <i style="font-size:.7em;">(A page name or a url.)</i>',
+                            'element' => 'Destination <i style="font-size:.7em;">(A page name or a url.)</i><div style="font-size:.5em;border-radius:12px;padding:10px;float:right;width:42%;background:#777777;"><h3>Available Internal Pages:</h3><i style="font-size:.9em;">(if using an internal page, it\'s recomended that you copy and paste from this list to avoid any typos that could lead to a bad link.)</i><p><b>' . implode(' | ', array_merge($sdmcore->sdmCoreDetermineAvailablePages(), json_decode(json_encode($sdmcore->sdmCmsDetermineEnabledApps()), TRUE))) . '</b></p></div>',
                             'value' => 'homepage', // default to homepage so no broken links are added to our menu system
                             'place' => '4',
                         ),
