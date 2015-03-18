@@ -27,9 +27,9 @@ $embedlyTesterForm->form_elements = array(
 $embedlyTesterForm->__build_form($sdmcore->getRootDirectoryUrl());
 $output .= $embedlyTesterForm->__get_form();
 
-function assemlbeExtractTableElements($extractData) {
-//    $styles_extractDataTable = 'border:2px solid #CCCCCC;border-radius: 3px;padding:10px;';
-    $styles_extractDataTableRow = 'background: black; color: white;'; // @todo alternate bg color every row
+function formatExtractDataForDisplay($extractData) {
+    $styles_extractDataTable = 'border:2px solid #CCCCCC;border-radius: 3px;padding:10px;';
+    $styles_extractDataTableRow = 'background: darkblue;'; // @todo alternate bg color every row
     $styles_td = 'padding: 10px;border:2px solid #777777;border-radius: 3px;'; // dont set background color here, it will be set depending on what value is returned
     $styles_headerTd = 'padding 10px; border: 2px solid #999999; border-radius: 3px;';
     $decodedData = json_decode($extractData, TRUE);
@@ -51,7 +51,7 @@ function assemlbeExtractTableElements($extractData) {
     }
     $output .= '</tr>';
 
-    return $output;
+    return '<table id="extractDataTable" style="' . $styles_extractDataTable . '">' . $output . '</table>';
 }
 
 if (isset($_POST['sdm_form'])) {
@@ -61,13 +61,11 @@ if (isset($_POST['sdm_form'])) {
     $styles_embedlyTester_json = 'color: #000000; border: 2px solid #000000; border-radius: 3px; overflow: auto; width: 95%; padding: 20px; margin: 15px 0px 15px 0px;';
     $styles_extractData = 'background: #000000; color: #DDDDDD; border: 2px solid #000000; border-radius: 3px; overflow: auto; width: 95%; padding: 20px; margin: 15px 0px 15px 0px;';
     $styles_embedlyTester_requestFailed = 'color:red';
-    $output .= '<table id="extractDataTable" style="' . $styles_extractDataTable . '">';
     foreach ($movieUrls as $movieUrl) {
         $embedlyRequestUrl = $embedlyUrl . $movieUrl;
         $extractData = $sdmcore->sdmCoreCurlGrabContent($embedlyRequestUrl, array());
-        $output .= assemlbeExtractTableElements($extractData);
+        $output .= '<h4>Embedly API Call : ' . $embedlyRequestUrl . '</h4>' . ($extractData === FALSE ? '<div id="embedlyTester_requestFailed" style="' . $styles_embedlyTester_requestFailed . '">Request Failed</div>' : '<div id="embedlyTester_json" style="' . $styles_embedlyTester_json . '">JSON :<xmp>' . $extractData . '</xmp></div>' . '<div id="extractData" style="' . $styles_extractData . '">' . formatExtractDataForDisplay($extractData) . '</div>');
     }
-    $output .= '</table>';
 }
 $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $output, $options, $devmode);
 
