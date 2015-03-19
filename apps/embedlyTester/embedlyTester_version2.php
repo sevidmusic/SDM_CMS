@@ -53,19 +53,7 @@ function assemlbeExtractTableElements($extractData, $rowcolor) {
 if (isset($_POST['sdm_form'])) {
     $movieUrls = array();
     $embedlyUrl = 'http://api.embed.ly/1/extract?key=a975a6e3ebc1424d85338917fcaca978&url=';
-    $movieUrls = array(
-        htmlentities(SDM_Form::get_submitted_form_value('movieUrl')),
-        'https://www.youtube.com/watch?v=1pqe_oqDJp0',
-        'http://www.twitch.tv/esl_csgo_pl',
-        'http://revision3.com/sourcefednerd/grand-theft-auto-tv-movie-coming-to-bbc/',
-        'http://www.dailymotion.com/video/x2ipb0z_bitcoin-and-the-history-of-money_tech',
-        'http://www.collegehumor.com/video/7012104/21-steps-to-making-an-oscar-movie',
-        'http://telly.com/lawless-movie',
-        'http://www.break.com/video/this-grandmother-literally-killed-somebody-for-eating-2834463',
-        'https://myspace.com/busking/video/shawn-mendes/109561937',
-        'http://www.metacafe.com/watch/11337959/review_griffin_guitarconnect_cable_geekbeat_tips_reviews/',
-        'http://blip.tv/animation-lookback/animat-s-classic-reviews-the-flight-of-dragons-7170787',
-    );
+    $movieUrls = array(htmlentities(SDM_Form::get_submitted_form_value('movieUrl')), 'https://www.youtube.com/watch?v=rG_7xur1iRc');
     $styles_embedlyTester_json = 'color: #000000; border: 2px solid #000000; border-radius: 3px; overflow: auto; width: 95%; padding: 20px; margin: 15px 0px 15px 0px;';
     $styles_extractData = 'background: #000000; color: #DDDDDD; border: 2px solid #000000; border-radius: 3px; overflow: auto; width: 95%; padding: 20px; margin: 15px 0px 15px 0px;';
     $styles_embedlyTester_requestFailed = 'color:red';
