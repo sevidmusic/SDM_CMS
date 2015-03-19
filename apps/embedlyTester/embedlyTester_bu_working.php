@@ -72,28 +72,16 @@ if (isset($_POST['sdm_form'])) {
     $embedlyUrl = 'http://api.embed.ly/1/extract?key=a975a6e3ebc1424d85338917fcaca978&url=';
     $movieUrls = array(
         htmlentities(SDM_Form::get_submitted_form_value('movieUrl')),
-        // youtube
         'https://www.youtube.com/watch?v=1pqe_oqDJp0',
-        // twitch tv
         'http://www.twitch.tv/esl_csgo_pl',
-        // revision 3
         'http://revision3.com/sourcefednerd/grand-theft-auto-tv-movie-coming-to-bbc/',
-        // daily motion
         'http://www.dailymotion.com/video/x2ipb0z_bitcoin-and-the-history-of-money_tech',
-        // cllege humor
         'http://www.collegehumor.com/video/7012104/21-steps-to-making-an-oscar-movie',
-        // telly
         'http://telly.com/lawless-movie',
-        // break
         'http://www.break.com/video/this-grandmother-literally-killed-somebody-for-eating-2834463',
-        // myspace
         'https://myspace.com/busking/video/shawn-mendes/109561937',
-        // metacafe
         'http://www.metacafe.com/watch/11337959/review_griffin_guitarconnect_cable_geekbeat_tips_reviews/',
-        // blip tv
         'http://blip.tv/animation-lookback/animat-s-classic-reviews-the-flight-of-dragons-7170787',
-        //
-        '',
     );
     $output .= '<table id="extractDataTable" style="' . $styles_extractDataTable . '">';
     $rowcolor = 'grey'; // initial row color
