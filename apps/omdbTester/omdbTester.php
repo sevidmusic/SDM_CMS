@@ -1,8 +1,9 @@
 <?php
 
+// THIS APP USES EMBEDLY AND OMDB TO DISCOVER DATA ABOUT A MOVIE TITLE OR MOVIE URL
 // EMBED API KEY AND EXTRACT API URL
-//$apikey = ''; // omdb does not require api key for testing
-$omdbUrl = 'http://www.omdbapi.com/?t=';
+$apikey = 'ef1f84febaea4e97aba981a262d58bc7';
+$embedlyUrl = 'http://api.embed.ly/1/extract?key=' . $apikey . '&url=';
 // app output options
 $options = array(
     'wrapper' => 'main_content',
@@ -56,7 +57,7 @@ function assemlbeExtractTableElements($omdbData, $rowcolor, $testurl = 'unknown'
     return $output;
 }
 
-$output = '<h2>Embedly Tester</h2><p>This app generates an html table that displays the data that is returned from the different EXTRACT provider apis. The urls tested can be seen in the source code in the $movieUrls array. To see the omdb data table click here: <br/><br/><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=omdbTester&mode=test">Generate Extract Data Table</a></p><p>You can also test an individual movie urls by entering a movie url from a site like YouTube into the form below.</p>';
+$output = '<h2>OMDB Tester</h2><p>This app generates an html table that displays the data that is returned from OMDB for a given movie title based. It works by first looking up a movie url on embedly, then it grabs the title returned for that url and passes the title as search parameter to OMDB. Then the data returned from OMDB is organized into an HTML table and displayed on the page. The urls tested can be seen in the source code in the $movieUrls array. To see the OMDB data table click here: <br/><br/><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=omdbTester&mode=test">Generate OMDB Data Table</a></p><p>You can also test an individual movie url by entering a movie url from a site like YouTube into the form below.</p>';
 $devmode = FALSE; // if set to TRUE then dev data about the app output will be displayed on the page as well
 $omdbTesterForm = new SDM_Form();
 $omdbTesterForm->form_handler = 'omdbTester';
@@ -315,8 +316,8 @@ if (!empty($movieUrls)) {
     $rowcolor = '#363636'; // initial row color | will alternate
     // create rows and columns of omdb data
     foreach ($movieUrls as $movieUrl) {
-        $omdbRequestUrl = $omdbUrl . $movieUrl;
-        $omdbData = $sdmcore->sdmCoreCurlGrabContent($omdbRequestUrl, array());
+        $embedlyRequestUrl = $embedlyUrl . $movieUrl;
+        $omdbData = $sdmcore->sdmCoreCurlGrabContent($embedlyRequestUrl, array());
         $output .= assemlbeExtractTableElements($omdbData, $rowcolor, $movieUrl);
         $rowcolor = ($rowcolor === '#363636' ? '#000000' : '#363636'); // alternate row colors
     }
