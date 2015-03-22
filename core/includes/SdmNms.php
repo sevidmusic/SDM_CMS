@@ -4,14 +4,16 @@
  * This file defines three distinct classes,
  * two base classes called SdmMenuItem, and
  * SdmMenu, as well as a final class called SdmNav.
- * These objects are dependent on each other, and the
- * order in which the extend each other is important.
+ * The SdmMenuItem and SdmMenu objects are dependent
+ * on each other, and the order in which the extend each
+ * other is important.
  *
  * The SdmMenuItem defines an object
  * that can be used as a single menu item.
  *
  * The SdmMenu extends the SdmMenuItem and can be used
- * to define a single menu object.
+ * to define a single menu object, which will contain
+ * multiple menuItems.
  *
  * Finally the SdmNav extends SdmCore and provides methods
  * for creating and handling the menu objects.
@@ -138,44 +140,32 @@ class SdmNms extends SdmCore {
     }
 
     /**
-     * update a menu
-     * @todo May not need this, it may be best to use the rename the
-     * add sdmNmsAddMenu() to sdmNmsUpdateMenu so that adding and
-     * updateing are handled the same. Just as in the SdmCms class
-     * the update method checks if the Additions match an object
-     * that already exists, if it does it loads in the original object
-     * and modifies the values that are changed leaving the others in
-     * tact, if it does not exist it creates a new object.
-     * This would make it easier because the decision to create
-     * or update will always be based on if the object already exists,
-     * while this may introdce the risk of overwriting values it also
-     * prevents duplicate objects from being created.
-     * The major con is if anything changes in how objects are added
-     * or updated then you may end  up needing to have seperate methods
-     * anyway.
+     * update a menu (we seperate add and update so existing menus are not accidently overwritten
+     * by calls to sdmNmsAddMenu
+     *
      */
-    public function updateMenu() {
+    public function sdmNmsupdateMenu() {
 
     }
 
     /**
      * delete a menu
      */
-    public function deleteMenu() {
+    public function sdmNmsdeleteMenu() {
 
     }
 
     /**
      * enable a menu
      */
-    public function enableMenu() {
+    public function sdmNmsenableMenu() {
 
     }
 
     /**
      * disable a menu
      */
-    public function disableMenu() {
+    public function sdmNmsdisableMenu() {
 
     }
 

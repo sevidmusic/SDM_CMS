@@ -8,16 +8,16 @@
 */
 
 body {
-    background: #000000;
+    background: #ffffff;
 }
-.sdmDemoTheme1 {
+.sdmDemoTheme2 {
     color: #000000;
     font-family: monospace;
     font-size: 1em;
 }
 
-.sdmDemoTheme1 #lockedwrapper {
-    width: 92%; /* default width for all children of the .sdmDemoTheme1 class*/
+.sdmDemoTheme2 #lockedwrapper {
+    width: 92%; /* default width for all children of the .sdmDemoTheme2 class*/
     height: 92%;
     padding: 20px 0px;
     margin: .2% 3.2%;
@@ -25,7 +25,7 @@ body {
     position: absolute;
 }
 
-.sdmDemoTheme1 #main_content {
+.sdmDemoTheme2 #main_content {
     background: #DDDDDD;
     text-align: left;
     border: 3px solid #CCCCCC;
@@ -46,19 +46,19 @@ a:hover {
     color: #777777;
 }
 
-.sdmDemoTheme1 input, textarea, select {
+.sdmDemoTheme2 input, textarea, select {
     border: 2px solid #777777;
     border-radius: 9px;
     display: block;
     position: relative;
-    margin: 5px 0px 20px 0px;
+    margin: 10px 0px 0px 0px;
 }
 
-.sdmDemoTheme1 input {
+.sdmDemoTheme2 input {
     min-width: 11%;
     padding: 5px;
 }
-.sdmDemoTheme1 textarea {
+.sdmDemoTheme2 textarea {
     padding: 20px;
     width: 88%;
     height: 300px;
