@@ -60,6 +60,9 @@ if (substr($sdmcore->determineRequestedPage(), 0, 17) === 'navigationManager') {
             $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<h3>How many menu items will this menu have?</h3>' . $addMenuFormStage1->__get_form(), array('incpages' => array('navigationManagerAddMenuStage1')));
             break;
         case 'navigationManagerAddMenuStage2': // configure the menu items
+            if (SDM_Form::get_submitted_form_value('menuItemDisplayName') !== null) {
+                $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<div style="border:2px solid #777777;border-radius:9px;padding:20px;height:120px;"><h3>Last Submitted Menu Item:<i style="font-size:.5em;">(DEV NOTE: THIS WILL BE REPLACED BY A PREVIEW OF THE MENU AS IT WOULD LOOK SO FAR BASED ON THE SUBMITTED MENU ITEMS)</i></h3><p>' . SDM_Form::get_submitted_form_value('menuItemDisplayName') . '</p></div>', array('incmethod' => 'prepend', 'incpages' => $options['incpages']));
+            }
             // check to make sure the menuItem number is set, if it doesnt report an error since we cant proceed without it
             switch (SDM_Form::get_submitted_form_value('menuItem') !== null) {
                 case TRUE:
@@ -180,7 +183,7 @@ if (substr($sdmcore->determineRequestedPage(), 0, 17) === 'navigationManager') {
                         // create new menu item object using last submitted menu items data
                         $lastSubmittedMenuItem = new SdmMenuItem();
                         $lastSubmittedMenuItem->arguments = array();
-                        $lastSubmittedMenuItem->destination = SDM_Form::get_submitted_form_value('destination');
+                        $lastSubmittedMenuItem->destination = (SDM_Form::get_submitted_form_value('destinationType') === 'external' ? SDM_Form::get_submitted_form_value('destinationExternal') : SDM_Form::get_submitted_form_value('destinationInternal'));
                         $lastSubmittedMenuItem->destinationType = SDM_Form::get_submitted_form_value('destinationType');
                         $lastSubmittedMenuItem->menuItemCssClasses = SDM_Form::get_submitted_form_value('menuItemCssClasses');
                         $lastSubmittedMenuItem->menuItemCssId = SDM_Form::get_submitted_form_value('menuItemCssId');
@@ -224,12 +227,15 @@ if (substr($sdmcore->determineRequestedPage(), 0, 17) === 'navigationManager') {
             }
             break;
         case 'navigationManagerAddMenuStage3':
+            if (SDM_Form::get_submitted_form_value('menuItemDisplayName') !== null) {
+                $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<div style="border:2px solid #777777;border-radius:9px;padding:20px;height:120px;"><h3>Last Submitted Menu Item:<i style="font-size:.5em;">(DEV NOTE: THIS WILL BE REPLACED BY A PREVIEW OF THE MENU AS IT WOULD LOOK SO FAR BASED ON THE SUBMITTED MENU ITEMS)</i></h3><p>' . SDM_Form::get_submitted_form_value('menuItemDisplayName') . '</p></div>', array('incmethod' => 'prepend', 'incpages' => $options['incpages']));
+            }
             // retrieve our menu items
             $menuItems = SDM_Form::get_submitted_form_value('menuItems');
             // since it has not been added to our menu items we create our final menu item object using last submitted menu item form data
             $finalSubmittedMenuItem = new SdmMenuItem();
             $finalSubmittedMenuItem->arguments = SDM_Form::get_submitted_form_value('arguments');
-            $finalSubmittedMenuItem->destination = SDM_Form::get_submitted_form_value('destination');
+            $finalSubmittedMenuItem->destination = (SDM_Form::get_submitted_form_value('destinationType') === 'external' ? SDM_Form::get_submitted_form_value('destinationExternal') : SDM_Form::get_submitted_form_value('destinationInternal'));
             $finalSubmittedMenuItem->destinationType = SDM_Form::get_submitted_form_value('destinationType');
             $finalSubmittedMenuItem->menuItemCssClasses = SDM_Form::get_submitted_form_value('menuItemCssClasses');
             $finalSubmittedMenuItem->menuItemCssId = SDM_Form::get_submitted_form_value('menuItemCssId');
