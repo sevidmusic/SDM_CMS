@@ -5,18 +5,18 @@ $options = array(
 );
 $output = '';
 // form submitted successfully
-if ($_POST['sdm_form']['content_manager_form_submitted'] === 'content_manager_form_submitted') {
+if ($_POST['SdmForm']['content_manager_form_submitted'] === 'content_manager_form_submitted') {
     $output .= '
                     <!-- contentManager div -->
                     <div id"contentManager">
                         <p>Form has been submitted with the following values.
                             <ul>
-                                <li>PAGE : ' . $_POST['sdm_form']['page'] . '</li>';
+                                <li>PAGE : ' . $_POST['SdmForm']['page'] . '</li>';
     // loop through and update wrappers
     foreach ($sdmcms->sdmCmsDetermineAvailableWrappers() as $dispalyValue => $machineValue) {
-        $sdmcms->sdmCmsUpdateContent($_POST['sdm_form']['page'], $machineValue, nl2br($_POST['sdm_form'][$machineValue]));
+        $sdmcms->sdmCmsUpdateContent($_POST['SdmForm']['page'], $machineValue, nl2br($_POST['SdmForm'][$machineValue]));
         $output .= '
-                                <li>Wrapper with ID : ' . $machineValue . '<br/>Wrapper Content : <xmp>' . $_POST['sdm_form'][$machineValue] . '</xmp></li>';
+                                <li>Wrapper with ID : ' . $machineValue . '<br/>Wrapper Content : <xmp>' . $_POST['SdmForm'][$machineValue] . '</xmp></li>';
     }
     $output .= '
                             </ul></p>
@@ -32,4 +32,4 @@ else {
                 ';
 }
 
-$sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $output, $options);
+$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, $output, $options);

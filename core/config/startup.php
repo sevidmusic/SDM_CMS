@@ -11,8 +11,8 @@ function __autoload($classes) {
 
 // create/configure core
 $sdmcore = new SdmCore;
-$sdmcore->configureCore();
+$sdmcore->sdmCoreConfigureCore();
 // initialize assembler
-$sdmassembler = SdmAssembler::sdmInitializeAssembler();
+$sdmassembler = SdmAssembler::sdmAssemblerInitializeAssembler();
 // load and assemble content | this var is used excluisively by the current themes page.php
-$sdmassembler_themeContentObject = $sdmassembler->loadAndAssembleContentObject();
+$sdmassembler_themeContentObject = $sdmassembler->sdmAssemblerLoadAndAssembleContentObject();

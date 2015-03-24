@@ -2,8 +2,8 @@
 
 $output = '';
 // form submitted successfully
-if ($_POST['sdm_form']['content_manager_form_submitted'] === 'content_manager_form_submitted') {
-    $sdmcms->sdmCmsDeletePage($_POST['sdm_form']['page_to_delete']);
+if ($_POST['SdmForm']['content_manager_form_submitted'] === 'content_manager_form_submitted') {
+    $sdmcms->sdmCmsDeletePage($_POST['SdmForm']['page_to_delete']);
 
 
     $output .= '
@@ -11,7 +11,7 @@ if ($_POST['sdm_form']['content_manager_form_submitted'] === 'content_manager_fo
                     <div id"contentManager">
                         <p>Form has been submitted with the following values.
                             <ul>
-                                <li>PAGE : ' . $_POST['sdm_form']['page_to_delete'] . '</li>
+                                <li>PAGE : ' . $_POST['SdmForm']['page_to_delete'] . '</li>
                             </ul></p>
                     </div>
                     <!-- close contentManager div -->';
@@ -25,4 +25,4 @@ else {
                 ';
 }
 
-$sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $output, $options);
+$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, $output, $options);

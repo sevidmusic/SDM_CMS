@@ -1,11 +1,11 @@
 <?php
 
 // load contentManager functions
-require_once($sdmcore->getCoreAppDirectoryPath() . '/contentManager/includes/contentManagerFunctions.php');
+require_once($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/contentManager/includes/contentManagerFunctions.php');
 
-$pagetoedit = $_POST['sdm_form']['page_to_edit'];
+$pagetoedit = $_POST['SdmForm']['page_to_edit'];
 // CREATE EDIT FORM OBJECT
-$editcontentform = new SDM_Form();
+$editcontentform = new SdmForm();
 $editcontentform->form_handler = 'contentManagerUpdateContentFormSubmission';
 $editcontentform->method = 'post';
 $editcontentform->form_elements = array(
@@ -59,6 +59,6 @@ foreach ($sdmcms->sdmCmsDetermineAvailableWrappers() as $displayValue => $machin
     }
 }
 
-$editcontentform->__build_form($sdmcore->getRootDirectoryUrl());
+$editcontentform->sdmFormBuildForm($sdmcore->sdmCoreGetRootDirectoryUrl());
 // add form to content
-$sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<!-- contentManager Edit Content Form --><p><i>You are currently editing the <b>' . ucwords($pagetoedit) . '</b></i></p>' . $editcontentform->__get_form() . '<!-- End contentManager Edit Content Form -->', $options);
+$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<!-- contentManager Edit Content Form --><p><i>You are currently editing the <b>' . ucwords($pagetoedit) . '</b></i></p>' . $editcontentform->sdmFormGetForm() . '<!-- End contentManager Edit Content Form -->', $options);

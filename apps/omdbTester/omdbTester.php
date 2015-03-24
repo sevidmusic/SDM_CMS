@@ -57,9 +57,9 @@ function assemlbeExtractTableElements($omdbData, $rowcolor, $testurl = 'unknown'
     return $output;
 }
 
-$output = '<h2>OMDB Tester</h2><p>This app generates an html table that displays the data that is returned from OMDB for a given movie title based. It works by first looking up a movie url on embedly, then it grabs the title returned for that url and passes the title as search parameter to OMDB. Then the data returned from OMDB is organized into an HTML table and displayed on the page. The urls tested can be seen in the source code in the $movieUrls array. To see the OMDB data table click here: <br/><br/><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=omdbTester&mode=test">Generate OMDB Data Table</a></p><p>You can also test an individual movie url by entering a movie url from a site like YouTube into the form below.</p>';
+$output = '<h2>OMDB Tester</h2><p>This app generates an html table that displays the data that is returned from OMDB for a given movie title based. It works by first looking up a movie url on embedly, then it grabs the title returned for that url and passes the title as search parameter to OMDB. Then the data returned from OMDB is organized into an HTML table and displayed on the page. The urls tested can be seen in the source code in the $movieUrls array. To see the OMDB data table click here: <br/><br/><a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=omdbTester&mode=test">Generate OMDB Data Table</a></p><p>You can also test an individual movie url by entering a movie url from a site like YouTube into the form below.</p>';
 $devmode = FALSE; // if set to TRUE then dev data about the app output will be displayed on the page as well
-$omdbTesterForm = new SDM_Form();
+$omdbTesterForm = new SdmForm();
 $omdbTesterForm->form_handler = 'omdbTester';
 $omdbTesterForm->method = 'post';
 $omdbTesterForm->submitLabel = 'See What Embedly Returns For This Movie';
@@ -72,13 +72,13 @@ $omdbTesterForm->form_elements = array(
         'place' => '0',
     ),
 );
-$omdbTesterForm->__build_form($sdmcore->getRootDirectoryUrl());
-$output .= $omdbTesterForm->__get_form();
+$omdbTesterForm->sdmFormBuildForm($sdmcore->sdmCoreGetRootDirectoryUrl());
+$output .= $omdbTesterForm->sdmFormGetForm();
 
 // determine if we should display the omdb data table
-if (isset($_POST['sdm_form'])) {
+if (isset($_POST['SdmForm'])) {
     $movieUrls = array(
-        htmlentities(SDM_Form::get_submitted_form_value('movieUrl')),
+        htmlentities(SdmForm::sdmFormGetSubmittedFormValue('movieUrl')),
     );
 } elseif (isset($_GET['mode']) && $_GET['mode'] === 'test') {
     $movieUrls = array(
@@ -325,5 +325,5 @@ if (!empty($movieUrls)) {
     $output .= '<h1>emalloc() MEMORY USAGE : ' . memory_get_usage() . '</h1>';
     $output .= '<h1>SYSTEM MEMORY USAGE : ' . memory_get_usage() . '</h1>';
 }
-$sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $output, $options, $devmode);
+$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, $output, $options, $devmode);
 

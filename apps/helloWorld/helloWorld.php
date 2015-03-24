@@ -11,5 +11,5 @@ $options = array(
     'ignorepages' => array(),
 ); // options array determines how an apps output is incorporated into the page
 $devmode = FALSE; // if set to TRUE then dev data about the app output will be displayed on the page as well
-// we use the Sdm Assembler's incorporateAppOutput() method to display our apps output on the page
-$sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $output, $options, $devmode);
+// we use the Sdm Assembler's sdmAssemblerIncorporateAppOutput() method to display our apps output on the page
+$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, $output, $options, $devmode);

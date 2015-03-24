@@ -10,7 +10,7 @@ class SdmCms extends SdmCore {
 
     private static $Initialized;
 
-    public static function sdmInitializeCms() {
+    public static function sdmCmsInitializeCms() {
         if (!isset(self::$Initialized)) {
             self::$Initialized = new SdmCms;
         }
@@ -45,7 +45,7 @@ class SdmCms extends SdmCore {
         }
         $content->content->$page->$id = htmlentities(utf8_encode(trim($filtered_html3)), ENT_SUBSTITUTE | ENT_DISALLOWED | ENT_HTML5, 'UTF-8');
         $data = json_encode($content);
-        return file_put_contents($this->getDataDirectoryPath() . '/data.json', $data, LOCK_EX);
+        return file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $data, LOCK_EX);
     }
 
     /**
@@ -55,7 +55,7 @@ class SdmCms extends SdmCore {
      * <b>array("Main Content" => 'main_content')</b></p>
      */
     public function sdmCmsDetermineAvailableWrappers() {
-        $html = file_get_contents($this->getCurrentThemeDirectoryPath() . '/page.php');
+        $html = file_get_contents($this->sdmCoreGetCurrentThemeDirectoryPath() . '/page.php');
         $dom = new DOMDocument();
         // for now we are surpressing any errors thrown by loadHTML() because it complains when malformed xml and html is loaded, and the errors were clogging up the error log during other development branches. Howver it is very important that a fix is found for this issue as it could lead to unknown bugs.
         @$dom->loadHTML($html);
@@ -78,7 +78,7 @@ class SdmCms extends SdmCore {
      */
     public function sdmCmsLoadSpecificContent($page = 'homepage', $contentWrapper = 'main_content') {
         // load our json data from data.json and convert into an array
-        $data = json_decode(file_get_contents($this->getCoreDirectoryPath() . '/sdm/data.json'), TRUE);
+        $data = json_decode(file_get_contents($this->sdmCoreGetCoreDirectoryPath() . '/sdm/data.json'), TRUE);
         return $data['content'][$page][$contentWrapper]; // @TODO : Use object notation instead of array notation
     }
 
@@ -113,7 +113,7 @@ class SdmCms extends SdmCore {
         $data = $this->sdmCoreLoadDataObject();
         $data->settings->theme = $theme;
         $jsondata = json_encode($data);
-        return file_put_contents($this->getDataDirectoryPath() . '/data.json', $jsondata, LOCK_EX);
+        return file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $jsondata, LOCK_EX);
     }
 
     /**
@@ -124,7 +124,7 @@ class SdmCms extends SdmCore {
         $data = $this->sdmCoreLoadDataObject();
         unset($data->content->$pagename);
         $jsondata = json_encode($data);
-        return file_put_contents($this->getDataDirectoryPath() . '/data.json', $jsondata, LOCK_EX);
+        return file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $jsondata, LOCK_EX);
     }
 
     /**
@@ -157,7 +157,7 @@ class SdmCms extends SdmCore {
      * values of the Enabled Apps object</p>
      * @return object An object whose properties are apps that are currently enabled.
      */
-//    public function sdmCmsDetermineEnabledApps() {
+//    public function sdmCoreDetermineEnabledApps() {
 //        $data = $this->sdmCoreLoadDataObject();
 //        $enabled_apps = $data->settings->enabledapps;
 //        return $enabled_apps;
@@ -190,9 +190,9 @@ class SdmCms extends SdmCore {
         unset($data->settings->enabledapps);
         // create new enabledapps object
         $data->settings->enabledapps = $enabledApps;
-        //$this->sdm_read_array(array('DATA OBJECT TO BE SAVED' => $data));
+        //$this->sdmCoreSdmReadArray(array('DATA OBJECT TO BE SAVED' => $data));
         $jsondata = json_encode($data);
-        return (file_put_contents($this->getDataDirectoryPath() . '/data.json', $jsondata, LOCK_EX) > 0 ? TRUE : FALSE);
+        return (file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $jsondata, LOCK_EX) > 0 ? TRUE : FALSE);
     }
 
 }

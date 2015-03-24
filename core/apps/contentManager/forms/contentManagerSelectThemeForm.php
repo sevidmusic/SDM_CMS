@@ -1,11 +1,11 @@
 <?php
 
 // CREATE EDIT FORM OBJECT
-$editcontentform = new SDM_Form();
+$editcontentform = new SdmForm();
 $editcontentform->form_handler = 'contentManagerSelectThemeFormSubmission';
 $editcontentform->method = 'post';
 $available_themes = $sdmcms->sdmCmsDetermineAvailableThemes();
-$current_theme = $sdmcms->determineCurrentTheme();
+$current_theme = $sdmcms->sdmCoreDetermineCurrentTheme();
 // set current theme as default value for select form
 $filtered_available_themes = array();
 foreach ($available_themes as $key => $value) {
@@ -34,6 +34,6 @@ $editcontentform->form_elements = array(
     ),
 );
 
-$editcontentform->__build_form($sdmcore->getRootDirectoryUrl());
+$editcontentform->sdmFormBuildForm($sdmcore->sdmCoreGetRootDirectoryUrl());
 // add form to content
-$sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<!-- contentManager Edit Content Form -->' . $editcontentform->__get_form() . '<!-- End contentManager Edit Content Form -->', $options);
+$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<!-- contentManager Edit Content Form -->' . $editcontentform->sdmFormGetForm() . '<!-- End contentManager Edit Content Form -->', $options);

@@ -17,7 +17,7 @@ class SdmAssembler extends SdmCore {
      * Initializes a single instance of the SdmAssembler class.
      * @return object <p>An SdmAssembler Object</p>
      */
-    public static function sdmInitializeAssembler() {
+    public static function sdmAssemblerInitializeAssembler() {
         if (!isset(self::$Initialized)) {
             self::$Initialized = new SdmAssembler;
         }
@@ -29,18 +29,18 @@ class SdmAssembler extends SdmCore {
      * a chance to modify the header prior to returning it.</p>
      * @return string <p>The HTML header for the page.</p>
      */
-    public function assembleHtmlHeader() {
+    public function sdmAssemblerAssembleHtmlHeader() {
         return '<!DOCTYPE html>
             <html>
                 <head>
                     <title>' . (isset($_GET['page']) ? ucfirst($_GET['page']) : ucfirst('homepage')) . '</title>
-                    <base href="' . $this->getRootDirectoryUrl() . '" target="_self">
+                    <base href="' . $this->sdmCoreGetRootDirectoryUrl() . '" target="_self">
                     <meta name="description" content="Website powered by the SDM CMS">
                     <meta name="author" content="Sevi Donnelly Foreman">
                     <meta http-equiv="refresh" content="3000">
-                    <script src="' . $this->getCoreDirectoryUrl() . '/js/jquery-1.9.0/jquery.min.js"></script>
-                    <script src="' . $this->getCoreDirectoryUrl() . '/js/jquery-ui-1.11.2/jquery-ui.js"></script>
-                    <link rel="stylesheet" href="' . $this->getCurrentThemeDirectoryUrl() . '/sdm_layout.css">
+                    <script src="' . $this->sdmCoreGetCoreDirectoryUrl() . '/js/jquery-1.9.0/jquery.min.js"></script>
+                    <script src="' . $this->sdmCoreGetCoreDirectoryUrl() . '/js/jquery-ui-1.11.2/jquery-ui.js"></script>
+                    <link rel="stylesheet" href="' . $this->sdmCoreGetCurrentThemeDirectoryUrl() . '/sdm_layout.css">
                     <!-- DEV JS TO TEST JQUERY AND JQERU UI ARE WORKING | REMOVE ONCE OUT OF DEV -->
                     <script>
                     if (typeof jQuery != "undefined") {
@@ -58,26 +58,26 @@ class SdmAssembler extends SdmCore {
                     </script>
                     <!-- END DEV JS | REMOVE ONCE OUT OF DEV-->
                 </head>
-            <body class="' . $this->determineCurrentTheme() . '">';
+            <body class="' . $this->sdmCoreDetermineCurrentTheme() . '">';
     }
 
     /**
      * <p>Loads and assembles a content object for the requested page.</p>
      * @return object A content object for the requested page.
      */
-    public function loadAndAssembleContentObject() {
-        $page = $this->determineRequestedPage();
+    public function sdmAssemblerLoadAndAssembleContentObject() {
+        $page = $this->sdmCoreDetermineRequestedPage();
         // load our data object
         $sdmassembler_dataObject = $this->sdmCoreLoadDataObject();
         // load and assemble apps
-        $this->loadCoreApps($sdmassembler_dataObject);
+        $this->sdmAssemblerLoadCoreApps($sdmassembler_dataObject);
         // load menus | we load them after the apps so apps have a chance to modify the menu obects before they are incorporated into the page. This makes it easier for apps to do such things as disable menu items in specific menu items before they are incorporated into the page, if we loaded the menus before apps then apps would have to sift through the pages html looking for the menu they want to modify, which is a much more convulted approach, better to work with real objects
-        $this->incorporateMenuObject($sdmassembler_dataObject);
+        $this->sdmAssemblerIncorporateMenuObject($sdmassembler_dataObject);
         // make sure content exists, if it does return it, if not, print a content not found message
         switch (isset($sdmassembler_dataObject->content->$page)) {
             case TRUE:
                 //var_dump($sdmassembler_dataObject->content->$page);
-                $sdmassembler_dataObject = $this->preparePageForDisplay($sdmassembler_dataObject->content->$page);
+                $sdmassembler_dataObject = $this->sdmAssemblerPreparePageForDisplay($sdmassembler_dataObject->content->$page);
                 return $sdmassembler_dataObject;
                 break;
             default:
@@ -98,7 +98,7 @@ class SdmAssembler extends SdmCore {
      * @return object <p>The prepared page object.</p>
      *
      */
-    private function preparePageForDisplay($page) {
+    private function sdmAssemblerPreparePageForDisplay($page) {
         foreach ($page as $name => $value) {
             $page->$name = html_entity_decode($value, ENT_HTML5, 'UTF-8');
         }
@@ -111,13 +111,13 @@ class SdmAssembler extends SdmCore {
      * loading all apps
      * @param object $sdmassembler_dataObject <p>The Content object for the requested page.</p>
      */
-    private function loadCoreApps($sdmassembler_dataObject) {
+    private function sdmAssemblerLoadCoreApps($sdmassembler_dataObject) {
         // store parent (i.e. SdmCore) in an appropriatly named var to give apps easy access
         $sdmcore = new parent;
         // store object in an appropriatly named var to give apps easy access
         $sdmassembler = $this;
         // @TODO : Unless you find good reason to keep it, the $sdmassembler_requestedpage var should be depreceated because SDM CORE provides a method for determining the requested page... store requested page (determined by CORE) in an appropriatly named var to give apps easy access
-        $sdmassembler_requestedpage = $this->determineRequestedPage();
+        $sdmassembler_requestedpage = $this->sdmCoreDetermineRequestedPage();
         // store data object in an appropriatly named for to give apps easy access
         $sdmassembler_dataObject = $sdmassembler_dataObject;
         $settings = $sdmcore->sdmCoreLoadDataObject()->settings;
@@ -137,10 +137,10 @@ class SdmAssembler extends SdmCore {
         foreach ($apps as $app) {
             if (property_exists($settings->enabledapps, $app)) {
                 // load apps
-                if (file_exists($this->getCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.php')) {
-                    require_once($this->getCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.php');
-                } else if (file_exists($this->getUserAppDirectoryPath() . '/' . $app . '/' . $app . '.php')) {
-                    require($this->getUserAppDirectoryPath() . '/' . $app . '/' . $app . '.php');
+                if (file_exists($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.php')) {
+                    require_once($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.php');
+                } else if (file_exists($this->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.php')) {
+                    require($this->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.php');
                 } else {
                     echo '<!-- site has no enabled apps -->';
                 }
@@ -152,7 +152,7 @@ class SdmAssembler extends SdmCore {
      * Returns <p>The required closing HTML tags for the page.</p>
      * @return <p>string The required HTML closing tags as a string.</p>
      */
-    public function assembleHtmlRequiredClosingTags() {
+    public function sdmAssemblerAssembleHtmlRequiredClosingTags() {
         return '
     <!--This site was built using the SDM CMS content management system which was designed and developed by Sevi Donnelly Foreman in the year 2014.-->
     <!--To contact the developer of the SDM CMS write to sdmwebsdm@gmail.com.-->
@@ -232,11 +232,11 @@ class SdmAssembler extends SdmCore {
      * will be displayed at the top of the page for the most every call to this method for the requested page. This is useful when developing apps.</p>
      * @return object <p style="font-size:9px;">The modified data object.</p>
      */
-    public function incorporateAppOutput(stdClass $dataObject, $output, array $options = array(), $devmode = FALSE) {
+    public function sdmAssemblerIncorporateAppOutput(stdClass $dataObject, $output, array $options = array(), $devmode = FALSE) {
         // determine which app this output came from
         $calledby = ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', str_replace(array('/', '.php'), '', strrchr(debug_backtrace()[0]['file'], '/')))); // trys to determine which app called this method using debug_backtrace() @see http://php.net/manual/en/function.debug-backtrace.php | basically were just filtering the name path of the file that this method was called to so it displays in a format that is easy to read, we know that the calling file will contain the app name since all apps must name their main php file according to this case insensitive naming convention : APPNAME.php
         // determine the requested page
-        $requestedPage = $this->determineRequestedPage();
+        $requestedPage = $this->sdmCoreDetermineRequestedPage();
         /* OPTIONS ARRAY check| Review $options array values to insure they exist in prep for checks that determine how app should be incorporated | If they werent passed in via the $options argument then they will be assigned a default value and stored in the $options array */
         // if $options['wrapper'] is not set
         if (!isset($options['wrapper'])) {
@@ -260,11 +260,11 @@ class SdmAssembler extends SdmCore {
              * Also note that if inpages is empty then it will be assumed the developer
              * does NOT want to incorporate app output into any page.
              * i.e.,
-             *   incorporateAppOutput($dataObject, $output, array('incpages' => array());// app out put will NOT be incorporated into any pages because incpages is empty
-             *   incorporateAppOutput($dataObject, $output);// app out put will be incorporated into all pages because incpages does not exist, and will therefore be created and configured with pre-determined internal default values
+             *   sdmAssemblerIncorporateAppOutput($dataObject, $output, array('incpages' => array());// app out put will NOT be incorporated into any pages because incpages is empty
+             *   sdmAssemblerIncorporateAppOutput($dataObject, $output);// app out put will be incorporated into all pages because incpages does not exist, and will therefore be created and configured with pre-determined internal default values
              */
             $pages = $this->sdmCoreDetermineAvailablePages();
-            $enabledApps = json_decode(json_encode($this->sdmCmsDetermineEnabledApps()), TRUE);
+            $enabledApps = json_decode(json_encode($this->sdmCoreDetermineEnabledApps()), TRUE);
             $options['incpages'] = array_merge($pages, $enabledApps);
         }
         // Check that $requested page exists in CORE or or is passed in as an option via the options array's incpages array
@@ -283,7 +283,7 @@ class SdmAssembler extends SdmCore {
             if (!in_array($requestedPage, $options['ignorepages'])) {
                 // PRE PROCESSING DEV MODE OUTPUT
                 if ($devmode === TRUE) {
-                    $this->sdm_read_array(array('Call To Method' => 'incorporateAppOutput()', 'Method called by app' => $calledby, 'STAGE' => 'PRE_PROCESSING', 'OPTIONS' => $options, 'App Output' => $output, 'Data Object State' => $dataObject,));
+                    $this->sdmCoreSdmReadArray(array('Call To Method' => 'sdmAssemblerIncorporateAppOutput()', 'Method called by app' => $calledby, 'STAGE' => 'PRE_PROCESSING', 'OPTIONS' => $options, 'App Output' => $output, 'Data Object State' => $dataObject,));
                 }
                 // if not in ignorepages array and incpages is empty assume any page not in ignore array can incorporate app output
                 // Only incorporate app output if requested page matches one of the items in incpages
@@ -292,19 +292,19 @@ class SdmAssembler extends SdmCore {
                         $dataObject->content->$requestedPage->$options['wrapper'] = $output . $dataObject->content->$requestedPage->$options['wrapper'];
                         // PREPEND DEV MODE OUTPUT
                         if ($devmode === TRUE) {
-                            $this->sdm_read_array(array('Call To Method' => 'incorporateAppOutput()', 'Method called by app' => $calledby, 'STAGE' => 'PREPENDING', 'OPTIONS' => $options, 'App Output' => $output, 'Data Object State' => $dataObject,));
+                            $this->sdmCoreSdmReadArray(array('Call To Method' => 'sdmAssemblerIncorporateAppOutput()', 'Method called by app' => $calledby, 'STAGE' => 'PREPENDING', 'OPTIONS' => $options, 'App Output' => $output, 'Data Object State' => $dataObject,));
                         }
                     } else if ($options['incmethod'] === 'overwrite') {
                         $dataObject->content->$requestedPage->$options['wrapper'] = $output;
                         // OVERWRITE DEV MODE OUTPUT
                         if ($devmode === TRUE) {
-                            $this->sdm_read_array(array('Call To Method' => 'incorporateAppOutput()', 'Method called by app' => $calledby, 'STAGE' => 'OVERWRITEING', 'OPTIONS' => $options, 'App Output' => $output, 'Data Object State' => $dataObject,));
+                            $this->sdmCoreSdmReadArray(array('Call To Method' => 'sdmAssemblerIncorporateAppOutput()', 'Method called by app' => $calledby, 'STAGE' => 'OVERWRITEING', 'OPTIONS' => $options, 'App Output' => $output, 'Data Object State' => $dataObject,));
                         }
                     } else { // default is to append
                         $dataObject->content->$requestedPage->$options['wrapper'] .= $output;
                         // APPEND (default) DEV MODE OUTPUT
                         if ($devmode === TRUE) {
-                            $this->sdm_read_array(array('Call To Method' => 'incorporateAppOutput()', 'Method called by app' => $calledby, 'STAGE' => 'APPENDING', 'OPTIONS' => $options, 'App Output' => $output, 'Data Object State' => $dataObject,));
+                            $this->sdmCoreSdmReadArray(array('Call To Method' => 'sdmAssemblerIncorporateAppOutput()', 'Method called by app' => $calledby, 'STAGE' => 'APPENDING', 'OPTIONS' => $options, 'App Output' => $output, 'Data Object State' => $dataObject,));
                         }
                     }
                 }
@@ -313,8 +313,8 @@ class SdmAssembler extends SdmCore {
         return $dataObject;
     }
 
-    public function incorporateMenuObject(stdClass $dataObject) {
-        //$this->sdm_read_array($dataObject);
+    public function sdmAssemblerIncorporateMenuObject(stdClass $dataObject) {
+        //$this->sdmCoreSdmReadArray($dataObject);
     }
 
 }

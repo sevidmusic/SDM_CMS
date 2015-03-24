@@ -19,7 +19,7 @@ function rangeArray($s, $e) {
 
 // create new naviagation management object
 $sdmnms = new SdmNms();
-// this otpions array will be passed to incorporateAppOutput() wherever this app outputs data.
+// this otpions array will be passed to sdmAssemblerIncorporateAppOutput() wherever this app outputs data.
 $options = array(
     'incpages' => array(
         'navigationManagerAddMenuStage1', // select number of menu items
@@ -29,14 +29,14 @@ $options = array(
     ),
 );
 $sdmcore = $sdmcore; // see SdmAssembler.php
-if (substr($sdmcore->determineRequestedPage(), 0, 17) === 'navigationManager') {
+if (substr($sdmcore->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationManager') {
     // CREATE A NEW CONTENT MANAGEMENT OBJECT
-    $sdmcms = SdmCms::sdmInitializeCms();
+    $sdmcms = SdmCms::sdmCmsInitializeCms();
     // determine which section of the content manager was requested
-    switch ($sdmcore->determineRequestedPage()) {
+    switch ($sdmcore->sdmCoreDetermineRequestedPage()) {
         // edit content form
         case 'navigationManagerAddMenuStage1': // determine how many menu items this menu will have
-            $addMenuFormStage1 = new SDM_Form();
+            $addMenuFormStage1 = new SdmForm();
             $addMenuFormStage1->form_method = 'post';
             $addMenuFormStage1->form_handler = 'navigationManagerAddMenuStage2';
             $addMenuFormStage1->submitLabel = 'Proceed to Edit Menu Items';
@@ -56,33 +56,33 @@ if (substr($sdmcore->determineRequestedPage(), 0, 17) === 'navigationManager') {
                     'place' => '1',
                 ),
             );
-            $addMenuFormStage1->__build_form($sdmcore->getRootDirectoryUrl());
-            $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<h3>How many menu items will this menu have?</h3>' . $addMenuFormStage1->__get_form(), array('incpages' => array('navigationManagerAddMenuStage1')));
+            $addMenuFormStage1->sdmFormBuildForm($sdmcore->sdmCoreGetRootDirectoryUrl());
+            $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<h3>How many menu items will this menu have?</h3>' . $addMenuFormStage1->sdmFormGetForm(), array('incpages' => array('navigationManagerAddMenuStage1')));
             break;
         case 'navigationManagerAddMenuStage2': // configure the menu items
-            if (SDM_Form::get_submitted_form_value('menuItemDisplayName') !== null) {
-                $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<div style="border:2px solid #777777;border-radius:9px;padding:20px;height:120px;"><h3>Last Submitted Menu Item:<i style="font-size:.5em;">(DEV NOTE: THIS WILL BE REPLACED BY A PREVIEW OF THE MENU AS IT WOULD LOOK SO FAR BASED ON THE SUBMITTED MENU ITEMS)</i></h3><p>' . SDM_Form::get_submitted_form_value('menuItemDisplayName') . '</p></div>', array('incmethod' => 'prepend', 'incpages' => $options['incpages']));
+            if (SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName') !== null) {
+                $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<div style="border:2px solid #777777;border-radius:9px;padding:20px;height:120px;"><h3>Last Submitted Menu Item:<i style="font-size:.5em;">(DEV NOTE: THIS WILL BE REPLACED BY A PREVIEW OF THE MENU AS IT WOULD LOOK SO FAR BASED ON THE SUBMITTED MENU ITEMS)</i></h3><p>' . SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName') . '</p></div>', array('incmethod' => 'prepend', 'incpages' => $options['incpages']));
             }
             // check to make sure the menuItem number is set, if it doesnt report an error since we cant proceed without it
-            switch (SDM_Form::get_submitted_form_value('menuItem') !== null) {
+            switch (SdmForm::sdmFormGetSubmittedFormValue('menuItem') !== null) {
                 case TRUE:
-                    $addMenuFormStage2 = new SDM_Form();
+                    $addMenuFormStage2 = new SdmForm();
                     $addMenuFormStage2->form_method = 'post';
-                    $addMenuFormStage2->form_handler = (SDM_Form::get_submitted_form_value('menuItem') === SDM_Form::get_submitted_form_value('number_of_menu_items') ? 'navigationManagerAddMenuStage3' : 'navigationManagerAddMenuStage2');
+                    $addMenuFormStage2->form_handler = (SdmForm::sdmFormGetSubmittedFormValue('menuItem') === SdmForm::sdmFormGetSubmittedFormValue('number_of_menu_items') ? 'navigationManagerAddMenuStage3' : 'navigationManagerAddMenuStage2');
                     $addMenuFormStage2->submitLabel = 'Proceed to Edit Menu Settings';
                     $addMenuFormStage2->form_elements = array(
                         array(// store number of menu items so each menu item form can reference it
                             'id' => 'number_of_menu_items',
                             'type' => 'hidden',
                             'element' => 'Number Of Menu Items For This Menu To Hold:',
-                            'value' => SDM_Form::get_submitted_form_value('number_of_menu_items'),
+                            'value' => SdmForm::sdmFormGetSubmittedFormValue('number_of_menu_items'),
                             'place' => '0',
                         ),
                         array(// store and increase menuItem so each form knows what menu item we are configuring
                             'id' => 'menuItem',
                             'type' => 'hidden',
                             'element' => 'Menu Item',
-                            'value' => (SDM_Form::get_submitted_form_value('menuItem') === SDM_Form::get_submitted_form_value('number_of_menu_items') ? null : intval(SDM_Form::get_submitted_form_value('menuItem')) + 1), // increase the menuItem value until it is equal to the number_of_menu_items value || If we have cycled through all the menu items set this to null
+                            'value' => (SdmForm::sdmFormGetSubmittedFormValue('menuItem') === SdmForm::sdmFormGetSubmittedFormValue('number_of_menu_items') ? null : intval(SdmForm::sdmFormGetSubmittedFormValue('menuItem')) + 1), // increase the menuItem value until it is equal to the number_of_menu_items value || If we have cycled through all the menu items set this to null
                             'place' => '1',
                         ),
                         array(
@@ -103,7 +103,7 @@ if (substr($sdmcore->determineRequestedPage(), 0, 17) === 'navigationManager') {
                             'id' => 'destinationInternal',
                             'type' => 'select',
                             'element' => 'Destination <i style="font-size:.7em;">(<b>internal</b>: Select a pagename from this menu if this menu item\'s destination type is internal.)</i>',
-                            'value' => array_merge($sdmcore->sdmCoreDetermineAvailablePages(), json_decode(json_encode($sdmcore->sdmCmsDetermineEnabledApps()), TRUE)),
+                            'value' => array_merge($sdmcore->sdmCoreDetermineAvailablePages(), json_decode(json_encode($sdmcore->sdmCoreDetermineEnabledApps()), TRUE)),
                             'place' => '4',
                         ),
                         array(
@@ -159,7 +159,7 @@ if (substr($sdmcore->determineRequestedPage(), 0, 17) === 'navigationManager') {
                             'id' => 'menuItemWrappingTagType',
                             'type' => 'select',
                             'element' => 'Wrapping Tag Type <i style="font-size:.7em;">(The html tag to wrap this menu item with. NOTE:if any menu items use li, all menu items must use li so a list can be created. The form will enforce this.)</i>',
-                            'value' => (SDM_Form::get_submitted_form_value('menuItemWrappingTagType') === 'li' ? array('li' => 'li') : array('div' => 'div', 'li' => 'li', 'p' => 'p', 'h1' => 'h1', 'h2' => 'h2', 'h3' => 'h3', 'h4' => 'h4', 'h5' => 'h5', 'h6' => 'h6')),
+                            'value' => (SdmForm::sdmFormGetSubmittedFormValue('menuItemWrappingTagType') === 'li' ? array('li' => 'li') : array('div' => 'div', 'li' => 'li', 'p' => 'p', 'h1' => 'h1', 'h2' => 'h2', 'h3' => 'h3', 'h4' => 'h4', 'h5' => 'h5', 'h6' => 'h6')),
                             'place' => '12',
                         ),
                         array(
@@ -177,23 +177,23 @@ if (substr($sdmcore->determineRequestedPage(), 0, 17) === 'navigationManager') {
                             'place' => '14',
                         ),
                     );
-                    if (isset($_POST['sdm_form']['menuItems'])) {
+                    if (isset($_POST['SdmForm']['menuItems'])) {
                         // retrieve any menu items already stored in the menuItems array
-                        $menuItems = SDM_Form::get_submitted_form_value('menuItems');
+                        $menuItems = SdmForm::sdmFormGetSubmittedFormValue('menuItems');
                         // create new menu item object using last submitted menu items data
                         $lastSubmittedMenuItem = new SdmMenuItem();
                         $lastSubmittedMenuItem->arguments = array();
-                        $lastSubmittedMenuItem->destination = (SDM_Form::get_submitted_form_value('destinationType') === 'external' ? SDM_Form::get_submitted_form_value('destinationExternal') : SDM_Form::get_submitted_form_value('destinationInternal'));
-                        $lastSubmittedMenuItem->destinationType = SDM_Form::get_submitted_form_value('destinationType');
-                        $lastSubmittedMenuItem->menuItemCssClasses = SDM_Form::get_submitted_form_value('menuItemCssClasses');
-                        $lastSubmittedMenuItem->menuItemCssId = SDM_Form::get_submitted_form_value('menuItemCssId');
-                        $lastSubmittedMenuItem->menuItemDisplayName = SDM_Form::get_submitted_form_value('menuItemDisplayName');
-                        $lastSubmittedMenuItem->menuItemEnabled = SDM_Form::get_submitted_form_value('menuItemEnabled');
-                        $lastSubmittedMenuItem->menuItemId = SDM_Form::get_submitted_form_value('menuItemId');
-                        $lastSubmittedMenuItem->menuItemKeyholders = SDM_Form::get_submitted_form_value('menuItemKeyholders');
-                        $lastSubmittedMenuItem->menuItemMachineName = SDM_Form::get_submitted_form_value('menuItemMachineName');
-                        $lastSubmittedMenuItem->menuItemPosition = SDM_Form::get_submitted_form_value('menuItemPosition');
-                        $lastSubmittedMenuItem->menuItemWrappingTagType = SDM_Form::get_submitted_form_value('menuItemWrappingTagType');
+                        $lastSubmittedMenuItem->destination = (SdmForm::sdmFormGetSubmittedFormValue('destinationType') === 'external' ? SdmForm::sdmFormGetSubmittedFormValue('destinationExternal') : SdmForm::sdmFormGetSubmittedFormValue('destinationInternal'));
+                        $lastSubmittedMenuItem->destinationType = SdmForm::sdmFormGetSubmittedFormValue('destinationType');
+                        $lastSubmittedMenuItem->menuItemCssClasses = SdmForm::sdmFormGetSubmittedFormValue('menuItemCssClasses');
+                        $lastSubmittedMenuItem->menuItemCssId = SdmForm::sdmFormGetSubmittedFormValue('menuItemCssId');
+                        $lastSubmittedMenuItem->menuItemDisplayName = SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName');
+                        $lastSubmittedMenuItem->menuItemEnabled = SdmForm::sdmFormGetSubmittedFormValue('menuItemEnabled');
+                        $lastSubmittedMenuItem->menuItemId = SdmForm::sdmFormGetSubmittedFormValue('menuItemId');
+                        $lastSubmittedMenuItem->menuItemKeyholders = SdmForm::sdmFormGetSubmittedFormValue('menuItemKeyholders');
+                        $lastSubmittedMenuItem->menuItemMachineName = SdmForm::sdmFormGetSubmittedFormValue('menuItemMachineName');
+                        $lastSubmittedMenuItem->menuItemPosition = SdmForm::sdmFormGetSubmittedFormValue('menuItemPosition');
+                        $lastSubmittedMenuItem->menuItemWrappingTagType = SdmForm::sdmFormGetSubmittedFormValue('menuItemWrappingTagType');
                         // add the last submitted menu item to our menu items array
                         array_push($menuItems, $lastSubmittedMenuItem);
                         // re-create menuItems form element with new menu items stored as its value
@@ -217,38 +217,38 @@ if (substr($sdmcore->determineRequestedPage(), 0, 17) === 'navigationManager') {
                         );
                         array_push($addMenuFormStage2->form_elements, $mi);
                     }
-                    $addMenuFormStage2->__build_form($sdmcore->getRootDirectoryUrl());
-                    $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<h3>Configure Menu Items</h3>' . $addMenuFormStage2->__get_form(), array('incpages' => array('navigationManagerAddMenuStage2')));
+                    $addMenuFormStage2->sdmFormBuildForm($sdmcore->sdmCoreGetRootDirectoryUrl());
+                    $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<h3>Configure Menu Items</h3>' . $addMenuFormStage2->sdmFormGetForm(), array('incpages' => array('navigationManagerAddMenuStage2')));
                     break;
 
                 default:
-                    $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<p>An error occured and the form could not be submitted. Please report this to the site admin. <a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=homepage">Return to the Homepage</a></p>', array('incpages' => array('navigationManagerAddMenuStage2')));
+                    $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<p>An error occured and the form could not be submitted. Please report this to the site admin. <a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=homepage">Return to the Homepage</a></p>', array('incpages' => array('navigationManagerAddMenuStage2')));
                     break;
             }
             break;
         case 'navigationManagerAddMenuStage3':
-            if (SDM_Form::get_submitted_form_value('menuItemDisplayName') !== null) {
-                $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<div style="border:2px solid #777777;border-radius:9px;padding:20px;height:120px;"><h3>Last Submitted Menu Item:<i style="font-size:.5em;">(DEV NOTE: THIS WILL BE REPLACED BY A PREVIEW OF THE MENU AS IT WOULD LOOK SO FAR BASED ON THE SUBMITTED MENU ITEMS)</i></h3><p>' . SDM_Form::get_submitted_form_value('menuItemDisplayName') . '</p></div>', array('incmethod' => 'prepend', 'incpages' => $options['incpages']));
+            if (SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName') !== null) {
+                $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<div style="border:2px solid #777777;border-radius:9px;padding:20px;height:120px;"><h3>Last Submitted Menu Item:<i style="font-size:.5em;">(DEV NOTE: THIS WILL BE REPLACED BY A PREVIEW OF THE MENU AS IT WOULD LOOK SO FAR BASED ON THE SUBMITTED MENU ITEMS)</i></h3><p>' . SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName') . '</p></div>', array('incmethod' => 'prepend', 'incpages' => $options['incpages']));
             }
             // retrieve our menu items
-            $menuItems = SDM_Form::get_submitted_form_value('menuItems');
+            $menuItems = SdmForm::sdmFormGetSubmittedFormValue('menuItems');
             // since it has not been added to our menu items we create our final menu item object using last submitted menu item form data
             $finalSubmittedMenuItem = new SdmMenuItem();
-            $finalSubmittedMenuItem->arguments = SDM_Form::get_submitted_form_value('arguments');
-            $finalSubmittedMenuItem->destination = (SDM_Form::get_submitted_form_value('destinationType') === 'external' ? SDM_Form::get_submitted_form_value('destinationExternal') : SDM_Form::get_submitted_form_value('destinationInternal'));
-            $finalSubmittedMenuItem->destinationType = SDM_Form::get_submitted_form_value('destinationType');
-            $finalSubmittedMenuItem->menuItemCssClasses = SDM_Form::get_submitted_form_value('menuItemCssClasses');
-            $finalSubmittedMenuItem->menuItemCssId = SDM_Form::get_submitted_form_value('menuItemCssId');
-            $finalSubmittedMenuItem->menuItemDisplayName = SDM_Form::get_submitted_form_value('menuItemDisplayName');
-            $finalSubmittedMenuItem->menuItemEnabled = SDM_Form::get_submitted_form_value('menuItemEnabled');
-            $finalSubmittedMenuItem->menuItemId = SDM_Form::get_submitted_form_value('menuItemId');
-            $finalSubmittedMenuItem->menuItemKeyholders = SDM_Form::get_submitted_form_value('menuItemKeyholders');
-            $finalSubmittedMenuItem->menuItemMachineName = SDM_Form::get_submitted_form_value('menuItemMachineName');
-            $finalSubmittedMenuItem->menuItemPosition = SDM_Form::get_submitted_form_value('menuItemPosition');
-            $finalSubmittedMenuItem->menuItemWrappingTagType = SDM_Form::get_submitted_form_value('menuItemWrappingTagType');
+            $finalSubmittedMenuItem->arguments = SdmForm::sdmFormGetSubmittedFormValue('arguments');
+            $finalSubmittedMenuItem->destination = (SdmForm::sdmFormGetSubmittedFormValue('destinationType') === 'external' ? SdmForm::sdmFormGetSubmittedFormValue('destinationExternal') : SdmForm::sdmFormGetSubmittedFormValue('destinationInternal'));
+            $finalSubmittedMenuItem->destinationType = SdmForm::sdmFormGetSubmittedFormValue('destinationType');
+            $finalSubmittedMenuItem->menuItemCssClasses = SdmForm::sdmFormGetSubmittedFormValue('menuItemCssClasses');
+            $finalSubmittedMenuItem->menuItemCssId = SdmForm::sdmFormGetSubmittedFormValue('menuItemCssId');
+            $finalSubmittedMenuItem->menuItemDisplayName = SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName');
+            $finalSubmittedMenuItem->menuItemEnabled = SdmForm::sdmFormGetSubmittedFormValue('menuItemEnabled');
+            $finalSubmittedMenuItem->menuItemId = SdmForm::sdmFormGetSubmittedFormValue('menuItemId');
+            $finalSubmittedMenuItem->menuItemKeyholders = SdmForm::sdmFormGetSubmittedFormValue('menuItemKeyholders');
+            $finalSubmittedMenuItem->menuItemMachineName = SdmForm::sdmFormGetSubmittedFormValue('menuItemMachineName');
+            $finalSubmittedMenuItem->menuItemPosition = SdmForm::sdmFormGetSubmittedFormValue('menuItemPosition');
+            $finalSubmittedMenuItem->menuItemWrappingTagType = SdmForm::sdmFormGetSubmittedFormValue('menuItemWrappingTagType');
             // add the last submitted menu item to our menu items array
             array_push($menuItems, $finalSubmittedMenuItem);
-            $addMenuFormStage3 = new SDM_Form();
+            $addMenuFormStage3 = new SdmForm();
             $addMenuFormStage3->form_handler = 'navigationManagerAddMenuStage4';
             $addMenuFormStage3->form_method = 'post';
             $addMenuFormStage3->submitLabel = 'Create Menu';
@@ -305,7 +305,7 @@ if (substr($sdmcore->determineRequestedPage(), 0, 17) === 'navigationManager') {
                     'id' => 'menuWrappingTagType',
                     'type' => 'select',
                     'element' => 'Wrapping Tag Type <i style="font-size:.7em;">(The html tag to wrap this menu item with. NOTE: If li was used for any menu items then ul is enforced so a list can be created.)</i>',
-                    'value' => (SDM_Form::get_submitted_form_value('menuItemWrappingTagType') === 'li' ? array('ul' => 'ul') : array('div' => 'div', 'p' => 'p', 'h1' => 'h1', 'h2' => 'h2', 'h3' => 'h3', 'h4' => 'h4', 'h5' => 'h5', 'h6' => 'h6')),
+                    'value' => (SdmForm::sdmFormGetSubmittedFormValue('menuItemWrappingTagType') === 'li' ? array('ul' => 'ul') : array('div' => 'div', 'p' => 'p', 'h1' => 'h1', 'h2' => 'h2', 'h3' => 'h3', 'h4' => 'h4', 'h5' => 'h5', 'h6' => 'h6')),
                     'place' => '7',
                 ),
                 array(
@@ -323,33 +323,33 @@ if (substr($sdmcore->determineRequestedPage(), 0, 17) === 'navigationManager') {
                     'place' => '9',
                 ),
             );
-            $addMenuFormStage3->__build_form($sdmcore->getRootDirectoryUrl());
-            $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $addMenuFormStage3->__get_form(), array('incpages' => array('navigationManagerAddMenuStage3')));
-            $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<h3>Configure Menu</h3>', array('incmethod' => 'prepend', 'incpages' => array('navigationManagerAddMenuStage3')));
+            $addMenuFormStage3->sdmFormBuildForm($sdmcore->sdmCoreGetRootDirectoryUrl());
+            $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, $addMenuFormStage3->sdmFormGetForm(), array('incpages' => array('navigationManagerAddMenuStage3')));
+            $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<h3>Configure Menu</h3>', array('incmethod' => 'prepend', 'incpages' => array('navigationManagerAddMenuStage3')));
             break;
         case 'navigationManagerAddMenuStage4':
             $menu = new SdmMenu();
-            $menu->displaypages = SDM_Form::get_submitted_form_value('displaypages'); //
-            $menu->menuCssClasses = SDM_Form::get_submitted_form_value('menuCssClasses'); //
-            $menu->menuCssId = SDM_Form::get_submitted_form_value('menuCssId'); //
-            $menu->menuDisplayName = SDM_Form::get_submitted_form_value('menuDisplayName'); //
-            $menu->menuId = SDM_Form::get_submitted_form_value('menuId'); //
-            $menu->menuItems = SDM_Form::get_submitted_form_value('menuItems'); //
-            $menu->menuKeyholders = SDM_Form::get_submitted_form_value('menuKeyholders');
-            $menu->menuMachineName = SDM_Form::get_submitted_form_value('menuMachineName'); //
-            $menu->menuPlacement = SDM_Form::get_submitted_form_value('menuPlacement'); //
-            $menu->menuWrappingTagType = SDM_Form::get_submitted_form_value('menuWrappingTagType'); //
-            $menu->wrapper = SDM_Form::get_submitted_form_value('wrapper'); //
+            $menu->displaypages = SdmForm::sdmFormGetSubmittedFormValue('displaypages'); //
+            $menu->menuCssClasses = SdmForm::sdmFormGetSubmittedFormValue('menuCssClasses'); //
+            $menu->menuCssId = SdmForm::sdmFormGetSubmittedFormValue('menuCssId'); //
+            $menu->menuDisplayName = SdmForm::sdmFormGetSubmittedFormValue('menuDisplayName'); //
+            $menu->menuId = SdmForm::sdmFormGetSubmittedFormValue('menuId'); //
+            $menu->menuItems = SdmForm::sdmFormGetSubmittedFormValue('menuItems'); //
+            $menu->menuKeyholders = SdmForm::sdmFormGetSubmittedFormValue('menuKeyholders');
+            $menu->menuMachineName = SdmForm::sdmFormGetSubmittedFormValue('menuMachineName'); //
+            $menu->menuPlacement = SdmForm::sdmFormGetSubmittedFormValue('menuPlacement'); //
+            $menu->menuWrappingTagType = SdmForm::sdmFormGetSubmittedFormValue('menuWrappingTagType'); //
+            $menu->wrapper = SdmForm::sdmFormGetSubmittedFormValue('wrapper'); //
             $sdmnms->sdmNmsAddMenu($menu);
-            $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<p>Menu Added Successfully (Still in Dev, Does not necessarily indicate succsessful menu add yet)</p>', array('incpages' => array('navigationManagerAddMenuStage4')));
+            $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<p>Menu Added Successfully (Still in Dev, Does not necessarily indicate succsessful menu add yet)</p>', array('incpages' => array('navigationManagerAddMenuStage4')));
             break;
         default:
             // present content manager menu
-            $sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '
+            $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '
                 <div id="navigationManager">
                 <p>Welcome to the Navigation Manager. Here you can create, edit, delete, and restore content</p>
                     <ul>
-                        <li><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=navigationManagerAddMenuStage1">Add Menu</a></li>
+                        <li><a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=navigationManagerAddMenuStage1">Add Menu</a></li>
                     </ul>
                 </div>
                 ', array('incpages' => array('navigationManager')));

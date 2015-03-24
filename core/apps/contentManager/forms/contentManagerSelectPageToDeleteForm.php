@@ -1,14 +1,14 @@
 <?php
 
 // load contentManager functions || this is only needed if this form requires the functions, some forms may not
-require_once($sdmcore->getCoreAppDirectoryPath() . '/contentManager/includes/contentManagerFunctions.php');
+require_once($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/contentManager/includes/contentManagerFunctions.php');
 
 // determine available pages
 $available_pages = $sdmcore->sdmCoreDetermineAvailablePages();
 // filter out "Content Manager" pages so they can not be editied
 $editable_pages = array_filter($available_pages, 'filter_content_manager_pages');
 // CREATE EDIT FORM OBJECT
-$editcontentform = new SDM_Form();
+$editcontentform = new SdmForm();
 $editcontentform->form_handler = 'contentManagerDeletePageSubmission';
 $editcontentform->method = 'post';
 $editcontentform->form_elements = array(
@@ -28,6 +28,6 @@ $editcontentform->form_elements = array(
     ),
 );
 
-$editcontentform->__build_form($sdmcore->getRootDirectoryUrl());
+$editcontentform->sdmFormBuildForm($sdmcore->sdmCoreGetRootDirectoryUrl());
 // add form to content
-$sdmassembler->incorporateAppOutput($sdmassembler_dataObject, '<!-- contentManager Edit Content Form -->' . $editcontentform->__get_form() . '<!-- End contentManager Edit Content Form -->', $options);
+$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<!-- contentManager Edit Content Form -->' . $editcontentform->sdmFormGetForm() . '<!-- End contentManager Edit Content Form -->', $options);
