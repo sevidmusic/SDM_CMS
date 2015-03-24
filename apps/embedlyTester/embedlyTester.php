@@ -55,9 +55,9 @@ $options = array(
     'incpages' => array('embedlyTester'),
         //'ignorepages' => array('contentManager'),
 ); // options array determines how an apps output is incorporated into the page
-$output = '<h2>Embedly Tester</h2><p>This app generates an html table that displays the data that is returned from the different EXTRACT provider apis. The urls tested can be seen in the source code in the $movieUrls array. To see the extract data table click here: <br/><br/><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=embedlyTester&mode=test">Generate Extract Data Table</a></p><p>You can also test an individual movie urls by entering a movie url from a site like YouTube into the form below.</p>';
+$output = '<h2>Embedly Tester</h2><p>This app generates an html table that displays the data that is returned from the different EXTRACT provider apis. The urls tested can be seen in the source code in the $movieUrls array. To see the extract data table click here: <br/><br/><a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=embedlyTester&mode=test">Generate Extract Data Table</a></p><p>You can also test an individual movie urls by entering a movie url from a site like YouTube into the form below.</p>';
 $devmode = FALSE; // if set to TRUE then dev data about the app output will be displayed on the page as well
-$embedlyTesterForm = new SDM_Form();
+$embedlyTesterForm = new SdmForm();
 $embedlyTesterForm->form_handler = 'embedlyTester';
 $embedlyTesterForm->method = 'post';
 $embedlyTesterForm->submitLabel = 'See What Embedly Returns For This Movie';
@@ -70,13 +70,13 @@ $embedlyTesterForm->form_elements = array(
         'place' => '0',
     ),
 );
-$embedlyTesterForm->__build_form($sdmcore->getRootDirectoryUrl());
-$output .= $embedlyTesterForm->__get_form();
+$embedlyTesterForm->sdmFormBuildForm($sdmcore->sdmCoreGetRootDirectoryUrl());
+$output .= $embedlyTesterForm->sdmFormGetForm();
 
 // determine if we should display the extract data table
-if (isset($_POST['sdm_form'])) {
+if (isset($_POST['SdmForm'])) {
     $movieUrls = array(
-        htmlentities(SDM_Form::get_submitted_form_value('movieUrl')),
+        htmlentities(SdmForm::sdmFormGetSubmittedFormValue('movieUrl')),
     );
 } elseif (isset($_GET['mode']) && $_GET['mode'] === 'test') {
     $movieUrls = array(
@@ -323,5 +323,5 @@ if (!empty($movieUrls)) {
     $output .= '<h1>emalloc() MEMORY USAGE : ' . memory_get_usage() . '</h1>';
     $output .= '<h1>SYSTEM MEMORY USAGE : ' . memory_get_usage() . '</h1>';
 }
-$sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $output, $options, $devmode);
+$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, $output, $options, $devmode);
 

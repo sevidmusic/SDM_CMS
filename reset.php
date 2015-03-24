@@ -19,12 +19,12 @@ $config = array(
     ), // end 'settings' array
 ); // end $config array
 $data = utf8_encode(trim(json_encode($config)));
-echo (file_put_contents($sdmcore->getDataDirectoryPath() . '/data.json', $data, LOCK_EX) != FALSE ? '<h4 style="color:#33CC33">Site configuration reset to defaults succsessfully</h4><p><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=homepage">Click Here</a> to view your new SDM CMS powered site</p>' : '<h2 style="color:red;">Could not configure site!Check config.php to determine the cause of the error.</h2>');
-echo '<h3>Site Configuration:</h3><p>The following data was written to: <b style="color:#999999"><i>' . $sdmcore->getDataDirectoryPath() . '/data.json</i></b></p>';
-echo '<p>The site\'s root URL is : ' . '<b style="color:#999999"><i>' . $sdmcore->getRootDirectoryUrl() . '</i></b>';
-$sdmcore->sdm_read_array($config);
+echo (file_put_contents($sdmcore->sdmCoreGetDataDirectoryPath() . '/data.json', $data, LOCK_EX) != FALSE ? '<h4 style="color:#33CC33">Site configuration reset to defaults succsessfully</h4><p><a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=homepage">Click Here</a> to view your new SDM CMS powered site</p>' : '<h2 style="color:red;">Could not configure site!Check config.php to determine the cause of the error.</h2>');
+echo '<h3>Site Configuration:</h3><p>The following data was written to: <b style="color:#999999"><i>' . $sdmcore->sdmCoreGetDataDirectoryPath() . '/data.json</i></b></p>';
+echo '<p>The site\'s root URL is : ' . '<b style="color:#999999"><i>' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '</i></b>';
+$sdmcore->sdmCoreSdmReadArray($config);
 echo '<h3>SDM Core Configuration</h3>';
-$sdmcore->sdm_read_array($sdmcore);
+$sdmcore->sdmCoreSdmReadArray($sdmcore);
 echo '<h3>Available Apps</h3><p>(these apps are <b>not</b> necessarily enabled)</p>';
 $coreapps = $sdmcore->sdmCoreGetDirectoryListing('', 'coreapps');
 $userapps = $sdmcore->sdmCoreGetDirectoryListing('', 'userapps');
@@ -39,9 +39,9 @@ foreach ($userapps as $value) {
         $apps[] = $value;
     }
 }
-$sdmcore->sdm_read_array($apps);
+$sdmcore->sdmCoreSdmReadArray($apps);
 // reset error log
-file_put_contents($sdmcore->getCoreDirectoryPath() . '/logs/sdm_core_errors.log', '', LOCK_EX);
-echo 'An empty error log was created to track site errors. You can view the error log <a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=errors">HERE</a>';
+file_put_contents($sdmcore->sdmCoreGetCoreDirectoryPath() . '/logs/sdm_core_errors.log', '', LOCK_EX);
+echo 'An empty error log was created to track site errors. You can view the error log <a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=errors">HERE</a>';
 echo '</div>';
 ?>

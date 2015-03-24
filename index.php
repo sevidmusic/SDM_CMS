@@ -4,11 +4,11 @@
 require(__DIR__ . '/core/config/startup.php');
 
 // assemble the HTML header
-echo $sdmassembler->assembleHtmlHeader();
+echo $sdmassembler->sdmAssemblerAssembleHtmlHeader();
 
 // load our theme and build the page
-include($sdmcore->getCurrentThemeDirectoryPath() . '/page.php');
+include($sdmcore->sdmCoreGetCurrentThemeDirectoryPath() . '/page.php');
 
 // assemlbe the required closing html tags/data
-echo $sdmassembler->assembleHtmlRequiredClosingTags();
+echo $sdmassembler->sdmAssemblerAssembleHtmlRequiredClosingTags();
 

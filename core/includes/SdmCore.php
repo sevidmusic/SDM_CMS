@@ -46,25 +46,33 @@ class SdmCore {
         // @todo: Find a way to autmoatically determine which .php files are in root, and ignore all of them
         $this->RootDirectoryUrl = str_replace(array('/index.php', '/reset.php', '/clearErrorLog.php'), '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']);
         // the following properties rely on what is determined to be the Root Directory Path and URL
-        $this->CoreDirectoryPath = $this->getRootDirectoryPath() . '/core';
-        $this->CoreDirectoryUrl = $this->getRootDirectoryUrl() . '/core';
-        $this->ConfigurationDirectoryPath = $this->getCoreDirectoryPath() . '/config';
-        $this->ConfigurationDirectoryUrl = $this->getCoreDirectoryUrl() . '/config';
-        $this->IncludesDirectoryPath = $this->getCoreDirectoryPath() . '/includes';
-        $this->ThemesDirectoryPath = $this->getRootDirectoryPath() . '/themes';
-        $this->ThemesDirectoryUrl = $this->getRootDirectoryUrl() . '/themes';
-        $this->CurrentTheme = $this->determineCurrentTheme();
-        $this->CurrentThemeDirectoryPath = $this->getThemesDirectoryPath() . '/' . $this->determineCurrentTheme();
-        $this->CurrentThemeDirectoryUrl = $this->getThemesDirectoryUrl() . '/' . $this->determineCurrentTheme();
-        $this->UserAppDirectoryPath = $this->getRootDirectoryPath() . '/apps';
-        $this->UserAppDirectoryUrl = $this->getRootDirectoryUrl() . '/apps';
-        $this->CoreAppDirectoryPath = $this->getCoreDirectoryPath() . '/apps';
-        $this->CoreAppDirectoryUrl = $this->getCoreDirectoryUrl() . '/apps';
-        $this->DataDirectoryPath = $this->getCoreDirectoryPath() . '/sdm';
-        $this->DataDirectoryUrl = $this->getCoreDirectoryUrl() . '/sdm/data.json';
+        $this->CoreDirectoryPath = $this->sdmCoreGetRootDirectoryPath() . '/core';
+        $this->CoreDirectoryUrl = $this->sdmCoreGetRootDirectoryUrl() . '/core';
+        $this->ConfigurationDirectoryPath = $this->sdmCoreGetCoreDirectoryPath() . '/config';
+        $this->ConfigurationDirectoryUrl = $this->sdmCoreGetCoreDirectoryUrl() . '/config';
+        $this->IncludesDirectoryPath = $this->sdmCoreGetCoreDirectoryPath() . '/includes';
+        $this->ThemesDirectoryPath = $this->sdmCoreGetRootDirectoryPath() . '/themes';
+        $this->ThemesDirectoryUrl = $this->sdmCoreGetRootDirectoryUrl() . '/themes';
+        $this->CurrentTheme = $this->sdmCoreDetermineCurrentTheme();
+        $this->CurrentThemeDirectoryPath = $this->sdmCoreGetThemesDirectoryPath() . '/' . $this->sdmCoreDetermineCurrentTheme();
+        $this->CurrentThemeDirectoryUrl = $this->sdmCoreGetThemesDirectoryUrl() . '/' . $this->sdmCoreDetermineCurrentTheme();
+        $this->UserAppDirectoryPath = $this->sdmCoreGetRootDirectoryPath() . '/apps';
+        $this->UserAppDirectoryUrl = $this->sdmCoreGetRootDirectoryUrl() . '/apps';
+        $this->CoreAppDirectoryPath = $this->sdmCoreGetCoreDirectoryPath() . '/apps';
+        $this->CoreAppDirectoryUrl = $this->sdmCoreGetCoreDirectoryUrl() . '/apps';
+        $this->DataDirectoryPath = $this->sdmCoreGetCoreDirectoryPath() . '/sdm';
+        $this->DataDirectoryUrl = $this->sdmCoreGetCoreDirectoryUrl() . '/sdm/data.json';
         $this->requestedPage = (isset($_GET['page']) && $_GET['page'] != '' ? $_GET['page'] : 'homepage');
     }
 
+    /**
+     * Returns get_object_vars() for the calling object.
+     * @return array <p>An associative array of defined
+     * object accessiblenon-static properties for the
+     * specified object in scope. If a property has not
+     * been assigned a value, it will be returned with a
+     * NULL value.</p>
+     */
     public function info() {
         return get_object_vars($this);
     }
@@ -73,7 +81,7 @@ class SdmCore {
      * <p>Returns the path to the SDM CMS root directory</p>
      * @return string <p>The path to the SDM CMS root directory as a string.</p>
      */
-    final public function getRootDirectoryPath() {
+    final public function sdmCoreGetRootDirectoryPath() {
         return $this->RootDirectoryPath;
     }
 
@@ -81,7 +89,7 @@ class SdmCore {
      * <p>Returns the SDM CMS root url</p>
      * @return string <p>The root url for the SDM CMS as a string.</p>
      */
-    final public function getRootDirectoryUrl() {
+    final public function sdmCoreGetRootDirectoryUrl() {
         return $this->RootDirectoryUrl;
     }
 
@@ -89,7 +97,7 @@ class SdmCore {
      * <p>Returns the path to the SDM CMS core directory</p>
      * @return string <p>the path to the SDM CMS core directory as a string.</p>
      */
-    final public function getCoreDirectoryPath() {
+    final public function sdmCoreGetCoreDirectoryPath() {
         return $this->CoreDirectoryPath;
     }
 
@@ -97,7 +105,7 @@ class SdmCore {
      * <p>Returns the url to the SDM CMS core directory</p>
      * @return string <p>the url to the SDM CMS core directory as a string.</p>
      */
-    final public function getCoreDirectoryUrl() {
+    final public function sdmCoreGetCoreDirectoryUrl() {
         return $this->CoreDirectoryUrl;
     }
 
@@ -105,7 +113,7 @@ class SdmCore {
      * <p>Returns the path to the SDM CMS configuration directory</p>
      * @return string <p>the path to the SDM CMS configuration directory as a string.</p>
      */
-    final public function getConfiguratonDirectoryPath() {
+    final public function sdmCoreGetConfiguratonDirectoryPath() {
         return $this->ConfigurationDirectoryPath;
     }
 
@@ -113,7 +121,7 @@ class SdmCore {
      * <p>Returns the path to the SDM CMS includes directory</p>
      * @return string <p>the path to the SDM CMS includes directory as a string.</p>
      */
-    final public function getIncludesDirectoryPath() {
+    final public function sdmCoreGetIncludesDirectoryPath() {
         return $this->IncludesDirectoryPath;
     }
 
@@ -122,7 +130,7 @@ class SdmCore {
      * (i.e., the directory where all themes are kept)</p>
      * @return string <p>the path to the SDM CMS themes directory as a string.</p>
      */
-    final public function getThemesDirectoryPath() {
+    final public function sdmCoreGetThemesDirectoryPath() {
         return $this->ThemesDirectoryPath;
     }
 
@@ -131,7 +139,7 @@ class SdmCore {
      * (i.e., the directory where all themes are kept)</p>
      * @return string <p>the url to the SDM CMS themes directory as a string.</p>
      */
-    final public function getThemesDirectoryUrl() {
+    final public function sdmCoreGetThemesDirectoryUrl() {
         return $this->ThemesDirectoryUrl;
     }
 
@@ -140,7 +148,7 @@ class SdmCore {
      * If a theme is not set/found then the defual core theme will be returned.</p>
      * @return string <p>The name of the Current site theme as a string</p>
      */
-    final public function determineCurrentTheme() {
+    final public function sdmCoreDetermineCurrentTheme() {
         /**
          * For some reason, child classes are not able to call sdmCoreLoadDataObject() from
          * within this method and find data.json, so for now we use __DIR__ and str_replace()
@@ -154,7 +162,7 @@ class SdmCore {
      * <p>Returns the path to the current chosen themes directory</p>
      * @return string <p>The path to the directory for the sites current theme as a string.</p>
      */
-    final public function getCurrentThemeDirectoryPath() {
+    final public function sdmCoreGetCurrentThemeDirectoryPath() {
         return $this->CurrentThemeDirectoryPath;
     }
 
@@ -162,7 +170,7 @@ class SdmCore {
      * <p>Returns the url to the current chosen themes directory</p>
      * @return string <p>The url to the directory for the sites current theme as a string.</p>
      */
-    final public function getCurrentThemeDirectoryUrl() {
+    final public function sdmCoreGetCurrentThemeDirectoryUrl() {
         return $this->CurrentThemeDirectoryUrl;
     }
 
@@ -170,7 +178,7 @@ class SdmCore {
      * <p>Returns the path to the user apps directory</p>
      * @return string <p>The path to the user apps directory.</p>
      */
-    final public function getUserAppDirectoryPath() {
+    final public function sdmCoreGetUserAppDirectoryPath() {
         return $this->UserAppDirectoryPath;
     }
 
@@ -178,7 +186,7 @@ class SdmCore {
      * <p>Returns the url to the user apps directory</p>
      * @return string <p>The url to the user apps directory.</p>
      */
-    final public function getUserAppDirectoryUrl() {
+    final public function sdmCoreGetUserAppDirectoryUrl() {
         return $this->UserAppDirectoryUrl;
     }
 
@@ -186,7 +194,7 @@ class SdmCore {
      * <p>Returns the path to the core apps directory</p>
      * @return string <p>The path to the core apps directory.</p>
      */
-    final public function getCoreAppDirectoryPath() {
+    final public function sdmCoreGetCoreAppDirectoryPath() {
         return $this->CoreAppDirectoryPath;
     }
 
@@ -194,7 +202,7 @@ class SdmCore {
      * <p>Returns the url to the user apps directory</p>
      * @return string <p>The url to the user apps directory.</p>
      */
-    final public function getCoreAppDirectoryUrl() {
+    final public function sdmCoreGetCoreAppDirectoryUrl() {
         return $this->CoreAppDirectoryUrl;
     }
 
@@ -202,7 +210,7 @@ class SdmCore {
      * <p>Returns the path to the data directory</p>
      * @return string <p>The path to the data directory.</p>
      */
-    final public function getDataDirectoryPath() {
+    final public function sdmCoreGetDataDirectoryPath() {
         return $this->DataDirectoryPath;
     }
 
@@ -210,7 +218,7 @@ class SdmCore {
      * <p>Returns the url to the data directory</p>
      * @return string <p>The url to the data directory.</p>
      */
-    final public function getDataDirectoryUrl() {
+    final public function sdmCoreGetDataDirectoryUrl() {
         return $this->DataDirectoryUrl;
     }
 
@@ -222,14 +230,14 @@ class SdmCore {
      * @return object <p>The content object loaded from $this->CoreDirectoryUrl/sdm/data.json or from the DB</p>
      */
     final public function sdmCoreLoadDataObject() {
-        $data = json_decode(file_get_contents($this->getDataDirectoryPath() . '/data.json'));
+        $data = json_decode(file_get_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json'));
         return $data;
     }
 
     /**
      * @return string The requested page
      */
-    final public function determineRequestedPage() {
+    final public function sdmCoreDetermineRequestedPage() {
         return $this->requestedPage;
     }
 
@@ -237,20 +245,20 @@ class SdmCore {
      * Configure PHP settings and Core settings.
      * @return boolen Returns TRUE regardless of success.
      */
-    final public function configureCore() {
+    final public function sdmCoreConfigureCore() {
         // turn on error reporting | @todo make this reflect site settings so admin can turn on or off based on wheater in dev or not...
         error_reporting(E_ALL | E_STRICT | E_NOTICE);
         // modify our ini settings to fit the needs of our CMS
         ini_set('log_errors', '1'); // will force php to log all errors to the Server's log files
-        ini_set('error_log', $this->getCoreDirectoryPath() . '/logs/sdm_core_errors.log');
+        ini_set('error_log', $this->sdmCoreGetCoreDirectoryPath() . '/logs/sdm_core_errors.log');
         ini_set('display_errors', 0); // this line should be commented out once out of dev
         ini_set("auto_detect_line_endings", true); // enables PHP to interoperate with Macintosh systems @see "http://www.php.net/manual/en/filesystem.configuration.php#ini.auto-detect-line-endings" for more information | the slight performance penalty is worth insuring that PHP's file functions will be able to determine the end of lines on all OS's
         // set include path
-        set_include_path($this->getIncludesDirectoryPath());
+        set_include_path($this->sdmCoreGetIncludesDirectoryPath());
         // include timezone file
-        require($this->getConfiguratonDirectoryPath() . '/timezone.php');
+        require($this->sdmCoreGetConfiguratonDirectoryPath() . '/timezone.php');
         // @depreceated : we only use objects now... | include dev functions | remove once out of dev
-        //require($this->getIncludesDirectoryPath() . '/dev_functions.php');
+        //require($this->sdmCoreGetIncludesDirectoryPath() . '/dev_functions.php');
         return TRUE;
     }
 
@@ -263,7 +271,7 @@ class SdmCore {
      * @param string $data <p>The data to be kind</p>
      * @return string <p>The encrypted string</p>
      */
-    final public function sdm_kind($data) {
+    final public function sdmKind($data) {
         $cipher = '>#|@zl)VR-1ZYP{8g~iJAxy^(\\?INr!*UBuMqt7nvk}&`wE6b:H03KXOm/f.c"[S]a<LGe\'p;o9,C2h%F=dDs$5jW_TQ+4';
         $limit = strlen($cipher);
         $offset = rand(0, $limit - 1);
@@ -277,11 +285,11 @@ class SdmCore {
     }
 
     /**
-     * <p>Decrypts a string encrypted with <b>sdm_kind()</b></p>
+     * <p>Decrypts a string encrypted with <b>sdmKind()</b></p>
      * @param string  $data <p>The string to be decrypted.</p>
      * @return string <p>The decrypted string.</p>
      */
-    final public function sdm_nice($data) {
+    final public function sdmNice($data) {
         $cipher = '>#|@zl)VR-1ZYP{8g~iJAxy^(\\?INr!*UBuMqt7nvk}&`wE6b:H03KXOm/f.c"[S]a<LGe\'p;o9,C2h%F=dDs$5jW_TQ+4';
         $limit = strlen($cipher);
         $key = explode('sdm', $data);
@@ -309,7 +317,7 @@ class SdmCore {
      * echo an array's data so if it cant read the array the array is corrupted and needs
      * to be re-structured</p>
      */
-    final public function sdm_read_array($array, $sub = FALSE, $parent = '') {
+    final public function sdmCoreSdmReadArray($array, $sub = FALSE, $parent = '') {
         $style = 'border:1px dashed limegreen;border-radius:3px;margin:25px;padding:12px;width:90%;overflow:auto;background:#000000;color:#ffffff;';
         echo '<div style="' . $style . '">';
         echo ($sub === FALSE ? '' : "<i style='color:#00CCFF;'>{$parent} (<i style='color:aqua;'>" . gettype($array) . "</i>)=> </i>");
@@ -321,12 +329,12 @@ class SdmCore {
         foreach ($array as $key => $value) {
             switch (is_array($value)) {
                 case TRUE:
-                    self::sdm_read_array($value, TRUE, $key);
+                    self::sdmCoreSdmReadArray($value, TRUE, $key);
                     break;
                 default:
                     if (is_object($value)) {
                         echo ($sub === FALSE ? '<p><b style="color:#00CCFF;"><i>' . (isset($key) ? strval($key) : 'unknown_object') . '</i></b> (<i style="color:aqua;">object</i>)</p>' : '<p><ul><li><b style="color:#00FF99;"><i>' . (isset($key) ? strval($key) : 'unknown_object') . '</i></b>(<i style="color:aqua;">object</i>)</li></ul></p>');
-                        self::sdm_read_array(json_decode(json_encode($value), TRUE));
+                        self::sdmCoreSdmReadArray(json_decode(json_encode($value), TRUE));
                     } else {
                         echo ($sub === FALSE ? "<p><xmp style='display:inline;color:#00CCFF'>{$key}</xmp> (<i style='color:aqua;'>" . gettype($value) . "</i>) => <xmp style='display:inline;color:#00CC99'>{$value}</xmp></p>" : "<p><ul><li><xmp style='display:inline;color:#00CC99'>{$key}</xmp> (<i style='color:aqua;'>" . gettype($value) . "</i>) => <xmp style='display:inline;color:#00CC99'>{$value}</xmp></li></ul></p>");
                     }
@@ -353,27 +361,27 @@ class SdmCore {
         switch ($directory_location_reference) {
             // search for directory in site root
             case 'root':
-                return scandir($this->getRootDirectoryPath() . '/' . $directory_name);
+                return scandir($this->sdmCoreGetRootDirectoryPath() . '/' . $directory_name);
                 break;
             // search for directory in site core
             case 'core':
-                return scandir($this->getCoreDirectoryPath() . '/' . $directory_name);
+                return scandir($this->sdmCoreGetCoreDirectoryPath() . '/' . $directory_name);
                 break;
             // search for directory in site themes
             case 'themes':
-                return scandir($this->getRootDirectoryPath() . '/themes/' . $directory_name);
+                return scandir($this->sdmCoreGetRootDirectoryPath() . '/themes/' . $directory_name);
                 break;
             case 'CURRENT_THEME':
-                return scandir($this->getCurrentThemeDirectoryPath() . '/' . $directory_name);
+                return scandir($this->sdmCoreGetCurrentThemeDirectoryPath() . '/' . $directory_name);
                 break;
             case 'apps':
-                return scandir($this->getUserAppDirectoryPath() . '/' . $directory_name);
+                return scandir($this->sdmCoreGetUserAppDirectoryPath() . '/' . $directory_name);
                 break;
             case 'coreapps':
-                return scandir($this->getCoreAppDirectoryPath() . '/' . $directory_name);
+                return scandir($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $directory_name);
                 break;
             case 'userapps':
-                return scandir($this->getUserAppDirectoryPath() . '/' . $directory_name);
+                return scandir($this->sdmCoreGetUserAppDirectoryPath() . '/' . $directory_name);
                 break;
             default:
                 return array('error' => 'Unable to find requested directory');
@@ -425,7 +433,7 @@ class SdmCore {
      */
     final public function sdmCoreDetermineAvailablePages() {
         // load our json data from data.json
-        $data = json_decode(file_get_contents($this->getCoreDirectoryPath() . '/sdm/data.json'), TRUE);
+        $data = json_decode(file_get_contents($this->sdmCoreGetCoreDirectoryPath() . '/sdm/data.json'), TRUE);
         // we just want the KEYS from the content array as they correlate to the names of the pages of our site. i.e., $data['content']['homepage'] holds the homepage content.
         $pages = array_keys($data['content']);
         // attempt to format the array so the KEYS can be used for display, and the VALUES can be used in code | "pageName" will become "Page Name" and will be used as a key
@@ -444,7 +452,7 @@ class SdmCore {
      * values of the Enabled Apps object</p>
      * @return object An object whose properties are apps that are currently enabled.
      */
-    final public function sdmCmsDetermineEnabledApps() {
+    final public function sdmCoreDetermineEnabledApps() {
         $data = $this->sdmCoreLoadDataObject();
         $enabled_apps = $data->settings->enabledapps;
         return $enabled_apps;

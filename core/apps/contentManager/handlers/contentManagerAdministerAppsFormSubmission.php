@@ -2,10 +2,10 @@
 
 $output = '';
 // form submitted successfully
-if (SDM_Form::get_submitted_form_value('content_manager_form_submitted') === 'content_manager_form_submitted') {
-    //$sdmcore->sdm_read_array($_POST['sdm_form']);
+if (SdmForm::sdmFormGetSubmittedFormValue('content_manager_form_submitted') === 'content_manager_form_submitted') {
+    //$sdmcore->sdmCoreSdmReadArray($_POST['SdmForm']);
     foreach ($sdmcms->sdmCmsDetermineAvailableApps() as $app) {
-        $sdmcms->sdmCmsSwitchAppState($app, SDM_Form::get_submitted_form_value($app));
+        $sdmcms->sdmCmsSwitchAppState($app, SdmForm::sdmFormGetSubmittedFormValue($app));
     }
     //$sdmcms->sdmCmsSwitchAppState('contentManager', 'off');
     $output .= '
@@ -24,4 +24,4 @@ else {
                 ';
 }
 
-$sdmassembler->incorporateAppOutput($sdmassembler_dataObject, $output, $options);
+$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, $output, $options);

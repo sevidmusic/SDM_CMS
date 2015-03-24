@@ -49,7 +49,7 @@ class SdmMenuItem {
         $this->menuItemEnabled = (isset($this->menuItemEnabled) ? $this->menuItemEnabled : TRUE);
     }
 
-    public static function generateMenuItem() {
+    public static function sdmMenuItemGenerateMenuItem() {
         return new Self;
     }
 
@@ -95,7 +95,7 @@ class SdmMenu extends SdmMenuItem {
         $this->menuCssClasses = (isset($this->menuCssClasses) ? $this->menuCssClasses : array('sdm-menu', $this->menuMachineName));
         $this->displaypages = (isset($this->displaypages) ? $this->displaypages : array('all'));
         $this->menuKeyholders = (isset($this->menuKeyholders) ? $this->menuKeyholders : array('root'));
-        $this->menuItems = (isset($this->menuItems) ? $this->menuItems : array(SdmMenuItem::generateMenuItem(), SdmMenuItem::generateMenuItem(), SdmMenuItem::generateMenuItem()));
+        $this->menuItems = (isset($this->menuItems) ? $this->menuItems : array(SdmMenuItem::sdmMenuItemGenerateMenuItem(), SdmMenuItem::sdmMenuItemGenerateMenuItem(), SdmMenuItem::sdmMenuItemGenerateMenuItem()));
     }
 
 }
@@ -117,7 +117,7 @@ class SdmNms extends SdmCore {
 
     private static $Initialized;
 
-    public static function sdmInitializeNms() {
+    public static function sdmNmsInitializeNms() {
         if (!isset(self::$Initialized)) {
             self::$Initialized = new SdmNms;
         }
@@ -136,7 +136,7 @@ class SdmNms extends SdmCore {
         $data = $this->sdmCoreLoadDataObject();
         array_push($data->menus, $menu);
         $json = json_encode($data);
-        return file_put_contents($this->getDataDirectoryPath() . '/data.json', $json, LOCK_EX);
+        return file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $json, LOCK_EX);
     }
 
     /**

@@ -1,7 +1,7 @@
 <div id="lockedwrapper">
     <div id="topmenu">
         <?php
-        echo (isset($sdmassembler_themeContentObject->topmenu) ? $sdmassembler_themeContentObject->topmenu : '<a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=homepage">Homepage</a>');
+        echo (isset($sdmassembler_themeContentObject->topmenu) ? $sdmassembler_themeContentObject->topmenu : '<a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=homepage">Homepage</a>');
         ?>
     </div>
     <div id='main_content'>
@@ -16,7 +16,7 @@
                 foreach ($menu->menuItems as $menuItem) {
                     switch ($menuItem->destinationType) {
                         case 'internal':
-                            echo '<p><a href="' . $sdmcore->getRootDirectoryUrl() . '/index.php?page=' . $menuItem->destination . '">' . $menuItem->menuItemDisplayName . '</a></p>';
+                            echo '<p><a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=' . $menuItem->destination . '">' . $menuItem->menuItemDisplayName . '</a></p>';
                             break;
 
                         case 'external':
