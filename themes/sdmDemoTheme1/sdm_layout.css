@@ -25,6 +25,9 @@ body {
     position: absolute;
 }
 
+.sdmDemoTheme1 #topmenu {
+    color: red;
+}
 .sdmDemoTheme1 #main_content {
     background: #DDDDDD;
     text-align: left;
