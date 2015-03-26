@@ -45,41 +45,53 @@ function assemlbeOmdbTableElements($embedlyData, $rowcolor, $testurl = 'unknown'
     $decodedEmbedlyData = json_decode($embedlyData, TRUE);
     // create OMDB api request url
     //$sdmcore->sdmCoreSdmReadArray($decodedEmbedlyData);
-    $omdbApiRequestUrl = 'http://www.omdbapi.com/?t=' . str_replace(array(' ', '_', '+'), '-', urlencode((isset($decodedEmbedlyData['title']) ? $decodedEmbedlyData['title'] : 'null')));
+    $omdbApiRequestUrls = array(
+        'http://www.omdbapi.com/?t=' . str_replace(array(' ', '_', '+'), '-', urlencode((isset($decodedEmbedlyData['title']) ? $decodedEmbedlyData['title'] : 'null'))),
+        'http://www.omdbapi.com/?t=' . str_replace(array(' ', '_', '+'), '-', urlencode((isset($decodedEmbedlyData['title']) ? $decodedEmbedlyData['title'] : 'null'))) . '&type=movie',
+        'http://www.omdbapi.com/?t=' . str_replace(array(' ', '_', '+'), '-', urlencode((isset($decodedEmbedlyData['title']) ? $decodedEmbedlyData['title'] : 'null'))) . '&type=episode',
+        'http://www.omdbapi.com/?t=' . str_replace(array(' ', '_', '+'), '-', urlencode((isset($decodedEmbedlyData['title']) ? $decodedEmbedlyData['title'] : 'null'))) . '&type=series',
+    );
+    // Create Header Rows
     $output = '<tr style="' . $styles_omdbDataTableRow . '"><td style="' . $styles_td . '">Provider Name : ' . (isset($decodedEmbedlyData['provider_name']) ? $decodedEmbedlyData['provider_name'] : '<b style="color:red;">UNKNOWN PROVIDER OR BAD URL | Tested URL : <i><a href="' . $testurl . '">' . $testurl . '</a></i></b>') . '</td></tr>';
     $output .= '<tr style="' . $styles_omdbDataTableRow . '"><td style="' . $styles_td . '">Movie Url : <i><a href="' . $testurl . '">' . $testurl . '</a></i></td></tr>';
     $output .= '<tr style="' . $styles_omdbDataTableRow . '"><td style="' . $styles_td . '">Movie Title : <i>' . (isset($decodedEmbedlyData['title']) ? $decodedEmbedlyData['title'] : '<b style="color:red;">Title Unknown</b>') . '</i></td></tr>';
-    $output .= '<tr style="' . $styles_omdbDataTableRow . '"><td style="' . $styles_td . '">OMDB API Request Url : <i>' . $omdbApiRequestUrl . '</i></td></tr>';
-    /** OMDB TESTS * */
-    $omdbJsonString = $sdmcore->sdmCoreCurlGrabContent($omdbApiRequestUrl);
-    $output .= '<tr style="' . $styles_omdbDataTableRow . '"><td style="' . $styles_td . '">Returned JSON String : <xmp style="color:orange;">' . $omdbJsonString . '</xmp></td></tr>';
-    $decodedOmdbData = json_decode($omdbJsonString, TRUE);
-    //DATA ROW //
-    $output .= '<tr style="' . $styles_omdbDataTableRow . '">';
-    // add header row with main array keys as column values
-    foreach ($decodedOmdbData as $keyname => $keyvalue) {
-        $output .= '<td style="' . $styles_headerTd . '">' . $keyname . ' (type : <i>' . gettype($keyvalue) . '</i>)</td>';
-    }
-    $output .= '</tr>';
-
-    $output .= '<tr style="' . $styles_omdbDataTableRow . '">';
-    // add omdb data to table
-    foreach ($decodedOmdbData as $key => $value) {
-        switch (is_array($value)) {
-            case TRUE:
-                if (empty($value)) {
-                    $output .= '<td style="' . $styles_td . 'background:darkred;"><div style="height:200px;overflow:auto;">' . (is_null($value) || $value === '' || $value === 'N/A' || $value === 'Null' || $value === 'null' || $value === 'False' || $value === 'Movie not found!' ? '<i style="color:aqua">null</i>' : '<i style="color:aqua">EMPTY ARRAY</i>') . '</div></td>';
-                } else {
-                    $output .= '<td style="' . $styles_td . '"><div style="height:200px;min-width:420px;overflow:auto;">' . (is_null($value) || $value === '' || $value === 'N/A' || $value === 'Null' || $value === 'null' || $value === 'False' || $value === 'Movie not found!' ? '<i style="color:aqua">null</i>' : omdbArrayToList($value, $key, $rowcolor)) . '</div></td>';
-                }
-                break;
-            default:
-                $output .= '<td style="' . $styles_td . (is_null($value) || $value === '' || $value === 'N/A' || $value === 'Null' || $value === 'null' || $value === 'False' || $value === 'Movie not found!' ? 'background: red;' : '') . '"><div style="height:200px;overflow:auto;">' . (is_null($value) || $value === '' || $value === 'N/A' || $value === 'Null' || $value === 'null' ? '<i style="color:aqua">null</i>' : (is_bool($value) === TRUE ? ($value === TRUE ? '<b style="color:green">TRUE</b>' : '<b style="color:red">FALSE</b>') : (substr($value, 0, 7) === 'http://' || substr($value, 0, 8) === 'https://' || substr($value, 0, 4) === 'www.' ? '<a href="' . $value . '">' . $value . '</a>' : $value))) . '</div></td>';
-                break;
+    // Create Returned Data Rows
+    foreach ($omdbApiRequestUrls as $index => $omdbApiRequestUrl) {
+        $output .= '<tr style="' . $styles_omdbDataTableRow . '"><td style="' . $styles_td . '">OMDB API Request Url <i style="color:#95B9C7;">(' . ($index === 0 ? 'no type' : ($index === 1 ? 'type=movie' : ($index === 2 ? 'type=episode' : ($index === 3 ? 'type=series' : '')))) . ')</i> : <i>' . $omdbApiRequestUrl . '</i></td></tr>';
+        /** OMDB TESTS * */
+        // meke request
+        $omdbJsonString = $sdmcore->sdmCoreCurlGrabContent($omdbApiRequestUrl);
+        // add a row to show the json string that was returned
+        $output .= '<tr style="' . $styles_omdbDataTableRow . '"><td style="' . $styles_td . '">Returned JSON String : <xmp style="color:orange;">' . $omdbJsonString . '</xmp></td></tr>';
+        // decode the json string
+        $decodedOmdbData = json_decode($omdbJsonString, TRUE);
+        // BUILD DATA HEADER ROW //
+        $output .= '<tr style="' . $styles_omdbDataTableRow . '">';
+        // add header row with main array keys as column values
+        foreach ($decodedOmdbData as $keyname => $keyvalue) {
+            $output .= '<td style="' . $styles_headerTd . '">' . $keyname . ' (type : <i>' . gettype($keyvalue) . '</i>)</td>';
         }
+        $output .= '</tr>';
+        // BUILD DATA ROW //
+        $output .= '<tr style="' . $styles_omdbDataTableRow . '">';
+        // add omdb data to table
+        foreach ($decodedOmdbData as $key => $value) {
+            switch (is_array($value)) {
+                case TRUE:
+                    if (empty($value)) {
+                        $output .= '<td style="' . $styles_td . 'background:darkred;"><div style="height:200px;overflow:auto;">' . (is_null($value) || $value === '' || $value === 'N/A' || $value === 'Null' || $value === 'null' || $value === 'False' || $value === 'Movie not found!' ? '<i style="color:aqua">null</i>' : '<i style="color:aqua">EMPTY ARRAY</i>') . '</div></td>';
+                    } else {
+                        $output .= '<td style="' . $styles_td . '"><div style="height:200px;min-width:420px;overflow:auto;">' . (is_null($value) || $value === '' || $value === 'N/A' || $value === 'Null' || $value === 'null' || $value === 'False' || $value === 'Movie not found!' ? '<i style="color:aqua">null</i>' : omdbArrayToList($value, $key, $rowcolor)) . '</div></td>';
+                    }
+                    break;
+                default:
+                    $output .= '<td style="' . $styles_td . (is_null($value) || $value === '' || $value === 'N/A' || $value === 'Null' || $value === 'null' || $value === 'False' || $value === 'Movie not found!' ? 'background: red;' : '') . '"><div style="height:200px;overflow:auto;">' . (is_null($value) || $value === '' || $value === 'N/A' || $value === 'Null' || $value === 'null' ? '<i style="color:aqua">null</i>' : (is_bool($value) === TRUE ? ($value === TRUE ? '<b style="color:green">TRUE</b>' : '<b style="color:red">FALSE</b>') : (substr($value, 0, 7) === 'http://' || substr($value, 0, 8) === 'https://' || substr($value, 0, 4) === 'www.' ? '<a href="' . $value . '">' . $value . '</a>' : $value))) . '</div></td>';
+                    break;
+            }
+        }
+        $output .= '</tr>';
+        // END BUILD DATA ROW //
     }
-    $output .= '</tr>';
-    // END DATA ROW //
     return $output;
 }
 
