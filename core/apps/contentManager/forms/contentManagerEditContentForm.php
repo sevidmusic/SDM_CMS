@@ -3,9 +3,9 @@
 // load contentManager functions
 require_once($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/contentManager/includes/contentManagerFunctions.php');
 
-$pagetoedit = $_POST['SdmForm']['page_to_edit'];
 // CREATE EDIT FORM OBJECT
 $editcontentform = new SdmForm();
+$pagetoedit = $editcontentform->sdmFormGetSubmittedFormValue('page_to_edit');
 $editcontentform->form_handler = 'contentManagerUpdateContentFormSubmission';
 $editcontentform->method = 'post';
 $editcontentform->form_elements = array(
