@@ -1,9 +1,11 @@
 <?php
 
+// initialize a form object so we can get the last forms sumbitted values
+$sdmForm = new SdmForm();
 $output = '';
 // form submitted successfully
-if ($_POST['SdmForm']['content_manager_form_submitted'] === 'content_manager_form_submitted') {
-    $sdmcms->sdmCmsDeletePage($_POST['SdmForm']['page_to_delete']);
+if ($sdmForm->sdmFormGetSubmittedFormValue('content_manager_form_submitted') === 'content_manager_form_submitted') {
+    $sdmcms->sdmCmsDeletePage($sdmForm->sdmFormGetSubmittedFormValue('page_to_delete'));
 
 
     $output .= '
@@ -11,7 +13,7 @@ if ($_POST['SdmForm']['content_manager_form_submitted'] === 'content_manager_for
                     <div id"contentManager">
                         <p>Form has been submitted with the following values.
                             <ul>
-                                <li>PAGE : ' . $_POST['SdmForm']['page_to_delete'] . '</li>
+                                <li>PAGE : ' . $sdmForm->sdmFormGetSubmittedFormValue('page_to_delete') . '</li>
                             </ul></p>
                     </div>
                     <!-- close contentManager div -->';

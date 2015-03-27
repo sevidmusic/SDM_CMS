@@ -1,22 +1,22 @@
 <?php
 
+$sdmForm = new SdmForm();
 $options = array(
     'incpages' => array('contentManagerUpdateContentFormSubmission'),
 );
 $output = '';
 // form submitted successfully
-if ($_POST['SdmForm']['content_manager_form_submitted'] === 'content_manager_form_submitted') {
+if ($sdmForm->sdmFormGetSubmittedFormValue('content_manager_form_submitted') === 'content_manager_form_submitted') {
     $output .= '
                     <!-- contentManager div -->
                     <div id"contentManager">
                         <p>Form has been submitted with the following values.
                             <ul>
-                                <li>PAGE : ' . $_POST['SdmForm']['page'] . '</li>';
+                                <li>PAGE : ' . $sdmForm->sdmFormGetSubmittedFormValue('page') . '</li>';
     // loop through and update wrappers
     foreach ($sdmcms->sdmCmsDetermineAvailableWrappers() as $dispalyValue => $machineValue) {
-        $sdmcms->sdmCmsUpdateContent($_POST['SdmForm']['page'], $machineValue, nl2br($_POST['SdmForm'][$machineValue]));
-        $output .= '
-                                <li>Wrapper with ID : ' . $machineValue . '<br/>Wrapper Content : <xmp>' . $_POST['SdmForm'][$machineValue] . '</xmp></li>';
+        $sdmcms->sdmCmsUpdateContent($sdmForm->sdmFormGetSubmittedFormValue('page'), $machineValue, nl2br($sdmForm->sdmFormGetSubmittedFormValue($machineValue)));
+        $output .= '<li>Wrapper : "' . $dispalyValue . '" (<i>' . $machineValue . '</i>)</li><li>Wrapper Content : <xmp>' . $sdmForm->sdmFormGetSubmittedFormValue($machineValue) . '</xmp></li>';
     }
     $output .= '
                             </ul></p>
