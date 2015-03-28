@@ -3,35 +3,27 @@
 // THIS APP USES EMBEDLY AND OMDB TO DISCOVER DATA ABOUT A MOVIE TITLE OR MOVIE URL
 
 require($sdmcore->sdmCoreGetUserAppDirectoryPath() . '/wikiTester/functions.php');
-/** APP SETTINGS CODE * */
-// app output options
-$options = array(
-    'wrapper' => 'main_content',
-    'incmethod' => 'append',
-    'incpages' => array('wikiTester'),
-        //'ignorepages' => array('contentManager'),
-); // options array determines how an apps output is incorporated into the page
-$devmode = FALSE; // if set to TRUE then dev data about the app output will be displayed on the page as well
-//  Add our initial app output to the $output var, this also initializes the $output var
-$output = '<h2>OMDB Tester</h2><p>This app generates an html table that displays the data that is returned from OMDB for a given movie title based. It works by first looking up a movie url on embedly, then it grabs the title returned for that url and passes the title as search parameter to OMDB. Then the data returned from OMDB is organized into an HTML table and displayed on the page. The urls tested can be seen in the source code in the $movieUrls array. To see the OMDB data table click here: <br/><br/><a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=wikiTester&mode=test">Generate OMDB Data Table</a></p><p>You can also test an individual movie url by entering a movie url from a site like YouTube into the form below.</p>';
-// Add our oembed test form. This form allows the user to submit the movie title or url via an html form instead of testing all the urls in returned by getTestMovieUrls()
-$output .= getOmdbTestForm();
-// determine if we should display the wiki data table, and weather or not to build the table based on a user submitted url or to test all providers by uilding a $movieUrls array with test urls to videos on the different providers sites
-if (isset($_POST['SdmForm'])) {
-    // if movie url submitted via getOembedTestForm, then use the submitter url as our only test movie url.
-    $movieUrls = array(
-        htmlentities(SdmForm::sdmFormGetSubmittedFormValue('movieUrl')),
-    );
-    // add our embedly data table to our app output
-    $output .= buildOmdbDataTable($movieUrls);
-}
-// otherwise see if we are in test mode
-elseif (isset($_GET['mode']) && $_GET['mode'] === 'test') {
-    // if in test mode, build table based on the test urls returned by getTestMovieUrls()
-    $movieUrls = getTestMovieUrls();
-    // add our embedly data table to our app output
-    $output .= buildOmdbDataTable($movieUrls);
-}
-// incorporate our app output into the page
-$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, $output, $options, $devmode);
+$queryArgs = array(
+    'action' => 'query', // type of action for the api to take, most cases will be query
+    'format' => 'json', // the format to return the data in, most cases will be json, but can also be xml and a variety of other formats. @see http://www.mediawiki.org/wiki/API
+    'indexpageids' => 'indexpageids', // will return an array of page ids for the returned pages
+    'titles' => 'Goodfellas|Family_Guy|Pulp_Fiction|Snatch', // the titles to search for (should be a piped string : Title_One|Title_Two|Title_Three)
+    'redirects' => 'redirects', // will cause API to try and resolve an naming convention issues witht he request titles or page ids that could lead to inaccurate results or no results at all
+    'prop' => 'info|extracts', // the property categories we wish to get
+    'inprop' => 'url|displaytitle', // the property types we wish to get
+);
+$queryRequest = $sdmcore->sdmCoreCurlGrabContent('http://en.wikipedia.org/w/api.php', $queryArgs);
+$parseArgs = array(
+    'action' => 'parse',
+    'format' => 'json',
+    'title' => 'family',
+    'redirects' => 'redirects',
+    'prop' => 'categories|Ccategorieshtml|Cimages|Cdisplaytitle',
+);
+$parseRequest = $sdmcore->sdmCoreCurlGrabContent('http://en.wikipedia.org/w/api.php', $queryArgs);
+$output = '<p>This app performs tests to see what wikipedia returns for agiven movie title.</p>';
+$output .= '<h3>Wiki Tester : Query Example</h3>' . wikiArrayToList(json_decode($queryRequest, TRUE), 'results');
+$output .= '<h3>Wiki Tester : Parse Example</h3>' . wikiArrayToList(json_decode($parseRequest, TRUE), 'results');
+
+$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, $output, array('incpages' => array('wikiTester')), FALSE);
 
