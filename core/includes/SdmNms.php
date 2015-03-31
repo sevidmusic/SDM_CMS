@@ -128,15 +128,24 @@ class SdmNms extends SdmCore {
     /**
      * Add a menu to our site.
      * It is suggested that you pass in an instance of the SdmMenu
-     * @param $menu mixed Can be an object or an array. If it an array it will be converted internally into an object for processing.
+     * @param $menu mixed .
      */
     public function sdmNmsAddMenu($menu) {
+        // we want to make sure we can accsess the new $menu as an object, so if it is not one convert it.
         if (gettype($menu) != 'object') {
             $menu = json_decode(json_encode($menu));
         }
+        // load our core data object
         $data = $this->sdmCoreLoadDataObject();
-        array_push($data->menus, $menu);
+        // load stored menus object from our core data object and convert to an array | makes it easiser to index the new $menu object we are going to be adding
+        $menus = json_decode(json_encode($data->menus), TRUE);
+        // store the new $menu using it's menu id as it's array index
+        $menus[$menu->menuId] = $menu;
+        // overwrite existing menus with our new menus array (which WILL contain any menus originally stored)
+        $data->menus = $menus;
+        // encode $data as json to prep it for storage
         $json = json_encode($data);
+        // attempt to write new core $data | if anything fails FALSE will be returned
         return file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $json, LOCK_EX);
     }
 
@@ -151,9 +160,16 @@ class SdmNms extends SdmCore {
 
     /**
      * delete a menu
+     * @param mixed $menuId <p>Can be a string or an integer whose values matches the id of the menu to be deleted.
+     *               i.e., sdmNmsdeleteMenu(1) and sdmNmsdeleteMenu('1') would delete the menu that has a menuId
+     *               equal to 1</p>
+     * @return bool TRUE if menu was deleted, FALSE on failure.
      */
-    public function sdmNmsdeleteMenu() {
-
+    public function sdmNmsdeleteMenu($menuId) {
+        $data = $this->sdmCoreLoadDataObject();
+        unset($data->menus->$menuId);
+        $json = json_encode($data);
+        return file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $json, LOCK_EX);
     }
 
     /**
@@ -167,6 +183,48 @@ class SdmNms extends SdmCore {
      * disable a menu
      */
     public function sdmNmsdisableMenu() {
+
+    }
+
+    /**
+     * get a stored menu
+     */
+    public function sdmNmsGetMenu() {
+
+    }
+
+    /**
+     * get a stored menu and return it as an html formatted string
+     */
+    public function sdmNmsGetMenuHtml() {
+
+    }
+
+    /**
+     * delete a menu
+     */
+    public function sdmNmsdeleteMenuItem() {
+
+    }
+
+    /**
+     * enable a menu
+     */
+    public function sdmNmsupdateMenuItem() {
+
+    }
+
+    /**
+     * disable a menu
+     */
+    public function sdmNmsdisableMenuItem() {
+
+    }
+
+    /**
+     * get a stored menu
+     */
+    public function sdmNmsGetMenuItem() {
 
     }
 
