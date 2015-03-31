@@ -12,7 +12,7 @@
  */
 function wikiArrayToList($array, $parentKey = null) {
     $wrappingDivStyle = 'color:#D0D0D0;background:#000000;border: 3px solid #99FF99;border-radius:5px;padding:15px;margin:20px 0px 20px 0px;';
-    $liStyle = 'color:#D2D2D2;background:#111111;border: 3px dashed #99FF99;border-radius:5px;padding:15px;margin:20px 0px 20px 0px;';
+    $liStyle = 'color:#D2D2D2;background:#111111;border: 3px dashed #99FF99;border-radius:5px;padding:15px;margin:20px 0px 20px 0px;overflow:auto;';
     $list = '<div style="' . $wrappingDivStyle . '' . (isset($parentKey) === TRUE ? '' : 'text-align:center;') . '">' . (isset($parentKey) === TRUE ? ' <i style="color:cornflowerblue;">(type : <span style="color:' . (gettype($array) === 'integer' ? '#0066ff' : (gettype($array) === 'array' ? '#66FF66' : '#009966')) . ';">' . gettype($array) . '</span>) </i> <span style="color:' . (gettype($array) === 'integer' ? '#0066ff' : (gettype($array) === 'array' ? '#66FF66' : '#009966')) . ';">[\'' . $parentKey . '\']</span>' : '-- Array Data --') . '</div><ul style="list-style-type:none;">';
     foreach ($array as $key => $value) {
         switch (is_array($value)) {

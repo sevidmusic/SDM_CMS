@@ -2,7 +2,8 @@
 
 echo '<div style="background:#DDDDDD;width:75%;border:2px solid #CCCCCC;border-radius:7px;margin:0 auto;padding:20px;">';
 echo '<h1>SDM CMS</h1>';
-require(__DIR__ . '/core/config/startup.php');
+require(__DIR__ . '/core/includes/SdmCore.php');
+$sdmcore = new SdmCore();
 /**
  * Run this file to configure a new site.
  */
