@@ -188,16 +188,36 @@ class SdmNms extends SdmCore {
 
     /**
      * get a stored menu
+     * @param mixed An integer or stirng that is equal to the id of the menu we wish to get
      */
-    public function sdmNmsGetMenu() {
-
+    public function sdmNmsGetMenu($menuId) {
+        $data = $this->sdmCoreLoadDataObject();
+        return $data->menus->$menuId;
     }
 
     /**
-     * get a stored menu and return it as an html formatted string
+     * Get a single stored menu and return it as an html formatted string
+     * @param mixed $menuId An integer or stirng that is equal to the id of the menu we wish to get
+     * @return string An html formated string representation of the menu
      */
-    public function sdmNmsGetMenuHtml() {
-
+    public function sdmNmsGetMenuHtml($menuId) {
+        $html = '';
+        $menu = $this->sdmNmsGetMenu($menuId);
+        $html .= '<' . $menu->menuWrappingTagType . '>';
+        foreach ($menu->menuItems as $menuItem) {
+            switch ($menuItem->destinationType) {
+                case 'internal':
+                    $html .= '<' . $menuItem->menuItemWrappingTagType . '>' . '<a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=' . $menuItem->destination . '">' . $menuItem->menuItemDisplayName . '</a>' . '</' . $menuItem->menuItemWrappingTagType . '>';
+                    break;
+                case 'external':
+                    $html .= '<' . $menuItem->menuItemWrappingTagType . '>' . '<a href="' . $menuItem->destination . '">' . $menuItem->menuItemDisplayName . '</a>' . '</' . $menuItem->menuItemWrappingTagType . '>';
+                    break;
+                default:
+                    break;
+            }
+        }
+        echo '</' . $menu->menuWrappingTagType . '>';
+        return gettype($menu);
     }
 
     /**
