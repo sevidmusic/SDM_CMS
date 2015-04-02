@@ -29,13 +29,39 @@ function buildMovieApiQueryArray($querytitles) {
     foreach ($wikitextArray as $pid => $wikitext) {
         $infoboxes[$pid] = getInfoBoxes($wikitext);
     }
-    $infoboxes['mmhQueryUrl'] = $queryData->mmhQueryUrl;
-    return $infoboxes;
+    // values to replace
+    $needles = array('\'');
+    // value to replace with
+    $replace = 'SEVI_D_JAMIE_MCCALLISTER';
+    // filter infoboxes recursively with recrusiveArrayStringReplace() and store filtered values in our $moviedata array
+    $moviedata = recrusiveArrayStringReplace($infoboxes, $needles, $replace);
+    // add the query url to our movie data
+    $movedata['mmhQueryUrl'] = $queryData->mmhQueryUrl;
+    return $moviedata;
+}
+
+/**
+ *
+ * @param array $array The array to recurse through. All string values will be filtered, replacing all chars passed to $replaceValues with the value passed to $replaceWith
+ */
+function recrusiveArrayStringReplace(array $array, array $needles, $replace) {
+    foreach ($array as $key => $value) {
+        switch (is_array($value)) {
+            case TRUE:
+                $array[$key] = recrusiveArrayStringReplace($value, $needles, $replace);
+                break;
+            case FALSE:
+                unset($array[$key]);
+                $array[$key] = str_replace($needles, $replace, $value);
+                break;
+        }
+    }
+    return $array;
 }
 
 /**
  * Returns an array as an unorderd HTML list.
- * @param array $array The array to turn into a list. Multi-dimensional arrays are supported.
+ * @param mixesd $array The array or object to turn into a list. Multi-dimensional arrays are supported.
  * @param string $parentKey The name of the array. This var is also used if a multi-dimensional array is passed as the first argument, in which case, this function will set the $parentKey automatically as it recurses through the child arrays of $array.
  * @return string
  */
