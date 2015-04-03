@@ -203,11 +203,11 @@ class SdmNms extends SdmCore {
     public function sdmNmsGetMenuHtml($menuId) {
         $html = '';
         $menu = $this->sdmNmsGetMenu($menuId);
-        $html .= '<' . $menu->menuWrappingTagType . '>';
+        $html .= '<h4>' . $menu->menuId . '</h4><' . $menu->menuWrappingTagType . '>';
         foreach ($menu->menuItems as $menuItem) {
             switch ($menuItem->destinationType) {
                 case 'internal':
-                    $html .= '<' . $menuItem->menuItemWrappingTagType . '>' . '<a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=' . $menuItem->destination . '">' . $menuItem->menuItemDisplayName . '</a>' . '</' . $menuItem->menuItemWrappingTagType . '>';
+                    $html .= '<' . $menuItem->menuItemWrappingTagType . '>' . '<a href="' . $this->sdmCoreGetRootDirectoryUrl() . '/index.php?page=' . $menuItem->destination . '">' . $menuItem->menuItemDisplayName . '</a>' . '</' . $menuItem->menuItemWrappingTagType . '>';
                     break;
                 case 'external':
                     $html .= '<' . $menuItem->menuItemWrappingTagType . '>' . '<a href="' . $menuItem->destination . '">' . $menuItem->menuItemDisplayName . '</a>' . '</' . $menuItem->menuItemWrappingTagType . '>';
@@ -217,7 +217,16 @@ class SdmNms extends SdmCore {
             }
         }
         echo '</' . $menu->menuWrappingTagType . '>';
-        return gettype($menu);
+        return $html;
+    }
+
+    public function sdmNmsGetWrapperMenusHtml() {
+        $data = $this->sdmCoreLoadDataObject();
+        $html = '';
+        foreach ($data->menus as $menu) {
+            $html .= $this->sdmNmsGetMenuHtml($menu->menuId);
+        }
+        return $html;
     }
 
     /**
