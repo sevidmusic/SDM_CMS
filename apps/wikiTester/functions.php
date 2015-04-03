@@ -22,140 +22,7 @@ function buildMovieApiQueryArray($querytitles, $returnType) {
     $infoboxes = extractInfoBoxes($wikitextArray);
     // add the query url to our movie data
     $infoboxes['mmhQueryUrl'] = $queryData->mmhQueryUrl;
-    return restructreInfoboxSubdata($infoboxes);
-}
-
-/**
- *
- * @param type $infoboxes
- * @return type
- */
-function restructreInfoboxSubdata($infoboxes) {
-    foreach ($infoboxes as $key => $value) {
-        switch (is_array($value)) {
-            case TRUE:
-                $infoboxes[$key] = restructreInfoboxSubdata($value);
-                break;
-            case FALSE:
-                unset($infoboxes[$key]);
-                $filteredValue = null;
-                preg_match('~{{(.*?)}}~', $value, $filteredValue);
-                var_dump($filteredValue);
-                $infoboxes[$key] = ($filteredValue[1] === null ? $value : $filteredValue[1]);
-                break;
-        }
-    }
-    return $infoboxes;
-}
-
-/**
- * Extract info boxes
- */
-function extractInfoBoxes($wikitextArray) {
-    // init $infoboxes
-    $infoboxes = array();
-    // get infoboxes from the wikitext
-    foreach ($wikitextArray as $pid => $wikitext) {
-        // store infoboxes and index by wiki page id
-        $infoboxes[$pid] = getInfoBoxes($wikitext);
-    }
-    // filter info box data so it is structured appropriatly to be used as the movieData array, object, or json string dependin on $returnType
-    $filteredInfoBoxData = filterInfoBoxData($infoboxes);
-    $restructuredInfoBoxData = restructreInfoboxSubdata($filteredInfoBoxData);
-    return $restructuredInfoBoxData;
-}
-
-/**
- *
- * @param type $queryData
- */
-function getWikitextFromQueryData($queryData) {
-    // init the restructured $pageids array
-    $pageids = array();
-    // generate an array of page ids | the array provided by wikipedia is not structured in a way that is useful for us, so we restructure it
-    foreach ($queryData->query->pageids as $id) {
-        $pageids[$id] = $id;
-    }
-    // init the $wikitextArray
-    $wikitextArray = array();
-    // get wiki text for each page
-    foreach ($pageids as $pageid) {
-        // get the most recent revision
-        $revision = $queryData->query->pages->$pageid->revisions[0];
-        // the revion key is a special char so we store it in a string
-        $revkey = '*'; // this is a workaround, the wiki api returns our revisions in an object property named *, the problem with the name * is the * character is not allowed in php because it has special meaning, so to get around this so we can access the property * we store * as a string in a var $revkey and then we can call $object->$revkey to accsess that property
-        // store wiki text for this revision in our $wikitextArray
-        $wikitextArray[$pageid] = $revision->$revkey;
-    }
-    return $wikitextArray;
-}
-
-/**
- * Filter movie data
- */
-function filterInfoboxData($movieData) {
-    /** we filter values over a series of stages so we can be careful not to break the data structure  * */
-    /* Filter Stage 1 */
-    // values to replace
-    $needles1 = array('\'', '[', ']', 'unbulleted list', 'Unbulleted list', '{{plainlist|', '* ');
-    // value to replace with
-    $replace1 = '';
-    // filter infoboxes recursively with recrusiveArrayStringReplace() and store filtered values in our $moviedata array
-    $filteredData1 = recrusiveArrayStringReplace($movieData, $needles1, $replace1);
-    /* Filter Stage 2 */
-    // values to replace
-    $needles2 = array('{{|');
-    // value to replace with
-    $replace2 = '{{';
-    // filter infoboxes recursively with recrusiveArrayStringReplace() and store filtered values in our $moviedata array
-    $filterData2 = recrusiveArrayStringReplace($filteredData1, $needles2, $replace2);
-    return $filterData2;
-}
-
-/**
- *
- * @param array $array The array to recurse through. All string values will be filtered, replacing all chars passed to $replaceValues with the value passed to $replaceWith
- */
-function recrusiveArrayStringReplace(array $array, array $needles, $replace) {
-    foreach ($array as $key => $value) {
-        switch (is_array($value)) {
-            case TRUE:
-                $array[$key] = recrusiveArrayStringReplace($value, $needles, $replace);
-                break;
-            case FALSE:
-                unset($array[$key]);
-                $array[$key] = str_replace($needles, $replace, $value);
-                break;
-        }
-    }
-    return $array;
-}
-
-/**
- * Returns an array as an unorderd HTML list.
- * @param mixesd $array The array or object to turn into a list. Multi-dimensional arrays are supported.
- * @param string $parentKey The name of the array. This var is also used if a multi-dimensional array is passed as the first argument, in which case, this function will set the $parentKey automatically as it recurses through the child arrays of $array.
- * @return string
- */
-function wikiArrayToList($array, $parentKey = null) {
-    if (is_object($array)) {
-        $array = json_decode(json_encode($array), TRUE);
-    }
-    $wrappingDivStyle = 'color:#D0D0D0;background:#000000;border: 3px solid #99FF99;border-radius:5px;padding:15px;margin:20px 0px 20px 0px;';
-    $liStyle = 'color:#D2D2D2;background:#111111;border: 3px dashed #99FF99;border-radius:5px;padding:15px;margin:20px 0px 20px 0px;overflow:auto;';
-    $list = '<div style="' . $wrappingDivStyle . '' . (isset($parentKey) === TRUE ? '' : 'text-align:center;') . '">' . (isset($parentKey) === TRUE ? ' <i style="color:cornflowerblue;">(type : <span style="color:' . (gettype($array) === 'integer' ? '#0066ff' : (gettype($array) === 'array' ? '#66FF66' : '#009966')) . ';">' . gettype($array) . '</span>) </i> <span style="color:' . (gettype($array) === 'integer' ? '#0066ff' : (gettype($array) === 'array' ? '#66FF66' : '#009966')) . ';">[\'' . $parentKey . '\']</span>' : '-- Array Data --') . '</div><ul style="list-style-type:none;">';
-    foreach ($array as $key => $value) {
-        switch (is_array($value)) {
-            case TRUE:
-                $list .= wikiArrayToList($value, $key);
-                break;
-            case FALSE:
-                $list .= '<li style="' . $liStyle . '"><i style="color:cornflowerblue;">(type : <span style="color:' . (gettype($value) === 'integer' ? '#0066ff' : (gettype($value) === 'array' ? '#33FFFF' : '#009966')) . ';">' . gettype($value) . '</span>)</i> <span style="color:' . (gettype($array) === 'integer' ? '#0066ff' : (gettype($array) === 'array' ? '#66FF66' : '#009966')) . ';">[\'' . $parentKey . '\']</span>[\'' . $key . '\'] = ' . (gettype($value) === 'integer' ? '' : '\'') . '<span style="color:' . (gettype($value) === 'integer' ? '#0066ff' : (gettype($value) === 'array' ? '#33FFFF' : '#009966')) . ';">' . (substr($value, 0, 7) === 'http://' || substr($value, 0, 8) === 'https://' || substr($value, 0, 4) === 'www.' ? '<a href="' . $value . '">' . $value . '</a>' : $value) . '</span>' . (gettype($value) === 'integer' ? '' : '\'') . ';</li>';
-                break;
-        }
-    }
-    $list .= '</ul>';
-    return $list;
+    return array_remove_empty(restructreInfoboxSubdata($infoboxes));
 }
 
 function movieApiRequest($querytitles) {
@@ -220,6 +87,48 @@ function curlGrabContent($url, array $post = array()) {
 }
 
 /**
+ *
+ * @param type $queryData
+ */
+function getWikitextFromQueryData($queryData) {
+    // init the restructured $pageids array
+    $pageids = array();
+    // generate an array of page ids | the array provided by wikipedia is not structured in a way that is useful for us, so we restructure it
+    foreach ($queryData->query->pageids as $id) {
+        $pageids[$id] = $id;
+    }
+    // init the $wikitextArray
+    $wikitextArray = array();
+    // get wiki text for each page
+    foreach ($pageids as $pageid) {
+        // get the most recent revision
+        $revision = $queryData->query->pages->$pageid->revisions[0];
+        // the revion key is a special char so we store it in a string
+        $revkey = '*'; // this is a workaround, the wiki api returns our revisions in an object property named *, the problem with the name * is the * character is not allowed in php because it has special meaning, so to get around this so we can access the property * we store * as a string in a var $revkey and then we can call $object->$revkey to accsess that property
+        // store wiki text for this revision in our $wikitextArray
+        $wikitextArray[$pageid] = $revision->$revkey;
+    }
+    return $wikitextArray;
+}
+
+/**
+ * Extract info boxes
+ */
+function extractInfoBoxes($wikitextArray) {
+    // init $infoboxes
+    $infoboxes = array();
+    // get infoboxes from the wikitext
+    foreach ($wikitextArray as $pid => $wikitext) {
+        // store infoboxes and index by wiki page id
+        $infoboxes[$pid] = getInfoBoxes($wikitext);
+    }
+    // filter info box data so it is structured appropriatly to be used as the movieData array, object, or json string dependin on $returnType
+    $filteredInfoBoxData = filterInfoBoxData($infoboxes);
+    $restructuredInfoBoxData = restructreInfoboxSubdata($filteredInfoBoxData);
+    return $restructuredInfoBoxData;
+}
+
+/**
  * getInfoBoxes() is based on code from Jungle Wikipedia Syntax Parser with some modifications for use on MMh.
  *
  * @link https://github.com/donwilson/PHP-Wikipedia-Syntax-Parser/blob/master/wiki_parser.php
@@ -278,6 +187,120 @@ function getInfoBoxes($wikitext) {
     }
 
     return $infobox;
+}
+
+/**
+ * Filter movie data
+ */
+function filterInfoboxData($movieData) {
+    /** we filter values over a series of stages so we can be careful not to break the data structure  * */
+    /* Filter Stage 1 */
+    // values to replace
+    $needles1 = array('\'', '[', ']', 'unbulleted list', 'Unbulleted list', '{{plainlist|', '* ', '<ref>', '<small>', '</small>');
+    // value to replace with
+    $replace1 = '';
+    // filter infoboxes recursively with recrusiveArrayStringReplace() and store filtered values in our $moviedata array
+    $filteredData1 = recrusiveArrayStringReplace($movieData, $needles1, $replace1);
+    /* Filter Stage 2 */
+    // values to replace
+    $needles2 = array('{{|');
+    // value to replace with
+    $replace2 = '{{';
+    // filter infoboxes recursively with recrusiveArrayStringReplace() and store filtered values in our $moviedata array
+    $filterData2 = recrusiveArrayStringReplace($filteredData1, $needles2, $replace2);
+    return $filterData2;
+}
+
+/**
+ *
+ * @param array $array The array to recurse through. All string values will be filtered, replacing all chars passed to $replaceValues with the value passed to $replaceWith
+ */
+function recrusiveArrayStringReplace(array $array, array $needles, $replace) {
+    foreach ($array as $key => $value) {
+        switch (is_array($value)) {
+            case TRUE:
+                $array[$key] = recrusiveArrayStringReplace($value, $needles, $replace);
+                break;
+            case FALSE:
+                unset($array[$key]);
+                $array[$key] = str_replace($needles, $replace, $value);
+                break;
+        }
+    }
+    return $array;
+}
+
+/**
+ *
+ * @param type $infoboxes
+ * @return type
+ */
+function restructreInfoboxSubdata($infoboxes) {
+    foreach ($infoboxes as $key => $value) {
+        switch (is_array($value)) {
+            case TRUE:
+                $infoboxes[$key] = restructreInfoboxSubdata($value);
+                break;
+            case FALSE: // if not an array, check that the string does not represent a wiki text data set, if it does convert it to an array, otherwise leave it as is
+                unset($infoboxes[$key]);
+                $subDataArray = array('subdata' => convertFilteredWikitextToArray($value));
+                $infoboxes[$key] = (!empty($subDataArray['subdata']) === TRUE ? $subDataArray : $value);
+                break;
+        }
+    }
+    return $infoboxes;
+}
+
+function convertFilteredWikitextToArray($filteredwikitext) {
+    // first identify multidimensional arrays and grab their keys
+    preg_match('~{{(.*?)}}~', $filteredwikitext, $convertedValue);
+    return $convertedValue;
+}
+
+/**
+ * Returns an array as an unorderd HTML list.
+ * @param mixesd $array The array or object to turn into a list. Multi-dimensional arrays are supported.
+ * @param string $parentKey The name of the array. This var is also used if a multi-dimensional array is passed as the first argument, in which case, this function will set the $parentKey automatically as it recurses through the child arrays of $array.
+ * @return string
+ */
+function wikiArrayToList($array, $parentKey = null) {
+    if (is_object($array)) {
+        $array = json_decode(json_encode($array), TRUE);
+    }
+    $wrappingDivStyle = 'color:#D0D0D0;background:#000000;border: 3px solid #99FF99;border-radius:5px;padding:15px;margin:20px 0px 20px 0px;';
+    $liStyle = 'color:#D2D2D2;background:#111111;border: 3px dashed #99FF99;border-radius:5px;padding:15px;margin:20px 0px 20px 0px;overflow:auto;';
+    $list = '<div style="' . $wrappingDivStyle . '' . (isset($parentKey) === TRUE ? '' : 'text-align:center;') . '">' . (isset($parentKey) === TRUE ? ' <i style="color:cornflowerblue;">(type : <span style="color:' . (gettype($array) === 'integer' ? '#0066ff' : (gettype($array) === 'array' ? '#66FF66' : '#009966')) . ';">' . gettype($array) . '</span>) </i> <span style="color:' . (gettype($array) === 'integer' ? '#0066ff' : (gettype($array) === 'array' ? '#66FF66' : '#009966')) . ';">[\'' . $parentKey . '\']</span>' : '-- Array Data --') . '</div><ul style="list-style-type:none;">';
+    foreach ($array as $key => $value) {
+        switch (is_array($value)) {
+            case TRUE:
+                $list .= wikiArrayToList($value, $key);
+                break;
+            case FALSE:
+                $list .= '<li style="' . $liStyle . '"><i style="color:cornflowerblue;">(type : <span style="color:' . (gettype($value) === 'integer' ? '#0066ff' : (gettype($value) === 'array' ? '#33FFFF' : '#009966')) . ';">' . gettype($value) . '</span>)</i> <span style="color:' . (gettype($array) === 'integer' ? '#0066ff' : (gettype($array) === 'array' ? '#66FF66' : '#009966')) . ';">[\'' . $parentKey . '\']</span>[\'' . $key . '\'] = ' . (gettype($value) === 'integer' ? '' : '\'') . '<span style="color:' . (gettype($value) === 'integer' ? '#0066ff' : (gettype($value) === 'array' ? '#33FFFF' : '#009966')) . ';">' . (substr($value, 0, 7) === 'http://' || substr($value, 0, 8) === 'https://' || substr($value, 0, 4) === 'www.' ? '<a href="' . $value . '">' . $value . '</a>' : $value) . '</span>' . (gettype($value) === 'integer' ? '' : '\'') . ';</li>';
+                break;
+        }
+    }
+    $list .= '</ul>';
+    return $list;
+}
+
+/**
+ * Revome null and empty array items from $haystack array
+ * @param type $haystack
+ * @return type
+ */
+function array_remove_empty($haystack) {
+    foreach ($haystack as $key => $value) {
+        if (is_array($value)) {
+            $haystack[$key] = array_remove_empty($haystack[$key]);
+        }
+
+        if (empty($haystack[$key])) {
+            unset($haystack[$key]);
+        }
+    }
+
+    return $haystack;
 }
 
 ?>
