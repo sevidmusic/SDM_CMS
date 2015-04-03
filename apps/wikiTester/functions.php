@@ -13,31 +13,103 @@
  * @param type $querytitles The movie titles to request in the query
  * @return array Array of info boxes for the requested movie titles ($querytitles)
  */
-function buildMovieApiQueryArray($querytitles) {
+function buildMovieApiQueryArray($querytitles, $returnType) {
+    // make query
     $queryData = movieApiRequest($querytitles);
+    // get wiki text for each title returned with in our query data @see movieApiRequest() to see how the titles are queried
+    $wikitextArray = getWikitextFromQueryData($queryData);
+    // extract infoboxes from the wiki text returned by our query data
+    $infoboxes = extractInfoBoxes($wikitextArray);
+    // add the query url to our movie data
+    $infoboxes['mmhQueryUrl'] = $queryData->mmhQueryUrl;
+    return restructreInfoboxSubdata($infoboxes);
+}
+
+/**
+ *
+ * @param type $infoboxes
+ * @return type
+ */
+function restructreInfoboxSubdata($infoboxes) {
+    foreach ($infoboxes as $key => $value) {
+        switch (is_array($value)) {
+            case TRUE:
+                $infoboxes[$key] = restructreInfoboxSubdata($value);
+                break;
+            case FALSE:
+                unset($infoboxes[$key]);
+                $filteredValue = null;
+                preg_match('~{{(.*?)}}~', $value, $filteredValue);
+                var_dump($filteredValue);
+                $infoboxes[$key] = ($filteredValue[1] === null ? $value : $filteredValue[1]);
+                break;
+        }
+    }
+    return $infoboxes;
+}
+
+/**
+ * Extract info boxes
+ */
+function extractInfoBoxes($wikitextArray) {
+    // init $infoboxes
+    $infoboxes = array();
+    // get infoboxes from the wikitext
+    foreach ($wikitextArray as $pid => $wikitext) {
+        // store infoboxes and index by wiki page id
+        $infoboxes[$pid] = getInfoBoxes($wikitext);
+    }
+    // filter info box data so it is structured appropriatly to be used as the movieData array, object, or json string dependin on $returnType
+    $filteredInfoBoxData = filterInfoBoxData($infoboxes);
+    $restructuredInfoBoxData = restructreInfoboxSubdata($filteredInfoBoxData);
+    return $restructuredInfoBoxData;
+}
+
+/**
+ *
+ * @param type $queryData
+ */
+function getWikitextFromQueryData($queryData) {
+    // init the restructured $pageids array
     $pageids = array();
+    // generate an array of page ids | the array provided by wikipedia is not structured in a way that is useful for us, so we restructure it
     foreach ($queryData->query->pageids as $id) {
         $pageids[$id] = $id;
     }
+    // init the $wikitextArray
     $wikitextArray = array();
+    // get wiki text for each page
     foreach ($pageids as $pageid) {
+        // get the most recent revision
         $revision = $queryData->query->pages->$pageid->revisions[0];
+        // the revion key is a special char so we store it in a string
         $revkey = '*'; // this is a workaround, the wiki api returns our revisions in an object property named *, the problem with the name * is the * character is not allowed in php because it has special meaning, so to get around this so we can access the property * we store * as a string in a var $revkey and then we can call $object->$revkey to accsess that property
+        // store wiki text for this revision in our $wikitextArray
         $wikitextArray[$pageid] = $revision->$revkey;
     }
-    $infoboxes = array();
-    foreach ($wikitextArray as $pid => $wikitext) {
-        $infoboxes[$pid] = getInfoBoxes($wikitext);
-    }
+    return $wikitextArray;
+}
+
+/**
+ * Filter movie data
+ */
+function filterInfoboxData($movieData) {
+    /** we filter values over a series of stages so we can be careful not to break the data structure  * */
+    /* Filter Stage 1 */
     // values to replace
-    $needles = array('\'');
+    $needles1 = array('\'', '[', ']', 'unbulleted list', 'Unbulleted list', '{{plainlist|', '* ');
     // value to replace with
-    $replace = 'SEVI_D_JAMIE_MCCALLISTER';
+    $replace1 = '';
     // filter infoboxes recursively with recrusiveArrayStringReplace() and store filtered values in our $moviedata array
-    $moviedata = recrusiveArrayStringReplace($infoboxes, $needles, $replace);
-    // add the query url to our movie data
-    $movedata['mmhQueryUrl'] = $queryData->mmhQueryUrl;
-    return $moviedata;
+    $filteredData1 = recrusiveArrayStringReplace($movieData, $needles1, $replace1);
+    /* Filter Stage 2 */
+    // values to replace
+    $needles2 = array('{{|');
+    // value to replace with
+    $replace2 = '{{';
+    // filter infoboxes recursively with recrusiveArrayStringReplace() and store filtered values in our $moviedata array
+    $filterData2 = recrusiveArrayStringReplace($filteredData1, $needles2, $replace2);
+    return $filterData2;
 }
 
 /**
