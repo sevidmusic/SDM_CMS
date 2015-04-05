@@ -8,7 +8,6 @@ if ($sdmcore->sdmCoreDetermineRequestedPage() === 'wikiTester') {
     $querytitles = 'goodfellas|family guy';
 // build the movie data array
     $movieApiQueryArray = buildMovieApiQueryArray($querytitles);
-    $sdmcore->sdmCoreSdmReadArray($movieApiQueryArray);
 // display the test url that was generated for the reuqest
     $output .= '<p>Tested url <a href="' . $movieApiQueryArray['mmhQueryUrl'] . '">' . $movieApiQueryArray['mmhQueryUrl'] . '</a></p>';
 // display array as an HTML list in the app output

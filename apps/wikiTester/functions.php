@@ -13,7 +13,7 @@
  * @param type $querytitles The movie titles to request in the query
  * @return array Array of info boxes for the requested movie titles ($querytitles)
  */
-function buildMovieApiQueryArray($querytitles, $returnType) {
+function buildMovieApiQueryArray($querytitles) {
     // make query
     $queryData = movieApiRequest($querytitles);
     // get wiki text for each title returned with in our query data @see movieApiRequest() to see how the titles are queried
@@ -22,7 +22,7 @@ function buildMovieApiQueryArray($querytitles, $returnType) {
     $infoboxes = extractInfoBoxes($wikitextArray);
     // add the query url to our movie data
     $infoboxes['mmhQueryUrl'] = $queryData->mmhQueryUrl;
-    return array_remove_empty(restructreInfoboxSubdata($infoboxes));
+    return array_remove_empty($infoboxes, array('{{')); // {{{{ is sometimes left over from extractInfoBoxes to due faulty parseing, we want to remove any array items that have the value '{{{{' // the second param should be an array of other values to remove from the array. i.e., if array_remove_empty($array, array('helloWorld')) the all array items with value helloWorld will be removed
 }
 
 function movieApiRequest($querytitles) {
@@ -196,7 +196,7 @@ function filterInfoboxData($movieData) {
     /** we filter values over a series of stages so we can be careful not to break the data structure  * */
     /* Filter Stage 1 */
     // values to replace
-    $needles1 = array('\'', '[', ']', 'unbulleted list', 'Unbulleted list', '{{plainlist|', '* ', '<ref>', '<small>', '</small>');
+    $needles1 = array('\'', '[', ']', 'unbulleted list', 'Unbulleted list', 'plainlist|', '* ', '<ref>', '</ref>', '<small>', '</small>', 'alt=', 'File:');
     // value to replace with
     $replace1 = '';
     // filter infoboxes recursively with recrusiveArrayStringReplace() and store filtered values in our $moviedata array
@@ -235,16 +235,18 @@ function recrusiveArrayStringReplace(array $array, array $needles, $replace) {
  * @param type $infoboxes
  * @return type
  */
-function restructreInfoboxSubdata($infoboxes) {
+function restructreInfoboxSubdata($infoboxes, $parentKey = null) {
+    $sdmcore = new SdmCore();
+    $originalInfoBoxes = $infoboxes;
     foreach ($infoboxes as $key => $value) {
         switch (is_array($value)) {
             case TRUE:
-                $infoboxes[$key] = restructreInfoboxSubdata($value);
+                $infoboxes[$key] = restructreInfoboxSubdata($value, $key);
                 break;
             case FALSE: // if not an array, check that the string does not represent a wiki text data set, if it does convert it to an array, otherwise leave it as is
                 unset($infoboxes[$key]);
-                $subDataArray = array('subdata' => convertFilteredWikitextToArray($value));
-                $infoboxes[$key] = (!empty($subDataArray['subdata']) === TRUE ? $subDataArray : $value);
+                $subDataArray = convertFilteredWikitextToArray(strval($value)); //array('subdata' => convertFilteredWikitextToArray($value));
+                $infoboxes[$key] = (is_array($subDataArray) === TRUE && !empty($subDataArray) === TRUE ? $subDataArray : $value);
                 break;
         }
     }
@@ -252,9 +254,23 @@ function restructreInfoboxSubdata($infoboxes) {
 }
 
 function convertFilteredWikitextToArray($filteredwikitext) {
-    // first identify multidimensional arrays and grab their keys
-    preg_match('~{{(.*?)}}~', $filteredwikitext, $convertedValue);
-    return $convertedValue;
+    // search for text within {{ }}
+    $regex = '~\{\{([^{}]+|{{?R}})*\}\}~';
+    $matches = array();
+    if (preg_match_all($regex, $filteredwikitext, $matches)) {
+        // get parent key if it exists by searching for text within {{ {{. i.e., {{ TEXT {{more text}}  would return TEXT as the parent key
+        $key = array();
+        $pattern = '~{{(.*?){{~';
+        preg_match($pattern, $filteredwikitext, $key); // we will want to use index 1 as it will NOT contain the brackets, i.e., no {{ or }}
+        $arr = explode('|', $matches[1][0]);
+        $array = array(($key[1] !== null ? $key[1] : rand(1000, 9999)) => $arr);
+        array_unshift($array, $key[1]);
+        return $array;
+    } else {
+        // check strings not containing brackets for pipes, i.e. "|"
+        $data = explode('|', $filteredwikitext);
+        return ($data[0] === $filteredwikitext ? $filteredwikitext : $data);
+    }
 }
 
 /**
@@ -285,17 +301,17 @@ function wikiArrayToList($array, $parentKey = null) {
 }
 
 /**
- * Revome null and empty array items from $haystack array
+ * Revome null and empty array items from $haystack array, also filters out any values passed to $removeValues
  * @param type $haystack
  * @return type
  */
-function array_remove_empty($haystack) {
+function array_remove_empty($haystack, $removeValues = array()) {
     foreach ($haystack as $key => $value) {
         if (is_array($value)) {
-            $haystack[$key] = array_remove_empty($haystack[$key]);
+            $haystack[$key] = array_remove_empty($haystack[$key], $removeValues);
         }
 
-        if (empty($haystack[$key])) {
+        if (empty($haystack[$key]) || in_array($haystack[$key], $removeValues) === TRUE) {
             unset($haystack[$key]);
         }
     }
