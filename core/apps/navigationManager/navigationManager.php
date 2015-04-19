@@ -182,15 +182,15 @@ if (substr($sdmcore->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationMana
                         $menuItems = SdmForm::sdmFormGetSubmittedFormValue('menuItems');
                         // create new menu item object using last submitted menu items data
                         $lastSubmittedMenuItem = new SdmMenuItem();
-                        $lastSubmittedMenuItem->arguments = array();
+                        $lastSubmittedMenuItem->arguments = explode(',', SdmForm::sdmFormGetSubmittedFormValue('arguments'));
                         $lastSubmittedMenuItem->destination = (SdmForm::sdmFormGetSubmittedFormValue('destinationType') === 'external' ? SdmForm::sdmFormGetSubmittedFormValue('destinationExternal') : SdmForm::sdmFormGetSubmittedFormValue('destinationInternal'));
                         $lastSubmittedMenuItem->destinationType = SdmForm::sdmFormGetSubmittedFormValue('destinationType');
-                        $lastSubmittedMenuItem->menuItemCssClasses = SdmForm::sdmFormGetSubmittedFormValue('menuItemCssClasses');
+                        $lastSubmittedMenuItem->menuItemCssClasses = explode(',', SdmForm::sdmFormGetSubmittedFormValue('menuItemCssClasses'));
                         $lastSubmittedMenuItem->menuItemCssId = SdmForm::sdmFormGetSubmittedFormValue('menuItemCssId');
                         $lastSubmittedMenuItem->menuItemDisplayName = SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName');
                         $lastSubmittedMenuItem->menuItemEnabled = SdmForm::sdmFormGetSubmittedFormValue('menuItemEnabled');
                         $lastSubmittedMenuItem->menuItemId = SdmForm::sdmFormGetSubmittedFormValue('menuItemId');
-                        $lastSubmittedMenuItem->menuItemKeyholders = SdmForm::sdmFormGetSubmittedFormValue('menuItemKeyholders');
+                        $lastSubmittedMenuItem->menuItemKeyholders = explode(',', SdmForm::sdmFormGetSubmittedFormValue('menuItemKeyholders'));
                         $lastSubmittedMenuItem->menuItemMachineName = SdmForm::sdmFormGetSubmittedFormValue('menuItemMachineName');
                         $lastSubmittedMenuItem->menuItemPosition = SdmForm::sdmFormGetSubmittedFormValue('menuItemPosition');
                         $lastSubmittedMenuItem->menuItemWrappingTagType = SdmForm::sdmFormGetSubmittedFormValue('menuItemWrappingTagType');
@@ -234,15 +234,15 @@ if (substr($sdmcore->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationMana
             $menuItems = SdmForm::sdmFormGetSubmittedFormValue('menuItems');
             // since it has not been added to our menu items we create our final menu item object using last submitted menu item form data
             $finalSubmittedMenuItem = new SdmMenuItem();
-            $finalSubmittedMenuItem->arguments = SdmForm::sdmFormGetSubmittedFormValue('arguments');
+            $finalSubmittedMenuItem->arguments = explode(',', SdmForm::sdmFormGetSubmittedFormValue('arguments'));
             $finalSubmittedMenuItem->destination = (SdmForm::sdmFormGetSubmittedFormValue('destinationType') === 'external' ? SdmForm::sdmFormGetSubmittedFormValue('destinationExternal') : SdmForm::sdmFormGetSubmittedFormValue('destinationInternal'));
             $finalSubmittedMenuItem->destinationType = SdmForm::sdmFormGetSubmittedFormValue('destinationType');
-            $finalSubmittedMenuItem->menuItemCssClasses = SdmForm::sdmFormGetSubmittedFormValue('menuItemCssClasses');
+            $finalSubmittedMenuItem->menuItemCssClasses = explode(',', SdmForm::sdmFormGetSubmittedFormValue('menuItemCssClasses'));
             $finalSubmittedMenuItem->menuItemCssId = SdmForm::sdmFormGetSubmittedFormValue('menuItemCssId');
             $finalSubmittedMenuItem->menuItemDisplayName = SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName');
             $finalSubmittedMenuItem->menuItemEnabled = SdmForm::sdmFormGetSubmittedFormValue('menuItemEnabled');
             $finalSubmittedMenuItem->menuItemId = SdmForm::sdmFormGetSubmittedFormValue('menuItemId');
-            $finalSubmittedMenuItem->menuItemKeyholders = SdmForm::sdmFormGetSubmittedFormValue('menuItemKeyholders');
+            $finalSubmittedMenuItem->menuItemKeyholders = explode(',', SdmForm::sdmFormGetSubmittedFormValue('menuItemKeyholders'));
             $finalSubmittedMenuItem->menuItemMachineName = SdmForm::sdmFormGetSubmittedFormValue('menuItemMachineName');
             $finalSubmittedMenuItem->menuItemPosition = SdmForm::sdmFormGetSubmittedFormValue('menuItemPosition');
             $finalSubmittedMenuItem->menuItemWrappingTagType = SdmForm::sdmFormGetSubmittedFormValue('menuItemWrappingTagType');
@@ -330,7 +330,7 @@ if (substr($sdmcore->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationMana
         case 'navigationManagerAddMenuStage4':
             $menu = new SdmMenu();
             $menu->displaypages = SdmForm::sdmFormGetSubmittedFormValue('displaypages'); //
-            $menu->menuCssClasses = SdmForm::sdmFormGetSubmittedFormValue('menuCssClasses'); //
+            $menu->menuCssClasses = explode(',', SdmForm::sdmFormGetSubmittedFormValue('menuCssClasses')); // convert commas seperated values into an array of values
             $menu->menuCssId = SdmForm::sdmFormGetSubmittedFormValue('menuCssId'); //
             $menu->menuDisplayName = SdmForm::sdmFormGetSubmittedFormValue('menuDisplayName'); //
             $menu->menuId = SdmForm::sdmFormGetSubmittedFormValue('menuId'); //
