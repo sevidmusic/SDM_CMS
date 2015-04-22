@@ -176,14 +176,14 @@ class SdmNms extends SdmCore {
      * enable a menu
      */
     public function sdmNmsenableMenu() {
-
+        return;
     }
 
     /**
      * disable a menu
      */
     public function sdmNmsdisableMenu() {
-
+        return;
     }
 
     /**
@@ -202,11 +202,11 @@ class SdmNms extends SdmCore {
      */
     public function sdmNmsGetMenuHtml($menuId) {
         $html = '';
-        $devRole = 'locked';
+        $currentUserRole = 'locked';
         $menu = $this->sdmNmsGetMenu($menuId);
-
-        if ($menu->menuKeyholders === null || in_array($devRole, $menu->menuKeyholders) || in_array('all', $menu->menuKeyholders)) { // we check two things, if the menuKeyholders property is null we assume all users can accsess this menu, if it is not null we check if the users role exists in the menuKeyholders array, we also do a check to see if the 'all' value exists in the menuKeyholders array, if 'all' is present then the menu will be available to all users regardless of the other roles set in menuKeyholders
-            //$this->sdmCoreSdmReadArray($menu);
+        //$this->sdmCoreSdmReadArray($menu);
+        // if menuKeyholders is null assume all users have accsess and show menu || if $currentUserRole exists in menuKeyholders array show menu || if the special all role exists in the menuKeyholders array we assume all user have accsess and show menu
+        if ($menu->menuKeyholders === null || in_array($currentUserRole, $menu->menuKeyholders) || in_array('all', $menu->menuKeyholders)) { // we check two things, if the menuKeyholders property is null we assume all users can accsess this menu, if it is not null we check if the users role exists in the menuKeyholders array, we also do a check to see if the 'all' value exists in the menuKeyholders array, if 'all' is present then the menu will be available to all users regardless of the other roles set in menuKeyholders
             $html .= '<h4>' . $menu->menuDisplayName . ' (menuId: ' . $menu->menuId . ')</h4><' . $menu->menuWrappingTagType . ' class="' . (is_array($menu->menuCssClasses) === TRUE ? implode(' ', $menu->menuCssClasses) : str_replace(array(',', '|', ':', ';'), ' ', strval($menu->menuCssClasses))) . '">';
             foreach ($menu->menuItems as $menuItem) {
                 switch ($menuItem->destinationType) {
@@ -238,28 +238,28 @@ class SdmNms extends SdmCore {
      * delete a menu
      */
     public function sdmNmsdeleteMenuItem() {
-
+        return;
     }
 
     /**
      * enable a menu
      */
     public function sdmNmsupdateMenuItem() {
-
+        return;
     }
 
     /**
      * disable a menu
      */
     public function sdmNmsdisableMenuItem() {
-
+        return;
     }
 
     /**
      * get a stored menu
      */
     public function sdmNmsGetMenuItem() {
-
+        return;
     }
 
 }

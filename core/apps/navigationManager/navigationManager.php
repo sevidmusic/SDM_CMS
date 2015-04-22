@@ -52,7 +52,7 @@ if (substr($sdmcore->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationMana
                     'id' => 'menuItem',
                     'type' => 'hidden',
                     'element' => 'Menu Item',
-                    'value' => 1, // the first menu item form will always set the properties of the first menu item
+                    'value' => 1, // tracks which menu item is being configured | the first menu item form will always set the properties of the first menu item so we always start with menu item 1
                     'place' => '1',
                 ),
             );
@@ -78,7 +78,7 @@ if (substr($sdmcore->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationMana
                             'value' => SdmForm::sdmFormGetSubmittedFormValue('number_of_menu_items'),
                             'place' => '0',
                         ),
-                        array(// store and increase menuItem so each form knows what menu item we are configuring
+                        array(// store and increase menuItem so each form knows what menu item we are configuring | if we are on the last menu item (i.e., post/get value menuItem === number_of_menu_items) then set to null so we form knows to move to the menu configuration form on submission of this menu item
                             'id' => 'menuItem',
                             'type' => 'hidden',
                             'element' => 'Menu Item',
@@ -89,7 +89,7 @@ if (substr($sdmcore->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationMana
                             'id' => 'menuItemId',
                             'type' => 'hidden',
                             'element' => 'Menu Item Id',
-                            'value' => rand(1000000000, 9999999999),
+                            'value' => rand(100, 99999) . chr(rand(65, 90)) . rand(100, 99999) . chr(rand(65, 90)) . chr(rand(65, 90)) . rand(100, 99999), // set menu item id randomly to insure unique id
                             'place' => '2',
                         ),
                         array(
@@ -169,13 +169,6 @@ if (substr($sdmcore->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationMana
                             'value' => rangeArray(1, 50),
                             'place' => '13',
                         ),
-                        array(
-                            'id' => 'menuItemMachineName',
-                            'type' => 'hidden',
-                            'element' => 'Menu Item Machine Name',
-                            'value' => rand(100000000000000, 999999999999999),
-                            'place' => '14',
-                        ),
                     );
                     if (isset($_POST['SdmForm']['menuItems'])) {
                         // retrieve any menu items already stored in the menuItems array
@@ -191,7 +184,7 @@ if (substr($sdmcore->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationMana
                         $lastSubmittedMenuItem->menuItemEnabled = SdmForm::sdmFormGetSubmittedFormValue('menuItemEnabled');
                         $lastSubmittedMenuItem->menuItemId = SdmForm::sdmFormGetSubmittedFormValue('menuItemId');
                         $lastSubmittedMenuItem->menuItemKeyholders = explode(',', SdmForm::sdmFormGetSubmittedFormValue('menuItemKeyholders'));
-                        $lastSubmittedMenuItem->menuItemMachineName = SdmForm::sdmFormGetSubmittedFormValue('menuItemMachineName');
+                        $lastSubmittedMenuItem->menuItemMachineName = SdmCore::SdmCoreGenerateMachineName(SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName'));
                         $lastSubmittedMenuItem->menuItemPosition = SdmForm::sdmFormGetSubmittedFormValue('menuItemPosition');
                         $lastSubmittedMenuItem->menuItemWrappingTagType = SdmForm::sdmFormGetSubmittedFormValue('menuItemWrappingTagType');
                         // add the last submitted menu item to our menu items array
@@ -243,7 +236,7 @@ if (substr($sdmcore->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationMana
             $finalSubmittedMenuItem->menuItemEnabled = SdmForm::sdmFormGetSubmittedFormValue('menuItemEnabled');
             $finalSubmittedMenuItem->menuItemId = SdmForm::sdmFormGetSubmittedFormValue('menuItemId');
             $finalSubmittedMenuItem->menuItemKeyholders = explode(',', SdmForm::sdmFormGetSubmittedFormValue('menuItemKeyholders'));
-            $finalSubmittedMenuItem->menuItemMachineName = SdmForm::sdmFormGetSubmittedFormValue('menuItemMachineName');
+            $finalSubmittedMenuItem->menuItemMachineName = SdmCore::SdmCoreGenerateMachineName(SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName'));
             $finalSubmittedMenuItem->menuItemPosition = SdmForm::sdmFormGetSubmittedFormValue('menuItemPosition');
             $finalSubmittedMenuItem->menuItemWrappingTagType = SdmForm::sdmFormGetSubmittedFormValue('menuItemWrappingTagType');
             // add the last submitted menu item to our menu items array
@@ -266,12 +259,6 @@ if (substr($sdmcore->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationMana
                     'element' => 'Menu Items',
                     'value' => rand(100000000, 99999999999),
                     'place' => '1',
-                ), array(
-                    'id' => 'menuMachineName',
-                    'type' => 'hidden',
-                    'element' => 'Menu Item Machine Name',
-                    'value' => rand(100000000, 999999999999),
-                    'place' => '2',
                 ),
                 array(
                     'id' => 'menuDisplayName',
@@ -336,7 +323,7 @@ if (substr($sdmcore->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationMana
             $menu->menuId = SdmForm::sdmFormGetSubmittedFormValue('menuId'); //
             $menu->menuItems = SdmForm::sdmFormGetSubmittedFormValue('menuItems'); //
             $menu->menuKeyholders = SdmForm::sdmFormGetSubmittedFormValue('menuKeyholders');
-            $menu->menuMachineName = SdmForm::sdmFormGetSubmittedFormValue('menuMachineName'); //
+            $menu->menuMachineName = SdmCore::SdmCoreGenerateMachineName(SdmForm::sdmFormGetSubmittedFormValue('menuDisplayName')); //
             $menu->menuPlacement = SdmForm::sdmFormGetSubmittedFormValue('menuPlacement'); //
             $menu->menuWrappingTagType = SdmForm::sdmFormGetSubmittedFormValue('menuWrappingTagType'); //
             $menu->wrapper = SdmForm::sdmFormGetSubmittedFormValue('wrapper'); //
