@@ -47,6 +47,9 @@ if (substr($sdmcore->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationMana
         case 'navigationManagerAddMenuStage4':
             require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/addmenustage4.php');
             break;
+        case 'navigationManagerDeleteMenuStage1':
+            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/deletemenustage1.php');
+            break;
         default:
             // present content manager menu
             $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '
@@ -54,6 +57,7 @@ if (substr($sdmcore->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationMana
                 <p>Welcome to the Navigation Manager. Here you can create, edit, delete, and restore content</p>
                     <ul>
                         <li><a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=navigationManagerAddMenuStage1">Add Menu</a></li>
+                        <li><a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=navigationManagerDeleteMenuStage1">Delete Menu</a></li>
                     </ul>
                 </div>
                 ', array('incpages' => array('navigationManager')));
