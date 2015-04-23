@@ -36,16 +36,16 @@ if (substr($sdmcore->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationMana
     switch ($sdmcore->sdmCoreDetermineRequestedPage()) {
         // edit content form
         case 'navigationManagerAddMenuStage1': // determine how many menu items this menu will have
-            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/stage1.php');
+            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/addmenustage1.php');
             break;
         case 'navigationManagerAddMenuStage2': // configure the menu items
-            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/stage2.php');
+            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/addmenustage2.php');
             break;
         case 'navigationManagerAddMenuStage3':
-            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/stage3.php');
+            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/addmenustage3.php');
             break;
         case 'navigationManagerAddMenuStage4':
-            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/stage4.php');
+            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/addmenustage4.php');
             break;
         default:
             // present content manager menu
