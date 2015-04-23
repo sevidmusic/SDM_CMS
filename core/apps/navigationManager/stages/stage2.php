@@ -110,6 +110,7 @@ switch (SdmForm::sdmFormGetSubmittedFormValue('menuItem') !== null) {
                 'place' => '13',
             ),
         );
+        // load any menu items already stored and create a menu item from the last submitted menu item configuration form
         if (isset($_POST['SdmForm']['menuItems'])) {
             // retrieve any menu items already stored in the menuItems array
             $menuItems = SdmForm::sdmFormGetSubmittedFormValue('menuItems');
@@ -158,4 +159,3 @@ switch (SdmForm::sdmFormGetSubmittedFormValue('menuItem') !== null) {
         $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<p>An error occured and the form could not be submitted. Please report this to the site admin. <a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=homepage">Return to the Homepage</a></p>', array('incpages' => array('navigationManagerAddMenuStage2')));
         break;
 }
-           
