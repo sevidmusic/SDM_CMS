@@ -34,7 +34,7 @@ if (substr($sdmcore->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationMana
     $sdmcms = SdmCms::sdmCmsInitializeCms();
     // determine which section of the content manager was requested
     switch ($sdmcore->sdmCoreDetermineRequestedPage()) {
-        // edit content form
+        // Add Menu Stages
         case 'navigationManagerAddMenuStage1': // determine how many menu items this menu will have
             require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/addmenustage1.php');
             break;
@@ -47,6 +47,7 @@ if (substr($sdmcore->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationMana
         case 'navigationManagerAddMenuStage4':
             require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/addmenustage4.php');
             break;
+        // DELETE MENU STAGES
         case 'navigationManagerDeleteMenuStage1':
             require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/deletemenustage1.php');
             break;
@@ -54,7 +55,7 @@ if (substr($sdmcore->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationMana
             // present content manager menu
             $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '
                 <div id="navigationManager">
-                <p>Welcome to the Navigation Manager. Here you can create, edit, delete, and restore content</p>
+                <p>Welcome to the Navigation Manager. Here you can create, edit, delete, and restore menus</p>
                     <ul>
                         <li><a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=navigationManagerAddMenuStage1">Add Menu</a></li>
                         <li><a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=navigationManagerDeleteMenuStage1">Delete Menu</a></li>
