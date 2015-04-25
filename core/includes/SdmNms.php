@@ -155,7 +155,7 @@ class SdmNms extends SdmCore {
      *
      */
     public function sdmNmsupdateMenu() {
-
+        return;
     }
 
     /**
@@ -176,56 +176,90 @@ class SdmNms extends SdmCore {
      * enable a menu
      */
     public function sdmNmsenableMenu() {
-
+        return;
     }
 
     /**
      * disable a menu
      */
     public function sdmNmsdisableMenu() {
-
+        return;
     }
 
     /**
      * get a stored menu
+     * @param mixed An integer or stirng that is equal to the id of the menu we wish to get
      */
-    public function sdmNmsGetMenu() {
-
+    public function sdmNmsGetMenu($menuId) {
+        $data = $this->sdmCoreLoadDataObject();
+        return $data->menus->$menuId;
     }
 
     /**
-     * get a stored menu and return it as an html formatted string
+     * Get a single stored menu and return it as an html formatted string
+     * @param mixed $menuId An integer or stirng that is equal to the id of the menu we wish to get
+     * @return string An html formated string representation of the menu
      */
-    public function sdmNmsGetMenuHtml() {
+    public function sdmNmsGetMenuHtml($menuId) {
+        $html = '';
+        $currentUserRole = 'locked';
+        $menu = $this->sdmNmsGetMenu($menuId);
+        //$this->sdmCoreSdmReadArray($menu);
+        // if menuKeyholders is null assume all users have accsess and show menu || if $currentUserRole exists in menuKeyholders array show menu || if the special all role exists in the menuKeyholders array we assume all user have accsess and show menu
+        if ($menu->menuKeyholders === null || in_array($currentUserRole, $menu->menuKeyholders) || in_array('all', $menu->menuKeyholders)) { // we check two things, if the menuKeyholders property is null we assume all users can accsess this menu, if it is not null we check if the users role exists in the menuKeyholders array, we also do a check to see if the 'all' value exists in the menuKeyholders array, if 'all' is present then the menu will be available to all users regardless of the other roles set in menuKeyholders
+            $html .= '<h4>' . $menu->menuDisplayName . ' (menuId: ' . $menu->menuId . ')</h4><' . $menu->menuWrappingTagType . ' class="' . (is_array($menu->menuCssClasses) === TRUE ? implode(' ', $menu->menuCssClasses) : str_replace(array(',', '|', ':', ';'), ' ', strval($menu->menuCssClasses))) . '">';
+            foreach ($menu->menuItems as $menuItem) {
+                switch ($menuItem->destinationType) {
+                    case 'internal':
+                        $html .= '<' . $menuItem->menuItemWrappingTagType . '><a href="' . $this->sdmCoreGetRootDirectoryUrl() . '/index.php?page=' . $menuItem->destination . '&' . (is_string($menuItem->arguments) ? str_replace(' ', '', str_replace(array(',', ';', ':', '|'), '&', $menuItem->arguments)) : str_replace(' ', '', implode('&', $menuItem->arguments))) . '">' . $menuItem->menuItemDisplayName . '</a>' . '</' . $menuItem->menuItemWrappingTagType . '>';
+                        break;
+                    case 'external':
+                        $html .= '<' . $menuItem->menuItemWrappingTagType . '>' . '<a href="' . $menuItem->destination . '?&' . (is_string($menuItem->arguments) ? str_replace(' ', '', str_replace(array(',', ';', ':', '|'), '&', $menuItem->arguments)) : str_replace(' ', '', implode('&', $menuItem->arguments))) . '">' . $menuItem->menuItemDisplayName . '</a>' . '</' . $menuItem->menuItemWrappingTagType . '>';
+                        break;
+                    default:
+                        break;
+                }
+            }
+            $html .= '</' . $menu->menuWrappingTagType . '>';
+        }
+        return ($html !== '' ? $html : FALSE);
+    }
 
+    public function sdmNmsGetWrapperMenusHtml() {
+        $data = $this->sdmCoreLoadDataObject();
+        $html = '';
+        foreach ($data->menus as $menu) {
+            $html .= $this->sdmNmsGetMenuHtml($menu->menuId);
+        }
+        return $html;
     }
 
     /**
      * delete a menu
      */
     public function sdmNmsdeleteMenuItem() {
-
+        return;
     }
 
     /**
      * enable a menu
      */
     public function sdmNmsupdateMenuItem() {
-
+        return;
     }
 
     /**
      * disable a menu
      */
     public function sdmNmsdisableMenuItem() {
-
+        return;
     }
 
     /**
      * get a stored menu
      */
     public function sdmNmsGetMenuItem() {
-
+        return;
     }
 
 }

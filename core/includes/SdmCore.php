@@ -458,4 +458,30 @@ class SdmCore {
         return $enabled_apps;
     }
 
+    /**
+     *
+     * @param mixed $value The value to convert into a machine safe string. If an array is passed each value in the array will be filtered
+     * @return mixed A machince safe string. If an array was passed then it's values will be filtered recursivley
+     */
+    final public function SdmCoreGenerateMachineName($value) {
+        $targetChars = str_split('~!@#$%^&*()+|}{":?> <`\'\\Ω≈ç√∫˜≤≥÷åß∂ƒ©˙∆˚¬…æœ∑´†¥¨ˆπ“‘«`™£¢∞§¶•ªº–≠¸˛Ç◊ı˜Â¯˘¿ÅÍÎÏ˝ÓÔÒÚÆŒ„´‰ˇÁ¨ˆØ∏”’»`⁄€‹›ﬁﬂ‡°·‚—±');
+        switch (is_array($value)) {
+            case TRUE:
+                foreach ($value as $k => $v) {
+                    unset($value[$k]);
+                    $value[$k] = SdmCore::SdmCoreGenerateMachineName($v);
+                    unset($k);
+                    unset($v);
+                }
+                break;
+
+            default:
+                $value = str_replace($targetChars, '_', $value);
+                break;
+        }
+        // remove any dulicate underscores
+        $machineValue = preg_replace('/[_]+/', '_', $value);
+        return $machineValue;
+    }
+
 }
