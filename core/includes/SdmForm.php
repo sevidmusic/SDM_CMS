@@ -2,6 +2,7 @@
 
 /**
  * @todo finsih utilizeing base64_encode(serialize()) in the sdmFormBuildForm() method to filter all form values so the sdmFormGetSubmittedFormValue() method can be used to get submitted form values.
+ * @todo Since base64_encode expects a string we need to convert integers, booleans, and null to string representations before encoding and then back to their correct types upn decodeing
  */
 class SdmForm {
 
