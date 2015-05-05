@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @todo finsih utilizeing base64_encode(serialize()) in the sdmFormBuildForm() method to filter all form values so the sdmFormGetSubmittedFormValue() method can be used to get submitted form values.
+ * @todo finsih utilizeing sdmFormEncode() in the sdmFormBuildForm() method to filter all form values so the sdmFormGetSubmittedFormValue() method can be used to get submitted form values.
  * @todo Since base64_encode expects a string we need to convert integers, booleans, and null to string representations before encoding and then back to their correct types upn decodeing
  */
 class SdmForm {
@@ -105,18 +105,18 @@ class SdmForm {
                 case 'select':
                     $form_html = $form_html . '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><select name="SdmForm[' . $value['id'] . ']">';
                     foreach ($value['value'] as $option => $option_value) {
-                        $form_html = $form_html . '<option value="' . (substr($option_value, 0, 8) === 'default_' ? base64_encode(serialize(str_replace('default_', '', $option_value))) . '" selected="selected"' : base64_encode(serialize($option_value)) . '"') . '>' . $option . '</option>';
+                        $form_html = $form_html . '<option value="' . (substr($option_value, 0, 8) === 'default_' ? $this->sdmFormEncode((str_replace('default_', '', $option_value))) . '" selected="selected"' : $this->sdmFormEncode(($option_value)) . '"') . '>' . $option . '</option>';
                     }
                     $form_html = $form_html . '</select><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
                     break;
                 case 'radio':
                     $form_html = $form_html . '<!-- form element "SdmForm[' . $value['id'] . ']" --><p id="label-for-SdmForm[' . $value['id'] . ']">' . $value['element'] . '</p>';
                     foreach ($value['value'] as $radio => $radio_value) {
-                        $form_html = $form_html . '<label  for="SdmForm[' . $value['id'] . ']">' . $radio . '</label><input type="radio" name="SdmForm[' . $value['id'] . ']" value="' . (substr($radio_value, 0, 8) === 'default_' ? base64_encode(serialize(str_replace('default_', '', $radio_value))) . '" checked="checked"' : base64_encode(serialize($radio_value)) . '"') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+                        $form_html = $form_html . '<label  for="SdmForm[' . $value['id'] . ']">' . $radio . '</label><input type="radio" name="SdmForm[' . $value['id'] . ']" value="' . (substr($radio_value, 0, 8) === 'default_' ? $this->sdmFormEncode((str_replace('default_', '', $radio_value))) . '" checked="checked"' : $this->sdmFormEncode(($radio_value)) . '"') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
                     }
                     break;
                 case 'hidden':
-                    $form_html = $form_html . '<!-- form element "SdmForm[' . $value['id'] . ']" --><input name="SdmForm[' . $value['id'] . ']" type="hidden" value="' . base64_encode(serialize($value['value'])) . '"><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+                    $form_html = $form_html . '<!-- form element "SdmForm[' . $value['id'] . ']" --><input name="SdmForm[' . $value['id'] . ']" type="hidden" value="' . $this->sdmFormEncode(($value['value'])) . '"><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
                     break;
                 default:
                     break;
@@ -126,6 +126,11 @@ class SdmForm {
         $form_html .= '<!-- built-in form element "form_id" --><input type="hidden" name="SdmForm[form_id]" value="' . $this->sdmFormGetFormId() . '"><!-- close built-in form element "form_id" -->';
         $this->form = $form_html . '<input value="' . $this->submitLabel . '" type="submit"></form><!-- close form ' . $this->sdmFormGetFormId() . ' -->';
         return $this->form;
+    }
+
+    final public function sdmFormEncode($value) {
+        $encodedValue = base64_encode(serialize($value));
+        return $encodedValue;
     }
 
     /**
