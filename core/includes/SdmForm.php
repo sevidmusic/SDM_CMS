@@ -1,7 +1,8 @@
 <?php
 
 /**
- * @todo finsih utilizeing base64_encode(serialize()) in the sdmFormBuildForm() method to filter all form values so the sdmFormGetSubmittedFormValue() method can be used to get submitted form values.
+ * @todo finsih utilizeing sdmFormEncode() in the sdmFormBuildForm() method to filter all form values so the sdmFormGetSubmittedFormValue() method can be used to get submitted form values.
+ * @todo Since base64_encode expects a string we need to convert integers, booleans, and null to string representations before encoding and then back to their correct types upn decodeing
  */
 class SdmForm {
 
@@ -104,18 +105,18 @@ class SdmForm {
                 case 'select':
                     $form_html = $form_html . '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><select name="SdmForm[' . $value['id'] . ']">';
                     foreach ($value['value'] as $option => $option_value) {
-                        $form_html = $form_html . '<option value="' . (substr($option_value, 0, 8) === 'default_' ? base64_encode(serialize(str_replace('default_', '', $option_value))) . '" selected="selected"' : base64_encode(serialize($option_value)) . '"') . '>' . $option . '</option>';
+                        $form_html = $form_html . '<option value="' . (substr($option_value, 0, 8) === 'default_' ? $this->sdmFormEncode((str_replace('default_', '', $option_value))) . '" selected="selected"' : $this->sdmFormEncode(($option_value)) . '"') . '>' . $option . '</option>';
                     }
                     $form_html = $form_html . '</select><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
                     break;
                 case 'radio':
                     $form_html = $form_html . '<!-- form element "SdmForm[' . $value['id'] . ']" --><p id="label-for-SdmForm[' . $value['id'] . ']">' . $value['element'] . '</p>';
                     foreach ($value['value'] as $radio => $radio_value) {
-                        $form_html = $form_html . '<label  for="SdmForm[' . $value['id'] . ']">' . $radio . '</label><input type="radio" name="SdmForm[' . $value['id'] . ']" value="' . (substr($radio_value, 0, 8) === 'default_' ? base64_encode(serialize(str_replace('default_', '', $radio_value))) . '" checked="checked"' : base64_encode(serialize($radio_value)) . '"') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+                        $form_html = $form_html . '<label  for="SdmForm[' . $value['id'] . ']">' . $radio . '</label><input type="radio" name="SdmForm[' . $value['id'] . ']" value="' . (substr($radio_value, 0, 8) === 'default_' ? $this->sdmFormEncode((str_replace('default_', '', $radio_value))) . '" checked="checked"' : $this->sdmFormEncode(($radio_value)) . '"') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
                     }
                     break;
                 case 'hidden':
-                    $form_html = $form_html . '<!-- form element "SdmForm[' . $value['id'] . ']" --><input name="SdmForm[' . $value['id'] . ']" type="hidden" value="' . base64_encode(serialize($value['value'])) . '"><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+                    $form_html = $form_html . '<!-- form element "SdmForm[' . $value['id'] . ']" --><input name="SdmForm[' . $value['id'] . ']" type="hidden" value="' . $this->sdmFormEncode(($value['value'])) . '"><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
                     break;
                 default:
                     break;
@@ -125,6 +126,32 @@ class SdmForm {
         $form_html .= '<!-- built-in form element "form_id" --><input type="hidden" name="SdmForm[form_id]" value="' . $this->sdmFormGetFormId() . '"><!-- close built-in form element "form_id" -->';
         $this->form = $form_html . '<input value="' . $this->submitLabel . '" type="submit"></form><!-- close form ' . $this->sdmFormGetFormId() . ' -->';
         return $this->form;
+    }
+
+    /**
+     * <p>Utilizes serialize() and base64_encode() to encode a form value. This method
+     * was created to fix bug#13</p>
+     * <p><i>Note: Value is only encoded if value is not of type boolean. Booleans
+     * are not encoded because it was determined that encoding booleans, specifically
+     * the boolean false, led to bugs in SdmForm::sdmFormGetSubmittedFormValue() because
+     * it interfered with SdmForm::sdmFormGetSubmittedFormValue()'s ability to determine if
+     * a value was serilaized or base64 encoded which led to the value not being decoded at all
+     * by SdmForm::sdmFormGetSubmittedFormValue().</i></p>
+     * <p><i>This resulted in SdmForm::sdmFormGetSubmittedFormValue() returning a boolean FALSE as
+     * the encoded string "YjowOw==" which of course would not equate to the boolean FALSE which meant
+     * the data was returned corrupted in both type and value.</i></p>
+     * @see https://github.com/sevidmusic/SDM_CMS/issues/13 : See bug#13 on git for more information</p>.
+     * @param mixed $value
+     * @return mixed <p>The encoded value unless value was of type boolean, in whcih case the original
+     * value is returned</p>
+     */
+    final public function sdmFormEncode($value) {
+        if (is_bool($value) === FALSE) {
+            $encodedValue = base64_encode(serialize($value));
+        } else {
+            $encodedValue = $value;
+        }
+        return $encodedValue;
     }
 
     /**
