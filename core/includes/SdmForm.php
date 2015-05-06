@@ -128,8 +128,29 @@ class SdmForm {
         return $this->form;
     }
 
+    /**
+     * <p>Utilizes serialize() and base64_encode() to encode a form value. This method
+     * was created to fix bug#13</p>
+     * <p><i>Note: Value is only encoded if value is not of type boolean. Booleans
+     * are not encoded because it was determined that encoding booleans, specifically
+     * the boolean false, led to bugs in SdmForm::sdmFormGetSubmittedFormValue() because
+     * it interfered with SdmForm::sdmFormGetSubmittedFormValue()'s ability to determine if
+     * a value was serilaized or base64 encoded which led to the value not being decoded at all
+     * by SdmForm::sdmFormGetSubmittedFormValue().</i></p>
+     * <p><i>This resulted in SdmForm::sdmFormGetSubmittedFormValue() returning a boolean FALSE as
+     * the encoded string "YjowOw==" which of course would not equate to the boolean FALSE which meant
+     * the data was returned corrupted in both type and value.</i></p>
+     * @see https://github.com/sevidmusic/SDM_CMS/issues/13 : See bug#13 on git for more information</p>.
+     * @param mixed $value
+     * @return mixed <p>The encoded value unless value was of type boolean, in whcih case the original
+     * value is returned</p>
+     */
     final public function sdmFormEncode($value) {
-        $encodedValue = base64_encode(serialize($value));
+        if (is_bool($value) === FALSE) {
+            $encodedValue = base64_encode(serialize($value));
+        } else {
+            $encodedValue = $value;
+        }
         return $encodedValue;
     }
 
