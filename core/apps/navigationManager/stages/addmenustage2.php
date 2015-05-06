@@ -3,9 +3,6 @@
 /**
  * Sets up the menu item configuration forms.
  */
-if (SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName') !== null) {
-    $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<div style="border:2px solid #777777;border-radius:9px;padding:20px;height:120px;"><h3>Last Submitted Menu Item:<i style="font-size:.5em;">(DEV NOTE: THIS WILL BE REPLACED BY A PREVIEW OF THE MENU AS IT WOULD LOOK SO FAR BASED ON THE SUBMITTED MENU ITEMS)</i></h3><p>' . SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName') . '</p></div>', array('incmethod' => 'prepend', 'incpages' => $options['incpages']));
-}
 // check to make sure the menuItem number is set, if it doesnt report an error since we cant proceed without it
 switch (SdmForm::sdmFormGetSubmittedFormValue('menuItem') !== null) {
     case TRUE:
@@ -113,7 +110,7 @@ switch (SdmForm::sdmFormGetSubmittedFormValue('menuItem') !== null) {
                 'place' => '13',
             ),
         );
-        // load any menu items already stored and create a menu item from the last submitted menu item configuration form
+        // load any menu items already stored and create a menu item from the last submitted menu item configuration form, also display a preview of what the menu looks like based on the menu items submitted so far.
         if (isset($_POST['SdmForm']['menuItems'])) {
             // retrieve any menu items already stored in the menuItems array
             $menuItems = SdmForm::sdmFormGetSubmittedFormValue('menuItems');
@@ -144,6 +141,8 @@ switch (SdmForm::sdmFormGetSubmittedFormValue('menuItem') !== null) {
             );
             // add the last submitted menu item to our menu items array
             array_push($addMenuFormStage2->form_elements, $mi);
+            // display of preview of the menu so far
+            $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<div style="border:2px solid #777777;border-radius:9px;padding:20px;height:120px;overflow:auto;"><h3>Last Submitted Menu Item:</h3><p>Display Name: <span style="color:blue;">' . SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName') . '</span> | Destination Type : <span style="color:blue;">' . $lastSubmittedMenuItem->destinationType . '</span> | Destination: <span style="color:blue;">' . $lastSubmittedMenuItem->destination . '</span></p><h3>Menu Preview:</h3>' . $sdmnms->sdmNmsBuildMenuItemsHtml($menuItems) . '</div>', array('incmethod' => 'prepend', 'incpages' => $options['incpages']));
         } else {
             $menuItems = array();
             $mi = array(

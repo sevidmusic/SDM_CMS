@@ -201,28 +201,37 @@ class SdmNms extends SdmCore {
      * @return string An html formated string representation of the menu
      */
     public function sdmNmsGetMenuHtml($menuId) {
-        $html = '';
-        $currentUserRole = 'locked';
+        $currentUserRole = 'root'; // this is a dev role, the users role should be determined by the Sdm Gatekeeper once it is built
         $menu = $this->sdmNmsGetMenu($menuId);
-        //$this->sdmCoreSdmReadArray($menu);
         // if menuKeyholders is null assume all users have accsess and show menu || if $currentUserRole exists in menuKeyholders array show menu || if the special all role exists in the menuKeyholders array we assume all user have accsess and show menu
         if ($menu->menuKeyholders === null || in_array($currentUserRole, $menu->menuKeyholders) || in_array('all', $menu->menuKeyholders)) { // we check two things, if the menuKeyholders property is null we assume all users can accsess this menu, if it is not null we check if the users role exists in the menuKeyholders array, we also do a check to see if the 'all' value exists in the menuKeyholders array, if 'all' is present then the menu will be available to all users regardless of the other roles set in menuKeyholders
-            $html .= '<h4>' . $menu->menuDisplayName . ' (menuId: ' . $menu->menuId . ')</h4><' . $menu->menuWrappingTagType . ' class="' . (is_array($menu->menuCssClasses) === TRUE ? implode(' ', $menu->menuCssClasses) : str_replace(array(',', '|', ':', ';'), ' ', strval($menu->menuCssClasses))) . '">';
-            foreach ($menu->menuItems as $menuItem) {
-                switch ($menuItem->destinationType) {
-                    case 'internal':
-                        $html .= '<' . $menuItem->menuItemWrappingTagType . '><a href="' . $this->sdmCoreGetRootDirectoryUrl() . '/index.php?page=' . $menuItem->destination . '&' . (is_string($menuItem->arguments) ? str_replace(' ', '', str_replace(array(',', ';', ':', '|'), '&', $menuItem->arguments)) : str_replace(' ', '', implode('&', $menuItem->arguments))) . '">' . $menuItem->menuItemDisplayName . '</a>' . '</' . $menuItem->menuItemWrappingTagType . '>';
-                        break;
-                    case 'external':
-                        $html .= '<' . $menuItem->menuItemWrappingTagType . '>' . '<a href="' . $menuItem->destination . '?&' . (is_string($menuItem->arguments) ? str_replace(' ', '', str_replace(array(',', ';', ':', '|'), '&', $menuItem->arguments)) : str_replace(' ', '', implode('&', $menuItem->arguments))) . '">' . $menuItem->menuItemDisplayName . '</a>' . '</' . $menuItem->menuItemWrappingTagType . '>';
-                        break;
-                    default:
-                        break;
-                }
-            }
-            $html .= '</' . $menu->menuWrappingTagType . '>';
+            $html = $this->sdmNmsBuildMenuHtml();
         }
-        return ($html !== '' ? $html : FALSE);
+        return (isset($html) && $html !== '' ? $html : FALSE);
+    }
+
+    public function sdmNmsBuildMenuHtml($menu) {
+        $html .= '<h4>' . $menu->menuDisplayName . ' (menuId: ' . $menu->menuId . ')</h4><' . $menu->menuWrappingTagType . ' class="' . (is_array($menu->menuCssClasses) === TRUE ? implode(' ', $menu->menuCssClasses) : str_replace(array(',', '|', ':', ';'), ' ', strval($menu->menuCssClasses))) . '">';
+        $html .= $this->sdmNmsBuildMenuItemsHtml($menu->menuItems);
+        $html .= '</' . $menu->menuWrappingTagType . '>';
+        return $html;
+    }
+
+    public function sdmNmsBuildMenuItemsHtml($menuItems) {
+        $html = '';
+        foreach ($menuItems as $menuItem) {
+            switch ($menuItem->destinationType) {
+                case 'internal':
+                    $html .= '<' . $menuItem->menuItemWrappingTagType . '><a href="' . $this->sdmCoreGetRootDirectoryUrl() . '/index.php?page=' . $menuItem->destination . '&' . (is_string($menuItem->arguments) ? str_replace(' ', '', str_replace(array(',', ';', ':', '|'), '&', $menuItem->arguments)) : str_replace(' ', '', implode('&', $menuItem->arguments))) . '">' . $menuItem->menuItemDisplayName . '</a>' . '</' . $menuItem->menuItemWrappingTagType . '>';
+                    break;
+                case 'external':
+                    $html .= '<' . $menuItem->menuItemWrappingTagType . '>' . '<a href="' . $menuItem->destination . '?&' . (is_string($menuItem->arguments) ? str_replace(' ', '', str_replace(array(',', ';', ':', '|'), '&', $menuItem->arguments)) : str_replace(' ', '', implode('&', $menuItem->arguments))) . '">' . $menuItem->menuItemDisplayName . '</a>' . '</' . $menuItem->menuItemWrappingTagType . '>';
+                    break;
+                default:
+                    break;
+            }
+        }
+        return $html;
     }
 
     public function sdmNmsGetWrapperMenusHtml() {

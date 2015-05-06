@@ -17,7 +17,7 @@ function rangeArray($s, $e) {
     return $array;
 }
 
-// create new naviagation management object
+// create new naviagation management object | this varialbe will be accsessible by the various stages forms and handlers
 $sdmnms = new SdmNms();
 // this otpions array will be passed to sdmAssemblerIncorporateAppOutput() wherever this app outputs data.
 $options = array(
