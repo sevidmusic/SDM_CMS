@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Sets up the menu item configuration forms.
+ */
 if (SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName') !== null) {
     $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<div style="border:2px solid #777777;border-radius:9px;padding:20px;height:120px;"><h3>Last Submitted Menu Item:<i style="font-size:.5em;">(DEV NOTE: THIS WILL BE REPLACED BY A PREVIEW OF THE MENU AS IT WOULD LOOK SO FAR BASED ON THE SUBMITTED MENU ITEMS)</i></h3><p>' . SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName') . '</p></div>', array('incmethod' => 'prepend', 'incpages' => $options['incpages']));
 }
@@ -90,9 +93,9 @@ switch (SdmForm::sdmFormGetSubmittedFormValue('menuItem') !== null) {
             ),
             array(
                 'id' => 'menuItemKeyholders',
-                'type' => 'text',
-                'element' => 'Menu Item Keyholders <i style="font-size:.7em;">(Comma seperated list of Roles that can use this menu item, i.e., "root, admin, registered_user")</i>',
-                'value' => '',
+                'type' => 'checkbox',
+                'element' => 'Menu Item Keyholders <i style="font-size:.7em;">(Check the roles that should have access this menu item)</i>',
+                'value' => array('Root' => 'root', 'Basic User' => 'basic_user', 'all' => 'all'),
                 'place' => '11',
             ),
             array(
@@ -124,7 +127,8 @@ switch (SdmForm::sdmFormGetSubmittedFormValue('menuItem') !== null) {
             $lastSubmittedMenuItem->menuItemDisplayName = SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName');
             $lastSubmittedMenuItem->menuItemEnabled = SdmForm::sdmFormGetSubmittedFormValue('menuItemEnabled');
             $lastSubmittedMenuItem->menuItemId = SdmForm::sdmFormGetSubmittedFormValue('menuItemId');
-            $lastSubmittedMenuItem->menuItemKeyholders = explode(',', SdmForm::sdmFormGetSubmittedFormValue('menuItemKeyholders'));
+            //$lastSubmittedMenuItem->menuItemKeyholders = explode(',', SdmForm::sdmFormGetSubmittedFormValue('menuItemKeyholders'));
+            $lastSubmittedMenuItem->menuItemKeyholders = SdmForm::sdmFormGetSubmittedFormValue('menuItemKeyholders');
             $lastSubmittedMenuItem->menuItemMachineName = SdmCore::SdmCoreGenerateMachineName(SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName'));
             $lastSubmittedMenuItem->menuItemPosition = SdmForm::sdmFormGetSubmittedFormValue('menuItemPosition');
             $lastSubmittedMenuItem->menuItemWrappingTagType = SdmForm::sdmFormGetSubmittedFormValue('menuItemWrappingTagType');
