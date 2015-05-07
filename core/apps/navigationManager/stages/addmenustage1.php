@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * This form is where the number of menu items is determined.
+ * The user will then be directed to configure the amount of number items
+ * determined by this form.
+ */
 $addMenuFormStage1 = new SdmForm();
 $addMenuFormStage1->form_method = 'post';
 $addMenuFormStage1->form_handler = 'navigationManagerAddMenuStage2';
