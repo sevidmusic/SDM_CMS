@@ -205,13 +205,13 @@ class SdmNms extends SdmCore {
         $menu = $this->sdmNmsGetMenu($menuId);
         // if menuKeyholders is null assume all users have accsess and show menu || if $currentUserRole exists in menuKeyholders array show menu || if the special all role exists in the menuKeyholders array we assume all user have accsess and show menu
         if ($menu->menuKeyholders === null || in_array($currentUserRole, $menu->menuKeyholders) || in_array('all', $menu->menuKeyholders)) { // we check two things, if the menuKeyholders property is null we assume all users can accsess this menu, if it is not null we check if the users role exists in the menuKeyholders array, we also do a check to see if the 'all' value exists in the menuKeyholders array, if 'all' is present then the menu will be available to all users regardless of the other roles set in menuKeyholders
-            $html = $this->sdmNmsBuildMenuHtml();
+            $html = $this->sdmNmsBuildMenuHtml($menu);
         }
         return (isset($html) && $html !== '' ? $html : FALSE);
     }
 
     public function sdmNmsBuildMenuHtml($menu) {
-        $html .= '<h4>' . $menu->menuDisplayName . ' (menuId: ' . $menu->menuId . ')</h4><' . $menu->menuWrappingTagType . ' class="' . (is_array($menu->menuCssClasses) === TRUE ? implode(' ', $menu->menuCssClasses) : str_replace(array(',', '|', ':', ';'), ' ', strval($menu->menuCssClasses))) . '">';
+        $html = '<h4>' . $menu->menuDisplayName . ' (menuId: ' . $menu->menuId . ')</h4><' . $menu->menuWrappingTagType . ' class="' . (is_array($menu->menuCssClasses) === TRUE ? implode(' ', $menu->menuCssClasses) : str_replace(array(',', '|', ':', ';'), ' ', strval($menu->menuCssClasses))) . '">';
         $html .= $this->sdmNmsBuildMenuItemsHtml($menu->menuItems);
         $html .= '</' . $menu->menuWrappingTagType . '>';
         return $html;

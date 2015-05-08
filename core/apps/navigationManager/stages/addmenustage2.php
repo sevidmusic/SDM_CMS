@@ -124,7 +124,6 @@ switch (SdmForm::sdmFormGetSubmittedFormValue('menuItem') !== null) {
             $lastSubmittedMenuItem->menuItemDisplayName = SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName');
             $lastSubmittedMenuItem->menuItemEnabled = SdmForm::sdmFormGetSubmittedFormValue('menuItemEnabled');
             $lastSubmittedMenuItem->menuItemId = SdmForm::sdmFormGetSubmittedFormValue('menuItemId');
-            //$lastSubmittedMenuItem->menuItemKeyholders = explode(',', SdmForm::sdmFormGetSubmittedFormValue('menuItemKeyholders'));
             $lastSubmittedMenuItem->menuItemKeyholders = SdmForm::sdmFormGetSubmittedFormValue('menuItemKeyholders');
             $lastSubmittedMenuItem->menuItemMachineName = SdmCore::SdmCoreGenerateMachineName(SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName'));
             $lastSubmittedMenuItem->menuItemPosition = SdmForm::sdmFormGetSubmittedFormValue('menuItemPosition');
