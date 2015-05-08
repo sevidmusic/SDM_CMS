@@ -211,7 +211,7 @@ class SdmNms extends SdmCore {
     }
 
     public function sdmNmsBuildMenuHtml($menu) {
-        $html .= '<h4>' . $menu->menuDisplayName . ' (menuId: ' . $menu->menuId . ')</h4><' . $menu->menuWrappingTagType . ' class="' . (is_array($menu->menuCssClasses) === TRUE ? implode(' ', $menu->menuCssClasses) : str_replace(array(',', '|', ':', ';'), ' ', strval($menu->menuCssClasses))) . '">';
+        $html = '<h4>' . $menu->menuDisplayName . ' (menuId: ' . $menu->menuId . ')</h4><' . $menu->menuWrappingTagType . ' class="' . (is_array($menu->menuCssClasses) === TRUE ? implode(' ', $menu->menuCssClasses) : str_replace(array(',', '|', ':', ';'), ' ', strval($menu->menuCssClasses))) . '">';
         $html .= $this->sdmNmsBuildMenuItemsHtml($menu->menuItems);
         $html .= '</' . $menu->menuWrappingTagType . '>';
         return $html;
