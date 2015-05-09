@@ -71,8 +71,6 @@ class SdmAssembler extends SdmCore {
         $sdmassembler_dataObject = $this->sdmCoreLoadDataObject();
         // load and assemble apps
         $this->sdmAssemblerLoadCoreApps($sdmassembler_dataObject);
-        // load menus | we load them after the apps so apps have a chance to modify the menu obects before they are incorporated into the page. This makes it easier for apps to do such things as disable menu items in specific menu items before they are incorporated into the page, if we loaded the menus before apps then apps would have to sift through the pages html looking for the menu they want to modify, which is a much more convulted approach, better to work with real objects
-        $this->sdmAssemblerIncorporateMenuObject($sdmassembler_dataObject);
         // make sure content exists, if it does return it, if not, print a content not found message
         switch (isset($sdmassembler_dataObject->content->$page)) {
             case TRUE:
@@ -313,8 +311,23 @@ class SdmAssembler extends SdmCore {
         return $dataObject;
     }
 
-    public function sdmAssemblerIncorporateMenuObject(stdClass $dataObject) {
-        //$this->sdmCoreSdmReadArray($dataObject);
+    /**
+     * <p>Assembles the html content for a given $wrapper and returns it as a string. This method
+     * is meant to be called from within a themes page.php file.</p>
+     * @param string $wrapper <p>The wrapper to assemble html</p>
+     * @param stdClass $dataObject <p>The $sdmassembler_themeContentObject variable that is created
+     * by startup.php's call to SdmAssembler::sdmAssemblerLoadAndAssembleContentObject() during the
+     * startup process. The $sdmassembler_themeContentObject is always avaialbe to all themes.
+     * <br>See: <i>/core/config/startup.php</i> for more info</p>
+     * @return type
+     */
+    public static function sdmAssemblerGetContentHtml($wrapper, stdClass $sdmassembler_themeContentObject) {
+        // initialize the SdmNms so we can add our menus to the page.
+        $nms = new SdmNms();
+        $sdmcore = new SdmCore();
+        $content = (isset($sdmassembler_themeContentObject->$wrapper) ? $sdmassembler_themeContentObject->$wrapper : '<a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=homepage">Homepage</a>');
+        $content .= $nms->sdmNmsGetWrapperMenusHtml();
+        return $content;
     }
 
 }

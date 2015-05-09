@@ -187,12 +187,16 @@ class SdmNms extends SdmCore {
     }
 
     /**
-     * get a stored menu
-     * @param mixed An integer or stirng that is equal to the id of the menu we wish to get
+     * <p>Gets the html needed to display the a wrappers menus</p>
+     * @return string <p>The html for the menus.</p>
      */
-    public function sdmNmsGetMenu($menuId) {
+    public function sdmNmsGetWrapperMenusHtml() {
         $data = $this->sdmCoreLoadDataObject();
-        return $data->menus->$menuId;
+        $html = '';
+        foreach ($data->menus as $menu) {
+            $html .= $this->sdmNmsGetMenuHtml($menu->menuId);
+        }
+        return $html;
     }
 
     /**
@@ -211,6 +215,20 @@ class SdmNms extends SdmCore {
         return (isset($html) && $html !== '' ? $html : FALSE);
     }
 
+    /**
+     * get a stored menu
+     * @param mixed An integer or stirng that is equal to the id of the menu we wish to get
+     */
+    public function sdmNmsGetMenu($menuId) {
+        $data = $this->sdmCoreLoadDataObject();
+        return $data->menus->$menuId;
+    }
+
+    /**
+     * <p>Builds the html for a menu object.</p>
+     * @param object $menu <p>The menu to object to build from.</p>
+     * @return string <p>The Menu's html</p>
+     */
     public function sdmNmsBuildMenuHtml($menu) {
         $html = '<!-- MENU: ' . $menu->menuDisplayName . ' | MENUID: ' . $menu->menuId . ' --><' . $menu->menuWrappingTagType . ' class="' . (is_array($menu->menuCssClasses) === TRUE ? implode(' ', $menu->menuCssClasses) : str_replace(array(',', '|', ':', ';'), ' ', strval($menu->menuCssClasses))) . '">';
         $html .= $this->sdmNmsBuildMenuItemsHtml($menu->menuItems);
@@ -218,6 +236,11 @@ class SdmNms extends SdmCore {
         return $html;
     }
 
+    /**
+     * <p>Builds the html for a menu object's menu items.</p>
+     * @param array $menuItems <p>The menu's menu items array (e.g., $menu->menuItems).</p>
+     * @return string <p>The Menu Item's html</p>
+     */
     public function sdmNmsBuildMenuItemsHtml($menuItems) {
         $html = '';
         foreach ($menuItems as $menuItem) {
@@ -231,15 +254,6 @@ class SdmNms extends SdmCore {
                 default:
                     break;
             }
-        }
-        return $html;
-    }
-
-    public function sdmNmsGetWrapperMenusHtml() {
-        $data = $this->sdmCoreLoadDataObject();
-        $html = '';
-        foreach ($data->menus as $menu) {
-            $html .= $this->sdmNmsGetMenuHtml($menu->menuId);
         }
         return $html;
     }
