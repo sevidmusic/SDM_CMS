@@ -244,7 +244,7 @@ class SdmForm {
      * @return mixed <p>The decoded value</p>
      */
     public static function sdmFormDecode($value, $devmode = FALSE, $key = null) {
-        if (is_string($value) === TRUE) {
+        if (is_array($value) === FALSE) {
             $sdmcore = new SdmCore();
             // if the key string length is a multiple of 4 then it may be base64 encoded, if it is it will have to be decoded
             if (strlen($value) % 4 == 0) {
@@ -292,8 +292,8 @@ class SdmForm {
                     ($devmode === TRUE ? $sdmcore->sdmCoreSdmReadArray(array('$_POST[\'SdmForm\']' . (is_array($key) === TRUE ? '[\'' . implode('\'][\'', $key) . '\']' : '[\'' . strval($key) . '\']') . ' STRING LENGTH NOT A MULTIPLE OF 4 AND VALUE IS NOT BASE 64. VALUE IS SERIALIZED' => $value, '$data' => $finaldata)) : null);
                 }
             }
-        } else {
-            $finaldata = $value;
+        } else { // if $value is an array we need to call SdmForm::sdmFormDecodeArrayValues() to recurse through the array makeing sure none of the values need to be decoded
+            $finaldata = SdmForm::sdmFormDecodeArrayValues($value, $devmode, $key);
         }
         return $finaldata;
     }

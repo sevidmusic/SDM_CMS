@@ -26,6 +26,9 @@ $options = array(
         'navigationManagerAddMenuStage2', // configure menu items
         'navigationManagerAddMenuStage3', // configure menu
         'navigationManagerAddMenuStage4', // add menu
+        'navigationManagerDeleteMenuStage1', // select menu to delete
+        'navigationManagerDeleteMenuStage2', // confirm selected menu should be deleted
+        'navigationManagerDeleteMenuStage3', // delete menu
     ),
 );
 $sdmcore = $sdmcore; // see SdmAssembler.php
@@ -50,6 +53,12 @@ if (substr($sdmcore->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationMana
         // DELETE MENU STAGES
         case 'navigationManagerDeleteMenuStage1':
             require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/deletemenustage1.php');
+            break;
+        case 'navigationManagerDeleteMenuStage2':
+            $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<h3>Confirm Delete Menu</h3><p>Still in development.</p>', array('incpages' => array('navigationManagerDeleteMenuStage2')));
+            break;
+        case 'navigationManagerDeleteMenuStage3':
+            $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<h3>Confirm Delete Menu</h3><p>Still in development.</p>', array('incpages' => array('navigationManagerDeleteMenuStage3')));
             break;
         default:
             // present content manager menu
