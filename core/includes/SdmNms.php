@@ -187,16 +187,30 @@ class SdmNms extends SdmCore {
     }
 
     /**
-     * <p>Gets the html needed to display the a wrappers menus</p>
+     * <p>Gets the html needed to display the wrappers menus and incorporates it into the page</p>
+     * @param string $wrapper <p>The wrapper to get menus for</p>
+     * @param string $wrapperAssembledContent <p>The wrapper html as it is assembled so far,
+     * the menu incorporation happens last in order to allow apps to modify menus prior to
+     * incorporating them into the page</p>
      * @return string <p>The html for the menus.</p>
      */
-    public function sdmNmsGetWrapperMenusHtml() {
+    public function sdmNmsGetWrapperMenusHtml($wrapper, $wrapperAssembledContent) {
         $data = $this->sdmCoreLoadDataObject();
-        $html = '';
+        $prepend = '';
+        $append = '';
         foreach ($data->menus as $menu) {
-            $html .= $this->sdmNmsGetMenuHtml($menu->menuId);
+            if ($menu->wrapper === $wrapper) {
+                switch ($menu->menuPlacement) {
+                    case 'prepend':
+                        $prepend .= $this->sdmNmsGetMenuHtml($menu->menuId);
+                        break;
+                    default:
+                        $append .= $this->sdmNmsGetMenuHtml($menu->menuId);
+                        break;
+                }
+            }
         }
-        return $html;
+        return $prepend . $wrapperAssembledContent . $append;
     }
 
     /**
@@ -246,7 +260,7 @@ class SdmNms extends SdmCore {
         foreach ($menuItems as $menuItem) {
             switch ($menuItem->destinationType) {
                 case 'internal':
-                    $html .= '<' . $menuItem->menuItemWrappingTagType . '><a href="' . $this->sdmCoreGetRootDirectoryUrl() . '/index.php?page=' . $menuItem->destination . '&' . (is_string($menuItem->arguments) ? str_replace(' ', '', str_replace(array(',', ';', ':', '|'), '&', $menuItem->arguments)) : str_replace(' ', '', implode('&', $menuItem->arguments))) . '">' . $menuItem->menuItemDisplayName . '</a>' . '</' . $menuItem->menuItemWrappingTagType . '>';
+                    $html .= '<' . $menuItem->menuItemWrappingTagType . '><a href="' . $this->sdmCoreGetRootDirectoryUrl() . '/index.php?page=' . $menuItem->destination . (isset($menuItem->arguments) === TRUE && !empty($menuItem->arguments) && $menuItem->arguments[0] != '' ? '&' : '') . (is_string($menuItem->arguments) ? str_replace(' ', '', str_replace(array(',', ';', ':', '|'), '&', $menuItem->arguments)) : str_replace(' ', '', implode('&', $menuItem->arguments))) . '">' . $menuItem->menuItemDisplayName . '</a>' . '</' . $menuItem->menuItemWrappingTagType . '>';
                     break;
                 case 'external':
                     $html .= '<' . $menuItem->menuItemWrappingTagType . '>' . '<a href="' . $menuItem->destination . '?&' . (is_string($menuItem->arguments) ? str_replace(' ', '', str_replace(array(',', ';', ':', '|'), '&', $menuItem->arguments)) : str_replace(' ', '', implode('&', $menuItem->arguments))) . '">' . $menuItem->menuItemDisplayName . '</a>' . '</' . $menuItem->menuItemWrappingTagType . '>';

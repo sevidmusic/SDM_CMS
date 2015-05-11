@@ -217,7 +217,7 @@ class SdmForm {
      * @param bool $devmode If set to TRUE then this method will display dev information related to the different stages of decodeing on the page via SdmCore::sdmCoreSdmReadArray().
      * @return mixed <p>The value.</p>
      */
-    public static function sdmFormGetSubmittedFormValue($key, $devmode = TRUE) {
+    public static function sdmFormGetSubmittedFormValue($key, $devmode = FALSE) {
         $sdmcore = new SdmCore();
         // if $key is not a string then just return the $key as the data
         if (!is_string($key) === TRUE) {
@@ -230,7 +230,7 @@ class SdmForm {
                 $data = SdmForm::sdmFormDecode($value, $devmode, $key);
             } else { // key does not exist | set $data to null
                 $data = null;
-                ($devmode === TRUE ? $sdmcore->sdmCoreSdmReadArray(array('</xmp><xmp style="color:violet;">$_POST[\'SdmForm\']' . (is_array($key) === TRUE ? '[\'' . implode('\'][\'', $key) . '\']' : '[\'' . strval($key) . '\']') . ' DOES NOT EXIST OR IS NULL</xmp>' => $value)) : null);
+                ($devmode === TRUE ? $sdmcore->sdmCoreSdmReadArray(array('</xmp><xmp style="color:violet;">$_POST[\'SdmForm\']' . (is_array($key) === TRUE ? '[\'' . implode('\'][\'', $key) . '\']' : '[\'' . strval($key) . '\']') . ' DOES NOT EXIST OR IS NULL</xmp>' => $key . ' = ' . strval($data))) : null);
             }
         }
         return $data;
@@ -244,7 +244,7 @@ class SdmForm {
      * @return mixed <p>The decoded value</p>
      */
     public static function sdmFormDecode($value, $devmode = FALSE, $key = null) {
-        if (is_array($value) === FALSE) {
+        if (is_string($value) === TRUE) { // we only want to attempt to decode strings, other types should be handled seperatly
             $sdmcore = new SdmCore();
             // if the key string length is a multiple of 4 then it may be base64 encoded, if it is it will have to be decoded
             if (strlen($value) % 4 == 0) {
@@ -292,8 +292,10 @@ class SdmForm {
                     ($devmode === TRUE ? $sdmcore->sdmCoreSdmReadArray(array('$_POST[\'SdmForm\']' . (is_array($key) === TRUE ? '[\'' . implode('\'][\'', $key) . '\']' : '[\'' . strval($key) . '\']') . ' STRING LENGTH NOT A MULTIPLE OF 4 AND VALUE IS NOT BASE 64. VALUE IS SERIALIZED' => $value, '$data' => $finaldata)) : null);
                 }
             }
-        } else { // if $value is an array we need to call SdmForm::sdmFormDecodeArrayValues() to recurse through the array makeing sure none of the values need to be decoded
+        } else if (is_array($value) === TRUE) { // if $value is an array we need to call SdmForm::sdmFormDecodeArrayValues() to recurse through the array makeing sure none of the values need to be decoded
             $finaldata = SdmForm::sdmFormDecodeArrayValues($value, $devmode, $key);
+        } else { // if value is not a string or an array just return it | this will mostly apply to integers and objects
+            $finaldata = $value;
         }
         return $finaldata;
     }

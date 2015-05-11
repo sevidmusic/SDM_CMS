@@ -324,9 +324,8 @@ class SdmAssembler extends SdmCore {
     public static function sdmAssemblerGetContentHtml($wrapper, stdClass $sdmassembler_themeContentObject) {
         // initialize the SdmNms so we can add our menus to the page.
         $nms = new SdmNms();
-        $sdmcore = new SdmCore();
-        $content = (isset($sdmassembler_themeContentObject->$wrapper) ? $sdmassembler_themeContentObject->$wrapper : '<a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=homepage">Homepage</a>');
-        $content .= $nms->sdmNmsGetWrapperMenusHtml();
+        $wrapperAssembledContent = (isset($sdmassembler_themeContentObject->$wrapper) ? $sdmassembler_themeContentObject->$wrapper : '<!-- ' . $wrapper . ' placeholder -->');
+        $content = $nms->sdmNmsGetWrapperMenusHtml($wrapper, $wrapperAssembledContent);
         return $content;
     }
 
