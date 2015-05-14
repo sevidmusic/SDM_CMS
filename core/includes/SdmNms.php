@@ -58,7 +58,7 @@ class SdmMenuItem {
 
 class SdmMenu extends SdmMenuItem {
 
-    // initialize properties needed for a menu
+// initialize properties needed for a menu
     public $menuId;
     public $menuMachineName;
     public $menuDisplayName;
@@ -72,7 +72,7 @@ class SdmMenu extends SdmMenuItem {
     public $menuItems;
 
     public function __construct() {
-        // unset parent properties
+// unset parent properties
         unset($this->menuItemId);
         unset($this->menuItemMachineName);
         unset($this->menuItemDisplayName);
@@ -85,7 +85,7 @@ class SdmMenu extends SdmMenuItem {
         unset($this->arguments);
         unset($this->menuItemKeyholders);
         unset($this->menuItemEnabled);
-        // define menu object properties
+// define menu object properties
         $this->menuId = (isset($this->menuId) ? $this->menuId : rand(100000000000, 999999999999));
         $this->menuMachineName = (isset($this->menuMachineName) ? $this->menuMachineName : rand(100000000000, 999999999999));
         $this->menuDisplayName = (isset($this->menuDisplayName) ? $this->menuDisplayName : rand(1000, 9999));
@@ -131,21 +131,21 @@ class SdmNms extends SdmCore {
      * @param $menu mixed .
      */
     public function sdmNmsAddMenu($menu) {
-        // we want to make sure we can accsess the new $menu as an object, so if it is not one convert it.
+// we want to make sure we can accsess the new $menu as an object, so if it is not one convert it.
         if (gettype($menu) != 'object') {
             $menu = json_decode(json_encode($menu));
         }
-        // load our core data object
+// load our core data object
         $data = $this->sdmCoreLoadDataObject();
-        // load stored menus object from our core data object and convert to an array | makes it easiser to index the new $menu object we are going to be adding
+// load stored menus object from our core data object and convert to an array | makes it easiser to index the new $menu object we are going to be adding
         $menus = json_decode(json_encode($data->menus), TRUE);
-        // store the new $menu using it's menu id as it's array index
+// store the new $menu using it's menu id as it's array index
         $menus[$menu->menuId] = $menu;
-        // overwrite existing menus with our new menus array (which WILL contain any menus originally stored)
+// overwrite existing menus with our new menus array (which WILL contain any menus originally stored)
         $data->menus = $menus;
-        // encode $data as json to prep it for storage
+// encode $data as json to prep it for storage
         $json = json_encode($data);
-        // attempt to write new core $data | if anything fails FALSE will be returned
+// attempt to write new core $data | if anything fails FALSE will be returned
         return file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $json, LOCK_EX);
     }
 
@@ -222,7 +222,7 @@ class SdmNms extends SdmCore {
         $currentUserRole = 'basic_user'; // this is a dev role, the users role should be determined by the Sdm Gatekeeper once it is built
         $menu = $this->sdmNmsGetMenu($menuId);
         $sdmcore = new SdmCore();
-        // if $currentUserRole exists in menuKeyholders array show menu || if the special role "all" exists in the menuKeyholders array we assume all users have accsess and show menu || we no longer  assume that all users have accsess to this menu if menuKeyholders is null
+// if $currentUserRole exists in menuKeyholders array show menu || if the special role "all" exists in the menuKeyholders array we assume all users have accsess and show menu || we no longer  assume that all users have accsess to this menu if menuKeyholders is null
         if (in_array($currentUserRole, $menu->menuKeyholders) || in_array('all', $menu->menuKeyholders)) { // we check three things, if the menuKeyholders property is null we assume all users can accsess this menu, if it is not null we check if the users role exists in the menuKeyholders array, we also do a check to see if the 'all' value exists in the menuKeyholders array, if 'all' is present then the menu will be available to all users regardless of the other roles set in menuKeyholders
             $html = (in_array($sdmcore->sdmCoreDetermineRequestedPage(), $menu->displaypages) === TRUE || in_array('all', $menu->displaypages) === TRUE ? $this->sdmNmsBuildMenuHtml($menu) : '<!-- Menu "' . $menu->menuDisplayName . '" Placeholder -->'); //$this->sdmNmsBuildMenuHtml($menu);
         }
@@ -279,6 +279,18 @@ class SdmNms extends SdmCore {
             }
         }
         return $html;
+    }
+
+    /**
+     * <p>Array of names of available menus. array('Menu Display Name' => 'menuMachineName')</p>
+     * @return array <p>An array of names of available menus where keys are menu display names and values are menu machine names.</p>
+     */
+    public function sdmNmsGetAvailableMenuNames() {
+        $menus = $this->sdmCoreLoadDataObject()->menus;
+        foreach ($menus as $menu) {
+            $availableMenus[$menu->menuDisplayName] = $menu->menuMachineName;
+        }
+        return $availableMenus;
     }
 
     /**
