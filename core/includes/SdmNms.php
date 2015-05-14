@@ -159,17 +159,20 @@ class SdmNms extends SdmCore {
     }
 
     /**
-     * delete a menu
-     * @param mixed $menuId <p>Can be a string or an integer whose values matches the id of the menu to be deleted.
+     * <p>Deletes a menu</p>
+     * @param mixed $menuId <p>Can be a string or an integer whose value matches the id of the menu to be deleted.
      *               i.e., sdmNmsdeleteMenu(1) and sdmNmsdeleteMenu('1') would delete the menu that has a menuId
      *               equal to 1</p>
-     * @return bool TRUE if menu was deleted, FALSE on failure.
+     * @return mixed <p>If menu was deleted then the display name of the deleted menu is returned, if menu could not be
+     * deleted then the boolean FALSE is returned.</p>
      */
     public function sdmNmsdeleteMenu($menuId) {
         $data = $this->sdmCoreLoadDataObject();
+        $menuDisplayName = $data->menus->$menuId->menuDisplayName;
         unset($data->menus->$menuId);
         $json = json_encode($data);
-        return file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $json, LOCK_EX);
+        $status = file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $json, LOCK_EX);
+        return ($status === FALSE ? FALSE : $menuDisplayName);
     }
 
     /**
@@ -282,13 +285,19 @@ class SdmNms extends SdmCore {
     }
 
     /**
-     * <p>Array of names of available menus. array('Menu Display Name' => 'menuMachineName')</p>
-     * @return array <p>An array of names of available menus where keys are menu display names and values are menu machine names.</p>
+     * <p>Generates an array of menu properties for all available menus where $propKey is
+     * the property to use for indexing and $propValue is the property to asign as a value.</p>
+     * <p>e.g.<br><b>sdmNmsGenerateMenuPropertiesArray(<i>'menuId', 'menuMachineName'</i>)</b>
+     * would generate an array with the following structure:<br>
+     * <i>array(<br><b>$menu1</b>-><b>menuId</b> => <b>$menu1</b>-><b>menuMachineName</b>,<br><b>$menu2</b>-><b>menuId</b> => <b>$menu2</b>-><b>menuMachineName</b>,<br>etc...,<br>);</p>
+     * @param string $propKey <p>The name of the property to use for indexes.</p>
+     * @param string $propValue <p>The name of the property to use for values.</p>
+     * @return array <p>An array of all available menus indexed by menu->$propKey with values set to menu->$propValue</p>
      */
-    public function sdmNmsGetAvailableMenuNames() {
+    public function sdmNmsGenerateMenuPropertiesArray($propKey, $propValue) {
         $menus = $this->sdmCoreLoadDataObject()->menus;
         foreach ($menus as $menu) {
-            $availableMenus[$menu->menuDisplayName] = $menu->menuMachineName;
+            $availableMenus[$menu->$propKey] = $menu->$propValue;
         }
         return $availableMenus;
     }

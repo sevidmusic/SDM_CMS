@@ -1,14 +1,14 @@
 <?php
 
 $deleteMenuFormStage1 = new SdmForm();
-$deleteMenuFormStage1->form_handler = 'deletemenustage2';
+$deleteMenuFormStage1->form_handler = 'navigationManagerDeleteMenuStage2';
 $deleteMenuFormStage1->method = 'post';
 $deleteMenuFormStage1->form_elements = array(
     array(
         'id' => 'menuId',
         'type' => 'select',
         'element' => 'Select A Menu To Delete',
-        'value' => $sdmnms->sdmNmsGetAvailableMenuNames(),
+        'value' => $sdmnms->sdmNmsGenerateMenuPropertiesArray('menuDisplayName', 'menuId'),
         'place' => '0',
     ),
 );
