@@ -60,6 +60,12 @@ if (substr($sdmcore->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationMana
         case 'navigationManagerDeleteMenuStage3':
             $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<h3>Confirm Delete Menu</h3><p>Still in development.</p>', array('incpages' => array('navigationManagerDeleteMenuStage3')));
             break;
+        case 'navigationManagerEditMenuStage1':
+            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/editMenuStage1.php');
+            break;
+        case 'navigationManagerEditMenuStage2':
+            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/editMenuStage2.php');
+            break;
         default:
             // present content manager menu
             $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '
@@ -68,6 +74,7 @@ if (substr($sdmcore->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationMana
                     <ul>
                         <li><a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=navigationManagerAddMenuStage1">Add Menu</a></li>
                         <li><a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=navigationManagerDeleteMenuStage1">Delete Menu</a></li>
+                        <li><a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=navigationManagerEditMenuStage1">Edit Menu</a></li>
                     </ul>
                 </div>
                 ', array('incpages' => array('navigationManager')));
