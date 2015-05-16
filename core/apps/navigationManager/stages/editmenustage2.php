@@ -23,7 +23,7 @@ $menuPlacement = SdmForm::setDefaultValues(array('prepend' => 'prepend', 'append
 /** BUILD EDIT MENU FORM * */
 $editMenuSelectMenuForm = new SdmForm();
 $editMenuSelectMenuForm->form_method = 'post';
-$editMenuSelectMenuForm->form_handler = 'navigationManagerEditMenuStage3';
+$editMenuSelectMenuForm->form_handler = 'navigationManagerEditMenuStage3_submitmenuchanges';
 $editMenuSelectMenuForm->submitLabel = 'Submit Changes to Menu';
 $editMenuSelectMenuForm->form_elements = array(
     array(
