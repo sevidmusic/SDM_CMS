@@ -98,7 +98,7 @@ class SdmForm {
         foreach ($this->form_elements as $key => $value) {
             switch ($value['type']) {
                 case 'text':
-                    $form_html = $form_html . '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><input name="SdmForm[' . $value['id'] . ']" type="text"><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+                    $form_html = $form_html . '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><input name="SdmForm[' . $value['id'] . ']" type="text" ' . (isset($value['value']) ? 'value="' . $value['value'] . '"' : '') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
                     break;
                 case 'textarea':
                     $form_html = $form_html . '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><textarea name="SdmForm[' . $value['id'] . ']">' . (isset($value['value']) ? $value['value'] : '') . '</textarea><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
@@ -317,6 +317,36 @@ class SdmForm {
             }
         }
         return $data;
+    }
+
+    /**
+     *
+     * @param array $values <p>The array of values to check, any value that matches the
+     *                         $testvalue will be prepended with the string 'default_'<br>
+     * <i>Note: Type Enforced for this argument! must be an array.</i></p>
+     * @param mixed $testvalue <p>The value to test the array's values against. Any $values
+     *                           that match $testvalue will be prepended with the string 'default_'.
+     *                           <br>Note: If $testvalue is an array then $values will be checked
+     *                           against the values in $testvalue</p>
+     * @return array <p>The $values array with all values that matched $testvalue prepened with the string
+     *                  'default_'.</p>
+     */
+    public static function setDefaultValues(array $values, $testvalue) {
+        switch (is_array($testvalue)) {
+            case TRUE:
+                foreach ($values as $key => $value) {
+                    unset($values[$key]);
+                    $values[$key] = (in_array($value, $testvalue) === TRUE ? 'default_' . $value : $value);
+                }
+                break;
+            default:
+                foreach ($values as $key => $value) {
+                    unset($values[$key]);
+                    $values[$key] = ($value === $testvalue ? 'default_' . $value : $value);
+                }
+                break;
+        }
+        return $values;
     }
 
 }

@@ -10,7 +10,7 @@ if (!empty($availableMenus) === TRUE) {
         array(
             'id' => 'menuId',
             'type' => 'select',
-            'element' => 'Select A Menu To Delete',
+            'element' => 'Select A Menu To Edit',
             'value' => $availableMenus,
             'place' => '0',
         ),

@@ -50,7 +50,7 @@ switch (SdmForm::sdmFormGetSubmittedFormValue('menuItem') !== null) {
                 'id' => 'destinationExternal',
                 'type' => 'text',
                 'element' => 'Destination <i style="font-size:.7em;">(<b>internal</b>: Select a pagename from this menu if this menu item\'s destination type is internal.)</i>',
-                'value' => 'homepage',
+                'value' => '',
                 'place' => '5',
             ),
             array(
