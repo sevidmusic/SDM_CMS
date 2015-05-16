@@ -16,7 +16,7 @@ $config = array(
     'menus' => array(), // end 'menus' array
     'settings' => array(
         'theme' => 'sdmDemoTheme1',
-        'enabledapps' => array('contentManager' => 'contentManager', 'SdmDevMenu' => 'SdmDevMenu', 'SdmErrorLog' => 'SdmErrorLog', 'navigationManager' => 'navigationManager'),
+        'enabledapps' => array('contentManager' => 'contentManager', 'SdmDevMenu' => 'SdmDevMenu', 'SdmErrorLog' => 'SdmErrorLog', 'navigationManager' => 'navigationManager', 'SdmCoreOverview' => 'SdmCoreOverview'),
     ), // end 'settings' array
 ); // end $config array
 $data = utf8_encode(trim(json_encode($config)));

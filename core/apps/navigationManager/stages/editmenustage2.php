@@ -89,6 +89,13 @@ $editMenuSelectMenuForm->form_elements = array(
         'value' => $keyholders,
         'place' => '10',
     ),
+    array(
+        'id' => 'menuItems',
+        'type' => 'hidden',
+        'element' => 'Menu Items',
+        'value' => $menu->menuItems,
+        'place' => '14',
+    ),
 );
 $editMenuSelectMenuForm->sdmFormBuildForm($sdmcore->sdmCoreGetRootDirectoryUrl());
 $output = '<div id="originalMenuPreview" style="padding:20px;border:3px dashed #777777;border-radius:7px;"><h4>Menu Preview</h4>' . $menuHtml . '</div>';
