@@ -150,15 +150,6 @@ class SdmNms extends SdmCore {
     }
 
     /**
-     * update a menu (we seperate add and update so existing menus are not accidently overwritten
-     * by calls to sdmNmsAddMenu
-     *
-     */
-    public function sdmNmsupdateMenu() {
-        return;
-    }
-
-    /**
      * <p>Deletes a menu</p>
      * @param mixed $menuId <p>Can be a string or an integer whose value matches the id of the menu to be deleted.
      *               i.e., sdmNmsdeleteMenu(1) and sdmNmsdeleteMenu('1') would delete the menu that has a menuId
@@ -173,20 +164,6 @@ class SdmNms extends SdmCore {
         $json = json_encode($data);
         $status = file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $json, LOCK_EX);
         return ($status === FALSE ? FALSE : $menuDisplayName);
-    }
-
-    /**
-     * enable a menu
-     */
-    public function sdmNmsenableMenu() {
-        return;
-    }
-
-    /**
-     * disable a menu
-     */
-    public function sdmNmsdisableMenu() {
-        return;
     }
 
     /**
@@ -248,7 +225,7 @@ class SdmNms extends SdmCore {
      */
     public function sdmNmsBuildMenuHtml($menu) {
         $html = '<!-- MENU: ' . $menu->menuDisplayName . ' | MENUID: ' . $menu->menuId . ' | MENU MACHINE NAME: ' . $menu->menuMachineName . ' --><' . $menu->menuWrappingTagType . ' id="' . $menu->menuCssId . '" class="' . (is_array($menu->menuCssClasses) === TRUE ? implode(' ', $menu->menuCssClasses) : str_replace(array(',', '|', ':', ';'), ' ', strval($menu->menuCssClasses))) . '">';
-        $html .= $this->sdmNmsBuildMenuItemsHtml($menu->menuItems);
+        $html .= $this->sdmNmsBuildMenuItemsHtml($menu->menuItems, $menu->menuId);
         $html .= '</' . $menu->menuWrappingTagType . '>';
         return $html;
     }
@@ -256,9 +233,10 @@ class SdmNms extends SdmCore {
     /**
      * <p>Builds the html for a menu object's menu items.</p>
      * @param array $menuItems <p>The menu's menu items array (e.g., $menu->menuItems).</p>
+     * @param string $menuId <p>Id of the menu these menu items belong to. Defaults to 'unknown'</p>
      * @return string <p>The Menu Item's html</p>
      */
-    public function sdmNmsBuildMenuItemsHtml($menuItems) {
+    public function sdmNmsBuildMenuItemsHtml($menuItems, $menuId = 'unknown') {
         $html = '';
         $currentUserRole = 'basic_user'; // this is a dev role, the users role should be determined by the Sdm Gatekeeper once it is built
         foreach ($menuItems as $menuItem) {
@@ -266,7 +244,7 @@ class SdmNms extends SdmCore {
                 if ($menuItem->menuItemEnabled === TRUE || $menuItem->menuItemEnabled === '1' || $menuItem->menuItemEnabled === 1) {
                     switch ($menuItem->destinationType) {
                         case 'internal':
-                            $html .= '<' . $menuItem->menuItemWrappingTagType . ' id="' . $menuItem->menuItemCssId . '" class="' . implode(' ', $menuItem->menuItemCssClasses) . '"><a href="' . $this->sdmCoreGetRootDirectoryUrl() . '/index.php?page=' . $menuItem->destination . (isset($menuItem->arguments) === TRUE && !empty($menuItem->arguments) && $menuItem->arguments[0] != '' ? '&' : '') . (is_string($menuItem->arguments) ? str_replace(' ', '', str_replace(array(',', ';', ':', '|'), '&', $menuItem->arguments)) : str_replace(' ', '', implode('&', $menuItem->arguments))) . '">' . $menuItem->menuItemDisplayName . '</a>' . '</' . $menuItem->menuItemWrappingTagType . '>';
+                            $html .= '<' . $menuItem->menuItemWrappingTagType . ' id="' . $menuItem->menuItemCssId . '" class="' . implode(' ', $menuItem->menuItemCssClasses) . '"><a href="' . $this->sdmCoreGetRootDirectoryUrl() . '/index.php?page=' . $menuItem->destination . '&linkedByMenu=' . $menuId . '&linkedByMenuItem=' . $menuItem->menuItemId . (isset($menuItem->arguments) === TRUE && !empty($menuItem->arguments) && $menuItem->arguments[0] != '' ? '&' : '') . (is_string($menuItem->arguments) ? str_replace(' ', '', str_replace(array(',', ';', ':', '|'), '&', $menuItem->arguments)) : str_replace(' ', '', implode('&', $menuItem->arguments))) . '">' . $menuItem->menuItemDisplayName . '</a>' . '</' . $menuItem->menuItemWrappingTagType . '>';
                             break;
                         case 'external': // $menuItem->destination
                             $html .= '<' . $menuItem->menuItemWrappingTagType . ' id="' . $menuItem->menuItemCssId . '" class="' . implode(' ', $menuItem->menuItemCssClasses) . '"><a href="' . $menuItem->destination . (isset($menuItem->arguments) === TRUE && !empty($menuItem->arguments) && $menuItem->arguments[0] != '' ? '?&' : '') . (is_string($menuItem->arguments) ? str_replace(' ', '', str_replace(array(',', ';', ':', '|'), '&', $menuItem->arguments)) : str_replace(' ', '', implode('&', $menuItem->arguments))) . '" target="_blank">' . $menuItem->menuItemDisplayName . '</a>' . '</' . $menuItem->menuItemWrappingTagType . '>';
@@ -300,34 +278,6 @@ class SdmNms extends SdmCore {
             $availableMenus[$menu->$propKey] = $menu->$propValue;
         }
         return $availableMenus;
-    }
-
-    /**
-     * delete a menu
-     */
-    public function sdmNmsdeleteMenuItem() {
-        return;
-    }
-
-    /**
-     * enable a menu
-     */
-    public function sdmNmsupdateMenuItem() {
-        return;
-    }
-
-    /**
-     * disable a menu
-     */
-    public function sdmNmsdisableMenuItem() {
-        return;
-    }
-
-    /**
-     * get a stored menu
-     */
-    public function sdmNmsGetMenuItem() {
-        return;
     }
 
 }
