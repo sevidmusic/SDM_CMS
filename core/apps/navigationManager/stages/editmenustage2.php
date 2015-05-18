@@ -101,7 +101,7 @@ $editMenuSelectMenuForm->sdmFormBuildForm($sdmcore->sdmCoreGetRootDirectoryUrl()
 $output = '<div id="originalMenuPreview" style="padding:20px;border:3px dashed #777777;border-radius:7px;"><h4>Menu Preview</h4>' . $menuHtml . '</div>';
 $output .= '<div><h3>Menu Items</h3><ul>';
 foreach ($menu->menuItems as $menuItem) {
-    $arguments = array('page=navigationManagerEditMenuStage3_editmenuitem', 'menuItemId=' . $menuItem->menuItemId, 'linkedBy=navigationManager_editmenustage2_editMenuItemLink');
+    $arguments = array('page=navigationManagerEditMenuStage3_editmenuitem', 'menuId=' . $menu->menuId, 'menuItemId=' . $menuItem->menuItemId, 'linkedBy=navigationManager_editmenustage2_editMenuItemLink');
     $output .= '<li>' . $menuItem->menuItemDisplayName . ' (<a href = "' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?' . str_replace('%26', '&', str_replace('%3D', '=', urlencode(implode('&', $arguments)))) . '">edit</a> | delete)</li>';
 }
 $output .= '</ul></div>';
