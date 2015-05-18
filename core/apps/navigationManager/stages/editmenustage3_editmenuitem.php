@@ -5,7 +5,7 @@ $firstMenuItemWrappingTagType = $menu->menuItems[0]->menuItemWrappingTagType;
 $menuItem = $sdmnms->sdmNmsGetMenuItem($_GET['menuId'], $_GET['menuItemId']);
 $editMenuItemForm = new SdmForm();
 $editMenuItemForm->form_method = 'post';
-$editMenuItemForm->form_handler = '';
+$editMenuItemForm->form_handler = 'navigationManagerEditMenuStage3_submitmenuitemchanges';
 $editMenuItemForm->submitLabel = 'Proceed to Edit Menu Settings';
 $editMenuItemForm->form_elements = array(
     array(
