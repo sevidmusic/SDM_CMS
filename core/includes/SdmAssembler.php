@@ -79,7 +79,21 @@ class SdmAssembler extends SdmCore {
                 return $sdmassembler_dataObject;
                 break;
             default:
-                return json_decode(json_encode(array('main_content' => '<p>The requested content could not be found. Check the url to for typos. If error persists and your sure this content should exist contact the site admin to report the error.</p>')));
+                // log bad request to our badRequestsLog.log file
+                $badRequestId = chr(rand(65, 90)) . rand(10, 99) . chr(rand(65, 90)) . rand(10, 99);
+                $badRequestDate = date('d-M-Y H:i:s e');
+                $badRequestUrl = $this->sdmCoreGetRootDirectoryUrl() . '/index.php?' . $_SERVER['QUERY_STRING'];
+                $truncatedBadRequsetUrl = (strlen($badRequestUrl) > 112 ? substr($badRequestUrl, 0, 112) . '...' : $badRequestUrl);
+                $linkedByInfo = (isset($_GET['linkedByMenu']) === TRUE ? 'Request Origin: Internal' . PHP_EOL . '- Menu:' . $_GET['linkedByMenu'] . PHP_EOL . (isset($_GET['linkedByMenuItem']) ? '- Menu Item: ' . $_GET['linkedByMenuItem'] : 'menu item unknown') : (isset($_GET['linkedBy']) === TRUE ? 'Request Origin: ' . $_GET['linkedBy'] : 'Request Origin: Unknown'));
+                $errorMessage = '----- BAD REQUEST [' . $badRequestDate . '] -----' . PHP_EOL .
+                        'Bad request id: ' . $badRequestId . PHP_EOL .
+                        'Requested Page: ' . $page . PHP_EOL .
+                        'Requested Url: ' . $badRequestUrl . PHP_EOL .
+                        'Request Made by User: ' . 'anonymous' . PHP_EOL .
+                        $linkedByInfo . PHP_EOL .
+                        '---------------------------------------------------------------' . PHP_EOL;
+                error_log($errorMessage, 3, $this->sdmCoreGetCoreDirectoryPath() . '/logs/badRequestsLog.log');
+                return json_decode(json_encode(array('main_content' => '<p>The requested page at <b>' . $this->sdmCoreGetRootDirectoryUrl() . '/index.php?page=' . $page . '</b> could not be found. Check the url to for typos. If error persists and your sure this content should exist contact the site admin  at (@TODO:DYNAMICALLY PLACE ADMIN EMAIL HERE) to report the error.</p><p>' . 'Bad request id: ' . $badRequestId . '</p><p>' . 'Requested Page: ' . $page . '</p><p>Requested Url <i>(trimmed for display)</i>: ' . $truncatedBadRequsetUrl . '</p>')));
         }
     }
 
