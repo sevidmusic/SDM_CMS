@@ -211,11 +211,28 @@ class SdmNms extends SdmCore {
 
     /**
      * get a stored menu
-     * @param mixed An integer or stirng that is equal to the id of the menu we wish to get
+     * @param mixed $menuId<p>An integer or stirng that is equal to the id of the menu we wish to get</p>
+     * @return object <p>The menu with id $menuId</p>
      */
     public function sdmNmsGetMenu($menuId) {
         $data = $this->sdmCoreLoadDataObject();
         return $data->menus->$menuId;
+    }
+
+    /**
+     * get a stored menu item
+     * @param mixed $menuId<p>An integer or stirng that is equal to the id of the menu the menu item belongs to</p>
+     * @param mixed $menuItemId <p>An integer or stirng that is equal to the id of the menu item we wish to get</p>
+     * @return object <p>The menu item with id $menuItemId that belongs to the menu with id $menuId</p>
+     */
+    public function sdmNmsGetMenuItem($menuId, $menuItemId) {
+        $data = $this->sdmCoreLoadDataObject();
+        $menu = $data->menus->$menuId;
+        foreach ($menu->menuItems as $menuItem) {
+            if ($menuItem->menuItemId === $menuItemId) {
+                return $menuItem;
+            }
+        }
     }
 
     /**
