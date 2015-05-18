@@ -336,13 +336,15 @@ class SdmForm {
             case TRUE:
                 foreach ($values as $key => $value) {
                     unset($values[$key]);
-                    $values[$key] = (in_array($value, $testvalue) === TRUE ? 'default_' . $value : $value);
+                    // using == instead of === to allow for type juggling | === was causing problems with non sting types, specifically the boolean FALSE was not being set to default when it should have been
+                    $values[$key] = (in_array($value, $testvalue) == TRUE ? 'default_' . $value : $value);
                 }
                 break;
             default:
                 foreach ($values as $key => $value) {
                     unset($values[$key]);
-                    $values[$key] = ($value === $testvalue ? 'default_' . $value : $value);
+                    // using == instead of === to allow for type juggling | === was causing problems with non sting types, specifically the boolean FALSE was not being set to default when it should have been
+                    $values[$key] = ($value == $testvalue ? 'default_' . $value : $value);
                 }
                 break;
         }
