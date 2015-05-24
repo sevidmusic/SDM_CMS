@@ -129,7 +129,7 @@ switch (SdmForm::sdmFormGetSubmittedFormValue('menuItem') !== null) {
             $lastSubmittedMenuItem->menuItemPosition = SdmForm::sdmFormGetSubmittedFormValue('menuItemPosition');
             $lastSubmittedMenuItem->menuItemWrappingTagType = SdmForm::sdmFormGetSubmittedFormValue('menuItemWrappingTagType');
             // add the last submitted menu item to our menu items array
-            array_push($menuItems, $lastSubmittedMenuItem);
+            $menuItems[$lastSubmittedMenuItem->menuItemId] = $lastSubmittedMenuItem;
             // re-create menuItems form element with new menu items stored as its value
             $mi = array(
                 'id' => 'menuItems',

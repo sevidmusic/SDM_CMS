@@ -22,7 +22,7 @@ $finalSubmittedMenuItem->menuItemMachineName = SdmCore::SdmCoreGenerateMachineNa
 $finalSubmittedMenuItem->menuItemPosition = SdmForm::sdmFormGetSubmittedFormValue('menuItemPosition');
 $finalSubmittedMenuItem->menuItemWrappingTagType = SdmForm::sdmFormGetSubmittedFormValue('menuItemWrappingTagType');
 // add the last submitted menu item to our menu items array
-array_push($menuItems, $finalSubmittedMenuItem);
+$menuItems[$finalSubmittedMenuItem->menuItemId] = $finalSubmittedMenuItem;
 // display of preview of the menu so far
 $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<div style="border:2px solid #777777;border-radius:9px;padding:20px;height:120px;overflow:auto;"><h3>Last Submitted Menu Item:</h3><p>Display Name: <span style="color:blue;">' . SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName') . '</span> | Destination Type : <span style="color:blue;">' . $finalSubmittedMenuItem->destinationType . '</span> | Destination: <span style="color:blue;">' . $finalSubmittedMenuItem->destination . '</span></p><h3>Menu Preview:</h3>' . $sdmnms->sdmNmsBuildMenuItemsHtml($menuItems) . '</div>', array('incmethod' => 'prepend', 'incpages' => $options['incpages']));
 $addMenuFormStage3 = new SdmForm();
