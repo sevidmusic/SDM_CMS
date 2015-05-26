@@ -228,11 +228,7 @@ class SdmNms extends SdmCore {
     public function sdmNmsGetMenuItem($menuId, $menuItemId) {
         $data = $this->sdmCoreLoadDataObject();
         $menu = $data->menus->$menuId;
-        foreach ($menu->menuItems as $menuItem) {
-            if ($menuItem->menuItemId === $menuItemId) {
-                return $menuItem;
-            }
-        }
+        return $menu->menuItems->$menuItemId;
     }
 
     /**
@@ -250,7 +246,10 @@ class SdmNms extends SdmCore {
     /**
      * <p>Builds the html for a menu object's menu items.</p>
      * @param array $menuItems <p>The menu's menu items array (e.g., $menu->menuItems).</p>
-     * @param string $menuId <p>Id of the menu these menu items belong to. Defaults to 'unknown'</p>
+     * @param string $menuId <p>Id of the menu these menu items belong to. Defaults to 'unknown', this allows
+     * this method to be called to build the html for a set of menu items that do not necessarily
+     * belong to a menu, for example this happens in the Navigation Manager when a menu is being created since
+     * the menu items are configured before the menu itself.</p>
      * @return string <p>The Menu Item's html</p>
      */
     public function sdmNmsBuildMenuItemsHtml($menuItems, $menuId = 'unknown') {
@@ -295,6 +294,24 @@ class SdmNms extends SdmCore {
             $availableMenus[$menu->$propKey] = $menu->$propValue;
         }
         return $availableMenus;
+    }
+
+    /**
+     * <p>Returns an array of menu ids for all the stored menus.</p>
+     * @return type <p>An array of menu ids for all available menus.</p>
+     */
+    public function sdmNmsGetMenuIds() {
+        return array_keys(json_decode(json_encode($this->sdmCoreLoadDataObject()->menus), TRUE));
+    }
+
+    /**
+     * <p>Returns an array of menu item ids belonging to the menu.</p>
+     * @param string <p>The menu id for the menu we want to get menu item ids from</p>
+     * @return type <p>An array of menu item ids for all menu items beloning to the menu.</p>
+     */
+    public function sdmNmsGetMenuItemIds($menuId) {
+        $menu = $this->sdmCoreLoadDataObject()->menus->$menuId;
+        return array_keys(json_decode(json_encode($menu->menuItems), TRUE));
     }
 
 }

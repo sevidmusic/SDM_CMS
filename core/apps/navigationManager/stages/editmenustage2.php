@@ -10,8 +10,12 @@ $menuHtml = $sdmnms->sdmNmsBuildMenuHtml($menu);
 // format current menu properties for use with edit menu form
 // determine available wrappers | run through SdmForm::setDefaultValues to set current wrapper as default element
 $availableWrappers = SdmForm::setDefaultValues($sdmcms->sdmCmsDetermineAvailableWrappers(), $menu->wrapper);
+// get menu item ids, used to find the first menu item by id
+$menuItemIds = $sdmnms->sdmNmsGetMenuItemIds($menu->menuId);
+// get first menu item by id to use as a reference to determine what wrapping tag types should be available to the menu and other menu items
+$firstMenuItem = $menu->menuItems->$menuItemIds[0];
 // get first menu item's wrapping tag type, this is used to determine which tag types should be available to the form element menuWrappingTagType
-$firstMenuItemWrappingTagType = $menu->menuItems[0]->menuItemWrappingTagType;
+$firstMenuItemWrappingTagType = $firstMenuItem->menuItemWrappingTagType;
 // if any menu items are wrapped with li then only ul should be available, otherwise call SdmForm::setDefaultValus()
 $menuWrappingTagType = ($firstMenuItemWrappingTagType === 'li' ? array('ul' => 'ul') : SdmForm::setDefaultValues(array('div' => 'div', 'p' => 'p', 'h1' => 'h1', 'h2' => 'h2', 'h3' => 'h3', 'h4' => 'h4', 'h5' => 'h5', 'h6' => 'h6'), $menu->menuWrappingTagType));
 // determine keyholders | run through SdmForm::setDefaultValues to set current keyholders as default elements | @todo: Until user and roles components are developed the available roles are root, basic_user, and all

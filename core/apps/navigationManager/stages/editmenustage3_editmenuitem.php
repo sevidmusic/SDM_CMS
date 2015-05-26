@@ -1,7 +1,13 @@
 <?php
 
 $menu = $sdmnms->sdmNmsGetMenu($_GET['menuId']);
-$firstMenuItemWrappingTagType = $menu->menuItems[0]->menuItemWrappingTagType;
+// get menu item ids, used to find the first menu item by id
+$menuItemIds = $sdmnms->sdmNmsGetMenuItemIds($menu->menuId);
+// get first menu item by id to use as a reference to determine what wrapping tag types should be available to the menu and other menu items
+$firstMenuItem = $menu->menuItems->$menuItemIds[0];
+// get first menu item's wrapping tag type, this is used to determine which tag types should be available to the form element menuWrappingTagType
+$firstMenuItemWrappingTagType = $firstMenuItem->menuItemWrappingTagType;
+// get the menu item we want to edit
 $menuItem = $sdmnms->sdmNmsGetMenuItem($_GET['menuId'], $_GET['menuItemId']);
 $editMenuItemForm = new SdmForm();
 $editMenuItemForm->form_method = 'post';
