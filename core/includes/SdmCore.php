@@ -320,7 +320,7 @@ class SdmCore {
     final public function sdmCoreSdmReadArray($array, $sub = FALSE, $parent = '') {
         $style = 'border:1px dashed limegreen;border-radius:3px;margin:25px;padding:12px;width:90%;overflow:auto;background:#000000;color:#ffffff;';
         echo '<div style="' . $style . '">';
-        echo ($sub === FALSE ? '' : "<i style='color:#00CCFF;'>{$parent} (<i style='color:aqua;'>" . gettype($array) . "</i>)=> </i>");
+        echo ($sub === FALSE ? '' : "<i style='color:#00CCFF;'>{$parent} (<i style='color:aqua;'>" . gettype($array) . "</i>) <span style='color:#00BB00;font-size:.7em;'>Element Count: " . count($array) . "</span> => </i>");
         if (is_bool($array) || is_string($array) || is_integer($array)) {
             $v = $array;
             unset($array);
@@ -336,7 +336,7 @@ class SdmCore {
                         echo ($sub === FALSE ? '<p><b style="color:#00CCFF;"><i>' . (isset($key) ? strval($key) : 'unknown_object') . '</i></b> (<i style="color:aqua;">object</i>)</p>' : '<p><ul><li><b style="color:#00FF99;"><i>' . (isset($key) ? strval($key) : 'unknown_object') . '</i></b>(<i style="color:aqua;">object</i>)</li></ul></p>');
                         self::sdmCoreSdmReadArray(json_decode(json_encode($value), TRUE));
                     } else {
-                        echo ($sub === FALSE ? "<p><xmp style='display:inline;color:#00CCFF'>{$key}</xmp> (<i style='color:aqua;'>" . gettype($value) . "</i>) => <xmp style='display:inline;color:#00CC99'>{$value}</xmp></p>" : "<p><ul><li><xmp style='display:inline;color:#00CC99'>{$key}</xmp> (<i style='color:aqua;'>" . gettype($value) . "</i>) => <xmp style='display:inline;color:#00CC99'>{$value}</xmp></li></ul></p>");
+                        echo ($sub === FALSE ? "<p><xmp style='display:inline;color:#00CCFF'>{$key}</xmp> (<i style='color:aqua;'>" . gettype($value) . "</i>) " . (gettype($value) === 'string' ? '<span style="color:#00DDFF;font-size:.7em;font-style: italic;">String Length: ' . strlen($value) . '</span>' : '') . " => <xmp style='display:inline;color:#00CC99'>{$value}</xmp></p>" : "<p><ul><li><xmp style='display:inline;color:#00CC99'>{$key}</xmp> (<i style='color:aqua;'>" . gettype($value) . "</i>) " . (gettype($value) === 'string' ? '<span style="color:#00DDFF;font-size:.7em;font-style: italic;">String Length: ' . strlen($value) . '</span>' : '') . " => <xmp style='display:inline;color:#00CC99'>{$value}</xmp></li></ul></p>");
                     }
                     break;
             }
@@ -464,7 +464,7 @@ class SdmCore {
      * @return mixed A machince safe string. If an array was passed then it's values will be filtered recursivley
      */
     final public function SdmCoreGenerateMachineName($value) {
-        $targetChars = str_split('~!@#$%^&*()+|}{":?> <`\'\\Ω≈ç√∫˜≤≥÷åß∂ƒ©˙∆˚¬…æœ∑´†¥¨ˆπ“‘«`™£¢∞§¶•ªº–≠¸˛Ç◊ı˜Â¯˘¿ÅÍÎÏ˝ÓÔÒÚÆŒ„´‰ˇÁ¨ˆØ∏”’»`⁄€‹›ﬁﬂ‡°·‚—±');
+        $targetChars = str_split('~!@#$%^&*()+|}{":;?> <`\'\\Ω≈ç√∫˜≤≥÷åß∂ƒ©˙∆˚¬…æœ∑´†¥¨ˆπ“‘«`™£¢∞§¶•ªº–≠¸˛Ç◊ı˜Â¯˘¿ÅÍÎÏ˝ÓÔÒÚÆŒ„´‰ˇÁ¨ˆØ∏”’»`⁄€‹›ﬁﬂ‡°·‚—±');
         switch (is_array($value)) {
             case TRUE:
                 foreach ($value as $k => $v) {
@@ -481,7 +481,7 @@ class SdmCore {
         }
         // remove any dulicate underscores
         $machineValue = preg_replace('/[_]+/', '_', $value);
-        return $machineValue;
+        return strtolower($machineValue);
     }
 
 }

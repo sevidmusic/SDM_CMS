@@ -71,8 +71,6 @@ class SdmAssembler extends SdmCore {
         $sdmassembler_dataObject = $this->sdmCoreLoadDataObject();
         // load and assemble apps
         $this->sdmAssemblerLoadCoreApps($sdmassembler_dataObject);
-        // load menus | we load them after the apps so apps have a chance to modify the menu obects before they are incorporated into the page. This makes it easier for apps to do such things as disable menu items in specific menu items before they are incorporated into the page, if we loaded the menus before apps then apps would have to sift through the pages html looking for the menu they want to modify, which is a much more convulted approach, better to work with real objects
-        $this->sdmAssemblerIncorporateMenuObject($sdmassembler_dataObject);
         // make sure content exists, if it does return it, if not, print a content not found message
         switch (isset($sdmassembler_dataObject->content->$page)) {
             case TRUE:
@@ -81,7 +79,21 @@ class SdmAssembler extends SdmCore {
                 return $sdmassembler_dataObject;
                 break;
             default:
-                return json_decode(json_encode(array('main_content' => '<p>The requested content could not be found. Check the url to for typos. If error persists and your sure this content should exist contact the site admin to report the error.</p>')));
+                // log bad request to our badRequestsLog.log file
+                $badRequestId = chr(rand(65, 90)) . rand(10, 99) . chr(rand(65, 90)) . rand(10, 99);
+                $badRequestDate = date('d-M-Y H:i:s e');
+                $badRequestUrl = $this->sdmCoreGetRootDirectoryUrl() . '/index.php?' . $_SERVER['QUERY_STRING'];
+                $truncatedBadRequsetUrl = (strlen($badRequestUrl) > 112 ? substr($badRequestUrl, 0, 112) . '...' : $badRequestUrl);
+                $linkedByInfo = (isset($_GET['linkedByMenu']) === TRUE ? 'Request Origin: Internal' . PHP_EOL . '- Menu:' . $_GET['linkedByMenu'] . PHP_EOL . (isset($_GET['linkedByMenuItem']) ? '- Menu Item: ' . $_GET['linkedByMenuItem'] : 'menu item unknown') : (isset($_GET['linkedBy']) === TRUE ? 'Request Origin: ' . $_GET['linkedBy'] : 'Request Origin: Unknown'));
+                $errorMessage = '----- BAD REQUEST [' . $badRequestDate . '] -----' . PHP_EOL .
+                        'Bad request id: ' . $badRequestId . PHP_EOL .
+                        'Requested Page: ' . $page . PHP_EOL .
+                        'Requested Url: ' . $badRequestUrl . PHP_EOL .
+                        'Request Made by User: ' . 'anonymous' . PHP_EOL .
+                        $linkedByInfo . PHP_EOL .
+                        '---------------------------------------------------------------' . PHP_EOL;
+                error_log($errorMessage, 3, $this->sdmCoreGetCoreDirectoryPath() . '/logs/badRequestsLog.log');
+                return json_decode(json_encode(array('main_content' => '<p>The requested page at <b>' . $this->sdmCoreGetRootDirectoryUrl() . '/index.php?page=' . $page . '</b> could not be found. Check the url to for typos. If error persists and your sure this content should exist contact the site admin  at (@TODO:DYNAMICALLY PLACE ADMIN EMAIL HERE) to report the error.</p><p>' . 'Bad request id: ' . $badRequestId . '</p><p>' . 'Requested Page: ' . $page . '</p><p>Requested Url <i>(trimmed for display)</i>: ' . $truncatedBadRequsetUrl . '</p>')));
         }
     }
 
@@ -313,8 +325,22 @@ class SdmAssembler extends SdmCore {
         return $dataObject;
     }
 
-    public function sdmAssemblerIncorporateMenuObject(stdClass $dataObject) {
-        //$this->sdmCoreSdmReadArray($dataObject);
+    /**
+     * <p>Assembles the html content for a given $wrapper and returns it as a string. This method
+     * is meant to be called from within a themes page.php file.</p>
+     * @param string $wrapper <p>The wrapper to assemble html</p>
+     * @param stdClass $dataObject <p>The $sdmassembler_themeContentObject variable that is created
+     * by startup.php's call to SdmAssembler::sdmAssemblerLoadAndAssembleContentObject() during the
+     * startup process. The $sdmassembler_themeContentObject is always avaialbe to all themes.
+     * <br>See: <i>/core/config/startup.php</i> for more info</p>
+     * @return type
+     */
+    public static function sdmAssemblerGetContentHtml($wrapper, stdClass $sdmassembler_themeContentObject) {
+        // initialize the SdmNms so we can add our menus to the page.
+        $nms = new SdmNms();
+        $wrapperAssembledContent = (isset($sdmassembler_themeContentObject->$wrapper) ? $sdmassembler_themeContentObject->$wrapper : '<!-- ' . $wrapper . ' placeholder -->');
+        $content = $nms->sdmNmsGetWrapperMenusHtml($wrapper, $wrapperAssembledContent);
+        return $content;
     }
 
 }

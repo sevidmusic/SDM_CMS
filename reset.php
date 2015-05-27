@@ -13,10 +13,9 @@ $config = array(
             'main_content' => 'Welcome To The SDM CMS',
         ),
     ),
-    'menus' => array(), // end 'menus' array
     'settings' => array(
         'theme' => 'sdmDemoTheme1',
-        'enabledapps' => array('contentManager' => 'contentManager', 'SdmDevMenu' => 'SdmDevMenu', 'SdmErrorLog' => 'SdmErrorLog', 'navigationManager' => 'navigationManager'),
+        'enabledapps' => array('contentManager' => 'contentManager', 'SdmDevMenu' => 'SdmDevMenu', 'SdmErrorLog' => 'SdmErrorLog', 'navigationManager' => 'navigationManager', 'SdmCoreOverview' => 'SdmCoreOverview'),
     ), // end 'settings' array
 ); // end $config array
 $data = utf8_encode(trim(json_encode($config)));
@@ -41,8 +40,9 @@ foreach ($userapps as $value) {
     }
 }
 $sdmcore->sdmCoreSdmReadArray($apps);
-// reset error log
+// reset error logs
 file_put_contents($sdmcore->sdmCoreGetCoreDirectoryPath() . '/logs/sdm_core_errors.log', '', LOCK_EX);
+file_put_contents($sdmcore->sdmCoreGetCoreDirectoryPath() . '/logs/badRequestsLog.log', '', LOCK_EX);
 echo 'An empty error log was created to track site errors. You can view the error log <a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=SdmErrorLog">HERE</a>';
 echo '</div>';
 ?>

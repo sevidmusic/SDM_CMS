@@ -22,7 +22,7 @@ $finalSubmittedMenuItem->menuItemMachineName = SdmCore::SdmCoreGenerateMachineNa
 $finalSubmittedMenuItem->menuItemPosition = SdmForm::sdmFormGetSubmittedFormValue('menuItemPosition');
 $finalSubmittedMenuItem->menuItemWrappingTagType = SdmForm::sdmFormGetSubmittedFormValue('menuItemWrappingTagType');
 // add the last submitted menu item to our menu items array
-array_push($menuItems, $finalSubmittedMenuItem);
+$menuItems[$finalSubmittedMenuItem->menuItemId] = $finalSubmittedMenuItem;
 // display of preview of the menu so far
 $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<div style="border:2px solid #777777;border-radius:9px;padding:20px;height:120px;overflow:auto;"><h3>Last Submitted Menu Item:</h3><p>Display Name: <span style="color:blue;">' . SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName') . '</span> | Destination Type : <span style="color:blue;">' . $finalSubmittedMenuItem->destinationType . '</span> | Destination: <span style="color:blue;">' . $finalSubmittedMenuItem->destination . '</span></p><h3>Menu Preview:</h3>' . $sdmnms->sdmNmsBuildMenuItemsHtml($menuItems) . '</div>', array('incmethod' => 'prepend', 'incpages' => $options['incpages']));
 $addMenuFormStage3 = new SdmForm();
@@ -48,21 +48,21 @@ $addMenuFormStage3->form_elements = array(
         'id' => 'menuDisplayName',
         'type' => 'text',
         'element' => 'Display Name <i style="font-size:.7em;">(The display name to use for this menu.)</i>',
-        'value' => 'main_content',
+        'value' => '',
         'place' => '3',
     ),
     array(
         'id' => 'menuCssId',
         'type' => 'text',
         'element' => 'Menu Css Id <i style="font-size:.7em;">(The css id for this menu.)</i>',
-        'value' => 'main_content',
+        'value' => '',
         'place' => '4',
     ),
     array(
         'id' => 'menuCssClasses',
         'type' => 'text',
         'element' => 'Menu Css Classes<i style="font-size:.7em;">(The css classes for this menu.)</i>',
-        'value' => 'main_content',
+        'value' => '',
         'place' => '5',
     ),
     array(
@@ -88,9 +88,9 @@ $addMenuFormStage3->form_elements = array(
     ),
     array(
         'id' => 'displaypages',
-        'type' => 'select',
+        'type' => 'checkbox',
         'element' => 'Pages to display menu on<i style="font-size:.7em;">(THIS NEEDS TO BE FIGURED OUT BETTER, POSSIBLY A CHECKLIST OF AVAILABLE PAGES...) FOR NOW all IS THE ONLY OPTION</i>',
-        'value' => array('all' => 'all'),
+        'value' => array_merge($sdmcore->sdmCoreDetermineAvailablePages(), json_decode(json_encode($sdmcore->sdmCoreDetermineEnabledApps()), TRUE), array('all' => 'all')),
         'place' => '9',
     ),
     array(

@@ -50,7 +50,7 @@ switch (SdmForm::sdmFormGetSubmittedFormValue('menuItem') !== null) {
                 'id' => 'destinationExternal',
                 'type' => 'text',
                 'element' => 'Destination <i style="font-size:.7em;">(<b>internal</b>: Select a pagename from this menu if this menu item\'s destination type is internal.)</i>',
-                'value' => 'homepage',
+                'value' => '',
                 'place' => '5',
             ),
             array(
@@ -99,7 +99,7 @@ switch (SdmForm::sdmFormGetSubmittedFormValue('menuItem') !== null) {
                 'id' => 'menuItemWrappingTagType',
                 'type' => 'select',
                 'element' => 'Wrapping Tag Type <i style="font-size:.7em;">(The html tag to wrap this menu item with. NOTE:if any menu items use li, all menu items must use li so a list can be created. The form will enforce this.)</i>',
-                'value' => (SdmForm::sdmFormGetSubmittedFormValue('menuItemWrappingTagType') === 'li' ? array('li' => 'li') : array('div' => 'div', 'li' => 'li', 'p' => 'p', 'h1' => 'h1', 'h2' => 'h2', 'h3' => 'h3', 'h4' => 'h4', 'h5' => 'h5', 'h6' => 'h6')),
+                'value' => (SdmForm::sdmFormGetSubmittedFormValue('menuItemWrappingTagType') === 'li' ? array('li' => 'li') : (SdmForm::sdmFormGetSubmittedFormValue('menuItem') > 1 === TRUE ? array('div' => 'div', 'p' => 'p', 'h1' => 'h1', 'h2' => 'h2', 'h3' => 'h3', 'h4' => 'h4', 'h5' => 'h5', 'h6' => 'h6') : array('div' => 'div', 'li' => 'li', 'p' => 'p', 'h1' => 'h1', 'h2' => 'h2', 'h3' => 'h3', 'h4' => 'h4', 'h5' => 'h5', 'h6' => 'h6'))),
                 'place' => '12',
             ),
             array(
@@ -129,7 +129,7 @@ switch (SdmForm::sdmFormGetSubmittedFormValue('menuItem') !== null) {
             $lastSubmittedMenuItem->menuItemPosition = SdmForm::sdmFormGetSubmittedFormValue('menuItemPosition');
             $lastSubmittedMenuItem->menuItemWrappingTagType = SdmForm::sdmFormGetSubmittedFormValue('menuItemWrappingTagType');
             // add the last submitted menu item to our menu items array
-            array_push($menuItems, $lastSubmittedMenuItem);
+            $menuItems[$lastSubmittedMenuItem->menuItemId] = $lastSubmittedMenuItem;
             // re-create menuItems form element with new menu items stored as its value
             $mi = array(
                 'id' => 'menuItems',

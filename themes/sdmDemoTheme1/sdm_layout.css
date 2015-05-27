@@ -17,52 +17,64 @@ body {
 }
 
 .sdmDemoTheme1 #lockedwrapper {
-    width: 92%; /* default width for all children of the .sdmDemoTheme1 class*/
-    height: 92%;
-    padding: 20px 0px;
-    margin: .2% 3.2%;
-    overflow: visible;
-    position: absolute;
+    background: #DDDDDD;
+    width: 95%;
+    min-width: 800px;
+    margin: 0 auto;
+    padding: 2%;
+    border-radius: 9px;
 }
 
 .sdmDemoTheme1 #topmenu {
-    color: red;
+    border-radius: 9px;
+    margin: 0 0 20px 0;
 }
 .sdmDemoTheme1 #main_content {
+    border-radius: 9px;
+}
+
+/** MENUS **/
+
+.main-menu {
+    font-size: .9em;
+}
+
+.main-menu a {
+    color: #0066ff;
+}
+
+.main-menu li {
+    display: inline;
+}
+
+.main-menu li a {
+    text-decoration: none;
     background: #DDDDDD;
-    text-align: left;
-    border: 3px solid #CCCCCC;
+    padding: 3px 15px;
+    margin: 0 12px 0 12px;
+}
+
+.main-menu li a:hover {
+    color: #66ccff;
+    background: #000000;
     border-radius: 9px;
-    padding: 2.2% 24px;
-    position: relative;
-    margin: 0 auto;
-    width: 72%;
-    overflow: visible;
 }
 
+/** MENU ITEMS **/
 
-a {
-    color: cornflowerblue;
+.external-link a {
+    color: #AA0000 !important; /* use !important to force this rule to be applied */
 }
 
-a:hover {
-    color: #777777;
+.external-link a:hover {
+    color: #66ccff !important; /* use !important to force this rule to be applied */
+    background: #000000 !important; /* use !important to force this rule to be applied */
 }
 
-.sdmDemoTheme1 input, textarea, select {
-    border: 2px solid #777777;
-    border-radius: 9px;
+/** FORM ELEMETNS **/
+
+input, text, textarea, select {
     display: block;
-    position: relative;
-    margin: 5px 0px 20px 0px;
-}
-
-.sdmDemoTheme1 input {
-    min-width: 11%;
-    padding: 5px;
-}
-.sdmDemoTheme1 textarea {
-    padding: 20px;
-    width: 88%;
-    height: 300px;
+    border-radius: 4px;
+    margin: 5px 0 20px 0;
 }
