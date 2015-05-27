@@ -13,7 +13,6 @@ $config = array(
             'main_content' => 'Welcome To The SDM CMS',
         ),
     ),
-    'menus' => array(), // end 'menus' array
     'settings' => array(
         'theme' => 'sdmDemoTheme1',
         'enabledapps' => array('contentManager' => 'contentManager', 'SdmDevMenu' => 'SdmDevMenu', 'SdmErrorLog' => 'SdmErrorLog', 'navigationManager' => 'navigationManager', 'SdmCoreOverview' => 'SdmCoreOverview'),
