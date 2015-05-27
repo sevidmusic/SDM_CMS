@@ -139,8 +139,8 @@ class SdmNms extends SdmCore {
         }
         // load our core data object
         $data = $this->sdmCoreLoadDataObject();
-        // load stored menus object from our core data object
-        $menus = json_decode(json_encode($data->menus));
+        // either load stored menus object from our core data object or if no menus exist yet initilize a default object using stdClass()
+        $menus = (isset($data->menus) === TRUE ? new stdClass() : $data->menus);
         // store the new $menu in $menus under it's $menu->menuId
         $newMenusId = $menu->menuId;
         $menus->$newMenusId = $menu;
@@ -178,6 +178,41 @@ class SdmNms extends SdmCore {
         // update menu with menuId === $menuId
         unset($menus->menuId);
         $menus->$menuId = $menu;
+        // update menus object to reflect changes
+        $data->menus = $menus;
+        // encode $data as json to prep it for storage
+        $json = json_encode($data);
+        // attempt to write new core $data | if anything fails FALSE will be returned
+        return file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $json, LOCK_EX);
+    }
+
+    /**
+     * Update a menu
+     * @param mixed $menuId <p>A string or an integer equal to the menuId
+     * of the menu we wish to update.<br>
+     * i.e.,<br>
+     * <i>sdmNmsUpdateMenu(<b>1234</b>, $menu)</i><br>
+     * and<br>
+     * <i>sdmNmsUpdateMenu(<b>'1234'</b>, $menu)</i><br>
+     * would update the menu with id <b>1234</b></p>
+     * @param mixed $menu <p>The new menu. It is preferable to pass in an SdmMenu object,
+     * but you can also pass in an array as long as the keys match the property
+     * names expected for a SdmMenu object.</p>
+     * @return bool TRUE of menu was added, FALSE on failure
+     */
+    public function sdmNmsUpdateMenuItem($menuId, $menuItemId, $menuItem) {
+        // load our core data object
+        $data = $this->sdmCoreLoadDataObject();
+        // load stored menus object from our core data object
+        $menus = $data->menus;
+        // get the menu this menu item belongs to
+        $menu = $menus->$menuId;
+        // update menu item
+        unset($menu->menuItems->$menuItemId);
+        $menu->menuItems->$menuItemId = $menuItem;
+        // update menus object to reflect changes to the menu that the updated menu item belongs to.
+        unset($menus->$menuId);
+        $menus->$menuId = $menu;
         $data->menus = $menus;
         // encode $data as json to prep it for storage
         $json = json_encode($data);
@@ -214,15 +249,17 @@ class SdmNms extends SdmCore {
         $data = $this->sdmCoreLoadDataObject();
         $prepend = '';
         $append = '';
-        foreach ($data->menus as $menu) {
-            if ($menu->wrapper === $wrapper) {
-                switch ($menu->menuPlacement) {
-                    case 'prepend':
-                        $prepend .= $this->sdmNmsGetMenuHtml($menu->menuId);
-                        break;
-                    default:
-                        $append .= $this->sdmNmsGetMenuHtml($menu->menuId);
-                        break;
+        if (isset($data->menus)) {
+            foreach ($data->menus as $menu) {
+                if ($menu->wrapper === $wrapper) {
+                    switch ($menu->menuPlacement) {
+                        case 'prepend':
+                            $prepend .= $this->sdmNmsGetMenuHtml($menu->menuId);
+                            break;
+                        default:
+                            $append .= $this->sdmNmsGetMenuHtml($menu->menuId);
+                            break;
+                    }
                 }
             }
         }
