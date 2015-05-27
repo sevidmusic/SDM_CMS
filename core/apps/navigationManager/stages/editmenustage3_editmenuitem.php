@@ -15,10 +15,17 @@ $editMenuItemForm->form_handler = 'navigationManagerEditMenuStage3_submitmenuite
 $editMenuItemForm->submitLabel = 'Proceed to Edit Menu Settings';
 $editMenuItemForm->form_elements = array(
     array(
+        'id' => 'menuId',
+        'type' => 'hidden',
+        'element' => 'Menu Id',
+        'value' => $menu->menuId,
+        'place' => '1',
+    ),
+    array(
         'id' => 'menuItemId',
         'type' => 'hidden',
         'element' => 'Menu Item Id',
-        'value' => $menuItem->menuItemId, // set menu item id randomly to insure unique id
+        'value' => $menuItem->menuItemId,
         'place' => '2',
     ),
     array(
