@@ -140,7 +140,7 @@ class SdmNms extends SdmCore {
         // load our core data object
         $data = $this->sdmCoreLoadDataObject();
         // either load stored menus object from our core data object or if no menus exist yet initilize a default object using stdClass()
-        $menus = (isset($data->menus) === TRUE ? new stdClass() : $data->menus);
+        $menus = (isset($data->menus) === TRUE ? $data->menus : new stdClass());
         // store the new $menu in $menus under it's $menu->menuId
         $newMenusId = $menu->menuId;
         $menus->$newMenusId = $menu;
