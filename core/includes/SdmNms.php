@@ -131,21 +131,22 @@ class SdmNms extends SdmCore {
      * @param $menu mixed .
      */
     public function sdmNmsAddMenu($menu) {
-// we want to make sure we can accsess the new $menu as an object, so if it is not one convert it.
+        // we want to make sure we can accsess the new $menu as an object, so if it is not one convert it.
         if (gettype($menu) != 'object') {
             $menu = json_decode(json_encode($menu));
         }
-// load our core data object
+        // load our core data object
         $data = $this->sdmCoreLoadDataObject();
-// load stored menus object from our core data object and convert to an array | makes it easiser to index the new $menu object we are going to be adding
-        $menus = json_decode(json_encode($data->menus), TRUE);
-// store the new $menu using it's menu id as it's array index
-        $menus[$menu->menuId] = $menu;
-// overwrite existing menus with our new menus array (which WILL contain any menus originally stored)
+        // load stored menus object from our core data object
+        $menus = json_decode(json_encode($data->menus));
+        // store the new $menu in $menus under it's $menu->menuId
+        $newMenusId = $menu->menuId;
+        $menus->$newMenusId = $menu;
+        // overwrite existing menus with our new menus array (which WILL contain any menus originally stored)
         $data->menus = $menus;
-// encode $data as json to prep it for storage
+        // encode $data as json to prep it for storage
         $json = json_encode($data);
-// attempt to write new core $data | if anything fails FALSE will be returned
+        // attempt to write new core $data | if anything fails FALSE will be returned
         return file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $json, LOCK_EX);
     }
 
