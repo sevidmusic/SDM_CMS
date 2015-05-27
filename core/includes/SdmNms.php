@@ -127,8 +127,10 @@ class SdmNms extends SdmCore {
 
     /**
      * Add a menu to our site.
-     * It is suggested that you pass in an instance of the SdmMenu
-     * @param $menu mixed .
+     * @param mixed $menu <p>The new menu. It is preferable to pass in an SdmMenu object,
+     * but you can also pass in an array as long as the keys match the property
+     * names expected by a SdmMenu object.</p>
+     * @return bool TRUE of menu was added, FALSE on failure
      */
     public function sdmNmsAddMenu($menu) {
         // we want to make sure we can accsess the new $menu as an object, so if it is not one convert it.
@@ -143,6 +145,39 @@ class SdmNms extends SdmCore {
         $newMenusId = $menu->menuId;
         $menus->$newMenusId = $menu;
         // overwrite existing menus with our new menus array (which WILL contain any menus originally stored)
+        $data->menus = $menus;
+        // encode $data as json to prep it for storage
+        $json = json_encode($data);
+        // attempt to write new core $data | if anything fails FALSE will be returned
+        return file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $json, LOCK_EX);
+    }
+
+    /**
+     * Update a menu
+     * @param mixed $menuId <p>A string or an integer equal to the menuId
+     * of the menu we wish to update.<br>
+     * i.e.,<br>
+     * <i>sdmNmsUpdateMenu(<b>1234</b>, $menu)</i><br>
+     * and<br>
+     * <i>sdmNmsUpdateMenu(<b>'1234'</b>, $menu)</i><br>
+     * would update the menu with id <b>1234</b></p>
+     * @param mixed $menu <p>The new menu. It is preferable to pass in an SdmMenu object,
+     * but you can also pass in an array as long as the keys match the property
+     * names expected for a SdmMenu object.</p>
+     * @return bool TRUE of menu was added, FALSE on failure
+     */
+    public function sdmNmsUpdateMenu($menuId, $menu) {
+        // we want to make sure we can accsess the new $menu as an object, so if it is not one convert it.
+        if (gettype($menu) != 'object') {
+            $menu = json_decode(json_encode($menu));
+        }
+        // load our core data object
+        $data = $this->sdmCoreLoadDataObject();
+        // load stored menus object from our core data object
+        $menus = json_decode(json_encode($data->menus));
+        // update menu with menuId === $menuId
+        unset($menus->menuId);
+        $menus->$menuId = $menu;
         $data->menus = $menus;
         // encode $data as json to prep it for storage
         $json = json_encode($data);
