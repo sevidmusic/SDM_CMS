@@ -223,12 +223,12 @@ class SdmNms extends SdmCore {
     /**
      * <p>Deletes a menu</p>
      * @param mixed $menuId <p>Can be a string or an integer whose value matches the id of the menu to be deleted.
-     *               i.e., sdmNmsdeleteMenu(1) and sdmNmsdeleteMenu('1') would delete the menu that has a menuId
+     *               i.e., sdmNmsDeleteMenu(1) and sdmNmsDeleteMenu('1') would delete the menu that has a menuId
      *               equal to 1</p>
      * @return mixed <p>If menu was deleted then the display name of the deleted menu is returned, if menu could not be
      * deleted then the boolean FALSE is returned.</p>
      */
-    public function sdmNmsdeleteMenu($menuId) {
+    public function sdmNmsDeleteMenu($menuId) {
         $data = $this->sdmCoreLoadDataObject();
         $menuDisplayName = $data->menus->$menuId->menuDisplayName;
         unset($data->menus->$menuId);
