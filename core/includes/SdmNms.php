@@ -328,24 +328,38 @@ class SdmNms extends SdmCore {
     public function sdmNmsBuildMenuItemsHtml($menuItems, $menuId = 'unknown') {
         $html = '';
         $currentUserRole = 'basic_user'; // this is a dev role, the users role should be determined by the Sdm Gatekeeper once it is built
+        $orderedMenuItems = array();
+        $usedPositions = array();
+        // order menu items by menu item position | first build an array of ordered menu items where each menu item is indexed by it's menuItemPosition
         foreach ($menuItems as $menuItem) {
-            if (in_array($currentUserRole, $menuItem->menuItemKeyholders) === TRUE || in_array('all', $menuItem->menuItemKeyholders)) {
-                if ($menuItem->menuItemEnabled === TRUE || $menuItem->menuItemEnabled === '1' || $menuItem->menuItemEnabled === 1) {
-                    switch ($menuItem->destinationType) {
+            // if menu item position is already in the $usedPositions array add 1 to avoid overwriting previous menu items
+            $position = (in_array($menuItem->menuItemPosition, $usedPositions) === TRUE ? $menuItem->menuItemPosition + 1 : $menuItem->menuItemPosition);
+            // index our menu item by $position in the new $orderedMenuItems array | $position and $usedPositions will insure menu items do not get indexed by a position that was already assigned as an index.
+            $orderedMenuItems[$position] = $menuItem;
+            // store the $position in the $usedPositions array so we can keep track of positions already in use, this allows us to prevent menu items that share the same $menuItem->menuItemPosition from overwriting each other by assuring no menu item is indexed by a $position that was already used.
+            $usedPositions[] = $position;
+        }
+        // use ksort() to order the menu items by their new indexes, the indexes will reflect the integer assigend to the menu item's menuItemPosition property
+        ksort($orderedMenuItems, SORT_NUMERIC);
+        // build each ordered menu itmes html
+        foreach ($orderedMenuItems as $orderedMenuItem) {
+            if (in_array($currentUserRole, $orderedMenuItem->menuItemKeyholders) === TRUE || in_array('all', $orderedMenuItem->menuItemKeyholders)) {
+                if ($orderedMenuItem->menuItemEnabled === TRUE || $orderedMenuItem->menuItemEnabled === '1' || $orderedMenuItem->menuItemEnabled === 1) {
+                    switch ($orderedMenuItem->destinationType) {
                         case 'internal':
-                            $html .= '<' . $menuItem->menuItemWrappingTagType . ' id="' . $menuItem->menuItemCssId . '" class="' . implode(' ', $menuItem->menuItemCssClasses) . '"><a href="' . $this->sdmCoreGetRootDirectoryUrl() . '/index.php?page=' . $menuItem->destination . '&linkedByMenu=' . $menuId . '&linkedByMenuItem=' . $menuItem->menuItemId . (isset($menuItem->arguments) === TRUE && !empty($menuItem->arguments) && $menuItem->arguments[0] != '' ? '&' : '') . (is_string($menuItem->arguments) ? str_replace(' ', '', str_replace(array(',', ';', ':', '|'), '&', $menuItem->arguments)) : str_replace(' ', '', implode('&', $menuItem->arguments))) . '">' . $menuItem->menuItemDisplayName . '</a>' . '</' . $menuItem->menuItemWrappingTagType . '>';
+                            $html .= '<' . $orderedMenuItem->menuItemWrappingTagType . ' id="' . $orderedMenuItem->menuItemCssId . '" class="' . implode(' ', $orderedMenuItem->menuItemCssClasses) . '"><a href="' . $this->sdmCoreGetRootDirectoryUrl() . '/index.php?page=' . $orderedMenuItem->destination . '&linkedByMenu=' . $menuId . '&linkedByMenuItem=' . $orderedMenuItem->menuItemId . (isset($orderedMenuItem->arguments) === TRUE && !empty($orderedMenuItem->arguments) && $orderedMenuItem->arguments[0] != '' ? '&' : '') . (is_string($orderedMenuItem->arguments) ? str_replace(' ', '', str_replace(array(',', ';', ':', '|'), '&', $orderedMenuItem->arguments)) : str_replace(' ', '', implode('&', $orderedMenuItem->arguments))) . '">' . $orderedMenuItem->menuItemDisplayName . '</a>' . '</' . $orderedMenuItem->menuItemWrappingTagType . '>';
                             break;
-                        case 'external': // $menuItem->destination
-                            $html .= '<' . $menuItem->menuItemWrappingTagType . ' id="' . $menuItem->menuItemCssId . '" class="' . implode(' ', $menuItem->menuItemCssClasses) . '"><a href="' . $menuItem->destination . (isset($menuItem->arguments) === TRUE && !empty($menuItem->arguments) && $menuItem->arguments[0] != '' ? '?&' : '') . (is_string($menuItem->arguments) ? str_replace(' ', '', str_replace(array(',', ';', ':', '|'), '&', $menuItem->arguments)) : str_replace(' ', '', implode('&', $menuItem->arguments))) . '" target="_blank">' . $menuItem->menuItemDisplayName . '</a>' . '</' . $menuItem->menuItemWrappingTagType . '>';
+                        case 'external': // $orderedMenuItem->destination
+                            $html .= '<' . $orderedMenuItem->menuItemWrappingTagType . ' id="' . $orderedMenuItem->menuItemCssId . '" class="' . implode(' ', $orderedMenuItem->menuItemCssClasses) . '"><a href="' . $orderedMenuItem->destination . (isset($orderedMenuItem->arguments) === TRUE && !empty($orderedMenuItem->arguments) && $orderedMenuItem->arguments[0] != '' ? '?&' : '') . (is_string($orderedMenuItem->arguments) ? str_replace(' ', '', str_replace(array(',', ';', ':', '|'), '&', $orderedMenuItem->arguments)) : str_replace(' ', '', implode('&', $orderedMenuItem->arguments))) . '" target="_blank">' . $orderedMenuItem->menuItemDisplayName . '</a>' . '</' . $orderedMenuItem->menuItemWrappingTagType . '>';
                             break;
                         default:
                             break;
                     }
                 } else { // menu item is disabled
-                    $html .= '<!-- Disabled Menu Item "' . $menuItem->menuItemDisplayName . '" Placeholder -->';
+                    $html .= '<!-- Disabled Menu Item "' . $orderedMenuItem->menuItemDisplayName . '" Placeholder -->';
                 }
             } else { // user does not have permission to see this menu item
-                $html .= '<!-- Menu Item "' . $menuItem->menuItemDisplayName . '" Placeholder -->';
+                $html .= '<!-- Menu Item "' . $orderedMenuItem->menuItemDisplayName . '" Placeholder -->';
             }
         }
         return $html;
