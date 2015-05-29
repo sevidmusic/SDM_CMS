@@ -238,6 +238,21 @@ class SdmNms extends SdmCore {
     }
 
     /**
+     * <p>Deltes a menu item belonging to the menu with $menuId</p>
+     * @param mixed $menuId <p>Can be a string or an integer whose value matches the id of the menu the menu item belongs to.</p>
+     * @param mixed $menuItemId <p>Can be a string or an integer whose value matches the id of the menu item to be deleted.</p>
+      @return mixed <p>If menu item was deleted then the display name of the deleted menu item is returned, if menu item could not be
+     * deleted then the boolean FALSE is returned.</p>     */
+    public function sdmNmsDeleteMenuItem($menuId, $menuItemId) {
+        $data = $this->sdmCoreLoadDataObject();
+        $menuItemDisplayName = $data->menus->$menuId->menuItems->$menuItemId->menuItemDisplayName;
+        unset($data->menus->$menuId->menuItems->$menuItemId);
+        $json = json_encode($data);
+        $status = file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $json, LOCK_EX);
+        return ($status === FALSE ? FALSE : $menuItemDisplayName);
+    }
+
+    /**
      * <p>Gets the html needed to display the wrappers menus and incorporates it into the page</p>
      * @param string $wrapper <p>The wrapper to get menus for</p>
      * @param string $wrapperAssembledContent <p>The wrapper html as it is assembled so far,
