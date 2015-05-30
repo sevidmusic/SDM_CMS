@@ -162,7 +162,7 @@ class SdmNms extends SdmCore {
     public function sdmNmsAddMenuItem($menuId, $menuItem) {
         // we want to make sure we can accsess the new $menu as an object, so if it is not one convert it.
         if (gettype($menuItem) != 'object') {
-            $menu = json_decode(json_encode($menu));
+            $menuItem = json_decode(json_encode($menuItem));
         }
         // get menu item id
         $menuItemId = $menuItem->menuItemId;

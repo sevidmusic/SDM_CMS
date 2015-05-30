@@ -104,7 +104,18 @@ $editMenuSelectMenuForm->form_elements = array(
 $editMenuSelectMenuForm->sdmFormBuildForm($sdmcore->sdmCoreGetRootDirectoryUrl());
 $output = '<div id="originalMenuPreview" style="padding:20px;border:3px dashed #777777;border-radius:7px;"><h4>Menu Preview</h4>' . $menuHtml . '</div>';
 $output .= '<div><h3>Menu Items</h3><ul>';
-foreach ($menu->menuItems as $menuItem) {
+// order menu items for display
+$menuItems = array();
+$usedPositions = array();
+foreach ($menu->menuItems as $mi) {
+    $pos = (in_array($mi->menuItemPosition, $usedPositions) === TRUE ? $mi->menuItemPosition + 1 : $mi->menuItemPosition);
+    $menuItems[$pos] = $mi;
+    $usedPositions[] = $pos;
+}
+// sort menu items by new indexes
+ksort($menuItems);
+// build edit/delete links for each menu item and add to output
+foreach ($menuItems as $menuItem) {
     $editMenuItemArguments = array('page=navigationManagerEditMenuStage3_editmenuitem', 'menuId=' . $menu->menuId, 'menuItemId=' . $menuItem->menuItemId, 'linkedBy=navigationManager_editmenustage2_editMenuItemLink');
     $editLink = '<a href = "' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?' . str_replace('%26', '&', str_replace('%3D', '=', urlencode(implode('&', $editMenuItemArguments)))) . '">edit</a>';
     $deleteMenuItemArguments = array('page=navigationManagerEditMenuStage3_confirmdeletemenuitem', 'menuId=' . $menu->menuId, 'menuItemId=' . $menuItem->menuItemId, 'linkedBy=navigationManager_editmenustage2_deleteMenuItemLink');
@@ -112,4 +123,6 @@ foreach ($menu->menuItems as $menuItem) {
     $output .= '<li>' . $menuItem->menuItemDisplayName . ' (' . $editLink . ' | ' . $deletetLink . ')</li>';
 }
 $output .= '</ul></div>';
+$addMenuItemArguments = array('page=navigationManagerEditMenuStage3_addmenuitem', 'menuId=' . $menu->menuId, 'linkedBy=navigationManager_editmenustage2_addMenuItemLink');
+$output .= '<p><a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?' . str_replace('%26', '&', str_replace('%3D', '=', urlencode(implode('&', $addMenuItemArguments)))) . '">Add Menu Item</a></p>';
 $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, $output . '<h3>Menu Settings</h3>' . $editMenuSelectMenuForm->sdmFormGetForm(), array('incpages' => array('navigationManagerEditMenuStage2')));
