@@ -36,6 +36,8 @@ $options = array(
         'navigationManagerEditMenuStage3_submitmenuitemchanges', // handle edit menu item form submission
         'navigationManagerEditMenuStage3_confirmdeletemenuitem', // confirm menu item to be deleted
         'navigationManagerEditMenuStage3_deletemenuitem', // handles deletion of a menu item from a menu through submission of confrim delete menu item form
+        'navigationManagerEditMenuStage3_addmenuitem', // add a menu item to a menu
+        'navigationManagerEditMenuStage3_submitaddmenuitem' // submit added menu item
     ),
 );
 $sdmcore = $sdmcore; // see SdmAssembler.php
@@ -85,6 +87,12 @@ if (substr($sdmcore->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationMana
             break;
         case 'navigationManagerEditMenuStage3_deletemenuitem':
             require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/editmenustage3_deletemenuitem.php');
+            break;
+        case 'navigationManagerEditMenuStage3_addmenuitem':
+            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/editmenustage3_addmenuitem.php');
+            break;
+        case 'navigationManagerEditMenuStage3_submitaddmenuitem':
+            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/editmenustage3_submitaddmenuitem.php');
             break;
         default:
             // present content manager menu

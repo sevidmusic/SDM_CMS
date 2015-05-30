@@ -153,6 +153,30 @@ class SdmNms extends SdmCore {
     }
 
     /**
+     * Add a menu item to a menu.
+     * @param mixed $menuId <p>The Id of the menu we want to add this menu item to.</p>
+     * @param mixed $menuItem <p>The menu item. Preferably passed in the form of an SdmMenuItem object, it is also possible
+     * to pass an array as long as the array indexes match the expected property names for a SdmMenuItem object.</p>
+     * @return bool TRUE of menu item was added, FALSE on failure
+     */
+    public function sdmNmsAddMenuItem($menuId, $menuItem) {
+        // we want to make sure we can accsess the new $menu as an object, so if it is not one convert it.
+        if (gettype($menuItem) != 'object') {
+            $menuItem = json_decode(json_encode($menuItem));
+        }
+        // get menu item id
+        $menuItemId = $menuItem->menuItemId;
+        // load our core data object
+        $data = $this->sdmCoreLoadDataObject();
+        // add menu item to menu
+        $data->menus->$menuId->menuItems->$menuItemId = $menuItem;
+        // encode $data as json to prep it for storage
+        $json = json_encode($data);
+        // attempt to write new core $data | if anything fails FALSE will be returned
+        return file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $json, LOCK_EX);
+    }
+
+    /**
      * Update a menu
      * @param mixed $menuId <p>A string or an integer equal to the menuId
      * of the menu we wish to update.<br>
