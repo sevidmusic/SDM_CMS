@@ -1,0 +1,102 @@
+/*
+    Document   : sdm_layout
+    Created on : Oct 12, 2014, 5:22:17 PM
+    Author     : Sevi Foreman
+    Description: Default theme for the SDM CMS.
+*/
+
+/* Default Styles */
+
+.sdm {
+    background: #000000;
+    color: #333333;
+    font-family: serif;
+    font-size:22px;
+}
+
+/* Wrappers */
+
+#lockedwrapper {
+    background: #EEEEEE;
+    border-radius: 12px;
+    min-height: 720px; /* use min-height so element will grow vertically with content */
+    margin: 42px auto;
+    padding: 20px;
+    width: 960px;
+    overflow: auto;
+}
+
+#main_content {
+    width: 100%;
+    height: 100%;
+}
+
+/* Menus */
+
+.horizontal-menu {
+    font-size: 1.2em;
+    list-style-type: none;
+    margin: 0 0 1em 0;
+    padding: 0;
+    width: 100%;
+}
+
+.horizontal-menu li {
+    display: inline;
+    margin: 0 1em 0 0;
+}
+
+.horizontal-menu a {
+    text-decoration: none;
+}
+
+/* Links */
+/* color links with homelink green */
+.homelink a:link {
+    color: #0066cc;
+}
+
+.homelink a:visited {
+    color: #0066cc;
+}
+
+.homelink a:hover {
+    color: #3399ff;
+}
+
+.homelink a:active {
+    color: #00DDff;
+}
+
+a {
+    text-decoration: none;
+}
+a:link {
+    color: #000000;
+}
+
+a:visited {
+    color: #000000;
+}
+
+a:hover {
+    color: #0099FF;
+}
+
+a:active {
+    color: #0099FF;
+}
+
+input select {
+    display: block;
+}
+
+/* Forms */
+input, text, textarea, select {
+    display: block;
+    border-radius: 4px;
+    margin: 5px 0 20px 0;
+}
+
+/* targeted elements */
+#gohome-link {float:right;}

@@ -14,7 +14,7 @@ $config = array(
         ),
     ),
     'settings' => array(
-        'theme' => 'sdmDemoTheme1',
+        'theme' => 'sdm',
         'enabledapps' => array('contentManager' => 'contentManager', 'SdmDevMenu' => 'SdmDevMenu', 'SdmErrorLog' => 'SdmErrorLog', 'navigationManager' => 'navigationManager', 'SdmCoreOverview' => 'SdmCoreOverview'),
     ), // end 'settings' array
 ); // end $config array
