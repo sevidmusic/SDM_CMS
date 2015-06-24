@@ -2,13 +2,15 @@
     Document   : sdm_layout
     Created on : Oct 12, 2014, 5:22:17 PM
     Author     : Sevi Foreman
-    Description: Theme for the SDM CMS. This theme is very similar to the default sdm theme.
+    Description: Alternative default theme for the SDM CMS.
     Overview:
 
     - classes -
-    .sdm : defines initial styels for all elements. This class is applied to the <body>
+    .sdm : defines initial styles for all elements. This class is applied to the <body>
     .horizontal-menu : defines styles for horizontal menus. (note: only works with html lists)
     .homelink : defines styles for links to homepage. (note: only applied if element is assigned class ""homelink".
+    .border : adds a border to elements if element allows for borders.
+    .rounded-edge : rounds the edge of an element;
 
     - ids -
     #lockedwrapper : defines styles for main wrapping element, all other elments should be children of this element.
@@ -18,9 +20,9 @@
 
 /** Default Styles */
 
-.sdm2 {
+.sdm3 {
     background: #ffffff;
-    color: #000000;
+    color: #CCCCCC;
     font-family: serif;
     font-size:22px;
 }
@@ -65,11 +67,11 @@ a {
     text-decoration: none;
 }
 a:link {
-    color: #000000;
+    color: #EEEEEE;
 }
 
 a:visited {
-    color: #000000;
+    color: #EEEEEE;
 }
 
 a:hover {
@@ -100,7 +102,7 @@ input select {
     display: block;
 }
 
-/* Forms */
+/** Forms */
 input, text, textarea, select {
     display: block;
     border-radius: 4px;
@@ -112,5 +114,25 @@ textarea {
     height: 16em;
 }
 
-/* targeted elements */
-#gohome-link {float:right;}
+/** targeted ids */
+#gohome-link {
+    float:right;
+    margin:0; /** prevent from leaving wrapping element */
+}
+
+#footer-menu {
+    margin: 20px 0 0 0;
+    padding: 20px 20px 20px 20px;
+    font-size: .5em;
+}
+
+/** targeted elements */
+
+/** Misc. styleing */
+.border {
+    border: 1px solid #999999;
+}
+
+.rounded-edge {
+    border-radius: 7px;
+}
