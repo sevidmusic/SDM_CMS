@@ -14,26 +14,32 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
     /** Custom Session Handler Methods */
     // NOTE: Theses methods overwrite the default session handlers provided by PHP //
     public function read($session_id) {
+        error_log('SdmGatekeeper->read(' . strval($session_id) . ') called.');
         return;
     }
 
     public function write($session_id, $session_data) {
+        error_log('SdmGatekeeper->write(' . strval($session_id) . ', ' . strval($session_data) . ') called.');
         return;
     }
 
     public function open($save_path, $name) {
+        error_log('SdmGatekeeper->open(' . strval($save_path) . ', ' . strval($name) . ') called.');
         return;
     }
 
     public function close() {
+        error_log('SdmGatekeeper->close() called.');
         return;
     }
 
     public function destroy($session_id) {
+        error_log('SdmGatekeeper->destroy(' . strval($session_id) . ') called.');
         return;
     }
 
     public function gc($maxlifetime) {
+        error_log('SdmGatekeeper->gc(' . strval($maxlifetime) . ') called.');
         return;
     }
 
@@ -57,6 +63,63 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
         );
         $this->sdmCoreSdmReadArray($sessionConfigInfo);
         return TRUE;
+    }
+
+    /**
+     * Start a session. This method should be used in place of
+     * PHP's session_start().
+     * @return bool <p>TRUE if session was started, false if session
+     * could not be started.</p>
+     */
+    public function sessionStart() {
+        $handler = $this;
+        $status = session_set_save_handler($handler, true);
+        $status = session_start();
+        // regenerate session id for security
+        $status = session_regenerate_id();
+        return $status;
+    }
+
+    /////////////////////////////////
+    ///// Security : Encryption /////
+    /////////////////////////////////
+
+    /**
+     * <p>Encrypts a string.</p>
+     * @param string $data <p>The data to be kind</p>
+     * @return string <p>The encrypted string</p>
+     */
+    final public function sdmKind($data) {
+        $cipher = '>#|@zl)VR-1ZYP{8g~iJAxy^(\\?INr!*UBuMqt7nvk}&`wE6b:H03KXOm/f.c"[S]a<LGe\'p;o9,C2h%F=dDs$5jW_TQ+4';
+        $limit = strlen($cipher);
+        $offset = rand(0, $limit - 1);
+        $kind = '';
+        for ($sweet = 0; $sweet < strlen($data); $sweet++) {
+            $empathy = (strpos($cipher, $data[$sweet]) === FALSE ? 'notfound' : strpos($cipher, $data[$sweet])); // current position in unencrypted string, to be encrypted it must be less than the cipher length because the encrypted chars will only be chars that exist in cipher, therefore any chars with positions greater than the cipher length will not be encrypted
+            $love = ($empathy + $offset >= $limit ? ($empathy - ($limit - $offset)) : ($empathy + $offset));
+            $kind .= ( $empathy === 'notfound' ? $data[$sweet] : $cipher[$love]);
+        }
+        return $kind . 'sdm' . $offset;
+    }
+
+    /**
+     * <p>Decrypts a string encrypted with <b>sdmKind()</b></p>
+     * @param string  $data <p>The string to be decrypted.</p>
+     * @return string <p>The decrypted string.</p>
+     */
+    final public function sdmNice($data) {
+        $cipher = '>#|@zl)VR-1ZYP{8g~iJAxy^(\\?INr!*UBuMqt7nvk}&`wE6b:H03KXOm/f.c"[S]a<LGe\'p;o9,C2h%F=dDs$5jW_TQ+4';
+        $limit = strlen($cipher);
+        $key = explode('sdm', $data);
+        $offset = end($key);
+        $new = strstr($data, 'sdm', TRUE);
+        $kind = '';
+        for ($sweet = 0; $sweet < strlen($new); $sweet++) {
+            $empathy = (strpos($cipher, $new[$sweet]) === FALSE ? 'notfound' : strpos($cipher, $data[$sweet])); // current position in unencrypted string, to be encrypted it must be less than the cipher length because the encrypted chars will only be chars that exist in cipher, therefore any chars with positions greater than the cipher length will not be encrypted
+            $love = ($empathy + ($limit - $offset) >= $limit ? ($empathy - $offset) : ($empathy + ($limit - $offset)));
+            $kind .= ( $empathy === 'notfound' ? $new[$sweet] : $cipher[$love]);
+        }
+        return $kind;
     }
 
 }
