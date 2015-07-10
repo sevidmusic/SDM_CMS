@@ -50,12 +50,15 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
     /** Session Info Methods */
 
     /**
-     * Utilizes sdmCoreSdmReadArray() to show info
-     * about the current configuration of PHP sessions.
-     * This method is useful for debugging and development.
-     * @return boolean Returns TRUE.
+     * <p>Utilizes sdmCoreSdmReadArray() to show info
+     * about the current configuration of PHP sessions, unless
+     * the $reutrnData var is set to TRUE, in which case
+     * the an array of data about the current session config is
+     * returned.</p>
+     * <p>This method is useful for debugging and development.</p>
+     * @return boolean <p>Returns TRUE.</p>
      */
-    public function sessionConfigInfo() {
+    public function sessionConfigInfo($returnData = FALSE) {
         $sessionConfigInfo = array(
             'session_module_name' => session_module_name(),
             'session_id' => (session_id() === '' ? 'There is no session id at the moment which means there is no active session' : session_id()),
@@ -65,8 +68,12 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
             'session_cache_limiter' => session_cache_limiter(),
             '$_SESSION' => (!empty($_SESSION) === TRUE ? $_SESSION : 'No current $_SESSION data'),
         );
-        $this->sdmCoreSdmReadArray($sessionConfigInfo);
-        return TRUE;
+        if ($returnData === FALSE) {
+            $this->sdmCoreSdmReadArray($sessionConfigInfo);
+            return TRUE;
+        } else {
+            return $sessionConfigInfo;
+        }
     }
 
     /**
