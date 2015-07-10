@@ -1,5 +1,9 @@
 <?php
 
+function colorText($text, $color) {
+    return '<span style="color:' . $color . ';">' . $text . '</span>';
+}
+
 /**
  * The SdmGatekeeper is responsible for security and security related components.
  * It implements PHP's built in SessionHandlerInterface in order to provide
@@ -14,32 +18,32 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
     /** Custom Session Handler Methods */
     // NOTE: Theses methods overwrite the default session handlers provided by PHP //
     public function read($session_id) {
-        error_log('SdmGatekeeper->read(' . strval($session_id) . ') called.');
+        error_log(colorText('SdmGatekeeper->read(' . colorText('"', '#ffffff') . colorText(strval($session_id), 'purple') . colorText('"', '#ffffff') . ') called.', '#00CCFF'));
         return;
     }
 
     public function write($session_id, $session_data) {
-        error_log('SdmGatekeeper->write(' . strval($session_id) . ', ' . strval($session_data) . ') called.');
+        error_log(colorText('SdmGatekeeper->write(' . colorText('"', '#ffffff') . colorText(strval($session_id), 'purple') . colorText('"', '#ffffff') . ', ' . colorText('"', '#ffffff') . colorText(strval($session_data), 'purple') . colorText('"', '#ffffff') . ') called.', '#00CCFF'));
         return;
     }
 
     public function open($save_path, $name) {
-        error_log('SdmGatekeeper->open(' . strval($save_path) . ', ' . strval($name) . ') called.');
+        error_log(colorText('SdmGatekeeper->open(' . colorText('"', '#ffffff') . colorText(strval($save_path), 'purple') . colorText('"', '#ffffff') . ', ' . colorText('"', '#ffffff') . colorText(strval($name), 'purple') . colorText('"', '#ffffff') . ') called.', '#00CCFF'));
         return;
     }
 
     public function close() {
-        error_log('SdmGatekeeper->close() called.');
+        error_log(colorText('SdmGatekeeper->close() called.', '#00CCFF'));
         return;
     }
 
     public function destroy($session_id) {
-        error_log('SdmGatekeeper->destroy(' . strval($session_id) . ') called.');
+        error_log(colorText('SdmGatekeeper->destroy(' . colorText('"', '#ffffff') . colorText(strval($session_id), 'purple') . colorText('"', '#ffffff') . ') called.', '#00CCFF'));
         return;
     }
 
     public function gc($maxlifetime) {
-        error_log('SdmGatekeeper->gc(' . strval($maxlifetime) . ') called.');
+        error_log(colorText('SdmGatekeeper->gc(' . colorText('"', '#ffffff') . colorText(strval($maxlifetime, 'purple')) . colorText('"', '#ffffff') . ') called.', '#00CCFF'));
         return;
     }
 
@@ -77,6 +81,11 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
         $status = session_start();
         // regenerate session id for security
         $status = session_regenerate_id();
+        return $status;
+    }
+
+    public function sessionDestroy() {
+        $status = session_destroy();
         return $status;
     }
 
