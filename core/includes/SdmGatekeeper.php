@@ -1,5 +1,12 @@
 <?php
 
+/**
+ *
+ * @param type $text <p>The text to wrap.</p>
+ * @param string $color <p>A RGB or HEX color value or valid HTML color name.</p>
+ * @return string <p>The text wrapped in span tags whose style
+ * tag has the color prperty assigend the value of $color.</p>
+ */
 function colorText($text, $color) {
     return '<span style="color:' . $color . ';">' . $text . '</span>';
 }
@@ -18,32 +25,32 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
     /** Custom Session Handler Methods */
     // NOTE: Theses methods overwrite the default session handlers provided by PHP //
     public function read($session_id) {
-        error_log(colorText('SdmGatekeeper->read(' . colorText('"', '#ffffff') . colorText(strval($session_id), 'purple') . colorText('"', '#ffffff') . ') called.', '#00CCFF'));
+        error_log(colorText('SdmGatekeeper->read(' . colorText('"', '#ffffff') . colorText(strval($session_id), 'purple') . colorText('"', '#ffffff') . ') called (' . time() . ').', '#00CCFF'));
         return;
     }
 
     public function write($session_id, $session_data) {
-        error_log(colorText('SdmGatekeeper->write(' . colorText('"', '#ffffff') . colorText(strval($session_id), 'purple') . colorText('"', '#ffffff') . ', ' . colorText('"', '#ffffff') . colorText(strval($session_data), 'purple') . colorText('"', '#ffffff') . ') called.', '#00CCFF'));
+        error_log(colorText('SdmGatekeeper->write(' . colorText('"', '#ffffff') . colorText(strval($session_id), 'purple') . colorText('"', '#ffffff') . ', ' . colorText('"', '#ffffff') . colorText(strval($session_data), 'purple') . colorText('"', '#ffffff') . ') called (' . time() . ').', '#00CCFF')); //
         return;
     }
 
     public function open($save_path, $name) {
-        error_log(colorText('SdmGatekeeper->open(' . colorText('"', '#ffffff') . colorText(strval($save_path), 'purple') . colorText('"', '#ffffff') . ', ' . colorText('"', '#ffffff') . colorText(strval($name), 'purple') . colorText('"', '#ffffff') . ') called.', '#00CCFF'));
+        error_log(colorText('SdmGatekeeper->open(' . colorText('"', '#ffffff') . colorText(strval($save_path), 'purple') . colorText('"', '#ffffff') . ', ' . colorText('"', '#ffffff') . colorText(strval($name), 'purple') . colorText('"', '#ffffff') . ') called (' . time() . ').', '#00CCFF'));
         return;
     }
 
     public function close() {
-        error_log(colorText('SdmGatekeeper->close() called.', '#00CCFF'));
+        error_log(colorText('SdmGatekeeper->close() called (' . time() . ').', '#00CCFF'));
         return;
     }
 
     public function destroy($session_id) {
-        error_log(colorText('SdmGatekeeper->destroy(' . colorText('"', '#ffffff') . colorText(strval($session_id), 'purple') . colorText('"', '#ffffff') . ') called.', '#00CCFF'));
+        error_log(colorText('SdmGatekeeper->destroy(' . colorText('"', '#ffffff') . colorText(strval($session_id), 'purple') . colorText('"', '#ffffff') . ') called (' . time() . ').', '#00CCFF'));
         return;
     }
 
     public function gc($maxlifetime) {
-        error_log(colorText('SdmGatekeeper->gc(' . colorText('"', '#ffffff') . colorText(strval($maxlifetime, 'purple')) . colorText('"', '#ffffff') . ') called.', '#00CCFF'));
+        error_log(colorText('SdmGatekeeper->gc(' . colorText('"', '#ffffff') . colorText(strval($maxlifetime, 'purple')) . colorText('"', '#ffffff') . ') called (' . time() . ').', '#00CCFF'));
         return;
     }
 
