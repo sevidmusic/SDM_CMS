@@ -1,12 +1,27 @@
 <?php
 
-$options = array(
-    'incpages' => array(
-        'SdmDevOutput',
-    ),
+/** Log of what is being tested */
+$tests = array(
+    'SdmGateKeeper()' . rand(1000, 9999) => 'Checking to see if sessions are working properly',
+    'SdmGateKeeper()' . rand(100, 999) => 'Testing that sessionConfigInfo() method is working',
 );
-$text = 'SDM sdm ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. SDM sdm';
-$encryptedText = $sdmcore->sdmKind($text);
-$decryptedText = $sdmcore->sdmNice($encryptedText);
-$output = '<p>TEXT: "' . $text . '"</p><p>ENCRYPTED TEXT: "' . htmlspecialchars(htmlentities(str_replace('<', '&lt;', $encryptedText))) . '"</p><p>DECRYPTED TEXT: "' . $decryptedText . '"</p>';
-$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, $output, $options);
+
+/** TESTS */
+$sdmGatekeeper = new SdmGatekeeper();
+$_SESSION['RequestedPage'] = $sdmcore->SdmCoreDetermineRequestedPage();
+$sdmGatekeeper->sessionConfigInfo();
+
+
+/** APP OUTPUT */
+$devOutput = '<h2>Dev Output</h2><p>This app can be used to test, debug, and experiment with snippets of PHP code.</p>';
+// Display current tests logged in $tests array
+$devOutput .= '<p>Current Tests</p><table style="width:100%;color:aqua;border:3px solid white;">';
+foreach ($tests as $key => $value) {
+    $devOutput .= '<tr>
+                <td style="padding:12px;border:1px solid white;">Testing ' . trim(str_replace(range(0, 9), '', $key)) . '</td>
+                <td style="padding:12px;color:#CCCCCC;border:1px solid white;">' . $value . '</td>
+            </tr>';
+}
+$devOutput .= '</table>';
+$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, $devOutput, array('wrapper' => 'main_content', 'incmethod' => 'append', 'incpages' => array('SdmDevOutput')));
+

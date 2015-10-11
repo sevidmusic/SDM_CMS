@@ -248,11 +248,17 @@ class SdmCore {
     final public function sdmCoreConfigureCore() {
         // turn on error reporting | @todo make this reflect site settings so admin can turn on or off based on wheater in dev or not...
         error_reporting(E_ALL | E_STRICT | E_NOTICE);
-        // modify our ini settings to fit the needs of our CMS
+        /** modify our ini settings to fit the needs of our CMS */
+        // ERRORS //
         ini_set('log_errors', '1'); // will force php to log all errors to the Server's log files
         ini_set('error_log', $this->sdmCoreGetCoreDirectoryPath() . '/logs/sdm_core_errors.log');
         ini_set('display_errors', 0); // this line should be commented out once out of dev
-        ini_set("auto_detect_line_endings", true); // enables PHP to interoperate with Macintosh systems @see "http://www.php.net/manual/en/filesystem.configuration.php#ini.auto-detect-line-endings" for more information | the slight performance penalty is worth insuring that PHP's file functions will be able to determine the end of lines on all OS's
+        // MISC //
+        ini_set('auto_detect_line_endings', true); // enables PHP to interoperate with Macintosh systems @see "http://www.php.net/manual/en/filesystem.configuration.php#ini.auto-detect-line-endings" for more information | the slight performance penalty is worth insuring that PHP's file functions will be able to determine the end of lines on all OS's
+        // SESSIONS //
+        ini_set('session.gc_maxlifetime', 5); // set in seconds | determines how a long a session file can exist before it becomes eligible for Garbage Collection
+        ini_set('session.gc_probability', 100); // chance that GC will occur
+        ini_set('session.gc_divisor', 100); // probability divisor, if gc_propbability is 50 and gc_divisor is 100 then there is a 50% chance of GC (i.e. 50/100)
         // set include path
         set_include_path($this->sdmCoreGetIncludesDirectoryPath());
         // include timezone file

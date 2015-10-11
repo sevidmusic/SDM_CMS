@@ -9,25 +9,14 @@ function __autoload($classes) {
     include_once(__SDM_INCTDIR__ . '/' . $filename);
 }
 
-// temp | configure session max lifetime | move this somehwere more reasonable
-ini_set('session.gc_maxlifetime', 5); // set in seconds
-ini_set('session.gc_probability', 100); // chance that GC will occur
-ini_set('session.gc_divisor', 100); // probability divisor, if gc_propbability is 50 and gc_divisor is 100 then there is a 50% chance of GC (i.e. 50/100)
-// dev //
 // create/configure core
 $sdmcore = new SdmCore;
 // configure core
 $sdmcore->sdmCoreConfigureCore();
 // startup the gatekeeper
 $sdmGatekeeper = new SdmGatekeeper();
-// start session
+// start core session
 $sdmGatekeeper->sessionStart();
-// set referer token which is used to insure requests are from our site
-$_SESSION['referer_token'] = $sdmGatekeeper->sdmKind($sdmcore->sdmCoreGetRootDirectoryUrl());
-// store decoded refer_token in $_SESSION, if it is not === to the site root url then this request is not from our site
-$_SESSION['site_root_url'] = ($sdmGatekeeper->sdmNice($_SESSION['referer_token']) === $sdmcore->sdmCoreGetRootDirectoryUrl() ? $sdmGatekeeper->sdmNice($_SESSION['referer_token']) : 'invalid_referer');
-// output session data while in dev
-$sdmGatekeeper->sessionConfigInfo();
 // initialize assembler
 $sdmassembler = SdmAssembler::sdmAssemblerInitializeAssembler();
 // load and assemble content | this var is used excluisively by the current themes page.php

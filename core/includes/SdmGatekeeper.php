@@ -103,9 +103,14 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
      * the an array of data about the current session config is
      * returned.</p>
      * <p>This method is useful for debugging and development.</p>
-     * @return boolean <p>Returns TRUE.</p>
+     * @param bool $returnData <p>If set to TRUE, an array of data
+     *                            about the current session config
+     *                            will be returned.</p>
+     * @param bool $resizeableView <p>Determines if view is resizeable
+     *                                or not. Defaults to FALSE</p>
+     * @return bool <p>Returns TRUE.</p>
      */
-    public function sessionConfigInfo($returnData = FALSE) {
+    public function sessionConfigInfo($returnData = FALSE, $resizeableView = FALSE) {
         $sessionConfigInfo = array(
             'session_module_name' => session_module_name(),
             'session_id' => (session_id() === '' ? 'There is no session id at the moment which means there is no active session' : session_id()),
@@ -116,7 +121,9 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
             '$_SESSION' => (!empty($_SESSION) === TRUE ? $_SESSION : 'No current $_SESSION data'),
         );
         if ($returnData === FALSE) {
+            echo '<div style="' . ($resizeableView === TRUE ? 'width:100%;height:42px;resize:both;overflow:auto;' : '') . '">';
             $this->sdmCoreSdmReadArray($sessionConfigInfo);
+            echo '</div>';
             return TRUE;
         } else {
             return $sessionConfigInfo;
@@ -126,21 +133,51 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
     /**
      * Start a session. This method should be used in place of
      * PHP's session_start().
+     * This method sets up our session configuration, startrs our session,
+     * and provides security checks abd applies timeout limits on our sessions.
      * @return bool <p>TRUE if session was started, false if session
      * could not be started.</p>
      */
     public function sessionStart() {
         $handler = $this;
-        $status = session_set_save_handler($handler, true);
-        $status = session_start();
-        // regenerate session id for security
+        session_set_save_handler($handler, true);
+        // set our session name | it is important for this to be unique to our site for security reasons
+        session_name('sdmsession');
+        session_start();
+        /**
+         * During development it became clear through some research
+         * that PHP's handling of session timeout is not reliable.
+         * The code below addresses this.
+         * @see http://stackoverflow.com/questions/520237/how-do-i-expire-a-php-session-after-30-minutes
+         * @see http://php.net/manual/en/function.session-set-cookie-params.php
+         */
+        // set session cookie params manually
+        $maxlifetime = ini_get('session.gc_maxlifetime');
+        $secure = TRUE;
+        $httponly = TRUE;
+        session_set_cookie_params($maxlifetime, session_save_path(), $this->SdmCoreGetRootDirectoryUrl(), $secure, $httponly);
+        // re-set the session cookie to insure the correct parameters are used
+        setcookie(session_name(), session_id(), time() + $maxlifetime);
+        /** Make sure sessions timeout appropriatly if user is no longer active * */
+        // check LAST_ACTIVITY against current time to see if last request was more then $maxlifetime seconds ago.
+        if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $maxlifetime)) {
+            // last request occured beyond the $maxlifetime...
+            session_unset();     // unset all $_SESSION variables
+            session_destroy();   // destroy all session data in storage
+        }
+        // update last activity time stamp
+        $_SESSION['LAST_ACTIVITY'] = time();
+        /** Regenerate session id on every request for security */
         $status = session_regenerate_id();
+        // set referer token which is used to insure requests are from our site
+        $_SESSION['referer_token'] = $this->sdmKind($this->sdmCoreGetRootDirectoryUrl());
+        // store decoded refer_token in $_SESSION, if it is not === to the site root url then this request is not from our site
+        $_SESSION['site_root_url'] = ($this->sdmNice($_SESSION['referer_token']) === $this->sdmCoreGetRootDirectoryUrl() ? $this->sdmNice($_SESSION['referer_token']) : 'invalid_referer');
         return $status;
     }
 
     public function sessionDestroy() {
-        $status = session_destroy();
-        return $status;
+        return session_destroy();
     }
 
     /////////////////////////////////
