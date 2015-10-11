@@ -1,17 +1,6 @@
 <?php
 
 /**
- *
- * @param type $text <p>The text to wrap.</p>
- * @param string $color <p>A RGB or HEX color value or valid HTML color name.</p>
- * @return string <p>The text wrapped in span tags whose style
- * tag has the color prperty assigend the value of $color.</p>
- */
-function colorText($text, $color) {
-    return '<span style="color:' . $color . ';">' . $text . '</span>';
-}
-
-/**
  * The SdmGatekeeper is responsible for security and security related components.
  * It implements PHP's built in SessionHandlerInterface in order to provide
  * custom session handling for the SDM CMS.
@@ -22,36 +11,87 @@ function colorText($text, $color) {
  */
 class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
 
+    /** Properties */
+    private $savePath;
+
     /** Custom Session Handler Methods */
-    // NOTE: Theses methods overwrite the default session handlers provided by PHP //
-    public function read($session_id) {
-        error_log(colorText('SdmGatekeeper->read(' . colorText('"', '#ffffff') . colorText(strval($session_id), 'purple') . colorText('"', '#ffffff') . ') called (' . time() . ').', '#00CCFF'));
+
+    /**
+     * <p>Initialize a session.</p>
+     * <p>Note: The two parameters do not need to be set since PHP sets them
+     * automatically.</p>
+     * @param string $savePath <p>The path where to store/retrieve the session. This parameter will
+     *                            not have any effect if the $storageType is not set to FILE</p>
+     * @param string $sessionName <p>The session name used by php, the default is PHPSESSID.</p>
+     * @param string $storageType <p>For now, this parameter is just a placeholder,
+     *                               in the future this parameter will determine where the session
+     *                               data is pulled from, i.e., a session file, or a Database, or
+     *                               some other storage.</p>
+     * @return bool <p>The return value (usually TRUE on success, FALSE on
+     *                 FALSE on failure).
+     *                 Note: This value is returned internally to PHP for
+     *                 processing.</p>
+     */
+    public function open($savePath, $sessionName, $storageType = 'FILE') {
+        $this->savePath = $savePath;
+        switch ($storageType) {
+            case 'FILE':
+                // Make sure our save path exists, if not create it.
+                if (!is_dir($this->savePath)) {
+                    mkdir($this->savePath, 0777); // @TODO: LOOK INTO WHAT PERMISSION SARE MOST SECURE FOR THIS DIR
+                }
+                break;
+            default:
+                error_log('PHP Warning: SdmGateKeeper - Invalid storage type requested for session with id ending in ' . substr(session_id(), -7) . '.');
+                break;
+        }
         return;
     }
 
-    public function write($session_id, $session_data) {
-        error_log(colorText('SdmGatekeeper->write(' . colorText('"', '#ffffff') . colorText(strval($session_id), 'purple') . colorText('"', '#ffffff') . ', ' . colorText('"', '#ffffff') . colorText(strval($session_data), 'purple') . colorText('"', '#ffffff') . ') called (' . time() . ').', '#00CCFF')); //
-        return;
+    public function read($sessionId) {
+        return (string) @file_get_contents($this->savePath . '/' . $sessionId);
     }
 
-    public function open($save_path, $name) {
-        error_log(colorText('SdmGatekeeper->open(' . colorText('"', '#ffffff') . colorText(strval($save_path), 'purple') . colorText('"', '#ffffff') . ', ' . colorText('"', '#ffffff') . colorText(strval($name), 'purple') . colorText('"', '#ffffff') . ') called (' . time() . ').', '#00CCFF'));
-        return;
+    public function write($sessionId, $sessionData) {
+        // write our session data
+        $status = (file_put_contents($this->savePath . '/' . $sessionId, $sessionData, LOCK_EX) === false ? false : true);
+        return $status;
     }
 
+    /**
+     * <p>Close a session.</p>
+     * @return bool <p>The return value (usually TRUE on success, FALSE on
+     *                 FALSE on failure).
+     *                 Note: This value is returned internally to PHP for
+     *                 processing.</p>
+     */
     public function close() {
-        error_log(colorText('SdmGatekeeper->close() called (' . time() . ').', '#00CCFF'));
+        /**
+         * Closing the session occurs at the end of the session life cycle,
+         * just after the session data has been written. No parameters are
+         * passed to this callback so if you need to process something here
+         * specific to the session, you can call session_id() to obtain the ID.
+         * i.e., if you need to do something here you can reference the session
+         * with session_id()
+         */
         return;
     }
 
-    public function destroy($session_id) {
-        error_log(colorText('SdmGatekeeper->destroy(' . colorText('"', '#ffffff') . colorText(strval($session_id), 'purple') . colorText('"', '#ffffff') . ') called (' . time() . ').', '#00CCFF'));
-        return;
+    public function destroy($sessionId) {
+        $file = $this->savePath . '/' . $sessionId;
+        if (file_exists($file)) {
+            unlink($file);
+        }
+        return true;
     }
 
     public function gc($maxlifetime) {
-        error_log(colorText('SdmGatekeeper->gc(' . colorText('"', '#ffffff') . colorText(strval($maxlifetime, 'purple')) . colorText('"', '#ffffff') . ') called (' . time() . ').', '#00CCFF'));
-        return;
+        foreach (glob("$this->savePath/*") as $file) {
+            if (filemtime($file) + $maxlifetime < time() && file_exists($file)) {
+                unlink($file);
+            }
+        }
+        return true;
     }
 
     /** Session Info Methods */
