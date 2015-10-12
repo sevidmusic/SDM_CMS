@@ -11,6 +11,11 @@ $sdmcore = new SdmCore();
 /**
  * Run this file to configure a new site.
  */
+/** Delete any old session data */
+$targets = scandir(session_save_path());
+foreach ($targets as $sessfile) {
+    unlink(session_save_path() . '/' . $sessfile);
+}
 /** Setup default menus for new site */
 /** Main Menu */
 $mainMenuItem1 = new SdmMenuItem();
@@ -36,7 +41,7 @@ $mainMenuItem2->menuItemCssId = 'defaultMenuitem_manage_content';
 $mainMenuItem2->menuItemDisplayName = 'Manage Content';
 $mainMenuItem2->menuItemEnabled = '1';
 $mainMenuItem2->menuItemId = rand(100, 99999) . chr(rand(65, 90)) . rand(100, 99999) . chr(rand(65, 90)) . chr(rand(65, 90)) . rand(100, 99999);
-$mainMenuItem2->menuItemKeyholders = array('all');/** @todo change to admin once gatekeeper is developed */
+$mainMenuItem2->menuItemKeyholders = array('root');/** @todo change to admin once gatekeeper is developed */
 $mainMenuItem2->menuItemMachineName = 'manage_content';
 $mainMenuItem2->menuItemPosition = 2;
 $mainMenuItem2->menuItemWrappingTagType = 'li';
@@ -50,7 +55,7 @@ $mainMenuItem3->menuItemCssId = 'defaultMenuItem_edit_menus';
 $mainMenuItem3->menuItemDisplayName = 'Edit Menus';
 $mainMenuItem3->menuItemEnabled = '1';
 $mainMenuItem3->menuItemId = rand(100, 99999) . chr(rand(65, 90)) . rand(100, 99999) . chr(rand(65, 90)) . chr(rand(65, 90)) . rand(100, 99999);
-$mainMenuItem3->menuItemKeyholders = array('all');/** @todo change to admin once gatekeeper is developed */
+$mainMenuItem3->menuItemKeyholders = array('root');/** @todo change to admin once gatekeeper is developed */
 $mainMenuItem3->menuItemMachineName = 'edit_menus';
 $mainMenuItem3->menuItemPosition = 3;
 $mainMenuItem3->menuItemWrappingTagType = 'li';
@@ -64,7 +69,7 @@ $mainMenuItem4->menuItemCssId = 'defaultMenuItem_review_site_errors';
 $mainMenuItem4->menuItemDisplayName = 'Review Site Errors';
 $mainMenuItem4->menuItemEnabled = '1';
 $mainMenuItem4->menuItemId = rand(100, 99999) . chr(rand(65, 90)) . rand(100, 99999) . chr(rand(65, 90)) . chr(rand(65, 90)) . rand(100, 99999);
-$mainMenuItem4->menuItemKeyholders = array('all');/** @todo change to admin once gatekeeper is developed */
+$mainMenuItem4->menuItemKeyholders = array('root');/** @todo change to admin once gatekeeper is developed */
 $mainMenuItem4->menuItemMachineName = 'review_site_errors';
 $mainMenuItem4->menuItemPosition = 4;
 $mainMenuItem4->menuItemWrappingTagType = 'li';
@@ -78,12 +83,26 @@ $mainMenuItem5->menuItemCssId = 'defaultMenuItem_review_core';
 $mainMenuItem5->menuItemDisplayName = 'Review Core';
 $mainMenuItem5->menuItemEnabled = '1';
 $mainMenuItem5->menuItemId = rand(100, 99999) . chr(rand(65, 90)) . rand(100, 99999) . chr(rand(65, 90)) . chr(rand(65, 90)) . rand(100, 99999);
-$mainMenuItem5->menuItemKeyholders = array('all');/** @todo change to admin once gatekeeper is developed */
+$mainMenuItem5->menuItemKeyholders = array('root');/** @todo change to admin once gatekeeper is developed */
 $mainMenuItem5->menuItemMachineName = 'review_core';
 $mainMenuItem5->menuItemPosition = 5;
 $mainMenuItem5->menuItemWrappingTagType = 'li';
 
-$mainMenuItems = array($mainMenuItem1->menuItemId => $mainMenuItem1, $mainMenuItem2->menuItemId => $mainMenuItem2, $mainMenuItem3->menuItemId => $mainMenuItem3, $mainMenuItem4->menuItemId => $mainMenuItem4, $mainMenuItem5->menuItemId => $mainMenuItem5);
+$mainMenuItem6 = new SdmMenuItem();
+$mainMenuItem6->arguments = array('defaultMenuItem=true', 'linkedBy=main_menu');
+$mainMenuItem6->destination = 'SdmAuth';
+$mainMenuItem6->destinationType = 'internal';
+$mainMenuItem6->menuItemCssClasses = array();
+$mainMenuItem6->menuItemCssId = 'defaultMenuItem_login';
+$mainMenuItem6->menuItemDisplayName = 'Login';
+$mainMenuItem6->menuItemEnabled = '1';
+$mainMenuItem6->menuItemId = rand(100, 99999) . chr(rand(65, 90)) . rand(100, 99999) . chr(rand(65, 90)) . chr(rand(65, 90)) . rand(100, 99999);
+$mainMenuItem6->menuItemKeyholders = array('basic_user');/** @todo change to admin once gatekeeper is developed */
+$mainMenuItem6->menuItemMachineName = 'login';
+$mainMenuItem6->menuItemPosition = 50;
+$mainMenuItem6->menuItemWrappingTagType = 'li';
+
+$mainMenuItems = array($mainMenuItem1->menuItemId => $mainMenuItem1, $mainMenuItem2->menuItemId => $mainMenuItem2, $mainMenuItem3->menuItemId => $mainMenuItem3, $mainMenuItem4->menuItemId => $mainMenuItem4, $mainMenuItem5->menuItemId => $mainMenuItem5, $mainMenuItem6->menuItemId => $mainMenuItem6);
 
 $mainMenu = new SdmMenu();
 $mainMenu->displaypages = array('all');
@@ -175,7 +194,7 @@ $config = array(/** This array defines the default configuration for a SDM CMS s
     ), // end content array
     'settings' => array(
         'theme' => 'sdm',
-        'enabledapps' => array('contentManager' => 'contentManager', 'SdmErrorLog' => 'SdmErrorLog', 'navigationManager' => 'navigationManager', 'SdmCoreOverview' => 'SdmCoreOverview'),
+        'enabledapps' => array('contentManager' => 'contentManager', 'SdmErrorLog' => 'SdmErrorLog', 'navigationManager' => 'navigationManager', 'SdmCoreOverview' => 'SdmCoreOverview', 'SdmAuth' => 'SdmAuth'),
     ), // end 'settings' array
     'menus' => $menus,
 ); // end $config array
