@@ -102,7 +102,20 @@ $mainMenuItem6->menuItemMachineName = 'login';
 $mainMenuItem6->menuItemPosition = 50;
 $mainMenuItem6->menuItemWrappingTagType = 'li';
 
-$mainMenuItems = array($mainMenuItem1->menuItemId => $mainMenuItem1, $mainMenuItem2->menuItemId => $mainMenuItem2, $mainMenuItem3->menuItemId => $mainMenuItem3, $mainMenuItem4->menuItemId => $mainMenuItem4, $mainMenuItem5->menuItemId => $mainMenuItem5, $mainMenuItem6->menuItemId => $mainMenuItem6);
+$mainMenuItem7 = new SdmMenuItem();
+$mainMenuItem7->arguments = array('defaultMenuItem=true', 'linkedBy=main_menu', 'logout=logout');
+$mainMenuItem7->destination = 'SdmAuthLogin';
+$mainMenuItem7->destinationType = 'internal';
+$mainMenuItem7->menuItemCssClasses = array();
+$mainMenuItem7->menuItemCssId = 'defaultMenuItem_logout';
+$mainMenuItem7->menuItemDisplayName = 'Logout';
+$mainMenuItem7->menuItemEnabled = '1';
+$mainMenuItem7->menuItemId = rand(100, 99999) . chr(rand(65, 90)) . rand(100, 99999) . chr(rand(65, 90)) . chr(rand(65, 90)) . rand(100, 99999);
+$mainMenuItem7->menuItemKeyholders = array('root');/** @todo change to admin once gatekeeper is developed */
+$mainMenuItem7->menuItemMachineName = 'login';
+$mainMenuItem7->menuItemPosition = 50;
+$mainMenuItem7->menuItemWrappingTagType = 'li';
+$mainMenuItems = array($mainMenuItem1->menuItemId => $mainMenuItem1, $mainMenuItem2->menuItemId => $mainMenuItem2, $mainMenuItem3->menuItemId => $mainMenuItem3, $mainMenuItem4->menuItemId => $mainMenuItem4, $mainMenuItem5->menuItemId => $mainMenuItem5, $mainMenuItem6->menuItemId => $mainMenuItem6, $mainMenuItem7->menuItemId => $mainMenuItem7);
 
 $mainMenu = new SdmMenu();
 $mainMenu->displaypages = array('all');

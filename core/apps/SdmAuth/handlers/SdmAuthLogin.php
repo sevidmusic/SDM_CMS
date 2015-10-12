@@ -9,7 +9,7 @@ switch (isset($_GET['logout'])) {
     case 'logout':
         session_unset();
         session_destroy();
-        $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<p>Your have been logged out successfully.</p><p>Terminated session with id : ' . $_GET['logout'] . '</p>', $options);
+        $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<p>Your have been logged out successfully.</p>', $options);
         break;
     default:
         // check if login credentials were valid | if they were login user, if not then display login form and a message indicating the login credentials were not valid.
