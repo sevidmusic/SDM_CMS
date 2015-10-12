@@ -224,5 +224,13 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
         return $kind;
     }
 
+    /**
+     * Determines if user is logged in.
+     * @return bool <p>TRUE if user is logged in, FALSE if not.</p>
+     */
+    final public static function sdmGatekeeperAuthenticate() {
+        return ($_SESSION['sdmauth'] === 'auth' ? TRUE : FALSE);
+    }
+
 }
 
