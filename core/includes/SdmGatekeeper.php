@@ -144,36 +144,38 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
         // set our session name | it is important for this to be unique to our site for security reasons
         session_name('sdmsession');
         session_start();
-        /**
+        // set referer token which is used to insure requests are from our site
+        $_SESSION['referer_token'] = $this->sdmKind($this->sdmCoreGetRootDirectoryUrl());
+        // store decoded refer_token in $_SESSION, if it is not === to the site root url then this request is not from our site
+        $_SESSION['site_root_url'] = ($this->sdmNice($_SESSION['referer_token']) === $this->sdmCoreGetRootDirectoryUrl() ? $this->sdmNice($_SESSION['referer_token']) : 'invalid_referer');
+        /** Make sure sessions timeout appropriatly if user is no longer active * */
+        $maxlifetime = ini_get('session.gc_maxlifetime');
+        // check LAST_ACTIVITY against current time to see if last request was more then $maxlifetime seconds ago.
+        if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $maxlifetime)) {
+            // last request is older than $maxlifetime
+            session_unset();     // unset $_SESSION variable for the run-time
+            session_destroy();   // destroy session data in storage
+        }
+        // update last activity time stamp
+        $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
+        return; //$status;
+        /*
          * During development it became clear through some research
          * that PHP's handling of session timeout is not reliable.
          * The code below addresses this.
          * @see http://stackoverflow.com/questions/520237/how-do-i-expire-a-php-session-after-30-minutes
          * @see http://php.net/manual/en/function.session-set-cookie-params.php
+         *
+          // set session cookie params manually
+          $maxlifetime = ini_get('session.gc_maxlifetime');
+          $secure = TRUE;
+          $httponly = TRUE;
+          session_set_cookie_params($maxlifetime, session_save_path(), $this->SdmCoreGetRootDirectoryUrl(), $secure, $httponly);
+          // re-set the session cookie to insure the correct parameters are used
+          setcookie(session_name(), session_id(), time() + $maxlifetime);
+          /** Regenerate session id on every request for security *
+          $status = session_regenerate_id();
          */
-        // set session cookie params manually
-        $maxlifetime = ini_get('session.gc_maxlifetime');
-        $secure = TRUE;
-        $httponly = TRUE;
-        session_set_cookie_params($maxlifetime, session_save_path(), $this->SdmCoreGetRootDirectoryUrl(), $secure, $httponly);
-        // re-set the session cookie to insure the correct parameters are used
-        setcookie(session_name(), session_id(), time() + $maxlifetime);
-        /** Make sure sessions timeout appropriatly if user is no longer active * */
-        // check LAST_ACTIVITY against current time to see if last request was more then $maxlifetime seconds ago.
-        if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $maxlifetime)) {
-            // last request occured beyond the $maxlifetime...
-            session_unset();     // unset all $_SESSION variables
-            session_destroy();   // destroy all session data in storage
-        }
-        // update last activity time stamp
-        $_SESSION['LAST_ACTIVITY'] = time();
-        /** Regenerate session id on every request for security */
-        $status = session_regenerate_id();
-        // set referer token which is used to insure requests are from our site
-        $_SESSION['referer_token'] = $this->sdmKind($this->sdmCoreGetRootDirectoryUrl());
-        // store decoded refer_token in $_SESSION, if it is not === to the site root url then this request is not from our site
-        $_SESSION['site_root_url'] = ($this->sdmNice($_SESSION['referer_token']) === $this->sdmCoreGetRootDirectoryUrl() ? $this->sdmNice($_SESSION['referer_token']) : 'invalid_referer');
-        return $status;
     }
 
     public function sessionDestroy() {

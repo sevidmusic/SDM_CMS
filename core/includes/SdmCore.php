@@ -256,7 +256,11 @@ class SdmCore {
         // MISC //
         ini_set('auto_detect_line_endings', true); // enables PHP to interoperate with Macintosh systems @see "http://www.php.net/manual/en/filesystem.configuration.php#ini.auto-detect-line-endings" for more information | the slight performance penalty is worth insuring that PHP's file functions will be able to determine the end of lines on all OS's
         // SESSIONS //
-        ini_set('session.gc_maxlifetime', 5); // set in seconds | determines how a long a session file can exist before it becomes eligible for Garbage Collection
+        ini_set('session.use_trans_sid', 0);
+        ini_set('session.use_only_cookies', 1);
+        ini_set('session.hash_function', 'sha512');
+        ini_set('session.hash_bits_per_character', 6);
+        ini_set('session.gc_maxlifetime', 180); // set in seconds | determines how a long a session file can exist before it becomes eligible for Garbage Collection
         ini_set('session.gc_probability', 100); // chance that GC will occur
         ini_set('session.gc_divisor', 100); // probability divisor, if gc_propbability is 50 and gc_divisor is 100 then there is a 50% chance of GC (i.e. 50/100)
         // set include path
