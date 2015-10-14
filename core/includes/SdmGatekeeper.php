@@ -134,7 +134,12 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
      * Start a session. This method should be used in place of
      * PHP's session_start().
      * This method sets up our session configuration, startrs our session,
-     * and provides security checks abd applies timeout limits on our sessions.
+     * and provides security checks that will end a session if they discover
+     * something insecure. Also applies timeout limits on our sessions.
+     * @TODO: We should apply sesson id regeneration for security, however
+     *        attempts to do so have resulted in session data being lost, so
+     *        until session id regeneration can be implemented without bugs
+     *        it is not being applied.
      * @return bool <p>TRUE if session was started, false if session
      * could not be started.</p>
      */
@@ -143,13 +148,24 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
         session_set_save_handler($handler, true);
         // set our session name | it is important for this to be unique to our site for security reasons
         session_name('sdmsession');
-        session_start();
+        $maxlifetime = ini_get('session.gc_maxlifetime');
+        $secure = TRUE;
+        $httponly = TRUE;
+        session_set_cookie_params($maxlifetime, '/', $this->SdmCoreGetRootDirectoryUrl(), $secure, $httponly);
+        // start session, and store result in $status var so the sessionStart() method will return true or false depending on the success of session_start()
+        $status = session_start();
+
         // set referer token which is used to insure requests are from our site
         $_SESSION['referer_token'] = $this->sdmKind($this->sdmCoreGetRootDirectoryUrl());
         // store decoded refer_token in $_SESSION, if it is not === to the site root url then this request is not from our site
         $_SESSION['site_root_url'] = ($this->sdmNice($_SESSION['referer_token']) === $this->sdmCoreGetRootDirectoryUrl() ? $this->sdmNice($_SESSION['referer_token']) : 'invalid_referer');
+        /** check if valid request | if $_SESSION['site_root_url'] has the 'invalid_referer' value or $_SESSION['site_root_url'] does NOT equal the our sites root url terminate session because request did not come from our site */
+        if ($_SESSION['site_root_url'] === 'invalid_referer' || $_SESSION['site_root_url'] != $this->sdmCoreGetRootDirectoryUrl()) {
+            // request did not come from our site, delete the
+            session_unset();     // unset $_SESSION variable for the run-time
+            session_destroy();   // destroy session data in storage
+        }
         /** Make sure sessions timeout appropriatly if user is no longer active * */
-        $maxlifetime = ini_get('session.gc_maxlifetime');
         // check LAST_ACTIVITY against current time to see if last request was more then $maxlifetime seconds ago.
         if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $maxlifetime)) {
             // last request is older than $maxlifetime
@@ -158,23 +174,15 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
         }
         // update last activity time stamp
         $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
-        return; //$status;
+        /** Regenerate session id on every request for security
+         * BUG: Regenerating session id seems to result the session data being lost.
+         * BUG: Until this is fixed, we cannot regenerate session id */
+        //$status = session_regenerate_id(TRUE);
+        return $status;
         /*
-         * During development it became clear through some research
-         * that PHP's handling of session timeout is not reliable.
-         * The code below addresses this.
-         * @see http://stackoverflow.com/questions/520237/how-do-i-expire-a-php-session-after-30-minutes
-         * @see http://php.net/manual/en/function.session-set-cookie-params.php
-         *
-          // set session cookie params manually
-          $maxlifetime = ini_get('session.gc_maxlifetime');
-          $secure = TRUE;
-          $httponly = TRUE;
-          session_set_cookie_params($maxlifetime, session_save_path(), $this->SdmCoreGetRootDirectoryUrl(), $secure, $httponly);
+         * NOT SURE IF THIS CODE IS USEFUL, DOING RESEARCH TO SEE IF IT IS NEEDED OR NOT
           // re-set the session cookie to insure the correct parameters are used
           setcookie(session_name(), session_id(), time() + $maxlifetime);
-          /** Regenerate session id on every request for security *
-          $status = session_regenerate_id();
          */
     }
 

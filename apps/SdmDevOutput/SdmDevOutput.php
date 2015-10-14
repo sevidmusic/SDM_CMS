@@ -1,5 +1,6 @@
 <?php
 
+echo '<span style="color:#ffffff;">Session Id: ' . session_id() . '</span>';
 /** Log of what is being tested */
 $tests = array(
     'SdmGateKeeper()' . rand(1000, 9999) => 'Checking to see if sessions are working properly',
@@ -9,7 +10,7 @@ $tests = array(
 /** TESTS */
 $sdmGatekeeper = new SdmGatekeeper();
 $_SESSION['RequestedPage'] = $sdmcore->SdmCoreDetermineRequestedPage();
-$sdmGatekeeper->sessionConfigInfo();
+$sdmGatekeeper->sessionConfigInfo(FALSE, TRUE);
 
 
 /** APP OUTPUT */
