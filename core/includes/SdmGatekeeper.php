@@ -183,7 +183,7 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
         /** Regenerate session id on every request for security
          * BUG: Regenerating session id seems to result the session data being lost.
          * BUG: Until this is fixed, we cannot regenerate session id */
-        //$status = session_regenerate_id(TRUE);
+        $status = session_regenerate_id(TRUE);
         return $status;
         /*
          * NOT SURE IF THIS CODE IS USEFUL, DOING RESEARCH TO SEE IF IT IS NEEDED OR NOT
