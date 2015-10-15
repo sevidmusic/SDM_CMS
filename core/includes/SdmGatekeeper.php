@@ -151,7 +151,21 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
         $maxlifetime = ini_get('session.gc_maxlifetime');
         $secure = TRUE;
         $httponly = TRUE;
-        session_set_cookie_params($maxlifetime, '/', $this->SdmCoreGetRootDirectoryUrl(), $secure, $httponly);
+        /**
+         *  It seems session_set_cookie_params is the culprit in our
+         * session loss, if the params are not set correctly then
+         * our sessions will not work properly.
+         * In our case it setting passing $this->SdmCoreGetRootDirectoryUrl()
+         * to the $domain argument was not working because our local domain is
+         * actually 'http://localhost:8888/' when we are developing locally,
+         * so we need to prefix our $domain with '.' while developing locally
+         * as $this->SdmCoreGetRootDirectoryUrl() is technically a sub-domain
+         * on our localhost.
+         * i.e., session_set_cookie_params($lifetime, $path, $domain = '.' . $this->SdmCoreGetRootDirectoryUrl(), $secure, $httponly) while in development
+         * This should not effect a live site, however if it the problem does
+         * occur on a live site just leave the prefixed '.' until a better solution is found.
+         */
+        session_set_cookie_params($maxlifetime, '/', '.' . $this->SdmCoreGetRootDirectoryUrl(), $secure, $httponly);
         // start session, and store result in $status var so the sessionStart() method will return true or false depending on the success of session_start()
         $status = session_start();
 
