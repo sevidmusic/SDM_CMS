@@ -152,8 +152,8 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
         $maxlifetime = ini_get('session.gc_maxlifetime');
         // path session cookie will be available on
         $path = '/';
-        // domain our session cookie will be available to | @todo make it possible to switch sub domains on and off, i.e., $domain = str_replace(array('http://', 'https://'), '', ($subdomains === TRUE ? '.' : '') . $this->SdmCoreGetRootDirectoryUrl());
-        $domain = ''; //str_replace(array('http://', 'https://'), '', $this->SdmCoreGetRootDirectoryUrl());
+        // domain our session cookie will be available to. | NOTE: Setting this parameter is resulting is session data being lost, until it is discovered how to set the $domain parameter without any problems set to an empty string.
+        $domain = ''; //$this->SdmCoreGetRootDirectoryUrl();
         // If set to TRUE session cookie will only be available over encrypted connections such as SSL/TLS. Setting this to TRUE on a non-encrypted connection will result in session data loss.
         $secure = FALSE;
         // If set to TRUE it forces seesions to only use HTTP with browsers that support this parameter. If supported setting this to TRUE will prevent javascript from interacting with the cookie which is useful in defending against XSS attacks.
@@ -180,16 +180,9 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
         }
         // update last activity time stamp
         $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
-        /** Regenerate session id on every request for security
-         * BUG: Regenerating session id seems to result the session data being lost.
-         * BUG: Until this is fixed, we cannot regenerate session id */
+        /** Regenerate session id on every request for security */
         $regenStatus = session_regenerate_id(TRUE);
         return ($startStatus && $regenStatus === TRUE ? TRUE : FALSE);
-        /*
-         * NOT SURE IF THIS CODE IS USEFUL, DOING RESEARCH TO SEE IF IT IS NEEDED OR NOT
-          // re-set the session cookie to insure the correct parameters are used
-          setcookie(session_name(), session_id(), time() + $maxlifetime);
-         */
     }
 
     public function sessionDestroy() {
