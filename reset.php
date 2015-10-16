@@ -14,7 +14,9 @@ $sdmcore = new SdmCore();
 /** Delete any old session data */
 $targets = scandir(session_save_path());
 foreach ($targets as $sessfile) {
-    unlink(session_save_path() . '/' . $sessfile);
+    if ($sessfile != '.' && $sessfile != '..') {
+        unlink(session_save_path() . '/' . $sessfile);
+    }
 }
 /** Setup default menus for new site */
 /** Main Menu */

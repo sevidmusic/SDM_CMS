@@ -148,19 +148,19 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
         session_set_save_handler($handler, true);
         // set our session name | it is important for this to be unique to our site for security reasons
         session_name('sdmsession');
+        // how long the session cookie will be valid
         $maxlifetime = ini_get('session.gc_maxlifetime');
-        $secure = TRUE;
+        // path session cookie will be available on
+        $path = '/';
+        // domain our session cookie will be available to | @todo make it possible to switch sub domains on and off, i.e., $domain = str_replace(array('http://', 'https://'), '', ($subdomains === TRUE ? '.' : '') . $this->SdmCoreGetRootDirectoryUrl());
+        $domain = ''; //str_replace(array('http://', 'https://'), '', $this->SdmCoreGetRootDirectoryUrl());
+        // If set to TRUE session cookie will only be available over encrypted connections such as SSL/TLS. Setting this to TRUE on a non-encrypted connection will result in session data loss.
+        $secure = FALSE;
+        // If set to TRUE it forces seesions to only use HTTP with browsers that support this parameter. If supported setting this to TRUE will prevent javascript from interacting with the cookie which is useful in defending against XSS attacks.
         $httponly = TRUE;
-        /**
-         * session_set_cookie_params() is still causing session data to
-         * be lost, do more reseach into session_set_cookie_params()
-         * and session_regenerate_id() so the SDM CMS can properly make
-         * use of them. Both are important for security.
-         */
-        //session_set_cookie_params($maxlifetime, '/', '.' . $this->SdmCoreGetRootDirectoryUrl(), $secure, $httponly);
+        session_set_cookie_params($maxlifetime, $path, $domain, $secure, $httponly);
         // start session, and store result in $status var so the sessionStart() method will return true or false depending on the success of session_start()
-        $status = session_start();
-
+        $startStatus = session_start();
         // set referer token which is used to insure requests are from our site
         $_SESSION['referer_token'] = $this->sdmKind($this->sdmCoreGetRootDirectoryUrl());
         // store decoded refer_token in $_SESSION, if it is not === to the site root url then this request is not from our site
@@ -183,8 +183,8 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
         /** Regenerate session id on every request for security
          * BUG: Regenerating session id seems to result the session data being lost.
          * BUG: Until this is fixed, we cannot regenerate session id */
-        $status = session_regenerate_id(TRUE);
-        return $status;
+        $regenStatus = session_regenerate_id(TRUE);
+        return ($startStatus && $regenStatus === TRUE ? TRUE : FALSE);
         /*
          * NOT SURE IF THIS CODE IS USEFUL, DOING RESEARCH TO SEE IF IT IS NEEDED OR NOT
           // re-set the session cookie to insure the correct parameters are used
