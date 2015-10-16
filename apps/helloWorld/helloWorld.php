@@ -9,6 +9,7 @@ $options = array(
     'incmethod' => 'overwrite',
     'incpages' => array('helloWorld'),
     'ignorepages' => array(),
+    'roles' => array('root'),
 ); // options array determines how an apps output is incorporated into the page
 $devmode = FALSE; // if set to TRUE then dev data about the app output will be displayed on the page as well
 // we use the Sdm Assembler's sdmAssemblerIncorporateAppOutput() method to display our apps output on the page
