@@ -239,5 +239,48 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
         return (isset($_SESSION['sdmauth']) && $_SESSION['sdmauth'] === 'auth' ? TRUE : FALSE);
     }
 
+    /**
+     * <p>Determines user role, if user is not assigned a role
+     * then the 'anonymous' role is returned.</p>
+     * @return string <p>The user role</p>
+     */
+    final public static function SdmGatekeeperDetermineUserRole() {
+        return (isset($_SESSION['userRole']) ? $_SESSION['userRole'] : 'anonymous');
+    }
+
+    /**
+     * <p>Reads gatekeeper parameters from an apps .gk file if one is provided.
+     * If present, the .gk file is used by internally by the SDM CMS to determine
+     * which 'roles' are allowed to use an app. Other parameters may be set
+     * but they are not required.</p>
+     * <p><i><b>Note:</b><br/>
+     * If an app does provides a .gk file then the 'roles'
+     * parameter must be present or else the .gk file will be ignored.<br/>
+     * Developers are free to add other params to the .gk file, and the use
+     * the sdmGatekeeperReadAppGkParams() method from within their app to
+     * read those parameters and use them in their app.</i></p>
+     * @param string $app <p>The name of the app to whose .gk file we want
+     * to get parameters from.</p>
+     * @return array <p>Associative array of parameters from the app's .gk
+     * file or FALSE if no .gk file is exists.
+     */
+    final public static function sdmGatekeeperReadAppGkParams($app) {
+        $SdmCore = new SdmCore();
+        if (file_exists($SdmCore->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.gk')) {
+            $gkfile = @file_get_contents($SdmCore->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.gk');
+            // @TODO, we need a better way to get gk params, as is multiple gk params are not possible.
+            $values = explode(',', str_replace(array('roles', '=', ';'), '', $gkfile));
+            $params = array('roles' => $values);
+        } else if (file_exists($SdmCore->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.gk')) {
+            $gkfile = @file_get_contents($SdmCore->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.gk');
+            // @TODO, we need a better way to get gk params, as is multiple gk params are not possible.
+            $values = explode(',', str_replace(array('roles', '=', ';'), '', $gkfile));
+            $params = array('roles' => $values);
+        } else {
+            $params = FALSE;
+        }
+        return $params; //$params;
+    }
+
 }
 
