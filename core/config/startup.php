@@ -11,7 +11,12 @@ function __autoload($classes) {
 
 // create/configure core
 $sdmcore = new SdmCore;
+// configure core
 $sdmcore->sdmCoreConfigureCore();
+// startup the gatekeeper
+$sdmGatekeeper = new SdmGatekeeper();
+// start core session
+$sdmGatekeeper->sessionStart();
 // initialize assembler
 $sdmassembler = SdmAssembler::sdmAssemblerInitializeAssembler();
 // load and assemble content | this var is used excluisively by the current themes page.php

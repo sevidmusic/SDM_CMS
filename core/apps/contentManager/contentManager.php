@@ -14,6 +14,7 @@ $options = array(
         'contentManagerAdministerAppsForm',
         'contentManagerAdministerAppsFormSubmission',
     ),
+    'roles' => array('root'),
 );
 //contentManagerSelectThemeForm.php
 $sdmcore = $sdmcore; // see SdmAssembler.php and the app loading methods

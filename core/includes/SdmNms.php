@@ -311,7 +311,7 @@ class SdmNms extends SdmCore {
      * @return string An html formated string representation of the menu
      */
     public function sdmNmsGetMenuHtml($menuId) {
-        $currentUserRole = 'basic_user'; // this is a dev role, the users role should be determined by the Sdm Gatekeeper once it is built
+        $currentUserRole = (SdmGatekeeper::sdmGatekeeperAuthenticate() === TRUE ? 'root' : 'basic_user'); // this is a dev role, the users role should be determined by the Sdm Gatekeeper once it is built
         $menu = $this->sdmNmsGetMenu($menuId);
         $sdmcore = new SdmCore();
 // if $currentUserRole exists in menuKeyholders array show menu || if the special role "all" exists in the menuKeyholders array we assume all users have accsess and show menu || we no longer  assume that all users have accsess to this menu if menuKeyholders is null
@@ -366,7 +366,7 @@ class SdmNms extends SdmCore {
      */
     public function sdmNmsBuildMenuItemsHtml($menuItems, $menuId = 'unknown') {
         $html = '';
-        $currentUserRole = 'basic_user'; // this is a dev role, the users role should be determined by the Sdm Gatekeeper once it is built
+        $currentUserRole = (SdmGatekeeper::sdmGatekeeperAuthenticate() === TRUE ? 'root' : 'basic_user'); // this is a dev role, the users role should be determined by the Sdm Gatekeeper once it is built
         $orderedMenuItems = array();
         $usedPositions = array();
         // order menu items by menu item position | first build an array of ordered menu items where each menu item is indexed by it's menuItemPosition

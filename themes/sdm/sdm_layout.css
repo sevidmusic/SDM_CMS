@@ -33,7 +33,7 @@
     min-height: 720px; /* use min-height so element will grow vertically with content */
     margin: 42px auto;
     padding: 20px;
-    width: 960px;
+    width: 980px;
     overflow: auto;
 }
 

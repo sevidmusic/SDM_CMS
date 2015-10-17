@@ -320,7 +320,9 @@ class SdmForm {
     }
 
     /**
-     *
+     * <p>Takes an associative array and prepends any values with 'default_'
+     * so the SdmForm will know to treat these items as defaults for form elements
+     * such as radio buttoms, or select lists.</p>
      * @param array $values <p>The array of values to check, any value that matches the
      *                         $testvalue will be prepended with the string 'default_'<br>
      * <i>Note: Type Enforced for this argument! must be an array.</i></p>

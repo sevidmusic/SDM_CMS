@@ -248,11 +248,21 @@ class SdmCore {
     final public function sdmCoreConfigureCore() {
         // turn on error reporting | @todo make this reflect site settings so admin can turn on or off based on wheater in dev or not...
         error_reporting(E_ALL | E_STRICT | E_NOTICE);
-        // modify our ini settings to fit the needs of our CMS
+        /** modify our ini settings to fit the needs of our CMS */
+        // ERRORS //
         ini_set('log_errors', '1'); // will force php to log all errors to the Server's log files
         ini_set('error_log', $this->sdmCoreGetCoreDirectoryPath() . '/logs/sdm_core_errors.log');
         ini_set('display_errors', 0); // this line should be commented out once out of dev
-        ini_set("auto_detect_line_endings", true); // enables PHP to interoperate with Macintosh systems @see "http://www.php.net/manual/en/filesystem.configuration.php#ini.auto-detect-line-endings" for more information | the slight performance penalty is worth insuring that PHP's file functions will be able to determine the end of lines on all OS's
+        // MISC //
+        ini_set('auto_detect_line_endings', true); // enables PHP to interoperate with Macintosh systems @see "http://www.php.net/manual/en/filesystem.configuration.php#ini.auto-detect-line-endings" for more information | the slight performance penalty is worth insuring that PHP's file functions will be able to determine the end of lines on all OS's
+        // SESSIONS //
+        ini_set('session.use_trans_sid', 0);
+        ini_set('session.use_only_cookies', 1);
+        ini_set('session.hash_function', 'sha512');
+        ini_set('session.hash_bits_per_character', 6);
+        ini_set('session.gc_maxlifetime', 180); // set in seconds | determines how a long a session file can exist before it becomes eligible for Garbage Collection
+        ini_set('session.gc_probability', 100); // chance that GC will occur
+        ini_set('session.gc_divisor', 100); // probability divisor, if gc_propbability is 50 and gc_divisor is 100 then there is a 50% chance of GC (i.e. 50/100)
         // set include path
         set_include_path($this->sdmCoreGetIncludesDirectoryPath());
         // include timezone file
@@ -260,48 +270,6 @@ class SdmCore {
         // @depreceated : we only use objects now... | include dev functions | remove once out of dev
         //require($this->sdmCoreGetIncludesDirectoryPath() . '/dev_functions.php');
         return TRUE;
-    }
-
-/////////////////////////////////
-///// Security : Encryption /////
-/////////////////////////////////
-
-    /**
-     * <p>Encrypts a string.</p>
-     * @param string $data <p>The data to be kind</p>
-     * @return string <p>The encrypted string</p>
-     */
-    final public function sdmKind($data) {
-        $cipher = '>#|@zl)VR-1ZYP{8g~iJAxy^(\\?INr!*UBuMqt7nvk}&`wE6b:H03KXOm/f.c"[S]a<LGe\'p;o9,C2h%F=dDs$5jW_TQ+4';
-        $limit = strlen($cipher);
-        $offset = rand(0, $limit - 1);
-        $kind = '';
-        for ($sweet = 0; $sweet < strlen($data); $sweet++) {
-            $empathy = (strpos($cipher, $data[$sweet]) === FALSE ? 'notfound' : strpos($cipher, $data[$sweet])); // current position in unencrypted string, to be encrypted it must be less than the cipher length because the encrypted chars will only be chars that exist in cipher, therefore any chars with positions greater than the cipher length will not be encrypted
-            $love = ($empathy + $offset >= $limit ? ($empathy - ($limit - $offset)) : ($empathy + $offset));
-            $kind .= ( $empathy === 'notfound' ? $data[$sweet] : $cipher[$love]);
-        }
-        return $kind . 'sdm' . $offset;
-    }
-
-    /**
-     * <p>Decrypts a string encrypted with <b>sdmKind()</b></p>
-     * @param string  $data <p>The string to be decrypted.</p>
-     * @return string <p>The decrypted string.</p>
-     */
-    final public function sdmNice($data) {
-        $cipher = '>#|@zl)VR-1ZYP{8g~iJAxy^(\\?INr!*UBuMqt7nvk}&`wE6b:H03KXOm/f.c"[S]a<LGe\'p;o9,C2h%F=dDs$5jW_TQ+4';
-        $limit = strlen($cipher);
-        $key = explode('sdm', $data);
-        $offset = end($key);
-        $new = strstr($data, 'sdm', TRUE);
-        $kind = '';
-        for ($sweet = 0; $sweet < strlen($new); $sweet++) {
-            $empathy = (strpos($cipher, $new[$sweet]) === FALSE ? 'notfound' : strpos($cipher, $data[$sweet])); // current position in unencrypted string, to be encrypted it must be less than the cipher length because the encrypted chars will only be chars that exist in cipher, therefore any chars with positions greater than the cipher length will not be encrypted
-            $love = ($empathy + ($limit - $offset) >= $limit ? ($empathy - $offset) : ($empathy + ($limit - $offset)));
-            $kind .= ( $empathy === 'notfound' ? $new[$sweet] : $cipher[$love]);
-        }
-        return $kind;
     }
 
 /////////////////////////////////
@@ -482,6 +450,27 @@ class SdmCore {
         // remove any dulicate underscores
         $machineValue = preg_replace('/[_]+/', '_', $value);
         return strtolower($machineValue);
+    }
+
+    /**
+     * <p>Returns a substring between two strings from a string.</p>
+     * <p>i.e.,</p>
+     * <p>sdmCoreStrSlice('Some string to slice.', 'to','.'); // returns 'slice'</p>
+     * <p>Note: <i>Niether the $start or $end strings will be included in the slice.</i></p>
+     * @param string $string <p>String to get slice from.</p>
+     * @param type $start <p>Starting string, i.e., the chars to start the slice after</p>
+     * @param type $end <p>The ending string, i.e., the chars to end the slice at</p>
+     * @return string <p>The slice of the string between $start and $end.</p>
+     */
+    final public static function sdmCoreStrSlice($string, $start, $end) {
+        $string = " " . $string;
+        $ini = strpos($string, $start);
+        if ($ini == 0) {
+            return "";
+        }
+        $ini += strlen($start);
+        $len = strpos($string, $end, $ini) - $ini;
+        return substr($string, $ini, $len);
     }
 
 }
