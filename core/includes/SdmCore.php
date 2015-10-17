@@ -452,4 +452,25 @@ class SdmCore {
         return strtolower($machineValue);
     }
 
+    /**
+     * <p>Returns a substring between two strings from a string.</p>
+     * <p>i.e.,</p>
+     * <p>sdmCoreStrSlice('Some string to slice.', 'to','.'); // returns 'slice'</p>
+     * <p>Note: <i>Niether the $start or $end strings will be included in the slice.</i></p>
+     * @param string $string <p>String to get slice from.</p>
+     * @param type $start <p>Starting string, i.e., the chars to start the slice after</p>
+     * @param type $end <p>The ending string, i.e., the chars to end the slice at</p>
+     * @return string <p>The slice of the string between $start and $end.</p>
+     */
+    final public static function sdmCoreStrSlice($string, $start, $end) {
+        $string = " " . $string;
+        $ini = strpos($string, $start);
+        if ($ini == 0) {
+            return "";
+        }
+        $ini += strlen($start);
+        $len = strpos($string, $end, $ini) - $ini;
+        return substr($string, $ini, $len);
+    }
+
 }

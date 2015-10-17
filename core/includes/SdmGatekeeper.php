@@ -267,19 +267,36 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
     final public static function sdmGatekeeperReadAppGkParams($app) {
         $SdmCore = new SdmCore();
         if (file_exists($SdmCore->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.gk')) {
-            $gkfile = @file_get_contents($SdmCore->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.gk');
-            // @TODO, we need a better way to get gk params, as is multiple gk params are not possible.
-            $values = explode(',', str_replace(array('roles', '=', ';'), '', $gkfile));
-            $params = array('roles' => $values);
+            $gkfile = file($SdmCore->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.gk');
+            $params = SdmGatekeeper::sdmGatekeeperDecodeParams($gkfile);
         } else if (file_exists($SdmCore->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.gk')) {
-            $gkfile = @file_get_contents($SdmCore->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.gk');
-            // @TODO, we need a better way to get gk params, as is multiple gk params are not possible.
-            $values = explode(',', str_replace(array('roles', '=', ';'), '', $gkfile));
-            $params = array('roles' => $values);
+            $gkfile = file($SdmCore->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.gk');
+            $params = SdmGatekeeper::sdmGatekeeperDecodeParams($gkfile);
         } else {
             $params = FALSE;
         }
         return $params; //$params;
+    }
+
+    /**
+     * Decodes parameters stored in .gk file and returns them in an associative array.
+     * @param array $gkfile <p>The array returned from loading the .gk file via file().<br/>
+     * i.e,<br/>
+     * <i>before calling this method store .gk file by loading via file() adn storeing the resulting array in a var</i><br/>
+     * <b>$var = file('PATH/TO/.gk/FILE');</b><br/>
+     * <i>then pass that var to this method.</i><br/>
+     * <b>SdmGatekeeper::sdmGatekeeperDecodeParams($var);</b>
+     * </p>
+     * @return array <p>Associative array of .gk params decoded from an array returned by loading a .gk file via file()</p>
+     */
+    final private static function sdmGatekeeperDecodeParams($gkfile) {
+
+        foreach ($gkfile as $param => $value) {
+            $paramName = SdmCore::sdmCoreStrSlice('->' . $value, '->', '=');
+            $paramValuesString = SdmCore::sdmCoreStrSlice($value, '=', ';');
+            $paramValuesArray[$paramName] = explode(',', $paramValuesString);
+        }
+        return $paramValuesArray;
     }
 
 }
