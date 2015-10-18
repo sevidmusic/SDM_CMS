@@ -49,12 +49,14 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
     }
 
     public function read($sessionId) {
-        return (string) @file_get_contents($this->savePath . '/' . $sessionId);
+        // read and decrypt our session data
+        $sessionData = $this->sdmNice(@file_get_contents($this->savePath . '/' . $sessionId));
+        return (string) $sessionData;
     }
 
     public function write($sessionId, $sessionData) {
-        // write our session data
-        $status = (file_put_contents($this->savePath . '/' . $sessionId, $sessionData, LOCK_EX) === false ? false : true);
+        // encrypt and write our session data
+        $status = (file_put_contents($this->savePath . '/' . $sessionId, $this->sdmKind($sessionData), LOCK_EX) === false ? false : true);
         return $status;
     }
 
