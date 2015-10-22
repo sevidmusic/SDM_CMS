@@ -24,24 +24,12 @@ class SdmAssembler extends SdmCore {
         return self::$Initialized;
     }
 
-    /**
-     * <p>Returns the HTML header for the page as a string. The SdmAssembler will give apps
-     * a chance to modify the header prior to returning it.</p>
-     * @return string <p>The HTML header for the page.</p>
-     */
-    public function sdmAssemblerAssembleHtmlHeader() {
-        return '<!DOCTYPE html>
-            <html>
-                <head>
-                    <title>' . (isset($_GET['page']) ? ucfirst($_GET['page']) : ucfirst('homepage')) . '</title>
-                    <base href="' . $this->sdmCoreGetRootDirectoryUrl() . '" target="_self">
-                    <meta name="description" content="Website powered by the SDM CMS">
-                    <meta name="author" content="Sevi Donnelly Foreman">
-                    <meta http-equiv="refresh" content="3000">
-                    <script src="' . $this->sdmCoreGetCoreDirectoryUrl() . '/js/jquery-1.9.0/jquery.min.js"></script>
-                    <script src="' . $this->sdmCoreGetCoreDirectoryUrl() . '/js/jquery-ui-1.11.2/jquery-ui.js"></script>
-                    <link rel="stylesheet" href="' . $this->sdmCoreGetCurrentThemeDirectoryUrl() . '/sdm_layout.css">
-                    <!-- DEV JS TO TEST JQUERY AND JQERU UI ARE WORKING | REMOVE ONCE OUT OF DEV -->
+    private function sdmAssemblerAssembleHeaderScripts() {
+        $scripts = '
+            <!-- Scripts -->
+            <script src="' . $this->sdmCoreGetCoreDirectoryUrl() . '/js/jquery-1.9.0/jquery.min.js"></script>
+            <script src="' . $this->sdmCoreGetCoreDirectoryUrl() . '/js/jquery-ui-1.11.2/jquery-ui.js"></script>
+                <!-- DEV JS TO TEST JQUERY AND JQERU UI ARE WORKING | REMOVE ONCE OUT OF DEV -->
                     <script>
                     if (typeof jQuery != "undefined") {
                         //alert("jQuery Loaded Sucessfully");
@@ -57,8 +45,46 @@ class SdmAssembler extends SdmCore {
                     }
                     </script>
                     <!-- END DEV JS | REMOVE ONCE OUT OF DEV-->
+            ';
+        return $scripts;
+    }
+
+    private function sdmAssemblerAssembleHeaderLinks() {
+        $links = '
+            <!-- Links -->
+            <link rel="stylesheet" href="' . $this->sdmCoreGetCurrentThemeDirectoryUrl() . '/sdm_layout.css">
+            ';
+        return $links;
+    }
+
+    private function sdmAssemblerAssembleHeaderMetaTags() {
+        $meta = '
+            <!-- Meta Tags -->
+            <meta name="description" content="Website powered by the SDM CMS">
+            <meta name="author" content="Sevi Donnelly Foreman">
+            <meta http-equiv="refresh" content="3000">
+            ';
+        return $meta;
+    }
+
+    /**
+     * <p>Returns the HTML header for the page as a string. The SdmAssembler will give apps
+     * a chance to modify the header prior to returning it.</p>
+     * @return string <p>The HTML header for the page.</p>
+     */
+    public function sdmAssemblerAssembleHtmlHeader() {
+        return '
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <title>' . (isset($_GET['page']) ? ucfirst($_GET['page']) : ucfirst('homepage')) . '</title>
+                    ' . $this->sdmAssemblerAssembleHeaderMetaTags() . '
+                    ' . $this->sdmAssemblerAssembleHeaderLinks() . '
+                    ' . $this->sdmAssemblerAssembleHeaderScripts() . '
+                    <base href="' . $this->sdmCoreGetRootDirectoryUrl() . '" target="_self">
                 </head>
-            <body class="' . $this->sdmCoreDetermineCurrentTheme() . '">';
+            <body class="' . $this->sdmCoreDetermineCurrentTheme() . '">
+            ';
     }
 
     /**
