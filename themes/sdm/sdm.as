@@ -1,2 +1,2 @@
-stylesheets=sdm_layout, text;
-scripts=sdm_js;
+stylesheets=css/sdm-layout, css/sdm-text;
+scripts=js/sdm;

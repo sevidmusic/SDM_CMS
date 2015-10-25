@@ -3,5 +3,42 @@
     Created on : Oct 22, 2015, 3:08:52 PM
     Author     : seviforeman
     Description:
-        Purpose of the stylesheet follows.
+        Styles for links, and text
 */
+
+/** Links */
+/** default link styles */
+a {
+    text-decoration: none;
+}
+a:link {
+    color: #EEEEEE;
+}
+
+a:visited {
+    color: #EEEEEE;
+}
+
+a:hover {
+    color: #0099FF;
+}
+
+a:active {
+    color: #0099FF;
+}
+/** custom links */
+.homelink a:link {
+    color: #0066cc;
+}
+
+.homelink a:visited {
+    color: #0066cc;
+}
+
+.homelink a:hover {
+    color: #3399ff;
+}
+
+.homelink a:active {
+    color: #00DDff;
+}
