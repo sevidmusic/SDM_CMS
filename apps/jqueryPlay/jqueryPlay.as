@@ -1,1 +1,1 @@
-scripts=js/jquery-1.9.0/jquery.min.js, js/jquery-ui-1.11.2/jquery-ui.js;
+scripts=js/jquery-1.9.0/jquery.min, js/jquery-ui-1.11.2/jquery-ui;

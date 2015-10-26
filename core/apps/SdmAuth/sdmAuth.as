@@ -1,1 +1,1 @@
-scripts=js/sdmAuth.js;
+scripts=js/sdmAuth;
