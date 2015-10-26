@@ -51,7 +51,10 @@ class SdmAssembler extends SdmCore {
         // init $appScriptProps var
         $appScriptProps = '';
         foreach ($this->sdmCoreDetermineEnabledApps() as $app) {
+            // get userApp .as properties
             $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('scripts', 'userApp', $app) === FALSE ? '' : $this->sdmAssemblerAssembleHeaderProperties('scripts', 'userApp', $app));
+            // get coreApp .as properties
+            $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('scripts', 'coreApp', $app) === FALSE ? '' : $this->sdmAssemblerAssembleHeaderProperties('scripts', 'coreApp', $app));
         }
         /** At the moment only app scipts are incorporated, stylesheets and meta tags are not yet supported for apps */
         return '
