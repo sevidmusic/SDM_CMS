@@ -96,7 +96,8 @@ class SdmAssembler extends SdmCore {
                 error_log('.as file property "' . $targetProperty . '" was not loaded because the "' . $targetProperty . '" property does not exist in the .as file. | Source:  ' . $sourceName);
             }
         } else {
-            error_log('.as file property "' . $targetProperty . '" was not loaded because a .as file is not provided by source : ' . $sourceName);
+            // commented out so error log does not get clutterd by these warnings
+            //error_log('.as file property "' . $targetProperty . '" was not loaded because a .as file is not provided by source : ' . $sourceName);
         }
         return ($html === '<!-- ' . $targetProperty . ' -->' ? FALSE : $html);
     }
