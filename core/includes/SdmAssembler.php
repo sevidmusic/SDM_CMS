@@ -26,19 +26,38 @@ class SdmAssembler extends SdmCore {
 
     /**
      * <p>Returns the HTML header for the page as a string. The SdmAssembler will give apps
-     * a chance to modify the header prior to returning it.</p>
+     * a chance to modify the header prior to returning it. This method also reads app and theme
+     * .as files if provided and incorporates stylesheets scripts and meta
+     * tags defined in those files into the html header.</p>
+     * <p>NOTE: At the moment apps are only allowed to define the scripts property in their .as files.
+     * This will change in the future, however apps may not ever be allowed to provide stylesheets
+     * in order to keep styling and extended functionality separate, however this is debatable
+     * because not allowing apps to serve stylesheets defined in their .as files stylesheets
+     * property will force app developers to write clunky code into their apps in order
+     * to add app specific styles to their apps output without modifying the current theme.</p>
+     * <p>Also note, app scripts will always be loaded first so that they take precedent over theme scripts.
+     * This is done to encourage developers to build apps to serve their scripts rather then serving them
+     * from a specific theme. Scripts served from a theme cannot be turned off from the UI and they will only
+     * work if the theme serving them is set to be the current theme, however scripts
+     * severed from apps can be turned off since apps can be turned off. The only reason themes are allowed
+     * to serve scripts from their .as files is because there may be rare circumstances where a developer
+     * needs a script for a specific theme.</p>
      * @return string <p>The HTML header for the page.</p>
      */
     public function sdmAssemblerAssembleHtmlHeader() {
+        /**
+         * Get enabled app scripts.
+         */
         foreach ($this->sdmCoreDetermineEnabledApps() as $app) {
-            $appProps = $this->sdmAssemblerAssembleHeaderProperties('scripts', 'userApp', $app);
-            ($appProps !== FALSE ? $this->sdmCoreSdmReadArray(array('Results' => $appProps)) : NULL);
+            $appScriptProps = $this->sdmAssemblerAssembleHeaderProperties('scripts', 'userApp', $app);
         }
+        /** At the moment only app scipts are incorporated, stylesheets and meta tags are not yet supported for apps */
         return '
             <!DOCTYPE html>
             <html>
                 <head>
                     <title>' . (isset($_GET['page']) ? ucfirst($_GET['page']) : ucfirst('homepage')) . '</title>
+                    ' . ($appScriptProps !== FALSE ? $appScriptProps : '') . '
                     ' . $this->sdmAssemblerAssembleHeaderProperties('meta') . '
                     ' . $this->sdmAssemblerAssembleHeaderProperties('stylesheets') . '
                     ' . $this->sdmAssemblerAssembleHeaderProperties('scripts') . '
@@ -63,7 +82,7 @@ class SdmAssembler extends SdmCore {
      */
     private function sdmAssemblerAssembleHeaderProperties($targetProperty, $source = NULL, $sourceName = NULL) {
         // initialize $html var
-        $html = '<!-- ' . $targetProperty . ' -->';
+        $html = '<!-- ' . ($source === NULL ? $this->sdmCoreDetermineCurrentTheme() . ' Theme ' . $targetProperty : ($source === 'userApp' ? 'User App' : ($source === 'coreApp' ? 'Core App' : 'Theme')) . ' ' . $sourceName . ' ' . $targetProperty) . ' -->';
         // determine directory to load resources set by properties such as stylesheets, or scripts
         $path = ($source === NULL ? $this->sdmCoreGetCurrentThemeDirectoryUrl() : ($source === 'theme' ? $this->sdmCoreGetThemesDirectoryUrl() . '/' . $sourceName : ($source === 'userApp' ? $this->sdmCoreGetUserAppDirectoryUrl() . '/' . $sourceName : ($source === 'coreApp' ? $this->sdmCoreGetUserAppDirectoryUrl() . '/' . $sourceName : NULL))));
         //$this->sdmCoreSdmReadArray(array('path' => $path));
