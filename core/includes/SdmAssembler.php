@@ -38,7 +38,6 @@ class SdmAssembler extends SdmCore {
                     ' . $this->sdmAssemblerAssembleHeaderProperties('meta') . '
                     ' . $this->sdmAssemblerAssembleHeaderProperties('stylesheets') . '
                     ' . $this->sdmAssemblerAssembleHeaderProperties('scripts') . '
-                    ' . $this->sdmAssemblerAssembleHeaderProperties('custom') . '
                     <base href="' . $this->sdmCoreGetRootDirectoryUrl() . '" target="_self">
                 </head>
             <body class="' . $this->sdmCoreDetermineCurrentTheme() . '">
@@ -51,12 +50,18 @@ class SdmAssembler extends SdmCore {
     }
 
     /**
-     * <p>Incorporates header properties specified in a theme or app's .as file
+     * <p>Assembles html for header properties specified in a theme or app's .as file
      * and assembles the html necessary to incorporate them into the page.</p>
-     * @param string $target <p>Header property to assemble.</p>
+     * @param string $targetProperty <p>Header property to assemble.</p>
+     * @param string $source <p>Determines where the .as file should be loaded from. Either
+     *                       <b>theme</b>, <b>userApp</b>, or <b>coreApp</b>.</p>
+     *                       <p><i>NOTE: If source is not set then it will be assumed that the $property
+     *                          values should be read from the current themes .as file<br/>
+     *                          <b>IMPORTANT: If $source is set then $sourceName must also be set.</b></i></p>
+     * @param string $sourceName <p>The name of the theme or app whose .as file we are reading .as property values from.</p>
      * @return string <p>The html for the header property.</p>
      */
-    private function sdmAssemblerAssembleHeaderProperties($targetProperty) {
+    private function sdmAssemblerAssembleHeaderProperties($targetProperty, $source = NULL, $sourceName = NULL) {
         // initialize $html var
         $html = '<!-- ' . $targetProperty . ' -->';
         $properties = $this->sdmAssemblerGetAsProperty($targetProperty);
