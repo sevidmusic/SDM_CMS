@@ -48,6 +48,8 @@ class SdmAssembler extends SdmCore {
         /**
          * Get enabled app scripts.
          */
+        // init $appScriptProps var
+        $appScriptProps = '';
         foreach ($this->sdmCoreDetermineEnabledApps() as $app) {
             $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('scripts', 'userApp', $app) === FALSE ? '' : $this->sdmAssemblerAssembleHeaderProperties('scripts', 'userApp', $app));
         }
@@ -83,6 +85,8 @@ class SdmAssembler extends SdmCore {
     private function sdmAssemblerAssembleHeaderProperties($targetProperty, $source = NULL, $sourceName = NULL) {
         // initialize $html var
         $html = '<!-- ' . ($source === NULL ? $this->sdmCoreDetermineCurrentTheme() . ' Theme ' . $targetProperty : ($source === 'userApp' ? 'User App' : ($source === 'coreApp' ? 'Core App' : 'Theme')) . ' ' . $sourceName . ' ' . $targetProperty) . ' -->';
+        // store initial $html value so we can perform a check later to see if anything was appended to $html, if nothing was appended to $html by the end of this method then the attempt to load the .as file properties failed
+        $initHtml = $html;
         // determine directory to load resources set by properties such as stylesheets, or scripts
         $path = ($source === NULL ? $this->sdmCoreGetCurrentThemeDirectoryUrl() : ($source === 'theme' ? $this->sdmCoreGetThemesDirectoryUrl() . '/' . $sourceName : ($source === 'userApp' ? $this->sdmCoreGetUserAppDirectoryUrl() . '/' . $sourceName : ($source === 'coreApp' ? $this->sdmCoreGetUserAppDirectoryUrl() . '/' . $sourceName : NULL))));
         //$this->sdmCoreSdmReadArray(array('path' => $path));
@@ -118,7 +122,7 @@ class SdmAssembler extends SdmCore {
             // commented out so error log does not get clutterd by these warnings
             //error_log('.as file property "' . $targetProperty . '" was not loaded because a .as file is not provided by source : ' . $sourceName);
         }
-        return ($html === '<!-- ' . $targetProperty . ' -->' ? FALSE : $html);
+        return ($html === $initHtml ? FALSE : $html);
     }
 
     /**
