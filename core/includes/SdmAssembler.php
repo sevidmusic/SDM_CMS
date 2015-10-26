@@ -91,7 +91,7 @@ class SdmAssembler extends SdmCore {
         // store initial $html value so we can perform a check later to see if anything was appended to $html, if nothing was appended to $html by the end of this method then the attempt to load the .as file properties failed
         $initHtml = $html;
         // determine directory to load resources set by properties such as stylesheets, or scripts
-        $path = ($source === NULL ? $this->sdmCoreGetCurrentThemeDirectoryUrl() : ($source === 'theme' ? $this->sdmCoreGetThemesDirectoryUrl() . '/' . $sourceName : ($source === 'userApp' ? $this->sdmCoreGetUserAppDirectoryUrl() . '/' . $sourceName : ($source === 'coreApp' ? $this->sdmCoreGetUserAppDirectoryUrl() . '/' . $sourceName : NULL))));
+        $path = ($source === NULL ? $this->sdmCoreGetCurrentThemeDirectoryUrl() : ($source === 'theme' ? $this->sdmCoreGetThemesDirectoryUrl() . '/' . $sourceName : ($source === 'userApp' ? $this->sdmCoreGetUserAppDirectoryUrl() . '/' . $sourceName : ($source === 'coreApp' ? $this->sdmCoreGetCoreAppDirectoryUrl() . '/' . $sourceName : NULL))));
         //$this->sdmCoreSdmReadArray(array('path' => $path));
         $properties = ($source === NULL ? $this->sdmAssemblerGetAsProperty($targetProperty) : $this->sdmAssemblerGetAsProperty($targetProperty, $source, $sourceName));
         if ($properties !== FALSE) {
