@@ -30,6 +30,10 @@ class SdmAssembler extends SdmCore {
      * @return string <p>The HTML header for the page.</p>
      */
     public function sdmAssemblerAssembleHtmlHeader() {
+        foreach ($this->sdmCoreDetermineEnabledApps() as $app) {
+            $appProps = $this->sdmAssemblerAssembleHeaderProperties('scripts', 'userApp', $app);
+            ($appProps !== FALSE ? $this->sdmCoreSdmReadArray(array('Results' => $appProps)) : NULL);
+        }
         return '
             <!DOCTYPE html>
             <html>
@@ -38,15 +42,11 @@ class SdmAssembler extends SdmCore {
                     ' . $this->sdmAssemblerAssembleHeaderProperties('meta') . '
                     ' . $this->sdmAssemblerAssembleHeaderProperties('stylesheets') . '
                     ' . $this->sdmAssemblerAssembleHeaderProperties('scripts') . '
+                    <!-- set base url -->
                     <base href="' . $this->sdmCoreGetRootDirectoryUrl() . '" target="_self">
                 </head>
             <body class="' . $this->sdmCoreDetermineCurrentTheme() . '">
             ';
-        /*
-         * <!-- Load jQuery and jQuery UI -->
-          <script src="' . $this->sdmCoreGetCoreDirectoryUrl() . '/js/jquery-1.9.0/jquery.min.js"></script>
-          <script src="' . $this->sdmCoreGetCoreDirectoryUrl() . '/js/jquery-ui-1.11.2/jquery-ui.js"></script>
-         */
     }
 
     /**
@@ -64,38 +64,41 @@ class SdmAssembler extends SdmCore {
     private function sdmAssemblerAssembleHeaderProperties($targetProperty, $source = NULL, $sourceName = NULL) {
         // initialize $html var
         $html = '<!-- ' . $targetProperty . ' -->';
-        $properties = $this->sdmAssemblerGetAsProperty($targetProperty);
-        // assemble property html
-        if (!empty($properties) === TRUE) {
-            foreach ($properties as $property) {
-                if ($property == '') {
-                    $html .= '<!-- SdmAssembler(): .as file property "' . $targetProperty . '" has no value. -->';
-                    error_log('.as file property "' . $targetProperty . '" has no value.');
-                } else {
-                    switch ($targetProperty) {
-                        case 'stylesheets':
-                            $html .= '<link rel="stylesheet" type="text/css" href="' . $this->sdmCoreGetCurrentThemeDirectoryUrl() . '/' . trim($property) . '.css">';
-                            break;
-                        case 'scripts':
-                            $html .= '<script src="' . $this->sdmCoreGetCurrentThemeDirectoryUrl() . '/' . trim($property) . '.js"></script>';
-                            break;
-                        case 'meta':
-                            // At the moment meta tags are being hardcoed until it is determined how to parse the values in a .as file and translate them into the more complex structure of a meta tag.
-                            $html .= '<meta name="description" content="Website powered by the SDM CMS"><meta name="author" content="Sevi Donnelly Foreman"><meta http-equiv="refresh" content="3000">';
-                            break;
-                        default:
-                            $html .= '<!-- SdmAssembler(): Value "' . $property . '" from .as file property "' . $targetProperty . '" was not loaded, custom .as properties are not recognized. -->';
-                            error_log('Value "' . $property . '" from .as file property "' . $targetProperty . '" was not loaded, custom .as properties are not recognized.');
-                            break;
+        // determine directory to load resources set by properties such as stylesheets, or scripts
+        $path = ($source === NULL ? $this->sdmCoreGetCurrentThemeDirectoryUrl() : ($source === 'theme' ? $this->sdmCoreGetThemesDirectoryUrl() . '/' . $sourceName : ($source === 'userApp' ? $this->sdmCoreGetUserAppDirectoryUrl() . '/' . $sourceName : ($source === 'coreApp' ? $this->sdmCoreGetUserAppDirectoryUrl() . '/' . $sourceName : NULL))));
+        //$this->sdmCoreSdmReadArray(array('path' => $path));
+        $properties = ($source === NULL ? $this->sdmAssemblerGetAsProperty($targetProperty) : $this->sdmAssemblerGetAsProperty($targetProperty, $source, $sourceName));
+        if ($properties !== FALSE) {
+            // assemble property html
+            if (!empty($properties) === TRUE) {
+                foreach ($properties as $property) {
+                    if ($property == '') {
+                        error_log('.as file property "' . $targetProperty . '" has no value. | Source:  ' . $sourceName . '');
+                    } else {
+                        switch ($targetProperty) {
+                            case 'stylesheets':
+                                $html .= '<link rel="stylesheet" type="text/css" href="' . $path . '/' . trim($property) . '.css">';
+                                break;
+                            case 'scripts':
+                                $html .= '<script src="' . $path . '/' . trim($property) . '.js"></script>';
+                                break;
+                            case 'meta':
+                                // At the moment meta tags are being hardcoed until it is determined how to parse the values in a .as file and translate them into the more complex structure of a meta tag.
+                                $html .= '<meta name="description" content="Website powered by the SDM CMS"><meta name="author" content="Sevi Donnelly Foreman"><meta http-equiv="refresh" content="3000">';
+                                break;
+                            default:
+                                error_log('Value "' . $property . '" from .as file property "' . $targetProperty . '" was not loaded, custom .as properties are not recognized. | Source:  ' . $sourceName);
+                                break;
+                        }
                     }
                 }
+            } else {
+                error_log('.as file property "' . $targetProperty . '" was not loaded because the "' . $targetProperty . '" property does not exist in the .as file. | Source:  ' . $sourceName);
             }
         } else {
-            $html .= '<!-- SdmAssembler(): .as file property "' . $targetProperty . '" was not loaded because the "' . $targetProperty . '" property does not exist in the .as file. -->';
-            error_log('.as file property "' . $targetProperty . '" was not loaded because the "' . $targetProperty . '" property does not exist in the .as file.');
+            error_log('.as file property "' . $targetProperty . '" was not loaded because a .as file is not provided by source : ' . $sourceName);
         }
-
-        return $html;
+        return ($html === '<!-- ' . $targetProperty . ' -->' ? FALSE : $html);
     }
 
     /**
@@ -129,29 +132,31 @@ class SdmAssembler extends SdmCore {
         switch ($source) {
             case 'theme':
                 // read .as file into an array
-                $asFile = file($this->sdmCoreGetThemesDirectoryPath() . '/' . $sourceName . '/' . $sourceName . '.as');
+                $asFile = @file($this->sdmCoreGetThemesDirectoryPath() . '/' . $sourceName . '/' . $sourceName . '.as');
                 break;
             case 'userApp':
                 // read .as file into an array
-                $asFile = file($this->sdmCoreGetUserAppDirectoryPath() . '/' . $sourceName . '/' . $sourceName . '.as');
+                $asFile = @file($this->sdmCoreGetUserAppDirectoryPath() . '/' . $sourceName . '/' . $sourceName . '.as');
                 break;
             case 'coreApp':
                 // read .as file into an array
-                $asFile = file($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $sourceName . '/' . $sourceName . '.as');
+                $asFile = @file($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $sourceName . '/' . $sourceName . '.as');
                 break;
             default: // defaults to reading the current theme's .as file
-                $asFile = file($this->sdmCoreGetCurrentThemeDirectoryPath() . '/' . $this->sdmCoreDetermineCurrentTheme() . '.as');
+                $asFile = @file($this->sdmCoreGetCurrentThemeDirectoryPath() . '/' . $this->sdmCoreDetermineCurrentTheme() . '.as');
                 break;
         }
-        // loop through array | i.e., loop through each line of the .as file
-        foreach ($asFile as $line) {
-            // check if current $line is for $property
-            if (strstr($line, '=', TRUE) === $property) {
-                // store property values in an array
-                $properties = explode(',', $this->sdmCoreStrSlice($line, '=', ';'));
+        if ($asFile !== FALSE) {
+            // loop through array | i.e., loop through each line of the .as file
+            foreach ($asFile as $line) {
+                // check if current $line is for $property
+                if (strstr($line, '=', TRUE) === $property) {
+                    // store property values in an array
+                    $properties = explode(',', $this->sdmCoreStrSlice($line, '=', ';'));
+                }
             }
         }
-        return (isset($properties) === TRUE ? $properties : array());
+        return ($asFile === FALSE ? FALSE : (isset($properties) === TRUE ? $properties : array()));
     }
 
     /**
