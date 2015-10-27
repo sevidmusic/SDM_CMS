@@ -110,7 +110,7 @@ class SdmAssembler extends SdmCore {
                                 break;
                             case 'meta':
                                 // At the moment meta tags are being hardcoed until it is determined how to parse the values in a .as file and translate them into the more complex structure of a meta tag.
-                                $html .= '<meta name="description" content="Website powered by the SDM CMS"><meta name="author" content="Sevi Donnelly Foreman"><meta http-equiv="refresh" content="3000">';
+                                $html .= '<meta name="description" content="Website powered by the SDM CMS"><meta name="author" content="Sevi Donnelly Foreman"><meta http-equiv="refresh" content="3000"><meta name="viewport" content="width=device-width, initial-scale=1.0">';
                                 break;
                             default:
                                 error_log('Value "' . $property . '" from .as file property "' . $targetProperty . '" was not loaded, custom .as properties are not recognized. | Source:  ' . $sourceName);
