@@ -1,0 +1,145 @@
+/*
+    Document   : layout
+    Created on : Oct 27, 2015, 4:31:01 PM
+    Author     : seviforeman
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/*
+The CSS3 box-sizing property allows us to
+include the padding and border in an element's
+total width and height. This prevents borders and
+padding from changing an elments overall width.
+@see http://www.w3schools.com/css/css3_box-sizing.asp for more info
+*/
+* {
+    box-sizing: border-box;
+}
+
+
+/* For mobile phones: */
+[class*="col-"] {
+    width: 100%;
+    background: #000000;
+    color:#ffffff;
+}
+@media only screen and (min-width: 600px) {
+    /* For tablets: */
+    .col-m-1 {width: 8.33%;}
+    .col-m-2 {width: 16.66%;}
+    .col-m-3 {width: 25%;}
+    .col-m-4 {width: 33.33%;}
+    .col-m-5 {width: 41.66%;}
+    .col-m-6 {width: 50%;}
+    .col-m-7 {width: 58.33%;}
+    .col-m-8 {width: 66.66%;}
+    .col-m-9 {width: 75%;}
+    .col-m-10 {width: 83.33%;}
+    .col-m-11 {width: 91.66%;}
+    .col-m-12 {width: 100%;}
+    [class*="col-"] {
+        background: #003333;
+        color:#ffffff;
+    }
+}
+@media only screen and (min-width: 768px) {
+    /* For desktop: */
+    .col-1 {width: 8.33%;}
+    .col-2 {width: 16.66%;}
+    .col-3 {width: 25%;}
+    .col-4 {width: 33.33%;}
+    .col-5 {width: 41.66%;}
+    .col-6 {width: 50%;}
+    .col-7 {width: 58.33%;}
+    .col-8 {width: 66.66%;}
+    .col-9 {width: 75%;}
+    .col-10 {width: 83.33%;}
+    .col-11 {width: 91.66%;}
+    .col-12 {width: 100%;}
+    [class*="col-"] {
+        background: #ffffff;
+        color:#000000;
+    }
+}
+
+/** float all elemetns to the left and set padding of 15px */
+[class*="col-"] {
+    float: left;
+    padding: 15px;
+    border: 1px solid #3399ff;
+}
+/** **/
+.row:after {
+    content: "";
+    clear: both;
+    display: block;
+}
+
+/** Menus */
+
+.horizontal-menu {
+    font-size: 1.2em;
+    list-style-type: none;
+    margin: 0 0 1em 0;
+    padding: 0;
+    width: 100%;
+}
+
+.horizontal-menu li {
+    display: inline;
+    margin: 0 1em 0 0;
+}
+
+.horizontal-menu a {
+    text-decoration: none;
+}
+
+ul {
+    list-style: none;
+    padding-left: 0;
+}
+/** Links */
+/** default link styles */
+a {
+    text-decoration: none;
+}
+a:link {
+    color: #777777;
+}
+
+a:visited {
+    color: #777777;
+}
+
+a:hover {
+    color: #0099FF;
+}
+
+a:active {
+    color: #0099FF;
+}
+/** custom links */
+.homelink a:link {
+    color: #0066cc;
+}
+
+.homelink a:visited {
+    color: #0066cc;
+}
+
+.homelink a:hover {
+    color: #3399ff;
+}
+
+.homelink a:active {
+    color: #00DDff;
+}
+
+input select {
+    display: block;
+}
+
+.spacer {
+    border:none;
+}
