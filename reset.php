@@ -246,7 +246,7 @@
                 ), // end content array
                 'settings' => array(
                     'theme' => 'sdmResponsive',
-                    'enabledapps' => array('contentManager' => 'contentManager', 'SdmErrorLog' => 'SdmErrorLog', 'navigationManager' => 'navigationManager', 'SdmCoreOverview' => 'SdmCoreOverview', 'SdmAuth' => 'SdmAuth', 'sdmDevMenu' => 'sdmDevMenu'),
+                    'enabledapps' => array('contentManager' => 'contentManager', 'SdmErrorLog' => 'SdmErrorLog', 'navigationManager' => 'navigationManager', 'SdmCoreOverview' => 'SdmCoreOverview', 'SdmAuth' => 'SdmAuth', 'SdmDevMenu' => 'SdmDevMenu'),
                 ), // end 'settings' array
                 'menus' => $menus,
             ); // end $config array
