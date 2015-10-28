@@ -19,11 +19,11 @@ a {
     text-decoration: none;
 }
 a:link {
-    color: #777777;
+    color: #ccffff;
 }
 
 a:visited {
-    color: #777777;
+    color: #ccffff;
 }
 
 a:hover {
@@ -35,11 +35,11 @@ a:active {
 }
 /** custom links */
 .homelink a:link {
-    color: #0066cc;
+    color: #99ccff;
 }
 
 .homelink a:visited {
-    color: #0066cc;
+    color: #99ccff;
 }
 
 .homelink a:hover {

@@ -15,29 +15,29 @@
 .border-1 {
     border-top-color:#000000;
     border-right-color:#000000;
-    border-bottom-color:#AAAAAA;
+    border-bottom-color:#ffffff;
     border-left-color:#000000;
-    border-width:7px;
+    border-width:5px;
     border-radius:0px;
     border-style:none none double none;
 }
 
 .border-2 {
-    border-top-color:#AAAAAA;
+    border-top-color:#ffffff;
     border-right-color:#000000;
-    border-bottom-color:#AAAAAA;
+    border-bottom-color:#ffffff;
     border-left-color:#000000;
-    border-width:7px;
-    border-radius:20px;
+    border-width:5px;
+    border-radius:140px;
     border-style:double none double none;
 }
 
 .gradi-bg {
     height: 200px;
-    background: -webkit-linear-gradient(left top, black , CornflowerBlue); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(bottom right, black , CornflowerBlue); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(bottom right, black , CornflowerBlue); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(to bottom right, black , CornflowerBlue); /* Standard syntax (must be last) */
+    background: -webkit-linear-gradient(left top, black , #99ccff); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(bottom right, black , #99ccff); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(bottom right, black , #99ccff); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(to bottom right, black , #99ccff); /* Standard syntax (must be last) */
 }
 
 /* Tablet Styles */
