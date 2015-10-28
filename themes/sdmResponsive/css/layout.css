@@ -3,16 +3,18 @@
     Created on : Oct 27, 2015, 4:31:01 PM
     Author     : seviforeman
     Description:
-        Resaponsive theme for the SDM CMS. This theme
+        Responsive theme for the SDM CMS. This theme
         is a mobile first design and will adjust it's
         styles based on screen size;
+
+        This file specifically sets the layout styles for the theme.
 */
 
 /*
     The CSS3 box-sizing property allows us to
     include the padding and border in an element's
     total width and height. This prevents borders and
-    padding from changing an elments overall width.
+    padding from changing an elements overall width.
     @see http://www.w3schools.com/css/css3_box-sizing.asp for more info
 */
 
@@ -20,10 +22,7 @@
     box-sizing: border-box;
 }
 
-.sdmResponsive {
-    background: #000000;
-    color: #99ccff;
-}
+
 /*
     Design for mobile first. By default set all
     column widths to 100% to adjust for smaller
@@ -50,103 +49,11 @@
     display: block;
 }
 
-/** Menus */
-
-ul {
-    list-style: none; /* get rid of bullets for list elemetns */
-    padding-left: 0; /* remove indentation of list elements */
-}
-
-/** Links */
-/** default link styles */
-a {
-    text-decoration: none;
-}
-a:link {
-    color: #777777;
-}
-
-a:visited {
-    color: #777777;
-}
-
-a:hover {
-    color: #0099FF;
-}
-
-a:active {
-    color: #0099FF;
-}
-/** custom links */
-.homelink a:link {
-    color: #0066cc;
-}
-
-.homelink a:visited {
-    color: #0066cc;
-}
-
-.homelink a:hover {
-    color: #3399ff;
-}
-
-.homelink a:active {
-    color: #00DDff;
-}
-
 /* elements with class spacer will have no border and can be used to create space between columns */
 .spacer {
     border:none;
 }
 
-
-.border-1 {
-    border-top-color:#000000;
-    border-right-color:#000000;
-    border-bottom-color:#AAAAAA;
-    border-left-color:#000000;
-    border-width:7px;
-    border-radius:0px;
-    border-style:none none double none;
-}
-
-.border-2 {
-    border-top-color:#AAAAAA;
-    border-right-color:#000000;
-    border-bottom-color:#AAAAAA;
-    border-left-color:#000000;
-    border-width:7px;
-    border-radius:20px;
-    border-style:double none double none;
-}
-
-.gradi-bg {
-    height: 200px;
-    background: -webkit-linear-gradient(left top, black , CornflowerBlue); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(bottom right, black , CornflowerBlue); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(bottom right, black , CornflowerBlue); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(to bottom right, black , CornflowerBlue); /* Standard syntax (must be last) */
-}
-
-/** Forms */
-input, text, textarea, select {
-    display: block;
-    border-radius: 4px;
-    margin: 5px 0 20px 0;
-}
-
-textarea {
-    width: 100%;
-    height: 16em;
-}
-
-/* Wrappers */
-#side-menu, #main_content {
-    height: 100%;
-}
-#top-menu {
-    margin-bottom: 25px;
-}
 
 /* Tablet Styles */
 @media only screen and (min-width: 600px) {
@@ -180,39 +87,4 @@ textarea {
     .col-10 {width: 83.33%;}
     .col-11 {width: 91.66%;}
     .col-12 {width: 100%;}
-    /** menu styles **/
-    .horizontal-menu {
-        font-size: 1.2em;
-        list-style-type: none;
-        margin: 0 0 1em 0;
-        padding: 0;
-        width: 100%;
-    }
-
-    .horizontal-menu li {
-        display: inline;
-        margin: 0 1em 0 0;
-    }
-
-    .horizontal-menu a {
-        text-decoration: none;
-    }
-
-    /* wrappers */
-    #top-menu {
-        min-width:968px;
-        margin-bottom: 15px;
-    }
-
-    #top-menu h1 {
-        display: inline;
-    }
-    #side-menu, #main_content {
-        height: 100%;
-        min-height: 200px;
-        padding: 20px;
-    }
-    #footer {
-        text-align: center;
-    }
 }

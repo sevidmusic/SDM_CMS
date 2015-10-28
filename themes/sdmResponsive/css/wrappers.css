@@ -1,0 +1,41 @@
+/*
+    Document   : wrappers
+    Created on : Oct 28, 2015, 5:29:19 PM
+    Author     : seviforeman
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* Wrappers */
+#side-menu, #main_content {
+    height: 100%;
+}
+#top-menu {
+    margin-bottom: 25px;
+}
+
+/* Tablet Styles */
+@media only screen and (min-width: 600px) {
+
+}
+
+/* Desktop Styles */
+@media only screen and (min-width: 768px) {
+    /* wrappers */
+    #top-menu {
+        min-width:968px;
+        margin-bottom: 15px;
+    }
+
+    #top-menu h1 {
+        display: inline;
+    }
+    #side-menu, #main_content {
+        height: 100%;
+        min-height: 200px;
+        padding: 20px;
+    }
+    #footer {
+        text-align: center;
+    }
+}
