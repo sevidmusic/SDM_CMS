@@ -167,7 +167,7 @@
             $mainMenu->menuMachineName = 'main_menu';
             $mainMenu->menuPlacement = 'prepend';
             $mainMenu->menuWrappingTagType = 'ul';
-            $mainMenu->wrapper = 'main_content';
+            $mainMenu->wrapper = 'top-menu';
 
 
             /** Footer Menu */
@@ -245,8 +245,8 @@
                     ),
                 ), // end content array
                 'settings' => array(
-                    'theme' => 'sdm',
-                    'enabledapps' => array('contentManager' => 'contentManager', 'SdmErrorLog' => 'SdmErrorLog', 'navigationManager' => 'navigationManager', 'SdmCoreOverview' => 'SdmCoreOverview', 'SdmAuth' => 'SdmAuth'),
+                    'theme' => 'sdmResponsive',
+                    'enabledapps' => array('contentManager' => 'contentManager', 'SdmErrorLog' => 'SdmErrorLog', 'navigationManager' => 'navigationManager', 'SdmCoreOverview' => 'SdmCoreOverview', 'SdmAuth' => 'SdmAuth', 'sdmDevMenu' => 'sdmDevMenu'),
                 ), // end 'settings' array
                 'menus' => $menus,
             ); // end $config array
