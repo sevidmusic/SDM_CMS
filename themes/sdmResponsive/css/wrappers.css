@@ -25,6 +25,7 @@
     /* wrappers */
     #top-menu {
         min-width:968px;
+        max-height: 50px;
         margin-bottom: 15px;
     }
 
