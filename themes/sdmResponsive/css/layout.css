@@ -4,15 +4,16 @@
     Author     : seviforeman
     Description:
         Resaponsive theme for the SDM CMS. This theme
-        is a mobile first design;
+        is a mobile first design and will adjust it's
+        styles based on screen size;
 */
 
 /*
-The CSS3 box-sizing property allows us to
-include the padding and border in an element's
-total width and height. This prevents borders and
-padding from changing an elments overall width.
-@see http://www.w3schools.com/css/css3_box-sizing.asp for more info
+    The CSS3 box-sizing property allows us to
+    include the padding and border in an element's
+    total width and height. This prevents borders and
+    padding from changing an elments overall width.
+    @see http://www.w3schools.com/css/css3_box-sizing.asp for more info
 */
 
 * {
@@ -21,13 +22,15 @@ padding from changing an elments overall width.
 
 .sdmResponsive {
     background: #000000;
-    color: #ccccff;
+    color: #99ccff;
 }
-/* For mobile phones: */
+/*
+    Design for mobile first. By default set all
+    column widths to 100% to adjust for smaller
+    screens
+*/
 [class*="col-"] {
     width: 100%;
-    background: #000000;
-    color:#ffffff;
     float: left;
     padding: 15px;
 }
@@ -36,13 +39,13 @@ padding from changing an elments overall width.
     The columns inside a row are all floating
     to the left, and are therefore taken out
     of the flow of the page, and other elements
-    will be placed as if the columns does not
+    will be placed as if the columns do not
     exist. To prevent this, we will add a style
-    that clears the flow after each element with
-    class .row
+    that clears the flow after each row.
+    (i.e., after each element with class .row)
 **/
 .row:after {
-    content: "";
+    content: ""; /* If set this sting will be placed after each row. Can be useful during theme development to see where various elements are in the page */
     clear: both;
     display: block;
 }
@@ -50,8 +53,8 @@ padding from changing an elments overall width.
 /** Menus */
 
 ul {
-    list-style: none;
-    padding-left: 0;
+    list-style: none; /* get rid of bullets for list elemetns */
+    padding-left: 0; /* remove indentation of list elements */
 }
 
 /** Links */
@@ -91,15 +94,40 @@ a:active {
     color: #00DDff;
 }
 
+/* elements with class spacer will have no border and can be used to create space between columns */
 .spacer {
     border:none;
 }
 
-#side-menu {
-    background: #333333;
-    border-radius: 9px;
-    min-height: 200px;
+
+.border-1 {
+    border-top-color:#000000;
+    border-right-color:#000000;
+    border-bottom-color:#AAAAAA;
+    border-left-color:#000000;
+    border-width:7px;
+    border-radius:0px;
+    border-style:none none double none;
 }
+
+.border-2 {
+    border-top-color:#AAAAAA;
+    border-right-color:#000000;
+    border-bottom-color:#AAAAAA;
+    border-left-color:#000000;
+    border-width:7px;
+    border-radius:20px;
+    border-style:double none double none;
+}
+
+.gradi-bg {
+    height: 200px;
+    background: -webkit-linear-gradient(left top, black , CornflowerBlue); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(bottom right, black , CornflowerBlue); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(bottom right, black , CornflowerBlue); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(to bottom right, black , CornflowerBlue); /* Standard syntax (must be last) */
+}
+
 /** Forms */
 input, text, textarea, select {
     display: block;
@@ -112,7 +140,15 @@ textarea {
     height: 16em;
 }
 
+/* Wrappers */
+#side-menu, #main_content {
+    height: 100%;
+}
+#top-menu {
+    margin-bottom: 25px;
+}
 
+/* Tablet Styles */
 @media only screen and (min-width: 600px) {
     /* For tablets: */
     .col-m-1 {width: 8.33%;}
@@ -128,6 +164,8 @@ textarea {
     .col-m-11 {width: 91.66%;}
     .col-m-12 {width: 100%;}
 }
+
+/* Desktop Styles */
 @media only screen and (min-width: 768px) {
     /* Col styles For desktop: */
     .col-1 {width: 8.33%;}
@@ -142,7 +180,7 @@ textarea {
     .col-10 {width: 83.33%;}
     .col-11 {width: 91.66%;}
     .col-12 {width: 100%;}
-    /** menu styles for desktop **/
+    /** menu styles **/
     .horizontal-menu {
         font-size: 1.2em;
         list-style-type: none;
@@ -158,5 +196,23 @@ textarea {
 
     .horizontal-menu a {
         text-decoration: none;
+    }
+
+    /* wrappers */
+    #top-menu {
+        min-width:968px;
+        margin-bottom: 15px;
+    }
+
+    #top-menu h1 {
+        display: inline;
+    }
+    #side-menu, #main_content {
+        height: 100%;
+        min-height: 200px;
+        padding: 20px;
+    }
+    #footer {
+        text-align: center;
     }
 }
