@@ -8,7 +8,7 @@
 
 .sdmResponsive {
     background: #000000;
-    color: #99ccff;
+    color: #ffffff;
 }
 
 
@@ -27,7 +27,7 @@
     border-right-color:#000000;
     border-bottom-color:#ffffff;
     border-left-color:#000000;
-    border-width:5px;
+    border-width:8px;
     border-radius:140px;
     border-style:double none double none;
 }

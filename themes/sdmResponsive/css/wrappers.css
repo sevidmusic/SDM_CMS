@@ -37,6 +37,9 @@
         min-width: 250px;
         padding: 50px 50px;
     }
+    #main_content {
+        float: right;
+    }
     #footer {
         text-align: center;
     }
