@@ -9,16 +9,22 @@
 /* Wrappers */
 #side-menu, #main_content {
     height: 100%;
-    padding: 50px 50px;
+    padding: 50px;
     background: #000000;
+    opacity: .7;
 }
 #top-menu {
-    margin-bottom: 25px;
+    margin-bottom: 5px;
 }
 
 /* Tablet Styles */
 @media only screen and (min-width: 600px) {
-
+    #side-menu {
+        min-width: 220px;
+    }
+    #main_content {
+        float: right;
+    }
 }
 
 /* Desktop Styles */

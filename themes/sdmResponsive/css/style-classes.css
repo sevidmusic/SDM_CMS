@@ -53,6 +53,9 @@ body {
     background: linear-gradient(to bottom right, black , #99ccff, black); /* Standard syntax (must be last) */
 }
 
+.padded-row {
+    padding: 20px;
+}
 /* Tablet Styles */
 @media only screen and (min-width: 600px) {
 
