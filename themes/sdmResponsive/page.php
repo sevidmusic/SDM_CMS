@@ -12,13 +12,13 @@
     $sideBarExists = (SdmAssembler::sdmAssemblerGetContentHtml('side-menu', $sdmassembler_themeContentObject) === '<!-- side-menu placeholder -->' ? FALSE : TRUE);
     if ($sideBarExists === TRUE) {
         ?>
-        <div id="side-menu" class="col-3 border-2 gradi-bg">
+        <div id="side-menu" class="col-3 rounded">
             <?php
             echo SdmAssembler::sdmAssemblerGetContentHtml('side-menu', $sdmassembler_themeContentObject);
             ?>    </div>
         <div id="locked-spacer" class="col-1 spacer"></div>
     <?php } ?>
-    <div id="main_content"class="<?php echo ($sideBarExists === TRUE ? 'col-8' : 'col-12'); ?> border-2 gradi-bg">
+    <div id="main_content"class="<?php echo ($sideBarExists === TRUE ? 'col-8' : 'col-12'); ?> rounded">
         <?php
         echo SdmAssembler::sdmAssemblerGetContentHtml('main_content', $sdmassembler_themeContentObject);
         ?>

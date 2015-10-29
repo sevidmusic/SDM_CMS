@@ -10,6 +10,7 @@
 #side-menu, #main_content {
     height: 100%;
     padding: 50px 50px;
+    background: #000000;
 }
 #top-menu {
     margin-bottom: 25px;
