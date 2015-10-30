@@ -11,9 +11,6 @@
     background: #000000;
     opacity: .7;
 }
-#top-menu {
-    margin-bottom: 5px;
-}
 
 /* Tablet Styles */
 @media only screen and (min-width: 600px) {
