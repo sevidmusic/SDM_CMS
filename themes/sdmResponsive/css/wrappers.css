@@ -8,8 +8,6 @@
 
 /* Wrappers */
 #side-menu, #main_content {
-    height: 100%;
-    padding: 50px;
     background: #000000;
     opacity: .7;
 }
@@ -19,35 +17,12 @@
 
 /* Tablet Styles */
 @media only screen and (min-width: 600px) {
-    #side-menu {
-        min-width: 220px;
-    }
-    #main_content {
-        float: right;
-    }
+
 }
 
 /* Desktop Styles */
 @media only screen and (min-width: 768px) {
-    /* wrappers */
-    #top-menu {
-        min-width:968px;
-        max-height: 50px;
-        margin-bottom: 15px;
-    }
-
-    #top-menu h1 {
-        display: inline;
-    }
-    #side-menu, #main_content {
-        height: 100%;
-        min-height: 200px;
-        min-width: 250px;
-        padding: 50px 50px;
-    }
-    #main_content {
-        float: right;
-    }
+    /* Wrappers */
     #footer {
         text-align: center;
     }

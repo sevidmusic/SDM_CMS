@@ -19,10 +19,12 @@ body {
 }
 .sdmResponsive {
     color: #ffffff;
+    font-size: 24px;
+    font-family: serif;
 }
 
 
-.border-1 {
+.border-bottom {
     border-top-color:#000000;
     border-right-color:#000000;
     border-bottom-color:#ffffff;
@@ -32,25 +34,8 @@ body {
     border-style:none none double none;
 }
 
-.border-2 {
-    border-top-color:#ffffff;
-    border-right-color:#000000;
-    border-bottom-color:#ffffff;
-    border-left-color:#000000;
-    border-width:8px;
-    border-radius:140px;
-    border-style:double none double none;
-}
-
 .rounded {
     border-radius:20px;
-}
-.gradi-bg {
-    height: 200px;
-    background: -webkit-linear-gradient(left top, black , #99ccff, black); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(bottom right, black , #99ccff, black); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(bottom right, black , #99ccff, black); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(to bottom right, black , #99ccff, black); /* Standard syntax (must be last) */
 }
 
 .padded-row {

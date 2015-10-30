@@ -1,6 +1,6 @@
 <!-- row 1 -->
 <div class="row">
-    <div id="top-menu"class="col-12 col-m-12 border-1">
+    <div id="top-menu"class="col-12 col-m-12 border-bottom">
         <?php
         echo SdmAssembler::sdmAssemblerGetContentHtml('top-menu', $sdmassembler_themeContentObject);
         ?>
