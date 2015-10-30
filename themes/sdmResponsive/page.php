@@ -1,5 +1,5 @@
 <!-- row 1 -->
-<div class="row">
+<div class="row row-min-wid-fix">
     <div id="top-menu"class="col-12 col-m-12 border-bottom">
         <?php
         echo SdmAssembler::sdmAssemblerGetContentHtml('top-menu', $sdmassembler_themeContentObject);
@@ -7,7 +7,7 @@
     </div>
 </div>
 <!-- row 2 -->
-<div class="row padded-row row-min-wid-fix">
+<div class="row row-min-wid-fix padded-row">
     <?php
     $sideBarExists = (SdmAssembler::sdmAssemblerGetContentHtml('side-menu', $sdmassembler_themeContentObject) === '<!-- side-menu placeholder -->' ? FALSE : TRUE);
     if ($sideBarExists === TRUE) {
@@ -25,7 +25,7 @@
     </div>
 </div>
 <!-- row 3 -->
-<div class="row">
+<div class="row row-min-wid-fix">
     <div id="footer"class="col-12 col-m-12">
         <?php
         echo SdmAssembler::sdmAssemblerGetContentHtml('footer', $sdmassembler_themeContentObject);
