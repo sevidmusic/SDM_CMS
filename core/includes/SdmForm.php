@@ -50,6 +50,15 @@ class SdmForm {
                         'value' => 'defualt value2',
                         'place' => '3',
                     ),
+                    // default form element example 3
+                    array(
+                        'id' => 'password_form_element',
+                        'type' => 'password',
+                        'element' => 'Password',
+                        'value' => 'defualt value3',
+                        'place' => '3',
+                    ),
+                    // default form element example 4
                     array(
                         'id' => 'select_form_element',
                         'type' => 'select',
@@ -57,6 +66,7 @@ class SdmForm {
                         'value' => array('yes' => 'yes', 'no' => 'no', 'maybe' => 'maybe'),
                         'place' => '1',
                     ),
+                    // default form element example 5
                     array(
                         'id' => 'radio_form_element',
                         'type' => 'radio',
@@ -64,6 +74,7 @@ class SdmForm {
                         'value' => array('yes' => 'yes', 'no' => 'no', 'maybe' => 'maybe'),
                         'place' => '2',
                     ),
+                    // default form element example 6
                     array(
                         'id' => 'hidden_form_element',
                         'type' => 'hidden',
@@ -99,6 +110,9 @@ class SdmForm {
             switch ($value['type']) {
                 case 'text':
                     $form_html = $form_html . '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><input name="SdmForm[' . $value['id'] . ']" type="text" ' . (isset($value['value']) ? 'value="' . $value['value'] . '"' : '') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+                    break;
+                case 'password':
+                    $form_html = $form_html . '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><input name="SdmForm[' . $value['id'] . ']" type="password" ' . (isset($value['value']) ? 'value="' . $value['value'] . '"' : '') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
                     break;
                 case 'textarea':
                     $form_html = $form_html . '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><textarea name="SdmForm[' . $value['id'] . ']">' . (isset($value['value']) ? $value['value'] : '') . '</textarea><!-- close form element "SdmForm[' . $value['id'] . ']" -->';

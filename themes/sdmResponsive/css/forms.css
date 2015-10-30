@@ -17,7 +17,13 @@ textarea {
     width: 100%;
     height: 16em;
 }
-
+select {
+    margin-top: 15px;
+}
+[type*='radio'] {
+    display: inline;
+    margin: 20px;
+}
 /* Tablet Styles */
 @media only screen and (min-width: 600px) {
 
