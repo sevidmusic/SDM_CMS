@@ -14,8 +14,9 @@ input, text, textarea, select {
 }
 
 textarea {
-    width: 100%;
-    height: 16em;
+    max-width: 100%;
+    min-width: 100%;
+    min-height: 150px;
 }
 select {
     margin-top: 15px;
