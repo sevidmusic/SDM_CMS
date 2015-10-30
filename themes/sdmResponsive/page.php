@@ -7,7 +7,7 @@
     </div>
 </div>
 <!-- row 2 -->
-<div class="row padded-row">
+<div class="row padded-row row-min-wid-fix">
     <?php
     $sideBarExists = (SdmAssembler::sdmAssemblerGetContentHtml('side-menu', $sdmassembler_themeContentObject) === '<!-- side-menu placeholder -->' ? FALSE : TRUE);
     if ($sideBarExists === TRUE) {

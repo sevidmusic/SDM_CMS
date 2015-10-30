@@ -7,10 +7,10 @@
 */
 
 body {
-    background: -webkit-linear-gradient(left top, black , #99ccff, black); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(bottom right, black , #99ccff, black); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(bottom right, black , #99ccff, black); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(to bottom right, black , #99ccff, black); /* Standard syntax (must be last) */
+    background: -webkit-linear-gradient(left top, black , #55eeff, black); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(bottom right, black , #55eeff, black); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(bottom right, black , #55eeff, black); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(to bottom right, black , #55eeff, black); /* Standard syntax (must be last) */
     margin: 0;
     /** the following three lines prevent bg from repeating **/
     height: 100%;
@@ -56,13 +56,39 @@ body {
 .padded-row {
     padding: 20px;
 }
+
 /* Tablet Styles */
 @media only screen and (min-width: 600px) {
-
+    body {
+        background: -webkit-linear-gradient(left top, black , #77ddff, black); /* For Safari 5.1 to 6.0 */
+        background: -o-linear-gradient(bottom right, black ,  #77ddff, black); /* For Opera 11.1 to 12.0 */
+        background: -moz-linear-gradient(bottom right, black ,  #77ddff, black); /* For Firefox 3.6 to 15 */
+        background: linear-gradient(to bottom right, black ,  #77ddff, black); /* Standard syntax (must be last) */
+        margin: 0;
+        /** the following three lines prevent bg from repeating **/
+        height: 100%;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
 }
 
 /* Desktop Styles */
 @media only screen and (min-width: 768px) {
+    body{
+        background: -webkit-linear-gradient(left top, black , #99ccff, black); /* For Safari 5.1 to 6.0 */
+        background: -o-linear-gradient(bottom right, black , #99ccff, black); /* For Opera 11.1 to 12.0 */
+        background: -moz-linear-gradient(bottom right, black , #99ccff, black); /* For Firefox 3.6 to 15 */
+        background: linear-gradient(to bottom right, black , #99ccff, black); /* Standard syntax (must be last) */
+        margin: 0;
+        /** the following three lines prevent bg from repeating **/
+        height: 100%;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
 
+    /* Prevent elements from collapsing on window resize on desktops by setting min-width for desktops */
+    .row-min-wid-fix {
+        min-width: 1040px;
+    }
 }
 
