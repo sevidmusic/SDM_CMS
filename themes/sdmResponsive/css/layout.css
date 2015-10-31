@@ -15,12 +15,35 @@
     include the padding and border in an element's
     total width and height. This prevents borders and
     padding from changing an elements overall width.
-    @see http://www.w3schools.com/css/css3_box-sizing.asp for more info
+    @see http://www.w3schools.com/css/css3_box-sizing.asp
+    for more info.
+        Another article, @see https://css-tricks.com/box-sizing/,
+    also explains why it is important to insure including
+    pseudo elements in the application of box-sizing. However,
+    as the article points out, the inclination to simply set...:
+        *, *:before, *:after {box-sizing: border-bos;}
+    ... will prevent designers from utilizing other
+    box-sizing properties if needed, so to solve this
+    set box-sizing to border-box for the parent html
+    element and have all other elements inherit their
+    box-sizing, this way elements can use other box-sizing
+    properties while all other elements default to the border-box
+    property;
 */
 
-* {
+html {
+    /* for older browsers */
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    /* moder browsers */
     box-sizing: border-box;
-    word-wrap: break-word; /* solves problem of text leaving containing element without the need for overflow:hidden||scroll||auto; Looks better because there are no scroll bars and text does not get cut off, instead it just moves to a newline as the screen re-sizes to accomodate a shrinking parent element */
+}
+*, *:before, *:after {
+    /* for older browsers */
+    -webkit-box-sizing: inherit;
+    -moz-box-sizing: inherit;
+    /* moder browsers */
+    box-sizing: inherit;
 }
 
 
