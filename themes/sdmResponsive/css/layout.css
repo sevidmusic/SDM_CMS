@@ -20,6 +20,7 @@
 
 * {
     box-sizing: border-box;
+    word-wrap: break-word; /* solves problem of text leaving containing element without the need for overflow:hidden||scroll||auto; Looks better because there are no scroll bars and text does not get cut off, instead it just moves to a newline as the screen re-sizes to accomodate a shrinking parent element */
 }
 
 
