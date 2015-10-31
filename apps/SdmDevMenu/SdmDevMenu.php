@@ -13,4 +13,4 @@ foreach ($availablePages as $link) {
 }
 $devMenu .= '</ul></div><!-- End Dev Menu -->';
 // incorporate devmenu
-$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, $devMenu, array('wrapper' => 'main_content', 'incmethod' => 'append', 'incpages' => $availablePages, 'roles' => array('root')));
+$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, $devMenu, array('wrapper' => 'side-menu', 'incmethod' => 'append', 'incpages' => $availablePages, 'roles' => array('root')));

@@ -27,7 +27,7 @@ if (SdmGatekeeper::sdmGatekeeperAuthenticate() === TRUE) {
         ),
         array(
             'id' => 'password',
-            'type' => 'text',
+            'type' => 'password',
             'element' => 'Password',
             'value' => '',
             'place' => '1',
