@@ -50,7 +50,7 @@ function randPara($lineLimit, $wordPerLine = 12, $wordLen = 12, $mode = NULL) {
 if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmContentGenerator') {
     $pageLimit = 5;
     for ($index = 0; $index < $pageLimit; $index++) {
-        $cm->sdmCmsUpdateContent(randString('alpha', 8), 'main_content', randPara(12, 100, 9, 'alpha'));
+        $cm->sdmCmsUpdateContent(randString('alpha', 8), 'main_content', randPara(rand(1, 12), rand(10, 900), rand(1, 12), 'alpha'));
     }
 }
 $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, $output, $options);
