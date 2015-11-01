@@ -14,7 +14,7 @@ if ($sdmForm->sdmFormGetSubmittedFormValue('page') !== 'contentManager') {
                     <div id"contentManager">
                         <p>Form has been submitted with the following values.
                             <ul>
-                                <li>PAGE : ' . $sdmForm->sdmFormGetSubmittedFormValue('page') . '</li>';
+                                <li>PAGE : <a href="' . $sdmassembler->sdmCoreGetRootDirectoryUrl() . '?page=' . $sdmForm->sdmFormGetSubmittedFormValue('page') . '">' . $sdmForm->sdmFormGetSubmittedFormValue('page') . '</a></li>';
         // loop through and update wrappers
         foreach ($sdmcms->sdmCmsDetermineAvailableWrappers() as $dispalyValue => $machineValue) {
             $sdmcms->sdmCmsUpdateContent($sdmForm->sdmFormGetSubmittedFormValue('page'), $machineValue, nl2br($sdmForm->sdmFormGetSubmittedFormValue($machineValue)));
