@@ -79,14 +79,16 @@ function randPara($numPara, $wordPerPara = 12, $wordLen = 12, $mode = NULL) {
 }
 
 if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmContentGenerator') {
-    $pageLimit = 5; // form element
+    ini_set('max_execution_time', 3000);
+    $pageLimit = 50; // form element
     $wrappers = $cm->sdmCmsDetermineAvailableWrappers(); // form element |
     $genPagenames = array();
     for ($index = 0; $index < $pageLimit; $index++) {
         $genPagename = randString('alpha', 8);
         $genPagenames[] = $genPagename;
-        foreach ($wrappers as $wrapperName => $wrapperId) {
-            $cm->sdmCmsUpdateContent($genPagename, $wrapperId, randPara(rand(1, 12), rand(10, 900), rand(1, 12), 'alpha'));
+        foreach ($wrappers as $wrapperId) {
+            $para = randPara(rand(1, 12), rand(10, 900), rand(1, 12), 'alpha');
+            $cm->sdmCmsUpdateContent($genPagename, $wrapperId, $para);
         }
     }
     $output .= '<p>' . $pageLimit . ' pages were generated.</p>';
