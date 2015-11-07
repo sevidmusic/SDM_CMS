@@ -182,7 +182,7 @@ class SdmAssembler extends SdmCore {
         // load our data object
         $sdmassembler_dataObject = $this->sdmCoreLoadDataObject();
         // load and assemble apps
-        $this->sdmAssemblerLoadCoreApps($sdmassembler_dataObject);
+        $this->sdmAssemblerLoadApps($sdmassembler_dataObject);
         // make sure content exists, if it does return it, if not, print a content not found message
         switch (isset($sdmassembler_dataObject->content->$page)) {
             case TRUE:
@@ -235,7 +235,7 @@ class SdmAssembler extends SdmCore {
      * loading all apps
      * @param object $sdmassembler_dataObject <p>The Content object for the requested page.</p>
      */
-    private function sdmAssemblerLoadCoreApps($sdmassembler_dataObject) {
+    private function sdmAssemblerLoadApps($sdmassembler_dataObject) {
         // store parent (i.e. SdmCore) in an appropriatly named var to give apps easy access
         //$sdmcore = new parent; @depreceated : Created unecessary dependency, made it harder to maintain code
         // @depreceated because SDM CORE provides a method for determining the requested page
