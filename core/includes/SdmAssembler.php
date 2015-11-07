@@ -11,19 +11,6 @@
  */
 class SdmAssembler extends SdmCore {
 
-    private static $Initialized;
-
-    /**
-     * Initializes a single instance of the SdmAssembler class.
-     * @return object <p>An SdmAssembler Object</p>
-     */
-    public static function sdmAssemblerInitializeAssembler() {
-        if (!isset(self::$Initialized)) {
-            self::$Initialized = new SdmAssembler;
-        }
-        return self::$Initialized;
-    }
-
     /**
      * <p>Returns the HTML header for the page as a string. The SdmAssembler will give apps
      * a chance to modify the header prior to returning it. This method also reads app and theme

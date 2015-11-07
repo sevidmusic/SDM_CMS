@@ -18,6 +18,6 @@ $sdmGatekeeper = new SdmGatekeeper();
 // start core session
 $sdmGatekeeper->sessionStart();
 // initialize assembler
-$sdmassembler = SdmAssembler::sdmAssemblerInitializeAssembler();
+$sdmassembler = new SdmAssembler();
 // load and assemble content | this var is used excluisively by the current themes page.php
 $sdmassembler_themeContentObject = $sdmassembler->sdmAssemblerLoadAndAssembleContentObject();
