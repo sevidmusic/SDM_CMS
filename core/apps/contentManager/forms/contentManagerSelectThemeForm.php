@@ -34,6 +34,6 @@ $editcontentform->form_elements = array(
     ),
 );
 
-$editcontentform->sdmFormBuildForm($sdmcore->sdmCoreGetRootDirectoryUrl());
+$editcontentform->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
 // add form to content
 $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<!-- contentManager Edit Content Form -->' . $editcontentform->sdmFormGetForm() . '<!-- End contentManager Edit Content Form -->', $options);

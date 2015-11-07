@@ -5,7 +5,7 @@ $on = array(); // used for display
 $off = array(); // used for display
 // form submitted successfully
 if (SdmForm::sdmFormGetSubmittedFormValue('content_manager_form_submitted') === 'content_manager_form_submitted') {
-    //$sdmcore->sdmCoreSdmReadArray($_POST['SdmForm']);
+    //$sdmassembler->sdmCoreSdmReadArray($_POST['SdmForm']);
     foreach ($sdmcms->sdmCmsDetermineAvailableApps() as $appname => $app) {
         $newAppState = SdmForm::sdmFormGetSubmittedFormValue($app);
         $sdmcms->sdmCmsSwitchAppState($app, $newAppState);

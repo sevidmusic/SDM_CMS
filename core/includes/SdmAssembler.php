@@ -237,16 +237,15 @@ class SdmAssembler extends SdmCore {
      */
     private function sdmAssemblerLoadCoreApps($sdmassembler_dataObject) {
         // store parent (i.e. SdmCore) in an appropriatly named var to give apps easy access
-        $sdmcore = new parent;
-        // store object in an appropriatly named var to give apps easy access
-        $sdmassembler = $this;
-        // @TODO : Unless you find good reason to keep it, the $sdmassembler_requestedpage var should be depreceated because SDM CORE provides a method for determining the requested page... store requested page (determined by CORE) in an appropriatly named var to give apps easy access
-        $sdmassembler_requestedpage = $this->sdmCoreDetermineRequestedPage();
+        //$sdmcore = new parent; @depreceated : Created unecessary dependency, made it harder to maintain code
+        // @depreceated because SDM CORE provides a method for determining the requested page
+        //$sdmassembler_requestedpage = $this->sdmCoreDetermineRequestedPage();
         // store data object in an appropriatly named for to give apps easy access
-        $sdmassembler_dataObject = $sdmassembler_dataObject;
-        $settings = $sdmcore->sdmCoreLoadDataObject()->settings;
-        $coreapps = $sdmcore->sdmCoreGetDirectoryListing('', 'coreapps');
-        $userapps = $sdmcore->sdmCoreGetDirectoryListing('', 'userapps');
+        // store SdmAssembler object in an appropriatly named var to give apps easy access
+        $sdmassembler = $this;
+        $settings = $this->sdmCoreLoadDataObject()->settings;
+        $coreapps = $this->sdmCoreGetDirectoryListing('', 'coreapps');
+        $userapps = $this->sdmCoreGetDirectoryListing('', 'userapps');
         $apps = array();
         foreach ($coreapps as $value) {
             if ($value != '.' && $value != '..' && $value != '.DS_Store') {

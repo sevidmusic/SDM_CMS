@@ -1,10 +1,10 @@
 <?php
 
 // load contentManager functions || this is only needed if this form requires the functions, some forms may not
-require_once($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/contentManager/includes/contentManagerFunctions.php');
+require_once($sdmassembler->sdmCoreGetCoreAppDirectoryPath() . '/contentManager/includes/contentManagerFunctions.php');
 
 // determine available pages
-$available_pages = $sdmcore->sdmCoreDetermineAvailablePages();
+$available_pages = $sdmassembler->sdmCoreDetermineAvailablePages();
 // filter out "Content Manager" pages so they can not be editied
 $editable_pages = array_filter($available_pages, 'filter_content_manager_pages');
 // CREATE EDIT FORM OBJECT
@@ -28,6 +28,6 @@ $editcontentform->form_elements = array(
     ),
 );
 
-$editcontentform->sdmFormBuildForm($sdmcore->sdmCoreGetRootDirectoryUrl());
+$editcontentform->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
 // add form to content
 $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<!-- contentManager Edit Content Form -->' . $editcontentform->sdmFormGetForm() . '<!-- End contentManager Edit Content Form -->', $options);

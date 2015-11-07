@@ -1,5 +1,5 @@
 <?php
 
 require('../../includes/SdmCore.php');
-$sdmcore = new SdmCore();
-$sdmcore->sdmCoreSdmReadArray($sdmcore->sdmCoreLoadDataObject());
+$sdmassembler = new SdmCore();
+$sdmassembler->sdmCoreSdmReadArray($sdmassembler->sdmCoreLoadDataObject());
