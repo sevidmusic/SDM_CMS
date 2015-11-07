@@ -230,33 +230,14 @@ class SdmAssembler extends SdmCore {
     }
 
     /**
-     * Loads enabled CORE apps.
-     * @todo Change name to loadApps, more accurate description b/c this method is responsible for
-     * loading all apps
+     * Loads enabled apps.
      * @param object $sdmassembler_dataObject <p>The Content object for the requested page.</p>
      */
     private function sdmAssemblerLoadApps($sdmassembler_dataObject) {
-        // store parent (i.e. SdmCore) in an appropriatly named var to give apps easy access
-        //$sdmcore = new parent; @depreceated : Created unecessary dependency, made it harder to maintain code
-        // @depreceated because SDM CORE provides a method for determining the requested page
-        //$sdmassembler_requestedpage = $this->sdmCoreDetermineRequestedPage();
-        // store data object in an appropriatly named for to give apps easy access
         // store SdmAssembler object in an appropriatly named var to give apps easy access
         $sdmassembler = $this;
         $settings = $this->sdmCoreLoadDataObject()->settings;
-        $coreapps = $this->sdmCoreGetDirectoryListing('', 'coreapps');
-        $userapps = $this->sdmCoreGetDirectoryListing('', 'userapps');
-        $apps = array();
-        foreach ($coreapps as $value) {
-            if ($value != '.' && $value != '..' && $value != '.DS_Store') {
-                $apps[] = $value;
-            }
-        }
-        foreach ($userapps as $value) {
-            if ($value != '.' && $value != '..' && $value != '.DS_Store') {
-                $apps[] = $value;
-            }
-        }
+        $apps = $settings->enabledapps;
         foreach ($apps as $app) {
             /**
              * Check if the app has a .gk file, if it does then get it's parameters.
