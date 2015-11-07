@@ -256,15 +256,13 @@ class SdmAssembler extends SdmCore {
              */
             $userClear = ($gkParams === FALSE || in_array(SdmGatekeeper::SdmGatekeeperDetermineUserRole(), $gkParams['roles']) || in_array('all', $gkParams['roles']) ? TRUE : FALSE);
             if ($userClear === TRUE) {
-                if (property_exists($settings->enabledapps, $app)) {
-                    // load apps
-                    if (file_exists($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.php')) {
-                        require_once($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.php');
-                    } else if (file_exists($this->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.php')) {
-                        require($this->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.php');
-                    } else {
-                        echo '<!-- site has no enabled apps -->';
-                    }
+                // load apps
+                if (file_exists($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.php')) {
+                    require_once($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.php');
+                } else if (file_exists($this->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.php')) {
+                    require($this->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.php');
+                } else {
+                    echo '<!-- site has no enabled apps -->';
                 }
             } else { // user does not have permission to use this app
                 $this->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, 'You do not have permission to be here.', array('incpages' => array($app)));
