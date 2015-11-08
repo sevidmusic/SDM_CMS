@@ -232,20 +232,27 @@ class SdmAssembler extends SdmCore {
     /**
      * Loads enabled apps.
      * @param object $sdmassembler_dataObject <p>The Content object for the requested page.</p>
-     * @return null <p>Does not return anything.</p>
+     * @return bool <p>FALSE if any apps failed to load, TRUE if no problems occured when loading
+     * all apps.</p><p><b>NOTE</b>:<i>This method will return TRUE even if this methods call to
+     * $this->sdmAssemblerLoadApp() fails to load an app as a result of user having insufficient
+     * privlages. Only actual failures will result in this method returning FALSE.</i></p>
      */
     private function sdmAssemblerLoadApps($sdmassembler_dataObject) {
         $enabledApps = $this->sdmCoreDetermineEnabledApps();
         foreach ($enabledApps as $app) {
-            $this->sdmAssemblerLoadApp($app, $sdmassembler_dataObject);
+            $status[] = $this->sdmAssemblerLoadApp($app, $sdmassembler_dataObject);
         }
+        $this->sdmCoreSdmReadArray($status);
+        return (in_array(FALSE, $status, TRUE));
     }
 
     /**
      * Loads an individual app. This method should only be used internally by
      * the sdmAssembler()'s sdmAssemblerLoadApps() method.
      * @param string $app <p>The name of the app to load</p>
-     * @return bool <p>TRUE if app was loaded, FALSE if app could not be loaded.</p>
+     * @return mixed <p>TRUE if app was loaded, FALSE if app could not be loaded as a result
+     * of an error, such as the app not being found, or the string 'accessDenied' if app was
+     * not loaded as a result of user not having sufficient privlages to use app.</p>
      */
     private function sdmAssemblerLoadApp($app, $sdmassembler_dataObject) {
         // store SdmAssembler object in an appropriatly named var to give apps easy access
@@ -276,7 +283,7 @@ class SdmAssembler extends SdmCore {
         }
         // user does not have permission to use this app
         $this->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, 'You do not have permission to be here.', array('incpages' => array($app)));
-        return FALSE;
+        return 'accessDenied';
     }
 
     /**
