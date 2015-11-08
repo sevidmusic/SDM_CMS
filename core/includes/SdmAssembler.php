@@ -235,9 +235,8 @@ class SdmAssembler extends SdmCore {
      * @return null <p>Does not return anything.</p>
      */
     private function sdmAssemblerLoadApps($sdmassembler_dataObject) {
-        $settings = $this->sdmCoreLoadDataObject()->settings;
-        $apps = $settings->enabledapps;
-        foreach ($apps as $app) {
+        $enabledApps = $this->sdmCoreDetermineEnabledApps();
+        foreach ($enabledApps as $app) {
             $this->sdmAssemblerLoadApp($app, $sdmassembler_dataObject);
         }
     }
