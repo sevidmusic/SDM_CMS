@@ -232,41 +232,46 @@ class SdmAssembler extends SdmCore {
     /**
      * Loads enabled apps.
      * @param object $sdmassembler_dataObject <p>The Content object for the requested page.</p>
+     * @return null <p>Does not return anything.</p>
      */
     private function sdmAssemblerLoadApps($sdmassembler_dataObject) {
-        // store SdmAssembler object in an appropriatly named var to give apps easy access
-        $sdmassembler = $this;
         $settings = $this->sdmCoreLoadDataObject()->settings;
         $apps = $settings->enabledapps;
         foreach ($apps as $app) {
-            /**
-             * Check if the app has a .gk file, if it does then get it's parameters.
-             * NOTE: If the app does NOT have a .gk file then
-             * SdmGatekeeper::sdmGatekeeperReadAppGkParams() will return
-             * FALSE.
-             */
-            $gkParams = SdmGatekeeper::sdmGatekeeperReadAppGkParams($app);
-            //$this->sdmCoreSdmReadArray(array('app' => $app, 'GkParams' => ($gkParams === FALSE ? 'FALSE' : $gkParams)));
-            /**
-             * If .gk file does NOT exist, SdmGatekeeper::sdmGatekeeperReadAppGkParams()
-             * returned FALSE, then assume app is not restricted to role,
-             * if .gk file exists then check the roles parameter to see which roles
-             * have permission to use this app, if the roles parameter has the 'all' value
-             * in it then all users will be able to use this app.
-             */
-            $userClear = ($gkParams === FALSE || in_array(SdmGatekeeper::SdmGatekeeperDetermineUserRole(), $gkParams['roles']) || in_array('all', $gkParams['roles']) ? TRUE : FALSE);
-            if ($userClear === TRUE) {
-                // load apps
-                if (file_exists($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.php')) {
-                    require_once($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.php');
-                } else if (file_exists($this->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.php')) {
-                    require($this->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.php');
-                } else {
-                    echo '<!-- site has no enabled apps -->';
-                }
-            } else { // user does not have permission to use this app
-                $this->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, 'You do not have permission to be here.', array('incpages' => array($app)));
+            $this->sdmAssemblerLoadApp($app, $sdmassembler_dataObject);
+        }
+    }
+
+    /**
+     * Loads an individual app. This method should only be used internally by
+     * the sdmAssembler()'s sdmAssemblerLoadApps() method.
+     * @param string $app <p>The name of the app to load</p>
+     * @return null <p>Does not return anything.</p>
+     */
+    private function sdmAssemblerLoadApp($app, $sdmassembler_dataObject) {
+        // store SdmAssembler object in an appropriatly named var to give apps easy access
+        $sdmassembler = $this;
+        // read app gatekeeper parameters
+        $gkParams = SdmGatekeeper::sdmGatekeeperReadAppGkParams($app);
+        /**
+         * If SdmGatekeeper::sdmGatekeeperReadAppGkParams()
+         * returned FALSE, then assume app is not restricted to role,
+         * if .gk file exists then check the roles parameter to see which roles
+         * have permission to use this app, if the roles parameter has the 'all' value
+         * in it then all users will be able to use this app.
+         */
+        $userClear = ($gkParams === FALSE || in_array(SdmGatekeeper::SdmGatekeeperDetermineUserRole(), $gkParams['roles']) || in_array('all', $gkParams['roles']) ? TRUE : FALSE);
+        if ($userClear === TRUE) {
+            // load apps
+            if (file_exists($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.php')) {
+                require_once($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.php');
+            } else if (file_exists($this->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.php')) {
+                require($this->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.php');
+            } else {
+                echo '<!-- site has no enabled apps -->';
             }
+        } else { // user does not have permission to use this app
+            $this->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, 'You do not have permission to be here.', array('incpages' => array($app)));
         }
     }
 
