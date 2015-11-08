@@ -245,7 +245,7 @@ class SdmAssembler extends SdmCore {
      * Loads an individual app. This method should only be used internally by
      * the sdmAssembler()'s sdmAssemblerLoadApps() method.
      * @param string $app <p>The name of the app to load</p>
-     * @return null <p>Does not return anything.</p>
+     * @return bool <p>TRUE if app was loaded, FALSE if app could not be loaded.</p>
      */
     private function sdmAssemblerLoadApp($app, $sdmassembler_dataObject) {
         // store SdmAssembler object in an appropriatly named var to give apps easy access
@@ -260,18 +260,23 @@ class SdmAssembler extends SdmCore {
          * in it then all users will be able to use this app.
          */
         $userClear = ($gkParams === FALSE || in_array(SdmGatekeeper::SdmGatekeeperDetermineUserRole(), $gkParams['roles']) || in_array('all', $gkParams['roles']) ? TRUE : FALSE);
+        $appPath = '/' . $app . '/' . $app . '.php';
         if ($userClear === TRUE) {
             // load apps
-            if (file_exists($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.php')) {
-                require_once($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.php');
-            } else if (file_exists($this->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.php')) {
-                require($this->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.php');
-            } else {
-                echo '<!-- site has no enabled apps -->';
+            if (file_exists($this->sdmCoreGetCoreAppDirectoryPath() . $appPath)) {
+                require_once($this->sdmCoreGetCoreAppDirectoryPath() . $appPath);
+                return TRUE;
+            } else if (file_exists($this->sdmCoreGetUserAppDirectoryPath() . $appPath)) {
+                require($this->sdmCoreGetUserAppDirectoryPath() . $appPath);
+                return TRUE;
             }
-        } else { // user does not have permission to use this app
-            $this->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, 'You do not have permission to be here.', array('incpages' => array($app)));
+            // failed to load app | log error to error log so admin can debug problem.
+            error_log('Warning: SdmAssembler() could not load app "' . $app . '". Make sure the app is installed in either the core or user app directory and that it is configured properly. This error most likely occured becuase the assmebler could not locate the "' . $app . '" app at either "' . $this->sdmCoreGetCoreAppDirectoryPath() . $appPath . '" or "' . $this->sdmCoreGetUserAppDirectoryPath() . $appPath . '"');
+            return FALSE;
         }
+        // user does not have permission to use this app
+        $this->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, 'You do not have permission to be here.', array('incpages' => array($app)));
+        return FALSE;
     }
 
     /**
