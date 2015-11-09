@@ -61,7 +61,7 @@ class SdmCore {
         $this->CoreAppDirectoryPath = $this->sdmCoreGetCoreDirectoryPath() . '/apps';
         $this->CoreAppDirectoryUrl = $this->sdmCoreGetCoreDirectoryUrl() . '/apps';
         $this->DataDirectoryPath = $this->sdmCoreGetCoreDirectoryPath() . '/sdm';
-        $this->DataDirectoryUrl = $this->sdmCoreGetCoreDirectoryUrl() . '/sdm/data.json';
+        $this->DataDirectoryUrl = $this->sdmCoreGetCoreDirectoryUrl() . '/sdm';
         $this->requestedPage = (isset($_GET['page']) && $_GET['page'] != '' ? $_GET['page'] : 'homepage');
     }
 
@@ -230,7 +230,8 @@ class SdmCore {
      * @return object <p>The content object loaded from $this->CoreDirectoryUrl/sdm/data.json or from the DB</p>
      */
     final public function sdmCoreLoadDataObject() {
-        $data = json_decode(file_get_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json'));
+        $coreData = $this->sdmCoreCurlGrabContent($this->sdmCoreGetDataDirectoryUrl() . '/data.json');
+        $data = json_decode($coreData);
         return $data;
     }
 
