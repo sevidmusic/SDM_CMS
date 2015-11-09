@@ -242,7 +242,6 @@ class SdmAssembler extends SdmCore {
         foreach ($enabledApps as $app) {
             $status[] = $this->sdmAssemblerLoadApp($app, $sdmassembler_dataObject);
         }
-        $this->sdmCoreSdmReadArray($status);
         return (in_array(FALSE, $status, TRUE));
     }
 
