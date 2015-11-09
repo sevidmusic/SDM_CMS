@@ -261,7 +261,7 @@ class SdmCore {
         ini_set('session.hash_function', 'sha512');
         ini_set('session.hash_bits_per_character', 6);
         ini_set('session.gc_maxlifetime', 180); // set in seconds | determines how a long a session file can exist before it becomes eligible for Garbage Collection
-        ini_set('session.gc_probability', 100); // chance that GC will occur
+        ini_set('session.gc_probability', 20); // chance that GC will occur
         ini_set('session.gc_divisor', 100); // probability divisor, if gc_propbability is 50 and gc_divisor is 100 then there is a 50% chance of GC (i.e. 50/100)
         // set include path
         set_include_path($this->sdmCoreGetIncludesDirectoryPath());

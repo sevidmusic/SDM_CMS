@@ -189,7 +189,6 @@ class SdmAssembler extends SdmCore {
                 //var_dump($sdmassembler_dataObject->content->$page);
                 $sdmassembler_dataObject = $this->sdmAssemblerPreparePageForDisplay($sdmassembler_dataObject->content->$page);
                 return $sdmassembler_dataObject;
-                break;
             default:
                 // log bad request to our badRequestsLog.log file
                 $badRequestId = chr(rand(65, 90)) . rand(10, 99) . chr(rand(65, 90)) . rand(10, 99);
