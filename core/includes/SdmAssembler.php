@@ -183,7 +183,7 @@ class SdmAssembler extends SdmCore {
         $sdmassembler_dataObject = $this->sdmCoreLoadDataObject();
         // load and assemble apps
         $this->sdmAssemblerLoadApps($sdmassembler_dataObject);
-        // make sure content exists, if it does return it, if not, print a content not found message
+        // make sure content exists, if it does return it, if not, return a content not found message and log the bad request to the bad requests log
         switch (isset($sdmassembler_dataObject->content->$page)) {
             case TRUE:
                 //var_dump($sdmassembler_dataObject->content->$page);
@@ -222,8 +222,8 @@ class SdmAssembler extends SdmCore {
      *
      */
     private function sdmAssemblerPreparePageForDisplay($page) {
-        foreach ($page as $name => $value) {
-            $page->$name = html_entity_decode($value, ENT_HTML5, 'UTF-8');
+        foreach ($page as $wrapper => $content) {
+            $page->$wrapper = html_entity_decode($content, ENT_HTML5, 'UTF-8');
         }
         return $page;
     }
