@@ -2,4 +2,4 @@
 
 require('../../includes/SdmCore.php');
 $sdmassembler = new SdmCore();
-$sdmassembler->sdmCoreSdmReadArray($sdmassembler->sdmCoreLoadDataObject());
+$sdmassembler->sdmCoreSdmReadArray($_POST['coredata']);
