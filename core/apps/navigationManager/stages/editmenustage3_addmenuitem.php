@@ -39,7 +39,7 @@ $addMenuItemForm->form_elements = array(
         'id' => 'destinationInternal',
         'type' => 'select',
         'element' => 'Destination <i style="font-size:.7em;">(<b>internal</b>: Select a pagename from this menu if this menu item\'s destination type is internal.)</i>',
-        'value' => array_merge($sdmassembler->sdmCoreDetermineAvailablePages(), json_decode(json_encode($sdmassembler->sdmCoreDetermineEnabledApps()), TRUE)),
+        'value' => array_merge($sdmassembler->sdmCoreDetermineAvailablePages(), json_decode(json_encode($sdmassembler->sdmCoreDetermineEnabledApps()), true)),
         'place' => '4',
     ),
     array(
@@ -81,7 +81,7 @@ $addMenuItemForm->form_elements = array(
         'id' => 'menuItemEnabled',
         'type' => 'select',
         'element' => 'Enabled <i style="font-size:.7em;">(If you choose to disable it this menu item will not be available until you enable it)</i>',
-        'value' => array('enabled' => TRUE, 'disabled' => FALSE),
+        'value' => array('enabled' => true, 'disabled' => false),
         'place' => '10',
     ),
     array(

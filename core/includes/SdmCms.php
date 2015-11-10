@@ -31,7 +31,7 @@ class SdmCms extends SdmCore {
      * to a div with an <b><i>id</i></b> of <b>'main_content'</b> in the current themes page.php and that div
      * will display the content with an <b><i>$id</i></b> of <b>'main_content'</b></p>
      * @param string $html <p>The html for this content.</p>
-     * @return int The number of bytes written to data.json or the DB. Returns FALSE on failure.
+     * @return int The number of bytes written to data.json or the DB. Returns false on failure.
      */
     public function sdmCmsUpdateContent($page, $id, $html) {
         $content = $this->sdmCoreGetDataObject();
@@ -40,7 +40,7 @@ class SdmCms extends SdmCore {
         $filtered_html2 = iconv("UTF-8", "ISO-8859-1//IGNORE", $filtered_html);
         $filtered_html3 = iconv("ISO-8859-1", "UTF-8", $filtered_html2);
         // if the page does not already exist in CORE create a placeholder object for it
-        if (!isset($content->content->$page) === TRUE) {
+        if (!isset($content->content->$page) === true) {
             $content->content->$page = new stdClass();
         }
         $content->content->$page->$id = htmlentities(utf8_encode(trim($filtered_html3)), ENT_SUBSTITUTE | ENT_DISALLOWED | ENT_HTML5, 'UTF-8');
@@ -78,7 +78,7 @@ class SdmCms extends SdmCore {
      */
     public function sdmCmsLoadSpecificContent($page = 'homepage', $contentWrapper = 'main_content') {
         // load our json data from data.json and convert into an array
-        $data = json_decode(file_get_contents($this->sdmCoreGetCoreDirectoryPath() . '/sdm/data.json'), TRUE);
+        $data = json_decode(file_get_contents($this->sdmCoreGetCoreDirectoryPath() . '/sdm/data.json'), true);
         return $data['content'][$page][$contentWrapper]; // @TODO : Use object notation instead of array notation
     }
 
@@ -107,7 +107,7 @@ class SdmCms extends SdmCore {
     /**
      * <p>Changes the sites theme.</p>
      * @param string $theme <p>The desired theme</p>
-     * @return int The number of bytes written to data.json or the DB. Returns FALSE on failure.
+     * @return int The number of bytes written to data.json or the DB. Returns false on failure.
      */
     public function sdmCmsChangeTheme($theme) {
         $data = $this->sdmCoreGetDataObject();
@@ -167,7 +167,7 @@ class SdmCms extends SdmCore {
      * Switches an app from on to off.
      * @param string $app <p>Name of the app to switch on or of.</p>
      * @param string $state  <p>State of the app, either on or off.</p>
-     * @return bool TRUE on sucessful state change, FALSE if unable to switch state.
+     * @return bool true on sucessful state change, false if unable to switch state.
      */
     public function sdmCmsSwitchAppState($app, $state) {
         $data = $this->sdmCoreGetDataObject();
@@ -192,7 +192,7 @@ class SdmCms extends SdmCore {
         $data->settings->enabledapps = $enabledApps;
         //$this->sdmCoreSdmReadArray(array('DATA OBJECT TO BE SAVED' => $data));
         $jsondata = json_encode($data);
-        return (file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $jsondata, LOCK_EX) > 0 ? TRUE : FALSE);
+        return (file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $jsondata, LOCK_EX) > 0 ? true : false);
     }
 
 }

@@ -1,7 +1,7 @@
 <?php
 
 $availableMenus = $sdmnms->sdmNmsGenerateMenuPropertiesArray('menuDisplayName', 'menuId');
-if (!empty($availableMenus) === TRUE) {
+if (!empty($availableMenus) === true) {
     $deleteMenuFormStage1 = new SdmForm();
     $deleteMenuFormStage1->form_handler = 'navigationManagerDeleteMenuStage2';
     $deleteMenuFormStage1->method = 'post';

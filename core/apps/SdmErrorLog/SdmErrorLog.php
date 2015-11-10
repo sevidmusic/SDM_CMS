@@ -16,7 +16,7 @@ foreach ($error_log as $error_number => $error_message) {
     $default_text_color = '#FFFFFF';
     $background_color = ((1 + intval($error_number)) % 2 == 0 ? '#000000' : '#303030');
     // determine which error color code to use
-    $output .= '<p style="overflow:auto;border:1px solid; border-radius: 20px; color:' . (strpos($error_message, 'Notice') !== false ? $notice_color : (strpos($error_message, 'Warning') !== FALSE ? $warning_color : (strpos($error_message, 'Fatal') !== FALSE || strpos($error_message, 'fatal') !== FALSE ? $fatal_color : $default_text_color))) . ';padding:20px;background:' . $background_color . '">' . strval((1 + intval($error_number))) . '. ' . $error_message . '</p>';
+    $output .= '<p style="overflow:auto;border:1px solid; border-radius: 20px; color:' . (strpos($error_message, 'Notice') !== false ? $notice_color : (strpos($error_message, 'Warning') !== false ? $warning_color : (strpos($error_message, 'Fatal') !== false || strpos($error_message, 'fatal') !== false ? $fatal_color : $default_text_color))) . ';padding:20px;background:' . $background_color . '">' . strval((1 + intval($error_number))) . '. ' . $error_message . '</p>';
 }
 $output .= ($output === '' ? '<p style="color:lightgreen;border:1px solid; border-radius: 20px; padding:20px;background:black;">No errors to report.</p>' : '');
 
@@ -44,7 +44,7 @@ $clearErrorsForm->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
 $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, $clearErrorsForm->sdmFormGetForm(), array('wrapper' => 'main_content', 'incmethod' => 'append', 'incpages' => array('SdmErrorLog')));
 if (isset($_POST['SdmForm']) && isset($_POST['SdmForm']['clear_error_log' . $_POST['SdmForm']['form_id']]) && $_POST['SdmForm']['clear_error_log' . $_POST['SdmForm']['form_id']] !== 'clear_error_log' . $clearErrorsForm->sdmFormGetFormId()) {
     //$sdmassembler->sdmCoreSdmReadArray($_POST);
-    if (file_put_contents($sdmassembler->sdmCoreGetCoreDirectoryPath() . '/logs/sdm_core_errors.log', trim('')) !== FALSE) {
+    if (file_put_contents($sdmassembler->sdmCoreGetCoreDirectoryPath() . '/logs/sdm_core_errors.log', trim('')) !== false) {
         $randInt = rand(1000, 9999);
         $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '
             <!-- this js reloads the page once after the clear error log form is submitted so that the Sdm Error Log page reflects the change. If we did not reload then the old error log could still be shown until the page is reloaded manually | there is still a chance this data may persist for one page load -->

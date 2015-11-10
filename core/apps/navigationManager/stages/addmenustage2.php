@@ -5,7 +5,7 @@
  */
 // check to make sure the menuItem number is set, if it doesnt report an error since we cant proceed without it
 switch (SdmForm::sdmFormGetSubmittedFormValue('menuItem') !== null) {
-    case TRUE:
+    case true:
         $addMenuFormStage2 = new SdmForm();
         $addMenuFormStage2->form_method = 'post';
         $addMenuFormStage2->form_handler = (SdmForm::sdmFormGetSubmittedFormValue('menuItem') === SdmForm::sdmFormGetSubmittedFormValue('number_of_menu_items') ? 'navigationManagerAddMenuStage3' : 'navigationManagerAddMenuStage2');
@@ -43,7 +43,7 @@ switch (SdmForm::sdmFormGetSubmittedFormValue('menuItem') !== null) {
                 'id' => 'destinationInternal',
                 'type' => 'select',
                 'element' => 'Destination <i style="font-size:.7em;">(<b>internal</b>: Select a pagename from this menu if this menu item\'s destination type is internal.)</i>',
-                'value' => array_merge($sdmassembler->sdmCoreDetermineAvailablePages(), json_decode(json_encode($sdmassembler->sdmCoreDetermineEnabledApps()), TRUE)),
+                'value' => array_merge($sdmassembler->sdmCoreDetermineAvailablePages(), json_decode(json_encode($sdmassembler->sdmCoreDetermineEnabledApps()), true)),
                 'place' => '4',
             ),
             array(
@@ -85,7 +85,7 @@ switch (SdmForm::sdmFormGetSubmittedFormValue('menuItem') !== null) {
                 'id' => 'menuItemEnabled',
                 'type' => 'select',
                 'element' => 'Enabled <i style="font-size:.7em;">(If you choose to disable it this menu item will not be available until you enable it)</i>',
-                'value' => array('enabled' => TRUE, 'disabled' => FALSE),
+                'value' => array('enabled' => true, 'disabled' => false),
                 'place' => '10',
             ),
             array(
@@ -99,7 +99,7 @@ switch (SdmForm::sdmFormGetSubmittedFormValue('menuItem') !== null) {
                 'id' => 'menuItemWrappingTagType',
                 'type' => 'select',
                 'element' => 'Wrapping Tag Type <i style="font-size:.7em;">(The html tag to wrap this menu item with. NOTE:if any menu items use li, all menu items must use li so a list can be created. The form will enforce this.)</i>',
-                'value' => (SdmForm::sdmFormGetSubmittedFormValue('menuItemWrappingTagType') === 'li' ? array('li' => 'li') : (SdmForm::sdmFormGetSubmittedFormValue('menuItem') > 1 === TRUE ? array('div' => 'div', 'p' => 'p', 'h1' => 'h1', 'h2' => 'h2', 'h3' => 'h3', 'h4' => 'h4', 'h5' => 'h5', 'h6' => 'h6') : array('div' => 'div', 'li' => 'li', 'p' => 'p', 'h1' => 'h1', 'h2' => 'h2', 'h3' => 'h3', 'h4' => 'h4', 'h5' => 'h5', 'h6' => 'h6'))),
+                'value' => (SdmForm::sdmFormGetSubmittedFormValue('menuItemWrappingTagType') === 'li' ? array('li' => 'li') : (SdmForm::sdmFormGetSubmittedFormValue('menuItem') > 1 === true ? array('div' => 'div', 'p' => 'p', 'h1' => 'h1', 'h2' => 'h2', 'h3' => 'h3', 'h4' => 'h4', 'h5' => 'h5', 'h6' => 'h6') : array('div' => 'div', 'li' => 'li', 'p' => 'p', 'h1' => 'h1', 'h2' => 'h2', 'h3' => 'h3', 'h4' => 'h4', 'h5' => 'h5', 'h6' => 'h6'))),
                 'place' => '12',
             ),
             array(

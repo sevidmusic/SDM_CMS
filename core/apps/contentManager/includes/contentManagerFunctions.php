@@ -2,8 +2,8 @@
 
 /**
  * <p>Searches a string for any values in the<b>$array</b></p>
- * <p>i.e., arrstristr(array('hello', 'hola', 'aloha'), 'Hello world') | returns TRUE because 'hello' exists in the string.</p>
- * <p>Note: arrstristr(array('hello', 'world'), 'Hello world') | returns TRUE because both 'hello' and 'world' are in the string.</p>
+ * <p>i.e., arrstristr(array('hello', 'hola', 'aloha'), 'Hello world') | returns true because 'hello' exists in the string.</p>
+ * <p>Note: arrstristr(array('hello', 'world'), 'Hello world') | returns true because both 'hello' and 'world' are in the string.</p>
  * @param array $array  <p>The array of values to search for in the $string.</p>
  * @param type $string <p>The string to search.</p>
  * @return boolean
@@ -11,17 +11,17 @@
 function arrstristr(array $array, $string) {
     foreach ($array as $si) {
         if (stristr($string, $si)) {
-            return TRUE;
+            return true;
         } else {
-            return FALSE;
+            return false;
         }
     }
 }
 
 /**
  * <p>Searches a string for any values in the<b>$array</b></p>
- * <p>i.e., arrstristr(array('hello', 'hola', 'aloha'), 'Hello world') | returns TRUE because 'hello' exists in the string.</p>
- * <p>Note: arrstristr(array('hello', 'world'), 'Hello world') | returns TRUE because both 'hello' and 'world' are in the string.</p>
+ * <p>i.e., arrstristr(array('hello', 'hola', 'aloha'), 'Hello world') | returns true because 'hello' exists in the string.</p>
+ * <p>Note: arrstristr(array('hello', 'world'), 'Hello world') | returns true because both 'hello' and 'world' are in the string.</p>
  * @param array $array  <p>The array of values to search for in the $string.</p>
  * @param type $string <p>The string to search.</p>
  * @return array <p>Array of substrings found</p>

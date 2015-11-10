@@ -21,7 +21,7 @@ $menuWrappingTagType = ($firstMenuItemWrappingTagType === 'li' ? array('ul' => '
 // determine keyholders | run through SdmForm::setDefaultValues to set current keyholders as default elements | @todo: Until user and roles components are developed the available roles are root, basic_user, and all
 $keyholders = SdmForm::setDefaultValues(array('Root' => 'root', 'Basic User' => 'basic_user', 'All' => 'all'), $menu->menuKeyholders);
 // determine display pages
-$displayPages = SdmForm::setDefaultValues(array_merge($sdmassembler->sdmCoreDetermineAvailablePages(), json_decode(json_encode($sdmassembler->sdmCoreDetermineEnabledApps()), TRUE), array('all' => 'all')), $menu->displaypages);
+$displayPages = SdmForm::setDefaultValues(array_merge($sdmassembler->sdmCoreDetermineAvailablePages(), json_decode(json_encode($sdmassembler->sdmCoreDetermineEnabledApps()), true), array('all' => 'all')), $menu->displaypages);
 // determine menu placement
 $menuPlacement = SdmForm::setDefaultValues(array('prepend' => 'prepend', 'append' => 'append'), $menu->menuPlacement);
 /** BUILD EDIT MENU FORM * */
@@ -108,7 +108,7 @@ $output .= '<div><h3>Menu Items</h3><ul>';
 $menuItems = array();
 $usedPositions = array();
 foreach ($menu->menuItems as $mi) {
-    $pos = (in_array($mi->menuItemPosition, $usedPositions) === TRUE ? $mi->menuItemPosition + 1 : $mi->menuItemPosition);
+    $pos = (in_array($mi->menuItemPosition, $usedPositions) === true ? $mi->menuItemPosition + 1 : $mi->menuItemPosition);
     $menuItems[$pos] = $mi;
     $usedPositions[] = $pos;
 }

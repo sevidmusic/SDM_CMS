@@ -61,7 +61,7 @@ function randString($mode, $limit) {
  *                     </p>
  * @return string <p>Specified number of html paragraphs of random strings.</p>
  */
-function randPara($numPara, $wordPerPara = 12, $wordLen = 12, $mode = NULL) {
+function randPara($numPara, $wordPerPara = 12, $wordLen = 12, $mode = null) {
     $para = '';
     $modes = array('alphaNum', 'alpha', 'num');
     // limit by $numPara
@@ -70,7 +70,7 @@ function randPara($numPara, $wordPerPara = 12, $wordLen = 12, $mode = NULL) {
         // limit by $wordPerPara
         for ($i = 0; $i <= $wordPerPara; $i++) {
             // create line
-            $para .= randString(($mode != NULL ? $mode : $modes[array_rand($modes)]), $wordLen) . ' ';
+            $para .= randString(($mode != null ? $mode : $modes[array_rand($modes)]), $wordLen) . ' ';
         }
         // end line
         $para .= '</p>';
