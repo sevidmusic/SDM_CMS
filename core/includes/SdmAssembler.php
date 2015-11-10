@@ -180,7 +180,7 @@ class SdmAssembler extends SdmCore {
     public function sdmAssemblerLoadAndAssembleContentObject() {
         $page = $this->sdmCoreDetermineRequestedPage();
         // load our data object
-        $sdmassembler_dataObject = $this->sdmCoreLoadDataObject();
+        $sdmassembler_dataObject = $this->sdmCoreGetDataObject();
         // load and assemble apps
         $this->sdmAssemblerLoadApps($sdmassembler_dataObject);
         // make sure content exists, if it does return it, if not, return a content not found message and log the bad request to the bad requests log

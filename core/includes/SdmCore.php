@@ -30,6 +30,8 @@ class SdmCore {
     private $DataDirectoryPath;
     private $DataDirectoryUrl;
     private $requestedPage;
+    // in dev
+    private $DataObject;
 
     final public function __construct() {
         // we need to do some special filetering to determine the Root Directory Path and Url
@@ -63,6 +65,7 @@ class SdmCore {
         $this->DataDirectoryPath = $this->sdmCoreGetCoreDirectoryPath() . '/sdm';
         $this->DataDirectoryUrl = $this->sdmCoreGetCoreDirectoryUrl() . '/sdm';
         $this->requestedPage = (isset($_GET['page']) && $_GET['page'] != '' ? $_GET['page'] : 'homepage');
+        $this->DataObject = (isset($this->DataObject) ? $this->DataObject : $this->sdmCoreLoadDataObject());
     }
 
     /**
@@ -150,7 +153,7 @@ class SdmCore {
      */
     final public function sdmCoreDetermineCurrentTheme() {
         /**
-         * For some reason, child classes are not able to call sdmCoreLoadDataObject() from
+         * For some reason, child classes are not able to call sdmCoreGetDataObject() from
          * within this method and find data.json, so for now we use __DIR__ and str_replace()
          * to figure out where data.json is.
          */
@@ -223,10 +226,15 @@ class SdmCore {
     }
 
     /**
+     * <p>Returns the core DataObject created from the data in data.json</p>
+     * @return object <p>The core data object created from the data in data.json.</p>
+     */
+    final public function sdmCoreGetDataObject() {
+        return $this->DataObject;
+    }
+
+    /**
      * <p>Loads the entire content object from data.json or the DB and returns it.</p>
-     * <p>NOTE: the name is misleading, this grabs the entire sdm data object from the
-     * set data source, be it a DATABSE or a JSON file.</p>
-     * @todo Change name to loadCoreData as it is a more accurate description of what this method does
      * @return object <p>The content object loaded from $this->CoreDirectoryUrl/sdm/data.json or from the DB</p>
      */
     final public function sdmCoreLoadDataObject() {
@@ -422,7 +430,7 @@ class SdmCore {
      * @return object An object whose properties are apps that are currently enabled.
      */
     final public function sdmCoreDetermineEnabledApps() {
-        $data = $this->sdmCoreLoadDataObject();
+        $data = $this->sdmCoreGetDataObject();
         $enabled_apps = $data->settings->enabledapps;
         return $enabled_apps;
     }
