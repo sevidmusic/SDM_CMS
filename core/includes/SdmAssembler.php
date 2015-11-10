@@ -11,19 +11,6 @@
  */
 class SdmAssembler extends SdmCore {
 
-    private static $Initialized;
-
-    /**
-     * Initializes a single instance of the SdmAssembler class.
-     * @return object <p>An SdmAssembler Object</p>
-     */
-    public static function sdmAssemblerInitializeAssembler() {
-        if (!isset(self::$Initialized)) {
-            self::$Initialized = new SdmAssembler;
-        }
-        return self::$Initialized;
-    }
-
     /**
      * <p>Returns the HTML header for the page as a string. The SdmAssembler will give apps
      * a chance to modify the header prior to returning it. This method also reads app and theme
@@ -193,16 +180,15 @@ class SdmAssembler extends SdmCore {
     public function sdmAssemblerLoadAndAssembleContentObject() {
         $page = $this->sdmCoreDetermineRequestedPage();
         // load our data object
-        $sdmassembler_dataObject = $this->sdmCoreLoadDataObject();
+        $sdmassembler_dataObject = $this->sdmCoreGetDataObject();
         // load and assemble apps
-        $this->sdmAssemblerLoadCoreApps($sdmassembler_dataObject);
-        // make sure content exists, if it does return it, if not, print a content not found message
+        $this->sdmAssemblerLoadApps($sdmassembler_dataObject);
+        // make sure content exists, if it does return it, if not, return a content not found message and log the bad request to the bad requests log
         switch (isset($sdmassembler_dataObject->content->$page)) {
             case TRUE:
                 //var_dump($sdmassembler_dataObject->content->$page);
                 $sdmassembler_dataObject = $this->sdmAssemblerPreparePageForDisplay($sdmassembler_dataObject->content->$page);
                 return $sdmassembler_dataObject;
-                break;
             default:
                 // log bad request to our badRequestsLog.log file
                 $badRequestId = chr(rand(65, 90)) . rand(10, 99) . chr(rand(65, 90)) . rand(10, 99);
@@ -236,73 +222,66 @@ class SdmAssembler extends SdmCore {
      *
      */
     private function sdmAssemblerPreparePageForDisplay($page) {
-        foreach ($page as $name => $value) {
-            $page->$name = html_entity_decode($value, ENT_HTML5, 'UTF-8');
+        foreach ($page as $wrapper => $content) {
+            $page->$wrapper = html_entity_decode($content, ENT_HTML5, 'UTF-8');
         }
         return $page;
     }
 
     /**
-     * Loads enabled CORE apps.
-     * @todo Change name to loadApps, more accurate description b/c this method is responsible for
-     * loading all apps
+     * Loads enabled apps.
      * @param object $sdmassembler_dataObject <p>The Content object for the requested page.</p>
+     * @return bool <p>FALSE if any apps failed to load, TRUE if no problems occured when loading
+     * all apps.</p><p><b>NOTE</b>:<i>This method will return TRUE even if this methods call to
+     * $this->sdmAssemblerLoadApp() fails to load an app as a result of user having insufficient
+     * privlages. Only actual failures will result in this method returning FALSE.</i></p>
      */
-    private function sdmAssemblerLoadCoreApps($sdmassembler_dataObject) {
-        // store parent (i.e. SdmCore) in an appropriatly named var to give apps easy access
-        $sdmcore = new parent;
-        // store object in an appropriatly named var to give apps easy access
+    private function sdmAssemblerLoadApps($sdmassembler_dataObject) {
+        $enabledApps = $this->sdmCoreDetermineEnabledApps();
+        foreach ($enabledApps as $app) {
+            $status[] = $this->sdmAssemblerLoadApp($app, $sdmassembler_dataObject);
+        }
+        return (in_array(FALSE, $status, TRUE));
+    }
+
+    /**
+     * Loads an individual app. This method should only be used internally by
+     * the sdmAssembler()'s sdmAssemblerLoadApps() method.
+     * @param string $app <p>The name of the app to load</p>
+     * @return mixed <p>TRUE if app was loaded, FALSE if app could not be loaded as a result
+     * of an error, such as the app not being found, or the string 'accessDenied' if app was
+     * not loaded as a result of user not having sufficient privlages to use app.</p>
+     */
+    private function sdmAssemblerLoadApp($app, $sdmassembler_dataObject) {
+        // store SdmAssembler object in an appropriatly named var to give apps easy access
         $sdmassembler = $this;
-        // @TODO : Unless you find good reason to keep it, the $sdmassembler_requestedpage var should be depreceated because SDM CORE provides a method for determining the requested page... store requested page (determined by CORE) in an appropriatly named var to give apps easy access
-        $sdmassembler_requestedpage = $this->sdmCoreDetermineRequestedPage();
-        // store data object in an appropriatly named for to give apps easy access
-        $sdmassembler_dataObject = $sdmassembler_dataObject;
-        $settings = $sdmcore->sdmCoreLoadDataObject()->settings;
-        $coreapps = $sdmcore->sdmCoreGetDirectoryListing('', 'coreapps');
-        $userapps = $sdmcore->sdmCoreGetDirectoryListing('', 'userapps');
-        $apps = array();
-        foreach ($coreapps as $value) {
-            if ($value != '.' && $value != '..' && $value != '.DS_Store') {
-                $apps[] = $value;
+        // read app gatekeeper parameters
+        $gkParams = SdmGatekeeper::sdmGatekeeperReadAppGkParams($app);
+        /**
+         * If SdmGatekeeper::sdmGatekeeperReadAppGkParams()
+         * returned FALSE, then assume app is not restricted to role,
+         * if .gk file exists then check the roles parameter to see which roles
+         * have permission to use this app, if the roles parameter has the 'all' value
+         * in it then all users will be able to use this app.
+         */
+        $userClear = ($gkParams === FALSE || in_array(SdmGatekeeper::SdmGatekeeperDetermineUserRole(), $gkParams['roles']) || in_array('all', $gkParams['roles']) ? TRUE : FALSE);
+        $appPath = '/' . $app . '/' . $app . '.php';
+        if ($userClear === TRUE) {
+            // load apps
+            if (file_exists($this->sdmCoreGetCoreAppDirectoryPath() . $appPath)) {
+                require_once($this->sdmCoreGetCoreAppDirectoryPath() . $appPath);
+                return TRUE;
+            } else if (file_exists($this->sdmCoreGetUserAppDirectoryPath() . $appPath)) {
+                require($this->sdmCoreGetUserAppDirectoryPath() . $appPath);
+                return TRUE;
             }
+            // failed to load app | log error to error log so admin can debug problem.
+            error_log('Warning: SdmAssembler() could not load app "' . $app . '". Make sure the app is installed in either the core or user app directory and that it is configured properly. This error most likely occured becuase the assmebler could not locate the "' . $app . '" app at either "' . $this->sdmCoreGetCoreAppDirectoryPath() . $appPath . '" or "' . $this->sdmCoreGetUserAppDirectoryPath() . $appPath . '"');
+            return FALSE;
         }
-        foreach ($userapps as $value) {
-            if ($value != '.' && $value != '..' && $value != '.DS_Store') {
-                $apps[] = $value;
-            }
-        }
-        foreach ($apps as $app) {
-            /**
-             * Check if the app has a .gk file, if it does then get it's parameters.
-             * NOTE: If the app does NOT have a .gk file then
-             * SdmGatekeeper::sdmGatekeeperReadAppGkParams() will return
-             * FALSE.
-             */
-            $gkParams = SdmGatekeeper::sdmGatekeeperReadAppGkParams($app);
-            //$this->sdmCoreSdmReadArray(array('app' => $app, 'GkParams' => ($gkParams === FALSE ? 'FALSE' : $gkParams)));
-            /**
-             * If .gk file does NOT exist, SdmGatekeeper::sdmGatekeeperReadAppGkParams()
-             * returned FALSE, then assume app is not restricted to role,
-             * if .gk file exists then check the roles parameter to see which roles
-             * have permission to use this app, if the roles parameter has the 'all' value
-             * in it then all users will be able to use this app.
-             */
-            $userClear = ($gkParams === FALSE || in_array(SdmGatekeeper::SdmGatekeeperDetermineUserRole(), $gkParams['roles']) || in_array('all', $gkParams['roles']) ? TRUE : FALSE);
-            if ($userClear === TRUE) {
-                if (property_exists($settings->enabledapps, $app)) {
-                    // load apps
-                    if (file_exists($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.php')) {
-                        require_once($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.php');
-                    } else if (file_exists($this->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.php')) {
-                        require($this->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.php');
-                    } else {
-                        echo '<!-- site has no enabled apps -->';
-                    }
-                }
-            } else { // user does not have permission to use this app
-                $this->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, 'You do not have permission to be here.', array('incpages' => array($app)));
-            }
-        }
+        // user does not have permission to use this app
+        $this->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, 'You do not have permission to be here.', array('incpages' => array($app)));
+        return 'accessDenied';
     }
 
     /**

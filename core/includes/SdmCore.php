@@ -30,6 +30,8 @@ class SdmCore {
     private $DataDirectoryPath;
     private $DataDirectoryUrl;
     private $requestedPage;
+    // in dev
+    private $DataObject;
 
     final public function __construct() {
         // we need to do some special filetering to determine the Root Directory Path and Url
@@ -61,8 +63,9 @@ class SdmCore {
         $this->CoreAppDirectoryPath = $this->sdmCoreGetCoreDirectoryPath() . '/apps';
         $this->CoreAppDirectoryUrl = $this->sdmCoreGetCoreDirectoryUrl() . '/apps';
         $this->DataDirectoryPath = $this->sdmCoreGetCoreDirectoryPath() . '/sdm';
-        $this->DataDirectoryUrl = $this->sdmCoreGetCoreDirectoryUrl() . '/sdm/data.json';
+        $this->DataDirectoryUrl = $this->sdmCoreGetCoreDirectoryUrl() . '/sdm';
         $this->requestedPage = (isset($_GET['page']) && $_GET['page'] != '' ? $_GET['page'] : 'homepage');
+        $this->DataObject = (isset($this->DataObject) ? $this->DataObject : $this->sdmCoreLoadDataObject());
     }
 
     /**
@@ -150,7 +153,7 @@ class SdmCore {
      */
     final public function sdmCoreDetermineCurrentTheme() {
         /**
-         * For some reason, child classes are not able to call sdmCoreLoadDataObject() from
+         * For some reason, child classes are not able to call sdmCoreGetDataObject() from
          * within this method and find data.json, so for now we use __DIR__ and str_replace()
          * to figure out where data.json is.
          */
@@ -223,14 +226,20 @@ class SdmCore {
     }
 
     /**
+     * <p>Returns the core DataObject created from the data in data.json</p>
+     * @return object <p>The core data object created from the data in data.json.</p>
+     */
+    final public function sdmCoreGetDataObject() {
+        return $this->DataObject;
+    }
+
+    /**
      * <p>Loads the entire content object from data.json or the DB and returns it.</p>
-     * <p>NOTE: the name is misleading, this grabs the entire sdm data object from the
-     * set data source, be it a DATABSE or a JSON file.</p>
-     * @todo Change name to loadCoreData as it is a more accurate description of what this method does
      * @return object <p>The content object loaded from $this->CoreDirectoryUrl/sdm/data.json or from the DB</p>
      */
     final public function sdmCoreLoadDataObject() {
-        $data = json_decode(file_get_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json'));
+        $coreData = $this->sdmCoreCurlGrabContent($this->sdmCoreGetDataDirectoryUrl() . '/data.json');
+        $data = json_decode($coreData);
         return $data;
     }
 
@@ -261,7 +270,7 @@ class SdmCore {
         ini_set('session.hash_function', 'sha512');
         ini_set('session.hash_bits_per_character', 6);
         ini_set('session.gc_maxlifetime', 180); // set in seconds | determines how a long a session file can exist before it becomes eligible for Garbage Collection
-        ini_set('session.gc_probability', 100); // chance that GC will occur
+        ini_set('session.gc_probability', 20); // chance that GC will occur
         ini_set('session.gc_divisor', 100); // probability divisor, if gc_propbability is 50 and gc_divisor is 100 then there is a 50% chance of GC (i.e. 50/100)
         // set include path
         set_include_path($this->sdmCoreGetIncludesDirectoryPath());
@@ -421,7 +430,7 @@ class SdmCore {
      * @return object An object whose properties are apps that are currently enabled.
      */
     final public function sdmCoreDetermineEnabledApps() {
-        $data = $this->sdmCoreLoadDataObject();
+        $data = $this->sdmCoreGetDataObject();
         $enabled_apps = $data->settings->enabledapps;
         return $enabled_apps;
     }

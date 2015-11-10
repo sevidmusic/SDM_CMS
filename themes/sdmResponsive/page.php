@@ -9,7 +9,9 @@
 <!-- row 2 -->
 <div class="row row-min-wid-fix padded-row">
     <?php
-    $sideBarExists = (SdmAssembler::sdmAssemblerGetContentHtml('side-menu', $sdmassembler_themeContentObject) === '<!-- side-menu placeholder -->' ? FALSE : TRUE);
+    $sidebar = SdmAssembler::sdmAssemblerGetContentHtml('side-menu', $sdmassembler_themeContentObject);
+    $sidebarInvalidValues = array(null, '', '<!-- side-menu placeholder -->');
+    $sideBarExists = (in_array($sidebar, $sidebarInvalidValues) === TRUE ? FALSE : TRUE);
     if ($sideBarExists === TRUE) {
         ?>
         <div id="side-menu" class="col-3 col-m-3 rounded">

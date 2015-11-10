@@ -40,59 +40,59 @@ $options = array(
         'navigationManagerEditMenuStage3_submitaddmenuitem' // submit added menu item
     ),
 );
-$sdmcore = $sdmcore; // see SdmAssembler.php
-if (substr($sdmcore->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationManager') {
+$sdmassembler = $sdmassembler; // see SdmAssembler.php
+if (substr($sdmassembler->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationManager') {
     // CREATE A NEW CONTENT MANAGEMENT OBJECT
     $sdmcms = SdmCms::sdmCmsInitializeCms();
     // determine which section of the content manager was requested
-    switch ($sdmcore->sdmCoreDetermineRequestedPage()) {
+    switch ($sdmassembler->sdmCoreDetermineRequestedPage()) {
         // Add Menu Stages
         case 'navigationManagerAddMenuStage1': // determine how many menu items this menu will have
-            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/addmenustage1.php');
+            require($sdmassembler->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/addmenustage1.php');
             break;
         case 'navigationManagerAddMenuStage2': // configure the menu items
-            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/addmenustage2.php');
+            require($sdmassembler->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/addmenustage2.php');
             break;
         case 'navigationManagerAddMenuStage3':
-            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/addmenustage3.php');
+            require($sdmassembler->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/addmenustage3.php');
             break;
         case 'navigationManagerAddMenuStage4':
-            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/addmenustage4.php');
+            require($sdmassembler->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/addmenustage4.php');
             break;
         // DELETE MENU STAGES
         case 'navigationManagerDeleteMenuStage1':
-            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/deletemenustage1.php');
+            require($sdmassembler->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/deletemenustage1.php');
             break;
         case 'navigationManagerDeleteMenuStage2':
-            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/deletemenustage2.php');
+            require($sdmassembler->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/deletemenustage2.php');
             break;
         // EDIT MENU STAGES
         case 'navigationManagerEditMenuStage1':
-            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/editmenustage1.php');
+            require($sdmassembler->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/editmenustage1.php');
             break;
         case 'navigationManagerEditMenuStage2':
-            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/editmenustage2.php');
+            require($sdmassembler->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/editmenustage2.php');
             break;
         case 'navigationManagerEditMenuStage3_submitmenuchanges':
-            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/editmenustage3_submitmenuchanges.php');
+            require($sdmassembler->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/editmenustage3_submitmenuchanges.php');
             break;
         case 'navigationManagerEditMenuStage3_editmenuitem':
-            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/editmenustage3_editmenuitem.php');
+            require($sdmassembler->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/editmenustage3_editmenuitem.php');
             break;
         case 'navigationManagerEditMenuStage3_submitmenuitemchanges':
-            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/editmenustage3_submitmenuitemchanges.php');
+            require($sdmassembler->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/editmenustage3_submitmenuitemchanges.php');
             break;
         case 'navigationManagerEditMenuStage3_confirmdeletemenuitem':
-            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/editmenustage3_confirmdeletemenuitem.php');
+            require($sdmassembler->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/editmenustage3_confirmdeletemenuitem.php');
             break;
         case 'navigationManagerEditMenuStage3_deletemenuitem':
-            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/editmenustage3_deletemenuitem.php');
+            require($sdmassembler->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/editmenustage3_deletemenuitem.php');
             break;
         case 'navigationManagerEditMenuStage3_addmenuitem':
-            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/editmenustage3_addmenuitem.php');
+            require($sdmassembler->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/editmenustage3_addmenuitem.php');
             break;
         case 'navigationManagerEditMenuStage3_submitaddmenuitem':
-            require($sdmcore->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/editmenustage3_submitaddmenuitem.php');
+            require($sdmassembler->sdmCoreGetCoreAppDirectoryPath() . '/navigationManager/stages/editmenustage3_submitaddmenuitem.php');
             break;
         default:
             // present content manager menu
@@ -100,9 +100,9 @@ if (substr($sdmcore->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationMana
                 <div id="navigationManager">
                 <p>Welcome to the Navigation Manager. Here you can create, edit, delete, and restore menus</p>
                     <ul>
-                        <li><a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=navigationManagerAddMenuStage1">Add Menu</a></li>
-                        <li><a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=navigationManagerDeleteMenuStage1">Delete Menu</a></li>
-                        <li><a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=navigationManagerEditMenuStage1">Edit Menu</a></li>
+                        <li><a href="' . $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?page=navigationManagerAddMenuStage1">Add Menu</a></li>
+                        <li><a href="' . $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?page=navigationManagerDeleteMenuStage1">Delete Menu</a></li>
+                        <li><a href="' . $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?page=navigationManagerEditMenuStage1">Edit Menu</a></li>
                     </ul>
                 </div>
                 ', array('incpages' => array('navigationManager')));

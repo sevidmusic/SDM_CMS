@@ -39,7 +39,7 @@ $addMenuItemForm->form_elements = array(
         'id' => 'destinationInternal',
         'type' => 'select',
         'element' => 'Destination <i style="font-size:.7em;">(<b>internal</b>: Select a pagename from this menu if this menu item\'s destination type is internal.)</i>',
-        'value' => array_merge($sdmcore->sdmCoreDetermineAvailablePages(), json_decode(json_encode($sdmcore->sdmCoreDetermineEnabledApps()), TRUE)),
+        'value' => array_merge($sdmassembler->sdmCoreDetermineAvailablePages(), json_decode(json_encode($sdmassembler->sdmCoreDetermineEnabledApps()), TRUE)),
         'place' => '4',
     ),
     array(
@@ -106,5 +106,5 @@ $addMenuItemForm->form_elements = array(
         'place' => '13',
     ),
 );
-$addMenuItemForm->sdmFormBuildForm($sdmcore->sdmCoreGetRootDirectoryUrl());
+$addMenuItemForm->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
 $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, $addMenuItemForm->sdmFormGetForm(), array('incpages' => array('navigationManagerEditMenuStage3_addmenuitem')));

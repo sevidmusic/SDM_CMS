@@ -21,7 +21,7 @@ $menuWrappingTagType = ($firstMenuItemWrappingTagType === 'li' ? array('ul' => '
 // determine keyholders | run through SdmForm::setDefaultValues to set current keyholders as default elements | @todo: Until user and roles components are developed the available roles are root, basic_user, and all
 $keyholders = SdmForm::setDefaultValues(array('Root' => 'root', 'Basic User' => 'basic_user', 'All' => 'all'), $menu->menuKeyholders);
 // determine display pages
-$displayPages = SdmForm::setDefaultValues(array_merge($sdmcore->sdmCoreDetermineAvailablePages(), json_decode(json_encode($sdmcore->sdmCoreDetermineEnabledApps()), TRUE), array('all' => 'all')), $menu->displaypages);
+$displayPages = SdmForm::setDefaultValues(array_merge($sdmassembler->sdmCoreDetermineAvailablePages(), json_decode(json_encode($sdmassembler->sdmCoreDetermineEnabledApps()), TRUE), array('all' => 'all')), $menu->displaypages);
 // determine menu placement
 $menuPlacement = SdmForm::setDefaultValues(array('prepend' => 'prepend', 'append' => 'append'), $menu->menuPlacement);
 /** BUILD EDIT MENU FORM * */
@@ -101,7 +101,7 @@ $editMenuSelectMenuForm->form_elements = array(
         'place' => '14',
     ),
 );
-$editMenuSelectMenuForm->sdmFormBuildForm($sdmcore->sdmCoreGetRootDirectoryUrl());
+$editMenuSelectMenuForm->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
 $output = '<div id="originalMenuPreview" style="padding:20px;border:3px dashed #777777;border-radius:7px;"><h4>Menu Preview</h4>' . $menuHtml . '</div>';
 $output .= '<div><h3>Menu Items</h3><ul>';
 // order menu items for display
@@ -117,12 +117,12 @@ ksort($menuItems);
 // build edit/delete links for each menu item and add to output
 foreach ($menuItems as $menuItem) {
     $editMenuItemArguments = array('page=navigationManagerEditMenuStage3_editmenuitem', 'menuId=' . $menu->menuId, 'menuItemId=' . $menuItem->menuItemId, 'linkedBy=navigationManager_editmenustage2_editMenuItemLink');
-    $editLink = '<a href = "' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?' . str_replace('%26', '&', str_replace('%3D', '=', urlencode(implode('&', $editMenuItemArguments)))) . '">edit</a>';
+    $editLink = '<a href = "' . $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?' . str_replace('%26', '&', str_replace('%3D', '=', urlencode(implode('&', $editMenuItemArguments)))) . '">edit</a>';
     $deleteMenuItemArguments = array('page=navigationManagerEditMenuStage3_confirmdeletemenuitem', 'menuId=' . $menu->menuId, 'menuItemId=' . $menuItem->menuItemId, 'linkedBy=navigationManager_editmenustage2_deleteMenuItemLink');
-    $deletetLink = '<a href = "' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?' . str_replace('%26', '&', str_replace('%3D', '=', urlencode(implode('&', $deleteMenuItemArguments)))) . '">Delete</a>';
+    $deletetLink = '<a href = "' . $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?' . str_replace('%26', '&', str_replace('%3D', '=', urlencode(implode('&', $deleteMenuItemArguments)))) . '">Delete</a>';
     $output .= '<li>' . $menuItem->menuItemDisplayName . ' (' . $editLink . ' | ' . $deletetLink . ')</li>';
 }
 $output .= '</ul></div>';
 $addMenuItemArguments = array('page=navigationManagerEditMenuStage3_addmenuitem', 'menuId=' . $menu->menuId, 'linkedBy=navigationManager_editmenustage2_addMenuItemLink');
-$output .= '<p><a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?' . str_replace('%26', '&', str_replace('%3D', '=', urlencode(implode('&', $addMenuItemArguments)))) . '">Add Menu Item</a></p>';
+$output .= '<p><a href="' . $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?' . str_replace('%26', '&', str_replace('%3D', '=', urlencode(implode('&', $addMenuItemArguments)))) . '">Add Menu Item</a></p>';
 $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, $output . '<h3>Menu Settings</h3>' . $editMenuSelectMenuForm->sdmFormGetForm(), array('incpages' => array('navigationManagerEditMenuStage2')));

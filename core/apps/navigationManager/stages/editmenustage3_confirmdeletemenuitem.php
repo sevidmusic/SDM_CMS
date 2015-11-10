@@ -30,7 +30,7 @@ $deleteForm->form_elements = array(
         'place' => '1',
     ),
 );
-$deleteForm->sdmFormBuildForm($sdmcore->sdmCoreGetRootDirectoryUrl());
+$deleteForm->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
 // cancel form
 $cancelForm = new SdmForm();
 $cancelForm->form_handler = 'navigationManagerEditMenuStage2';
@@ -44,5 +44,5 @@ $cancelForm->form_elements = array(
         'place' => '0',
     ),
 );
-$cancelForm->sdmFormBuildForm($sdmcore->sdmCoreGetRootDirectoryUrl());
+$cancelForm->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
 $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<p>Are you sure you wish to delete menu item "<b>' . $menuItemName . '</b>" with id "<b>' . $menuItemId . '</b>" from menu "<b>' . $menuName . '</b>" with id "<b>' . $menuId . '</b>"?</p>' . $deleteForm->sdmFormGetForm() . $cancelForm->sdmFormGetForm(), array('incpages' => array('navigationManagerEditMenuStage3_confirmdeletemenuitem')));

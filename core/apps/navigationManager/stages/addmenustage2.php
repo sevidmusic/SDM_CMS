@@ -43,7 +43,7 @@ switch (SdmForm::sdmFormGetSubmittedFormValue('menuItem') !== null) {
                 'id' => 'destinationInternal',
                 'type' => 'select',
                 'element' => 'Destination <i style="font-size:.7em;">(<b>internal</b>: Select a pagename from this menu if this menu item\'s destination type is internal.)</i>',
-                'value' => array_merge($sdmcore->sdmCoreDetermineAvailablePages(), json_decode(json_encode($sdmcore->sdmCoreDetermineEnabledApps()), TRUE)),
+                'value' => array_merge($sdmassembler->sdmCoreDetermineAvailablePages(), json_decode(json_encode($sdmassembler->sdmCoreDetermineEnabledApps()), TRUE)),
                 'place' => '4',
             ),
             array(
@@ -153,11 +153,11 @@ switch (SdmForm::sdmFormGetSubmittedFormValue('menuItem') !== null) {
             );
             array_push($addMenuFormStage2->form_elements, $mi);
         }
-        $addMenuFormStage2->sdmFormBuildForm($sdmcore->sdmCoreGetRootDirectoryUrl());
+        $addMenuFormStage2->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
         $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<h3>Configure Menu Items</h3>' . $addMenuFormStage2->sdmFormGetForm(), array('incpages' => array('navigationManagerAddMenuStage2')));
         break;
 
     default:
-        $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<p>An error occured and the form could not be submitted. Please report this to the site admin. <a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=homepage">Return to the Homepage</a></p>', array('incpages' => array('navigationManagerAddMenuStage2')));
+        $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<p>An error occured and the form could not be submitted. Please report this to the site admin. <a href="' . $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?page=homepage">Return to the Homepage</a></p>', array('incpages' => array('navigationManagerAddMenuStage2')));
         break;
 }

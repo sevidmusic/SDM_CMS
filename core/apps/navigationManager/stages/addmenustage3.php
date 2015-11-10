@@ -90,7 +90,7 @@ $addMenuFormStage3->form_elements = array(
         'id' => 'displaypages',
         'type' => 'checkbox',
         'element' => 'Pages to display menu on<i style="font-size:.7em;">(THIS NEEDS TO BE FIGURED OUT BETTER, POSSIBLY A CHECKLIST OF AVAILABLE PAGES...) FOR NOW all IS THE ONLY OPTION</i>',
-        'value' => array_merge($sdmcore->sdmCoreDetermineAvailablePages(), json_decode(json_encode($sdmcore->sdmCoreDetermineEnabledApps()), TRUE), array('all' => 'all')),
+        'value' => array_merge($sdmassembler->sdmCoreDetermineAvailablePages(), json_decode(json_encode($sdmassembler->sdmCoreDetermineEnabledApps()), TRUE), array('all' => 'all')),
         'place' => '9',
     ),
     array(
@@ -101,6 +101,6 @@ $addMenuFormStage3->form_elements = array(
         'place' => '10',
     ),
 );
-$addMenuFormStage3->sdmFormBuildForm($sdmcore->sdmCoreGetRootDirectoryUrl());
+$addMenuFormStage3->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
 $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, $addMenuFormStage3->sdmFormGetForm(), array('incpages' => array('navigationManagerAddMenuStage3')));
 $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<h3>Configure Menu</h3>', array('incmethod' => 'prepend', 'incpages' => array('navigationManagerAddMenuStage3')));

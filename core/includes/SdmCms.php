@@ -34,7 +34,7 @@ class SdmCms extends SdmCore {
      * @return int The number of bytes written to data.json or the DB. Returns FALSE on failure.
      */
     public function sdmCmsUpdateContent($page, $id, $html) {
-        $content = $this->sdmCoreLoadDataObject();
+        $content = $this->sdmCoreGetDataObject();
         // filter out problematic charaters from $html and insure UTF-8 using iconv()
         $filtered_html = iconv("UTF-8", "UTF-8//IGNORE", $html);
         $filtered_html2 = iconv("UTF-8", "ISO-8859-1//IGNORE", $filtered_html);
@@ -110,7 +110,7 @@ class SdmCms extends SdmCore {
      * @return int The number of bytes written to data.json or the DB. Returns FALSE on failure.
      */
     public function sdmCmsChangeTheme($theme) {
-        $data = $this->sdmCoreLoadDataObject();
+        $data = $this->sdmCoreGetDataObject();
         $data->settings->theme = $theme;
         $jsondata = json_encode($data);
         return file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $jsondata, LOCK_EX);
@@ -121,7 +121,7 @@ class SdmCms extends SdmCore {
      * @param string $pagename Name of the page to delete.
      */
     public function sdmCmsDeletePage($pagename) {
-        $data = $this->sdmCoreLoadDataObject();
+        $data = $this->sdmCoreGetDataObject();
         unset($data->content->$pagename);
         $jsondata = json_encode($data);
         return file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $jsondata, LOCK_EX);
@@ -158,7 +158,7 @@ class SdmCms extends SdmCore {
      * @return object An object whose properties are apps that are currently enabled.
      */
 //    public function sdmCoreDetermineEnabledApps() {
-//        $data = $this->sdmCoreLoadDataObject();
+//        $data = $this->sdmCoreGetDataObject();
 //        $enabled_apps = $data->settings->enabledapps;
 //        return $enabled_apps;
 //    }
@@ -170,7 +170,7 @@ class SdmCms extends SdmCore {
      * @return bool TRUE on sucessful state change, FALSE if unable to switch state.
      */
     public function sdmCmsSwitchAppState($app, $state) {
-        $data = $this->sdmCoreLoadDataObject();
+        $data = $this->sdmCoreGetDataObject();
         $enabledApps = $data->settings->enabledapps;
         switch ($state) {
             case 'on':

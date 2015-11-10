@@ -25,5 +25,5 @@ $addMenuFormStage1->form_elements = array(
         'place' => '1',
     ),
 );
-$addMenuFormStage1->sdmFormBuildForm($sdmcore->sdmCoreGetRootDirectoryUrl());
+$addMenuFormStage1->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
 $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<h3>How many menu items will this menu have?</h3>' . $addMenuFormStage1->sdmFormGetForm(), array('incpages' => array('navigationManagerAddMenuStage1')));
