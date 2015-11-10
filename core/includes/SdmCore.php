@@ -74,7 +74,7 @@ class SdmCore {
      * object accessiblenon-static properties for the
      * specified object in scope. If a property has not
      * been assigned a value, it will be returned with a
-     * NULL value.</p>
+     * null value.</p>
      */
     public function info() {
         return get_object_vars($this);
@@ -252,7 +252,7 @@ class SdmCore {
 
     /**
      * Configure PHP settings and Core settings.
-     * @return boolen Returns TRUE regardless of success.
+     * @return boolen Returns true regardless of success.
      */
     final public function sdmCoreConfigureCore() {
         // turn on error reporting | @todo make this reflect site settings so admin can turn on or off based on wheater in dev or not...
@@ -278,7 +278,7 @@ class SdmCore {
         require($this->sdmCoreGetConfiguratonDirectoryPath() . '/timezone.php');
         // @depreceated : we only use objects now... | include dev functions | remove once out of dev
         //require($this->sdmCoreGetIncludesDirectoryPath() . '/dev_functions.php');
-        return TRUE;
+        return true;
     }
 
 /////////////////////////////////
@@ -290,36 +290,36 @@ class SdmCore {
      * @param type $array : <p>The array to read</p>
      * @param type $sub : <p>Set internally, determines if were handling a sub array of the
      * parent array</p>
-     * @return bool <p>Returns TRUE regardless of success. This function is simply used to
+     * @return bool <p>Returns true regardless of success. This function is simply used to
      * echo an array's data so if it cant read the array the array is corrupted and needs
      * to be re-structured</p>
      */
-    final public function sdmCoreSdmReadArray($array, $sub = FALSE, $parent = '') {
+    final public function sdmCoreSdmReadArray($array, $sub = false, $parent = '') {
         $style = 'border:1px dashed limegreen;border-radius:3px;margin:25px;padding:12px;width:90%;overflow:auto;background:#000000;color:#ffffff;';
         echo '<div style="' . $style . '">';
-        echo ($sub === FALSE ? '' : "<i style='color:#00CCFF;'>{$parent} (<i style='color:aqua;'>" . gettype($array) . "</i>) <span style='color:#00BB00;font-size:.7em;'>Element Count: " . count($array) . "</span> => </i>");
+        echo ($sub === false ? '' : "<i style='color:#00CCFF;'>{$parent} (<i style='color:aqua;'>" . gettype($array) . "</i>) <span style='color:#00BB00;font-size:.7em;'>Element Count: " . count($array) . "</span> => </i>");
         if (is_bool($array) || is_string($array) || is_integer($array)) {
             $v = $array;
             unset($array);
-            $array = (is_bool($v) ? array(gettype($v) => ($v === TRUE ? 'TRUE' : 'FALSE')) : array(gettype($v) => strval($v)));
+            $array = (is_bool($v) ? array(gettype($v) => ($v === true ? 'true' : 'false')) : array(gettype($v) => strval($v)));
         }
         foreach ($array as $key => $value) {
             switch (is_array($value)) {
-                case TRUE:
-                    self::sdmCoreSdmReadArray($value, TRUE, $key);
+                case true:
+                    self::sdmCoreSdmReadArray($value, true, $key);
                     break;
                 default:
                     if (is_object($value)) {
-                        echo ($sub === FALSE ? '<p><b style="color:#00CCFF;"><i>' . (isset($key) ? strval($key) : 'unknown_object') . '</i></b> (<i style="color:aqua;">object</i>)</p>' : '<p><ul><li><b style="color:#00FF99;"><i>' . (isset($key) ? strval($key) : 'unknown_object') . '</i></b>(<i style="color:aqua;">object</i>)</li></ul></p>');
-                        self::sdmCoreSdmReadArray(json_decode(json_encode($value), TRUE));
+                        echo ($sub === false ? '<p><b style="color:#00CCFF;"><i>' . (isset($key) ? strval($key) : 'unknown_object') . '</i></b> (<i style="color:aqua;">object</i>)</p>' : '<p><ul><li><b style="color:#00FF99;"><i>' . (isset($key) ? strval($key) : 'unknown_object') . '</i></b>(<i style="color:aqua;">object</i>)</li></ul></p>');
+                        self::sdmCoreSdmReadArray(json_decode(json_encode($value), true));
                     } else {
-                        echo ($sub === FALSE ? "<p><xmp style='display:inline;color:#00CCFF'>{$key}</xmp> (<i style='color:aqua;'>" . gettype($value) . "</i>) " . (gettype($value) === 'string' ? '<span style="color:#00DDFF;font-size:.7em;font-style: italic;">String Length: ' . strlen($value) . '</span>' : '') . " => <xmp style='display:inline;color:#00CC99'>{$value}</xmp></p>" : "<p><ul><li><xmp style='display:inline;color:#00CC99'>{$key}</xmp> (<i style='color:aqua;'>" . gettype($value) . "</i>) " . (gettype($value) === 'string' ? '<span style="color:#00DDFF;font-size:.7em;font-style: italic;">String Length: ' . strlen($value) . '</span>' : '') . " => <xmp style='display:inline;color:#00CC99'>{$value}</xmp></li></ul></p>");
+                        echo ($sub === false ? "<p><xmp style='display:inline;color:#00CCFF'>{$key}</xmp> (<i style='color:aqua;'>" . gettype($value) . "</i>) " . (gettype($value) === 'string' ? '<span style="color:#00DDFF;font-size:.7em;font-style: italic;">String Length: ' . strlen($value) . '</span>' : '') . " => <xmp style='display:inline;color:#00CC99'>{$value}</xmp></p>" : "<p><ul><li><xmp style='display:inline;color:#00CC99'>{$key}</xmp> (<i style='color:aqua;'>" . gettype($value) . "</i>) " . (gettype($value) === 'string' ? '<span style="color:#00DDFF;font-size:.7em;font-style: italic;">String Length: ' . strlen($value) . '</span>' : '') . " => <xmp style='display:inline;color:#00CC99'>{$value}</xmp></li></ul></p>");
                     }
                     break;
             }
         }
         echo '</div>';
-        return TRUE;
+        return true;
     }
 
     /**
@@ -387,10 +387,10 @@ class SdmCore {
         // we need to mimic a browser to get the actual web page data | otherwise some servers will "withhold" some of that data
         $useragent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.71 Safari/537.36"; // mimics a browser | we use an older browser to further prevent the target site from stopping us from getting the data we want
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_COOKIESESSION, FALSE);
+        curl_setopt($ch, CURLOPT_COOKIESESSION, false);
         curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         if (isset($post) && !empty($post)) {
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
@@ -410,7 +410,7 @@ class SdmCore {
      */
     final public function sdmCoreDetermineAvailablePages() {
         // load our json data from data.json
-        $data = json_decode(file_get_contents($this->sdmCoreGetCoreDirectoryPath() . '/sdm/data.json'), TRUE);
+        $data = json_decode(file_get_contents($this->sdmCoreGetCoreDirectoryPath() . '/sdm/data.json'), true);
         // we just want the KEYS from the content array as they correlate to the names of the pages of our site. i.e., $data['content']['homepage'] holds the homepage content.
         $pages = array_keys($data['content']);
         // attempt to format the array so the KEYS can be used for display, and the VALUES can be used in code | "pageName" will become "Page Name" and will be used as a key
@@ -443,7 +443,7 @@ class SdmCore {
     final public function SdmCoreGenerateMachineName($value) {
         $targetChars = str_split('~!@#$%^&*()+|}{":;?> <`\'\\Ω≈ç√∫˜≤≥÷åß∂ƒ©˙∆˚¬…æœ∑´†¥¨ˆπ“‘«`™£¢∞§¶•ªº–≠¸˛Ç◊ı˜Â¯˘¿ÅÍÎÏ˝ÓÔÒÚÆŒ„´‰ˇÁ¨ˆØ∏”’»`⁄€‹›ﬁﬂ‡°·‚—±');
         switch (is_array($value)) {
-            case TRUE:
+            case true:
                 foreach ($value as $k => $v) {
                     unset($value[$k]);
                     $value[$k] = SdmCore::SdmCoreGenerateMachineName($v);

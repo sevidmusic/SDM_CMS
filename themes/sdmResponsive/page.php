@@ -11,8 +11,8 @@
     <?php
     $sidebar = SdmAssembler::sdmAssemblerGetContentHtml('side-menu', $sdmassembler_themeContentObject);
     $sidebarInvalidValues = array(null, '', '<!-- side-menu placeholder -->');
-    $sideBarExists = (in_array($sidebar, $sidebarInvalidValues) === TRUE ? FALSE : TRUE);
-    if ($sideBarExists === TRUE) {
+    $sideBarExists = (in_array($sidebar, $sidebarInvalidValues) === true ? false : true);
+    if ($sideBarExists === true) {
         ?>
         <div id="side-menu" class="col-3 col-m-3 rounded">
             <?php
@@ -20,7 +20,7 @@
             ?>    </div>
         <div id="locked-spacer" class="col-1 col-m-1 spacer"></div>
     <?php } ?>
-    <div id="main_content"class="<?php echo ($sideBarExists === TRUE ? 'col-8 col-m-8' : 'col-12 col-m-12'); ?> rounded">
+    <div id="main_content"class="<?php echo ($sideBarExists === true ? 'col-8 col-m-8' : 'col-12 col-m-12'); ?> rounded">
         <?php
         echo SdmAssembler::sdmAssemblerGetContentHtml('main_content', $sdmassembler_themeContentObject);
         ?>

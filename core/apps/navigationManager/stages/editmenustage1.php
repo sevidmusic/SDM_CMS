@@ -1,7 +1,7 @@
 <?php
 
 $availableMenus = $sdmnms->sdmNmsGenerateMenuPropertiesArray('menuDisplayName', 'menuId');
-if (!empty($availableMenus) === TRUE) {
+if (!empty($availableMenus) === true) {
     $editMenuSelectMenuForm = new SdmForm();
     $editMenuSelectMenuForm->form_method = 'post';
     $editMenuSelectMenuForm->form_handler = 'navigationManagerEditMenuStage2';

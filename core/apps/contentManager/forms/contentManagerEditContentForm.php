@@ -33,7 +33,7 @@ $existing_content = $sdmassembler->sdmCoreGetDataObject()->content->$pagetoedit;
 // create form elements for appropriate wrappers | i.e., page specific wrappers will only be shown if $pagetoedit matches exists in the wrappers name
 foreach ($sdmcms->sdmCmsDetermineAvailableWrappers() as $displayValue => $machineValue) {
     // create place holder string if any wrappers that do not exist in core
-    if (!isset($existing_content->$machineValue) === TRUE) {
+    if (!isset($existing_content->$machineValue) === true) {
         $existing_content->$machineValue = '';
     }
     if (!in_array($machineValue, array_filter(arrstristrchars($available_pages, $machineValue)))) {

@@ -27,8 +27,8 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
      *                               in the future this parameter will determine where the session
      *                               data is pulled from, i.e., a session file, or a Database, or
      *                               some other storage.</p>
-     * @return bool <p>The return value (usually TRUE on success, FALSE on
-     *                 FALSE on failure).
+     * @return bool <p>The return value (usually true on success, false on
+     *                 false on failure).
      *                 Note: This value is returned internally to PHP for
      *                 processing.</p>
      */
@@ -62,8 +62,8 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
 
     /**
      * <p>Close a session.</p>
-     * @return bool <p>The return value (usually TRUE on success, FALSE on
-     *                 FALSE on failure).
+     * @return bool <p>The return value (usually true on success, false on
+     *                 false on failure).
      *                 Note: This value is returned internally to PHP for
      *                 processing.</p>
      */
@@ -101,18 +101,18 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
     /**
      * <p>Utilizes sdmCoreSdmReadArray() to show info
      * about the current configuration of PHP sessions, unless
-     * the $reutrnData var is set to TRUE, in which case
+     * the $reutrnData var is set to true, in which case
      * the an array of data about the current session config is
      * returned.</p>
      * <p>This method is useful for debugging and development.</p>
-     * @param bool $returnData <p>If set to TRUE, an array of data
+     * @param bool $returnData <p>If set to true, an array of data
      *                            about the current session config
      *                            will be returned.</p>
      * @param bool $resizeableView <p>Determines if view is resizeable
-     *                                or not. Defaults to FALSE</p>
-     * @return bool <p>Returns TRUE.</p>
+     *                                or not. Defaults to false</p>
+     * @return bool <p>Returns true.</p>
      */
-    public function sessionConfigInfo($returnData = FALSE, $resizeableView = FALSE) {
+    public function sessionConfigInfo($returnData = false, $resizeableView = false) {
         $sessionConfigInfo = array(
             'session_module_name' => session_module_name(),
             'session_id' => (session_id() === '' ? 'There is no session id at the moment which means there is no active session' : session_id()),
@@ -120,13 +120,13 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
             'session_save_path' => session_save_path(),
             'session_get_cookie_params' => session_get_cookie_params(),
             'session_cache_limiter' => session_cache_limiter(),
-            '$_SESSION' => (!empty($_SESSION) === TRUE ? $_SESSION : 'No current $_SESSION data'),
+            '$_SESSION' => (!empty($_SESSION) === true ? $_SESSION : 'No current $_SESSION data'),
         );
-        if ($returnData === FALSE) {
-            echo '<div style="' . ($resizeableView === TRUE ? 'width:100%;height:42px;resize:both;overflow:auto;' : '') . '">';
+        if ($returnData === false) {
+            echo '<div style="' . ($resizeableView === true ? 'width:100%;height:42px;resize:both;overflow:auto;' : '') . '">';
             $this->sdmCoreSdmReadArray($sessionConfigInfo);
             echo '</div>';
-            return TRUE;
+            return true;
         } else {
             return $sessionConfigInfo;
         }
@@ -142,7 +142,7 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
      *        attempts to do so have resulted in session data being lost, so
      *        until session id regeneration can be implemented without bugs
      *        it is not being applied.
-     * @return bool <p>TRUE if session was started, false if session
+     * @return bool <p>true if session was started, false if session
      * could not be started.</p>
      */
     public function sessionStart() {
@@ -156,10 +156,10 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
         $path = '/';
         // domain our session cookie will be available to. | NOTE: Setting this parameter is resulting is session data being lost, until it is discovered how to set the $domain parameter without any problems set to an empty string.
         $domain = ''; //$this->SdmCoreGetRootDirectoryUrl();
-        // If set to TRUE session cookie will only be available over encrypted connections such as SSL/TLS. Setting this to TRUE on a non-encrypted connection will result in session data loss.
-        $secure = FALSE;
-        // If set to TRUE it forces seesions to only use HTTP with browsers that support this parameter. If supported setting this to TRUE will prevent javascript from interacting with the cookie which is useful in defending against XSS attacks.
-        $httponly = TRUE;
+        // If set to true session cookie will only be available over encrypted connections such as SSL/TLS. Setting this to true on a non-encrypted connection will result in session data loss.
+        $secure = false;
+        // If set to true it forces seesions to only use HTTP with browsers that support this parameter. If supported setting this to true will prevent javascript from interacting with the cookie which is useful in defending against XSS attacks.
+        $httponly = true;
         session_set_cookie_params($maxlifetime, $path, $domain, $secure, $httponly);
         // start session, and store result in $status var so the sessionStart() method will return true or false depending on the success of session_start()
         $startStatus = session_start();
@@ -183,8 +183,8 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
         // update last activity time stamp
         $_SESSION['LAST_ACTIVITY'] = time(); // update last activity time stamp
         /** Regenerate session id on every request for security */
-        $regenStatus = session_regenerate_id(TRUE);
-        return ($startStatus && $regenStatus === TRUE ? TRUE : FALSE);
+        $regenStatus = session_regenerate_id(true);
+        return ($startStatus && $regenStatus === true ? true : false);
     }
 
     public function sessionDestroy() {
@@ -206,7 +206,7 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
         $offset = rand(0, $limit - 1);
         $kind = '';
         for ($sweet = 0; $sweet < strlen($data); $sweet++) {
-            $empathy = (strpos($cipher, $data[$sweet]) === FALSE ? 'notfound' : strpos($cipher, $data[$sweet])); // current position in unencrypted string, to be encrypted it must be less than the cipher length because the encrypted chars will only be chars that exist in cipher, therefore any chars with positions greater than the cipher length will not be encrypted
+            $empathy = (strpos($cipher, $data[$sweet]) === false ? 'notfound' : strpos($cipher, $data[$sweet])); // current position in unencrypted string, to be encrypted it must be less than the cipher length because the encrypted chars will only be chars that exist in cipher, therefore any chars with positions greater than the cipher length will not be encrypted
             $love = ($empathy + $offset >= $limit ? ($empathy - ($limit - $offset)) : ($empathy + $offset));
             $kind .= ( $empathy === 'notfound' ? $data[$sweet] : $cipher[$love]);
         }
@@ -223,10 +223,10 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
         $limit = strlen($cipher);
         $key = explode('sdm', $data);
         $offset = end($key);
-        $new = strstr($data, 'sdm', TRUE);
+        $new = strstr($data, 'sdm', true);
         $kind = '';
         for ($sweet = 0; $sweet < strlen($new); $sweet++) {
-            $empathy = (strpos($cipher, $new[$sweet]) === FALSE ? 'notfound' : strpos($cipher, $data[$sweet])); // current position in unencrypted string, to be encrypted it must be less than the cipher length because the encrypted chars will only be chars that exist in cipher, therefore any chars with positions greater than the cipher length will not be encrypted
+            $empathy = (strpos($cipher, $new[$sweet]) === false ? 'notfound' : strpos($cipher, $data[$sweet])); // current position in unencrypted string, to be encrypted it must be less than the cipher length because the encrypted chars will only be chars that exist in cipher, therefore any chars with positions greater than the cipher length will not be encrypted
             $love = ($empathy + ($limit - $offset) >= $limit ? ($empathy - $offset) : ($empathy + ($limit - $offset)));
             $kind .= ( $empathy === 'notfound' ? $new[$sweet] : $cipher[$love]);
         }
@@ -235,10 +235,10 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
 
     /**
      * Determines if user is logged in.
-     * @return bool <p>TRUE if user is logged in, FALSE if not.</p>
+     * @return bool <p>true if user is logged in, false if not.</p>
      */
     final public static function sdmGatekeeperAuthenticate() {
-        return (isset($_SESSION['sdmauth']) && $_SESSION['sdmauth'] === 'auth' ? TRUE : FALSE);
+        return (isset($_SESSION['sdmauth']) && $_SESSION['sdmauth'] === 'auth' ? true : false);
     }
 
     /**
@@ -264,7 +264,7 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
      * @param string $app <p>The name of the app to whose .gk file we want
      * to get parameters from.</p>
      * @return array <p>Associative array of parameters from the app's .gk
-     * file or FALSE if no .gk file is exists.
+     * file or false if no .gk file is exists.
      */
     final public static function sdmGatekeeperReadAppGkParams($app) {
         $SdmCore = new SdmCore();
@@ -275,7 +275,7 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
             $gkfile = file($SdmCore->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.gk');
             $params = SdmGatekeeper::sdmGatekeeperDecodeParams($gkfile);
         } else {
-            $params = FALSE;
+            $params = false;
         }
         return $params; //$params;
     }

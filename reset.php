@@ -251,7 +251,7 @@
                 'menus' => $menus,
             ); // end $config array
             $data = utf8_encode(trim(json_encode($config)));
-            echo (file_put_contents($sdmcore->sdmCoreGetDataDirectoryPath() . '/data.json', $data, LOCK_EX) != FALSE ? '<h4 style="color:#00FF99">Site configuration reset to defaults succsessfully</h4><p><a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=homepage">Click Here</a> to view your new SDM CMS powered site</p>' : '<h2 style="color:red;">Could not configure site!Check config.php to determine the cause of the error.</h2>');
+            echo (file_put_contents($sdmcore->sdmCoreGetDataDirectoryPath() . '/data.json', $data, LOCK_EX) != false ? '<h4 style="color:#00FF99">Site configuration reset to defaults succsessfully</h4><p><a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=homepage">Click Here</a> to view your new SDM CMS powered site</p>' : '<h2 style="color:red;">Could not configure site!Check config.php to determine the cause of the error.</h2>');
             echo '<h3>Site Configuration:</h3><p>The following data was written to: <b style="color:#00FF99"><i>' . $sdmcore->sdmCoreGetDataDirectoryPath() . '/data.json</i></b></p>';
             echo '<p>The site\'s root URL is : ' . '<b style="color:#00FF99"><i>' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '</i></b>';
             $sdmcore->sdmCoreSdmReadArray($config);

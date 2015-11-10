@@ -39,9 +39,9 @@ class SdmAssembler extends SdmCore {
         $appScriptProps = '';
         foreach ($this->sdmCoreDetermineEnabledApps() as $app) {
             // get userApp .as properties
-            $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('scripts', 'userApp', $app) === FALSE ? '' : $this->sdmAssemblerAssembleHeaderProperties('scripts', 'userApp', $app));
+            $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('scripts', 'userApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('scripts', 'userApp', $app));
             // get coreApp .as properties
-            $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('scripts', 'coreApp', $app) === FALSE ? '' : $this->sdmAssemblerAssembleHeaderProperties('scripts', 'coreApp', $app));
+            $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('scripts', 'coreApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('scripts', 'coreApp', $app));
         }
         /** At the moment only app scipts are incorporated, stylesheets and meta tags are not yet supported for apps */
         return '
@@ -49,7 +49,7 @@ class SdmAssembler extends SdmCore {
             <html>
                 <head>
                     <title>' . (isset($_GET['page']) ? ucfirst($_GET['page']) : ucfirst('homepage')) . '</title>
-                    ' . ($appScriptProps !== FALSE ? $appScriptProps : '') . '
+                    ' . ($appScriptProps !== false ? $appScriptProps : '') . '
                     ' . $this->sdmAssemblerAssembleHeaderProperties('meta') . '
                     ' . $this->sdmAssemblerAssembleHeaderProperties('stylesheets') . '
                     ' . $this->sdmAssemblerAssembleHeaderProperties('scripts') . '
@@ -72,18 +72,18 @@ class SdmAssembler extends SdmCore {
      * @param string $sourceName <p>The name of the theme or app whose .as file we are reading .as property values from.</p>
      * @return string <p>The html for the header property.</p>
      */
-    private function sdmAssemblerAssembleHeaderProperties($targetProperty, $source = NULL, $sourceName = NULL) {
+    private function sdmAssemblerAssembleHeaderProperties($targetProperty, $source = null, $sourceName = null) {
         // initialize $html var
-        $html = '<!-- ' . ($source === NULL ? $this->sdmCoreDetermineCurrentTheme() . ' Theme ' . $targetProperty : ($source === 'userApp' ? 'User App' : ($source === 'coreApp' ? 'Core App' : 'Theme')) . ' ' . $sourceName . ' ' . $targetProperty) . ' -->';
+        $html = '<!-- ' . ($source === null ? $this->sdmCoreDetermineCurrentTheme() . ' Theme ' . $targetProperty : ($source === 'userApp' ? 'User App' : ($source === 'coreApp' ? 'Core App' : 'Theme')) . ' ' . $sourceName . ' ' . $targetProperty) . ' -->';
         // store initial $html value so we can perform a check later to see if anything was appended to $html, if nothing was appended to $html by the end of this method then the attempt to load the .as file properties failed
         $initHtml = $html;
         // determine directory to load resources set by properties such as stylesheets, or scripts
-        $path = ($source === NULL ? $this->sdmCoreGetCurrentThemeDirectoryUrl() : ($source === 'theme' ? $this->sdmCoreGetThemesDirectoryUrl() . '/' . $sourceName : ($source === 'userApp' ? $this->sdmCoreGetUserAppDirectoryUrl() . '/' . $sourceName : ($source === 'coreApp' ? $this->sdmCoreGetCoreAppDirectoryUrl() . '/' . $sourceName : NULL))));
+        $path = ($source === null ? $this->sdmCoreGetCurrentThemeDirectoryUrl() : ($source === 'theme' ? $this->sdmCoreGetThemesDirectoryUrl() . '/' . $sourceName : ($source === 'userApp' ? $this->sdmCoreGetUserAppDirectoryUrl() . '/' . $sourceName : ($source === 'coreApp' ? $this->sdmCoreGetCoreAppDirectoryUrl() . '/' . $sourceName : null))));
         //$this->sdmCoreSdmReadArray(array('path' => $path));
-        $properties = ($source === NULL ? $this->sdmAssemblerGetAsProperty($targetProperty) : $this->sdmAssemblerGetAsProperty($targetProperty, $source, $sourceName));
-        if ($properties !== FALSE) {
+        $properties = ($source === null ? $this->sdmAssemblerGetAsProperty($targetProperty) : $this->sdmAssemblerGetAsProperty($targetProperty, $source, $sourceName));
+        if ($properties !== false) {
             // assemble property html
-            if (!empty($properties) === TRUE) {
+            if (!empty($properties) === true) {
                 foreach ($properties as $property) {
                     if ($property == '') {
                         error_log('.as file property "' . $targetProperty . '" has no value. | Source:  ' . $sourceName . '');
@@ -112,7 +112,7 @@ class SdmAssembler extends SdmCore {
             // commented out so error log does not get clutterd by these warnings
             //error_log('.as file property "' . $targetProperty . '" was not loaded because a .as file is not provided by source : ' . $sourceName);
         }
-        return ($html === $initHtml ? FALSE : $html);
+        return ($html === $initHtml ? false : $html);
     }
 
     /**
@@ -135,14 +135,14 @@ class SdmAssembler extends SdmCore {
      * @param string $sourceName <p>The name of the theme or app whose .as file we are reading .as property values from.</p>
      * @return array <p>An array of values for the specified $property.
      *               <br/><i><b>Note:</b> An empty array will be returned if
-     *               any of the following are TRUE:</i></p>
+     *               any of the following are true:</i></p>
      *               <ul>
      *                  <li>if property is not set in .as file</li>
      *                  <li>if it is set but it does not have any values</li>
      *                  <li>if the method failed to get the property values.</li>
      *               </ul>
      */
-    private function sdmAssemblerGetAsProperty($property, $source = NULL, $sourceName = NULL) {
+    private function sdmAssemblerGetAsProperty($property, $source = null, $sourceName = null) {
         switch ($source) {
             case 'theme':
                 // read .as file into an array
@@ -160,17 +160,17 @@ class SdmAssembler extends SdmCore {
                 $asFile = @file($this->sdmCoreGetCurrentThemeDirectoryPath() . '/' . $this->sdmCoreDetermineCurrentTheme() . '.as');
                 break;
         }
-        if ($asFile !== FALSE) {
+        if ($asFile !== false) {
             // loop through array | i.e., loop through each line of the .as file
             foreach ($asFile as $line) {
                 // check if current $line is for $property
-                if (strstr($line, '=', TRUE) === $property) {
+                if (strstr($line, '=', true) === $property) {
                     // store property values in an array
                     $properties = explode(',', $this->sdmCoreStrSlice($line, '=', ';'));
                 }
             }
         }
-        return ($asFile === FALSE ? FALSE : (isset($properties) === TRUE ? $properties : array()));
+        return ($asFile === false ? false : (isset($properties) === true ? $properties : array()));
     }
 
     /**
@@ -185,7 +185,7 @@ class SdmAssembler extends SdmCore {
         $this->sdmAssemblerLoadApps($sdmassembler_dataObject);
         // make sure content exists, if it does return it, if not, return a content not found message and log the bad request to the bad requests log
         switch (isset($sdmassembler_dataObject->content->$page)) {
-            case TRUE:
+            case true:
                 //var_dump($sdmassembler_dataObject->content->$page);
                 $sdmassembler_dataObject = $this->sdmAssemblerPreparePageForDisplay($sdmassembler_dataObject->content->$page);
                 return $sdmassembler_dataObject;
@@ -195,7 +195,7 @@ class SdmAssembler extends SdmCore {
                 $badRequestDate = date('d-M-Y H:i:s e');
                 $badRequestUrl = $this->sdmCoreGetRootDirectoryUrl() . '/index.php?' . $_SERVER['QUERY_STRING'];
                 $truncatedBadRequsetUrl = (strlen($badRequestUrl) > 112 ? substr($badRequestUrl, 0, 112) . '...' : $badRequestUrl);
-                $linkedByInfo = (isset($_GET['linkedByMenu']) === TRUE ? 'Request Origin: Internal' . PHP_EOL . '- Menu:' . $_GET['linkedByMenu'] . PHP_EOL . (isset($_GET['linkedByMenuItem']) ? '- Menu Item: ' . $_GET['linkedByMenuItem'] : 'menu item unknown') : (isset($_GET['linkedBy']) === TRUE ? 'Request Origin: ' . $_GET['linkedBy'] : 'Request Origin: Unknown'));
+                $linkedByInfo = (isset($_GET['linkedByMenu']) === true ? 'Request Origin: Internal' . PHP_EOL . '- Menu:' . $_GET['linkedByMenu'] . PHP_EOL . (isset($_GET['linkedByMenuItem']) ? '- Menu Item: ' . $_GET['linkedByMenuItem'] : 'menu item unknown') : (isset($_GET['linkedBy']) === true ? 'Request Origin: ' . $_GET['linkedBy'] : 'Request Origin: Unknown'));
                 $errorMessage = '----- BAD REQUEST [' . $badRequestDate . '] -----' . PHP_EOL .
                         'Bad request id: ' . $badRequestId . PHP_EOL .
                         'Requested Page: ' . $page . PHP_EOL .
@@ -231,24 +231,24 @@ class SdmAssembler extends SdmCore {
     /**
      * Loads enabled apps.
      * @param object $sdmassembler_dataObject <p>The Content object for the requested page.</p>
-     * @return bool <p>FALSE if any apps failed to load, TRUE if no problems occured when loading
-     * all apps.</p><p><b>NOTE</b>:<i>This method will return TRUE even if this methods call to
+     * @return bool <p>false if any apps failed to load, true if no problems occured when loading
+     * all apps.</p><p><b>NOTE</b>:<i>This method will return true even if this methods call to
      * $this->sdmAssemblerLoadApp() fails to load an app as a result of user having insufficient
-     * privlages. Only actual failures will result in this method returning FALSE.</i></p>
+     * privlages. Only actual failures will result in this method returning false.</i></p>
      */
     private function sdmAssemblerLoadApps($sdmassembler_dataObject) {
         $enabledApps = $this->sdmCoreDetermineEnabledApps();
         foreach ($enabledApps as $app) {
             $status[] = $this->sdmAssemblerLoadApp($app, $sdmassembler_dataObject);
         }
-        return (in_array(FALSE, $status, TRUE));
+        return (in_array(false, $status, true));
     }
 
     /**
      * Loads an individual app. This method should only be used internally by
      * the sdmAssembler()'s sdmAssemblerLoadApps() method.
      * @param string $app <p>The name of the app to load</p>
-     * @return mixed <p>TRUE if app was loaded, FALSE if app could not be loaded as a result
+     * @return mixed <p>true if app was loaded, false if app could not be loaded as a result
      * of an error, such as the app not being found, or the string 'accessDenied' if app was
      * not loaded as a result of user not having sufficient privlages to use app.</p>
      */
@@ -259,25 +259,25 @@ class SdmAssembler extends SdmCore {
         $gkParams = SdmGatekeeper::sdmGatekeeperReadAppGkParams($app);
         /**
          * If SdmGatekeeper::sdmGatekeeperReadAppGkParams()
-         * returned FALSE, then assume app is not restricted to role,
+         * returned false, then assume app is not restricted to role,
          * if .gk file exists then check the roles parameter to see which roles
          * have permission to use this app, if the roles parameter has the 'all' value
          * in it then all users will be able to use this app.
          */
-        $userClear = ($gkParams === FALSE || in_array(SdmGatekeeper::SdmGatekeeperDetermineUserRole(), $gkParams['roles']) || in_array('all', $gkParams['roles']) ? TRUE : FALSE);
+        $userClear = ($gkParams === false || in_array(SdmGatekeeper::SdmGatekeeperDetermineUserRole(), $gkParams['roles']) || in_array('all', $gkParams['roles']) ? true : false);
         $appPath = '/' . $app . '/' . $app . '.php';
-        if ($userClear === TRUE) {
+        if ($userClear === true) {
             // load apps
             if (file_exists($this->sdmCoreGetCoreAppDirectoryPath() . $appPath)) {
                 require_once($this->sdmCoreGetCoreAppDirectoryPath() . $appPath);
-                return TRUE;
+                return true;
             } else if (file_exists($this->sdmCoreGetUserAppDirectoryPath() . $appPath)) {
                 require($this->sdmCoreGetUserAppDirectoryPath() . $appPath);
-                return TRUE;
+                return true;
             }
             // failed to load app | log error to error log so admin can debug problem.
             error_log('Warning: SdmAssembler() could not load app "' . $app . '". Make sure the app is installed in either the core or user app directory and that it is configured properly. This error most likely occured becuase the assmebler could not locate the "' . $app . '" app at either "' . $this->sdmCoreGetCoreAppDirectoryPath() . $appPath . '" or "' . $this->sdmCoreGetUserAppDirectoryPath() . $appPath . '"');
-            return FALSE;
+            return false;
         }
         // user does not have permission to use this app
         $this->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, 'You do not have permission to be here.', array('incpages' => array($app)));
@@ -369,7 +369,7 @@ class SdmAssembler extends SdmCore {
      * will be displayed at the top of the page for the most every call to this method for the requested page. This is useful when developing apps.</p>
      * @return object <p style="font-size:9px;">The modified data object.</p>
      */
-    public function sdmAssemblerIncorporateAppOutput(stdClass $dataObject, $output, array $options = array(), $devmode = FALSE) {
+    public function sdmAssemblerIncorporateAppOutput(stdClass $dataObject, $output, array $options = array(), $devmode = false) {
         // determine which app this output came from
         $calledby = ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', str_replace(array('/', '.php'), '', strrchr(debug_backtrace()[0]['file'], '/')))); // trys to determine which app called this method using debug_backtrace() @see http://php.net/manual/en/function.debug-backtrace.php | basically were just filtering the name path of the file that this method was called to so it displays in a format that is easy to read, we know that the calling file will contain the app name since all apps must name their main php file according to this case insensitive naming convention : APPNAME.php
         // determine the requested page
@@ -401,7 +401,7 @@ class SdmAssembler extends SdmCore {
              *   sdmAssemblerIncorporateAppOutput($dataObject, $output);// app out put will be incorporated into all pages because incpages does not exist, and will therefore be created and configured with pre-determined internal default values
              */
             $pages = $this->sdmCoreDetermineAvailablePages();
-            $enabledApps = json_decode(json_encode($this->sdmCoreDetermineEnabledApps()), TRUE);
+            $enabledApps = json_decode(json_encode($this->sdmCoreDetermineEnabledApps()), true);
             $options['incpages'] = array_merge($pages, $enabledApps);
         }
         // if $options['roles'] is not set then we assume all users should see this app output and we add the special 'all' value to the $otpions['roles'] array, if $options['roles'] is empty we assume no users can see this app output.
@@ -409,10 +409,10 @@ class SdmAssembler extends SdmCore {
             $options['roles'] = array('all');
         }
         // first we check if app output is restricted to certain roles. if it is we check that current user role matches one of the valid roles for the app. If the special 'all' role is in the $options['roles'] array then all users see the app output
-        $validUser = (in_array(SdmGatekeeper::SdmGatekeeperDetermineUserRole(), $options['roles']) || in_array('all', $options['roles']) ? TRUE : FALSE);
-        if ($validUser === TRUE) {
+        $validUser = (in_array(SdmGatekeeper::SdmGatekeeperDetermineUserRole(), $options['roles']) || in_array('all', $options['roles']) ? true : false);
+        if ($validUser === true) {
             // Check that $requested page exists in CORE or or is passed in as an option via the options array's incpages array
-            if (in_array($requestedPage, $this->sdmCoreDetermineAvailablePages()) === TRUE || in_array($requestedPage, $options['incpages']) === TRUE) {
+            if (in_array($requestedPage, $this->sdmCoreDetermineAvailablePages()) === true || in_array($requestedPage, $options['incpages']) === true) {
                 /* DATAOBJECT check | Make sure the properties we are modifying exist to prevent throwing any PHP errors */
                 // if no page exists for app in the CORE, then create a placeholder object for it to avoid PHP Errors, Notices, and Warnings
                 if (!isset($dataObject->content->$requestedPage)) {
@@ -426,28 +426,28 @@ class SdmAssembler extends SdmCore {
                 // make sure requested page is not in the ignorepages array
                 if (!in_array($requestedPage, $options['ignorepages'])) {
                     // PRE PROCESSING DEV MODE OUTPUT
-                    if ($devmode === TRUE) {
+                    if ($devmode === true) {
                         $this->sdmCoreSdmReadArray(array('Call To Method' => 'sdmAssemblerIncorporateAppOutput()', 'Method called by app' => $calledby, 'STAGE' => 'PRE_PROCESSING', 'OPTIONS' => $options, 'App Output' => $output, 'Data Object State' => $dataObject,));
                     }
                     // if not in ignorepages array and incpages is empty assume any page not in ignore array can incorporate app output
                     // Only incorporate app output if requested page matches one of the items in incpages
-                    if (in_array($requestedPage, $options['incpages'], TRUE)) {
+                    if (in_array($requestedPage, $options['incpages'], true)) {
                         if ($options['incmethod'] === 'prepend') {
                             $dataObject->content->$requestedPage->$options['wrapper'] = $output . $dataObject->content->$requestedPage->$options['wrapper'];
                             // PREPEND DEV MODE OUTPUT
-                            if ($devmode === TRUE) {
+                            if ($devmode === true) {
                                 $this->sdmCoreSdmReadArray(array('Call To Method' => 'sdmAssemblerIncorporateAppOutput()', 'Method called by app' => $calledby, 'STAGE' => 'PREPENDING', 'OPTIONS' => $options, 'App Output' => $output, 'Data Object State' => $dataObject,));
                             }
                         } else if ($options['incmethod'] === 'overwrite') {
                             $dataObject->content->$requestedPage->$options['wrapper'] = $output;
                             // OVERWRITE DEV MODE OUTPUT
-                            if ($devmode === TRUE) {
+                            if ($devmode === true) {
                                 $this->sdmCoreSdmReadArray(array('Call To Method' => 'sdmAssemblerIncorporateAppOutput()', 'Method called by app' => $calledby, 'STAGE' => 'OVERWRITEING', 'OPTIONS' => $options, 'App Output' => $output, 'Data Object State' => $dataObject,));
                             }
                         } else { // default is to append
                             $dataObject->content->$requestedPage->$options['wrapper'] .= $output;
                             // APPEND (default) DEV MODE OUTPUT
-                            if ($devmode === TRUE) {
+                            if ($devmode === true) {
                                 $this->sdmCoreSdmReadArray(array('Call To Method' => 'sdmAssemblerIncorporateAppOutput()', 'Method called by app' => $calledby, 'STAGE' => 'APPENDING', 'OPTIONS' => $options, 'App Output' => $output, 'Data Object State' => $dataObject,));
                             }
                         }

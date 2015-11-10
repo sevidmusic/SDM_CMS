@@ -47,7 +47,7 @@ class SdmMenuItem {
         $this->destination = (isset($this->destination) ? $this->destination : 'homepage');
         $this->arguments = (isset($this->arguments) ? $this->arguments : array('linkedby' => $this->menuItemMachineName));
         $this->menuItemKeyholders = (isset($this->menuItemKeyholders) ? $this->menuItemKeyholders : array('root'));
-        $this->menuItemEnabled = (isset($this->menuItemEnabled) ? $this->menuItemEnabled : TRUE);
+        $this->menuItemEnabled = (isset($this->menuItemEnabled) ? $this->menuItemEnabled : true);
     }
 
     public static function sdmMenuItemGenerateMenuItem() {
@@ -130,7 +130,7 @@ class SdmNms extends SdmCore {
      * @param mixed $menu <p>The new menu. It is preferable to pass in an SdmMenu object,
      * but you can also pass in an array as long as the keys match the property
      * names expected by a SdmMenu object.</p>
-     * @return bool TRUE of menu was added, FALSE on failure
+     * @return bool true of menu was added, false on failure
      */
     public function sdmNmsAddMenu($menu) {
         // we want to make sure we can accsess the new $menu as an object, so if it is not one convert it.
@@ -140,7 +140,7 @@ class SdmNms extends SdmCore {
         // load our core data object
         $data = $this->sdmCoreGetDataObject();
         // either load stored menus object from our core data object or if no menus exist yet initilize a default object using stdClass()
-        $menus = (isset($data->menus) === TRUE ? $data->menus : new stdClass());
+        $menus = (isset($data->menus) === true ? $data->menus : new stdClass());
         // store the new $menu in $menus under it's $menu->menuId
         $newMenusId = $menu->menuId;
         $menus->$newMenusId = $menu;
@@ -148,7 +148,7 @@ class SdmNms extends SdmCore {
         $data->menus = $menus;
         // encode $data as json to prep it for storage
         $json = json_encode($data);
-        // attempt to write new core $data | if anything fails FALSE will be returned
+        // attempt to write new core $data | if anything fails false will be returned
         return file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $json, LOCK_EX);
     }
 
@@ -157,7 +157,7 @@ class SdmNms extends SdmCore {
      * @param mixed $menuId <p>The Id of the menu we want to add this menu item to.</p>
      * @param mixed $menuItem <p>The menu item. Preferably passed in the form of an SdmMenuItem object, it is also possible
      * to pass an array as long as the array indexes match the expected property names for a SdmMenuItem object.</p>
-     * @return bool TRUE of menu item was added, FALSE on failure
+     * @return bool true of menu item was added, false on failure
      */
     public function sdmNmsAddMenuItem($menuId, $menuItem) {
         // we want to make sure we can accsess the new $menu as an object, so if it is not one convert it.
@@ -172,7 +172,7 @@ class SdmNms extends SdmCore {
         $data->menus->$menuId->menuItems->$menuItemId = $menuItem;
         // encode $data as json to prep it for storage
         $json = json_encode($data);
-        // attempt to write new core $data | if anything fails FALSE will be returned
+        // attempt to write new core $data | if anything fails false will be returned
         return file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $json, LOCK_EX);
     }
 
@@ -188,7 +188,7 @@ class SdmNms extends SdmCore {
      * @param mixed $menu <p>The new menu. It is preferable to pass in an SdmMenu object,
      * but you can also pass in an array as long as the keys match the property
      * names expected for a SdmMenu object.</p>
-     * @return bool TRUE of menu was added, FALSE on failure
+     * @return bool true of menu was added, false on failure
      */
     public function sdmNmsUpdateMenu($menuId, $menu) {
         // we want to make sure we can accsess the new $menu as an object, so if it is not one convert it.
@@ -206,7 +206,7 @@ class SdmNms extends SdmCore {
         $data->menus = $menus;
         // encode $data as json to prep it for storage
         $json = json_encode($data);
-        // attempt to write new core $data | if anything fails FALSE will be returned
+        // attempt to write new core $data | if anything fails false will be returned
         return file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $json, LOCK_EX);
     }
 
@@ -222,7 +222,7 @@ class SdmNms extends SdmCore {
      * @param mixed $menu <p>The new menu. It is preferable to pass in an SdmMenu object,
      * but you can also pass in an array as long as the keys match the property
      * names expected for a SdmMenu object.</p>
-     * @return bool TRUE of menu was added, FALSE on failure
+     * @return bool true of menu was added, false on failure
      */
     public function sdmNmsUpdateMenuItem($menuId, $menuItemId, $menuItem) {
         // load our core data object
@@ -240,7 +240,7 @@ class SdmNms extends SdmCore {
         $data->menus = $menus;
         // encode $data as json to prep it for storage
         $json = json_encode($data);
-        // attempt to write new core $data | if anything fails FALSE will be returned
+        // attempt to write new core $data | if anything fails false will be returned
         return file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $json, LOCK_EX);
     }
 
@@ -250,7 +250,7 @@ class SdmNms extends SdmCore {
      *               i.e., sdmNmsDeleteMenu(1) and sdmNmsDeleteMenu('1') would delete the menu that has a menuId
      *               equal to 1</p>
      * @return mixed <p>If menu was deleted then the display name of the deleted menu is returned, if menu could not be
-     * deleted then the boolean FALSE is returned.</p>
+     * deleted then the boolean false is returned.</p>
      */
     public function sdmNmsDeleteMenu($menuId) {
         $data = $this->sdmCoreGetDataObject();
@@ -258,7 +258,7 @@ class SdmNms extends SdmCore {
         unset($data->menus->$menuId);
         $json = json_encode($data);
         $status = file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $json, LOCK_EX);
-        return ($status === FALSE ? FALSE : $menuDisplayName);
+        return ($status === false ? false : $menuDisplayName);
     }
 
     /**
@@ -266,14 +266,14 @@ class SdmNms extends SdmCore {
      * @param mixed $menuId <p>Can be a string or an integer whose value matches the id of the menu the menu item belongs to.</p>
      * @param mixed $menuItemId <p>Can be a string or an integer whose value matches the id of the menu item to be deleted.</p>
       @return mixed <p>If menu item was deleted then the display name of the deleted menu item is returned, if menu item could not be
-     * deleted then the boolean FALSE is returned.</p>     */
+     * deleted then the boolean false is returned.</p>     */
     public function sdmNmsDeleteMenuItem($menuId, $menuItemId) {
         $data = $this->sdmCoreGetDataObject();
         $menuItemDisplayName = $data->menus->$menuId->menuItems->$menuItemId->menuItemDisplayName;
         unset($data->menus->$menuId->menuItems->$menuItemId);
         $json = json_encode($data);
         $status = file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $json, LOCK_EX);
-        return ($status === FALSE ? FALSE : $menuItemDisplayName);
+        return ($status === false ? false : $menuItemDisplayName);
     }
 
     /**
@@ -311,14 +311,14 @@ class SdmNms extends SdmCore {
      * @return string An html formated string representation of the menu
      */
     public function sdmNmsGetMenuHtml($menuId) {
-        $currentUserRole = (SdmGatekeeper::sdmGatekeeperAuthenticate() === TRUE ? 'root' : 'basic_user'); // this is a dev role, the users role should be determined by the Sdm Gatekeeper once it is built
+        $currentUserRole = (SdmGatekeeper::sdmGatekeeperAuthenticate() === true ? 'root' : 'basic_user'); // this is a dev role, the users role should be determined by the Sdm Gatekeeper once it is built
         $menu = $this->sdmNmsGetMenu($menuId);
         $sdmcore = new SdmCore();
 // if $currentUserRole exists in menuKeyholders array show menu || if the special role "all" exists in the menuKeyholders array we assume all users have accsess and show menu || we no longer  assume that all users have accsess to this menu if menuKeyholders is null
         if (in_array($currentUserRole, $menu->menuKeyholders) || in_array('all', $menu->menuKeyholders)) { // we check three things, if the menuKeyholders property is null we assume all users can accsess this menu, if it is not null we check if the users role exists in the menuKeyholders array, we also do a check to see if the 'all' value exists in the menuKeyholders array, if 'all' is present then the menu will be available to all users regardless of the other roles set in menuKeyholders
-            $html = (in_array($sdmcore->sdmCoreDetermineRequestedPage(), $menu->displaypages) === TRUE || in_array('all', $menu->displaypages) === TRUE ? $this->sdmNmsBuildMenuHtml($menu) : '<!-- Menu "' . $menu->menuDisplayName . '" Placeholder -->'); //$this->sdmNmsBuildMenuHtml($menu);
+            $html = (in_array($sdmcore->sdmCoreDetermineRequestedPage(), $menu->displaypages) === true || in_array('all', $menu->displaypages) === true ? $this->sdmNmsBuildMenuHtml($menu) : '<!-- Menu "' . $menu->menuDisplayName . '" Placeholder -->'); //$this->sdmNmsBuildMenuHtml($menu);
         }
-        return (isset($html) && $html !== '' ? $html : FALSE);
+        return (isset($html) && $html !== '' ? $html : false);
     }
 
     /**
@@ -349,7 +349,7 @@ class SdmNms extends SdmCore {
      * @return string <p>The Menu's html</p>
      */
     public function sdmNmsBuildMenuHtml($menu) {
-        $html = '<!-- MENU: ' . $menu->menuDisplayName . ' | MENUID: ' . $menu->menuId . ' | MENU MACHINE NAME: ' . $menu->menuMachineName . ' --><' . $menu->menuWrappingTagType . ' id="' . $menu->menuCssId . '" class="' . (is_array($menu->menuCssClasses) === TRUE ? implode(' ', $menu->menuCssClasses) : str_replace(array(',', '|', ':', ';'), ' ', strval($menu->menuCssClasses))) . '">';
+        $html = '<!-- MENU: ' . $menu->menuDisplayName . ' | MENUID: ' . $menu->menuId . ' | MENU MACHINE NAME: ' . $menu->menuMachineName . ' --><' . $menu->menuWrappingTagType . ' id="' . $menu->menuCssId . '" class="' . (is_array($menu->menuCssClasses) === true ? implode(' ', $menu->menuCssClasses) : str_replace(array(',', '|', ':', ';'), ' ', strval($menu->menuCssClasses))) . '">';
         $html .= $this->sdmNmsBuildMenuItemsHtml($menu->menuItems, $menu->menuId);
         $html .= '</' . $menu->menuWrappingTagType . '>';
         return $html;
@@ -366,13 +366,13 @@ class SdmNms extends SdmCore {
      */
     public function sdmNmsBuildMenuItemsHtml($menuItems, $menuId = 'unknown') {
         $html = '';
-        $currentUserRole = (SdmGatekeeper::sdmGatekeeperAuthenticate() === TRUE ? 'root' : 'basic_user'); // this is a dev role, the users role should be determined by the Sdm Gatekeeper once it is built
+        $currentUserRole = (SdmGatekeeper::sdmGatekeeperAuthenticate() === true ? 'root' : 'basic_user'); // this is a dev role, the users role should be determined by the Sdm Gatekeeper once it is built
         $orderedMenuItems = array();
         $usedPositions = array();
         // order menu items by menu item position | first build an array of ordered menu items where each menu item is indexed by it's menuItemPosition
         foreach ($menuItems as $menuItem) {
             // if menu item position is already in the $usedPositions array add 1 to avoid overwriting previous menu items
-            $position = (in_array($menuItem->menuItemPosition, $usedPositions) === TRUE ? $menuItem->menuItemPosition + 1 : $menuItem->menuItemPosition);
+            $position = (in_array($menuItem->menuItemPosition, $usedPositions) === true ? $menuItem->menuItemPosition + 1 : $menuItem->menuItemPosition);
             // index our menu item by $position in the new $orderedMenuItems array | $position and $usedPositions will insure menu items do not get indexed by a position that was already assigned as an index.
             $orderedMenuItems[$position] = $menuItem;
             // store the $position in the $usedPositions array so we can keep track of positions already in use, this allows us to prevent menu items that share the same $menuItem->menuItemPosition from overwriting each other by assuring no menu item is indexed by a $position that was already used.
@@ -382,14 +382,14 @@ class SdmNms extends SdmCore {
         ksort($orderedMenuItems, SORT_NUMERIC);
         // build each ordered menu itmes html
         foreach ($orderedMenuItems as $orderedMenuItem) {
-            if (in_array($currentUserRole, $orderedMenuItem->menuItemKeyholders) === TRUE || in_array('all', $orderedMenuItem->menuItemKeyholders)) {
-                if ($orderedMenuItem->menuItemEnabled === TRUE || $orderedMenuItem->menuItemEnabled === '1' || $orderedMenuItem->menuItemEnabled === 1) {
+            if (in_array($currentUserRole, $orderedMenuItem->menuItemKeyholders) === true || in_array('all', $orderedMenuItem->menuItemKeyholders)) {
+                if ($orderedMenuItem->menuItemEnabled === true || $orderedMenuItem->menuItemEnabled === '1' || $orderedMenuItem->menuItemEnabled === 1) {
                     switch ($orderedMenuItem->destinationType) {
                         case 'internal':
-                            $html .= '<' . $orderedMenuItem->menuItemWrappingTagType . ' id="' . $orderedMenuItem->menuItemCssId . '" class="' . implode(' ', $orderedMenuItem->menuItemCssClasses) . '"><a href="' . $this->sdmCoreGetRootDirectoryUrl() . '/index.php?page=' . $orderedMenuItem->destination . '&linkedByMenu=' . $menuId . '&linkedByMenuItem=' . $orderedMenuItem->menuItemId . (isset($orderedMenuItem->arguments) === TRUE && !empty($orderedMenuItem->arguments) && $orderedMenuItem->arguments[0] != '' ? '&' : '') . (is_string($orderedMenuItem->arguments) ? str_replace(' ', '', str_replace(array(',', ';', ':', '|'), '&', $orderedMenuItem->arguments)) : str_replace(' ', '', implode('&', $orderedMenuItem->arguments))) . '">' . $orderedMenuItem->menuItemDisplayName . '</a>' . '</' . $orderedMenuItem->menuItemWrappingTagType . '>';
+                            $html .= '<' . $orderedMenuItem->menuItemWrappingTagType . ' id="' . $orderedMenuItem->menuItemCssId . '" class="' . implode(' ', $orderedMenuItem->menuItemCssClasses) . '"><a href="' . $this->sdmCoreGetRootDirectoryUrl() . '/index.php?page=' . $orderedMenuItem->destination . '&linkedByMenu=' . $menuId . '&linkedByMenuItem=' . $orderedMenuItem->menuItemId . (isset($orderedMenuItem->arguments) === true && !empty($orderedMenuItem->arguments) && $orderedMenuItem->arguments[0] != '' ? '&' : '') . (is_string($orderedMenuItem->arguments) ? str_replace(' ', '', str_replace(array(',', ';', ':', '|'), '&', $orderedMenuItem->arguments)) : str_replace(' ', '', implode('&', $orderedMenuItem->arguments))) . '">' . $orderedMenuItem->menuItemDisplayName . '</a>' . '</' . $orderedMenuItem->menuItemWrappingTagType . '>';
                             break;
                         case 'external': // $orderedMenuItem->destination
-                            $html .= '<' . $orderedMenuItem->menuItemWrappingTagType . ' id="' . $orderedMenuItem->menuItemCssId . '" class="' . implode(' ', $orderedMenuItem->menuItemCssClasses) . '"><a href="' . $orderedMenuItem->destination . (isset($orderedMenuItem->arguments) === TRUE && !empty($orderedMenuItem->arguments) && $orderedMenuItem->arguments[0] != '' ? '?&' : '') . (is_string($orderedMenuItem->arguments) ? str_replace(' ', '', str_replace(array(',', ';', ':', '|'), '&', $orderedMenuItem->arguments)) : str_replace(' ', '', implode('&', $orderedMenuItem->arguments))) . '" target="_blank">' . $orderedMenuItem->menuItemDisplayName . '</a>' . '</' . $orderedMenuItem->menuItemWrappingTagType . '>';
+                            $html .= '<' . $orderedMenuItem->menuItemWrappingTagType . ' id="' . $orderedMenuItem->menuItemCssId . '" class="' . implode(' ', $orderedMenuItem->menuItemCssClasses) . '"><a href="' . $orderedMenuItem->destination . (isset($orderedMenuItem->arguments) === true && !empty($orderedMenuItem->arguments) && $orderedMenuItem->arguments[0] != '' ? '?&' : '') . (is_string($orderedMenuItem->arguments) ? str_replace(' ', '', str_replace(array(',', ';', ':', '|'), '&', $orderedMenuItem->arguments)) : str_replace(' ', '', implode('&', $orderedMenuItem->arguments))) . '" target="_blank">' . $orderedMenuItem->menuItemDisplayName . '</a>' . '</' . $orderedMenuItem->menuItemWrappingTagType . '>';
                             break;
                         default:
                             break;
@@ -427,7 +427,7 @@ class SdmNms extends SdmCore {
      * @return type <p>An array of menu ids for all available menus.</p>
      */
     public function sdmNmsGetMenuIds() {
-        return array_keys(json_decode(json_encode($this->sdmCoreGetDataObject()->menus), TRUE));
+        return array_keys(json_decode(json_encode($this->sdmCoreGetDataObject()->menus), true));
     }
 
     /**
@@ -437,7 +437,7 @@ class SdmNms extends SdmCore {
      */
     public function sdmNmsGetMenuItemIds($menuId) {
         $menu = $this->sdmCoreGetDataObject()->menus->$menuId;
-        return array_keys(json_decode(json_encode($menu->menuItems), TRUE));
+        return array_keys(json_decode(json_encode($menu->menuItems), true));
     }
 
 }
