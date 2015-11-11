@@ -1,9 +1,9 @@
 var alerted = localStorage.getItem('alerted') || '';
-if (alerted != 'yes') {
+if (alerted !== 'yes') {
 // first check if jQuery has been loaded
-    if (typeof jQuery != 'undefined') {
+    if (typeof jQuery !== 'undefined') {
         // then check if jQuery UI has been loaded
-        if (typeof jQuery.ui != 'undefined') {
+        if (typeof jQuery.ui !== 'undefined') {
             $("document").ready(function() {
                 /* VARIABLE INIT */
                 alert('jQuery version "' + $.fn.jquery + '" and jQuery UI version "' + $.ui.version + '" are working on this page.');
