@@ -32,7 +32,7 @@ class SdmForm {
      *
      */
     public function __construct() {
-        $this->form_id = (isset($this->form_id) ? $this->form_id : $this->sdmFormGenerateFormId());
+        $this->formId = (isset($this->formId) ? $this->formId : $this->sdmFormGenerateFormId());
         $this->form_elements = (isset($this->form_elements) ? $this->form_elements : array(
                     // default form element example
                     array(
@@ -195,8 +195,8 @@ class SdmForm {
      */
     public function sdmFormGenerateFormId() {
         // we only set id if it is NOT already set | checked via terenary operator (condition ? true : false)
-        $this->form_id = (!isset($this->form_id) ? rand(1000, 9999) . '-' . $this->sdmFormAlphaRand(8) : $this->form_id);
-        return $this->form_id;
+        $this->formId = (!isset($this->formId) ? rand(1000, 9999) . '-' . $this->sdmFormAlphaRand(8) : $this->formId);
+        return $this->formId;
     }
 
     /**
@@ -204,7 +204,7 @@ class SdmForm {
      * @return string Form ID as a string.
      */
     public function sdmFormGetFormId() {
-        return (isset($this->form_id) ? $this->form_id : 'FORM ID NOT SET!');
+        return (isset($this->formId) ? $this->formId : 'FORM ID NOT SET!');
     }
 
     /** sdm_alpha_rand($numChars)
