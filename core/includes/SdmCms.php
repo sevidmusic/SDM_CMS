@@ -143,17 +143,6 @@ class SdmCms extends SdmCore {
         return $available_apps;
     }
 
-    /** MOVED TO CORE
-     * <p>Determines what apps are enabled by checking the property
-     * values of the Enabled Apps object</p>
-     * @return object An object whose properties are apps that are currently enabled.
-     */
-//    public function sdmCoreDetermineEnabledApps() {
-//        $data = $this->sdmCoreGetDataObject();
-//        $enabled_apps = $data->settings->enabledapps;
-//        return $enabled_apps;
-//    }
-
     /**
      * Switches an app from on to off.
      * @param string $app <p>Name of the app to switch on or of.</p>
