@@ -8,7 +8,7 @@
 class SdmForm {
 
     // properties //
-    private $form_id;
+    private $formId;
     private $form;
     public $form_handler;
     public $form_elements;
@@ -20,7 +20,7 @@ class SdmForm {
      *
      * PROPERTIES:
      *
-     * $form_id : defined internally, upon the creation of an SdmForm instance. A unique ID is assigned to this property via the internal sdmFormGenerateFormId() function
+     * $formId : defined internally, upon the creation of an SdmForm instance. A unique ID is assigned to this property via the internal sdmFormGenerateFormId() function
      *
      * $form : The assembled form.
      *
@@ -85,7 +85,7 @@ class SdmForm {
         ));
         $this->method = (isset($this->method) ? $this->method : 'post');
         $this->form_handler = (isset($this->form_handler) ? $this->form_handler : '');
-        $this->form = (isset($this->form) ? $this->form : $this->sdmFormBuildForm(str_replace('/index.php', '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'])));
+        $this->form = (isset($this->form) ? $this->form : $this->sdmFormBuildForm());
         $this->submitLabel = (isset($this->submitLabel) ? $this->submitLabel : 'Submit');
     }
 
@@ -95,6 +95,10 @@ class SdmForm {
      * @return The Form html
      */
     public function sdmFormBuildForm($rootUrl) {
+        if (!isset($rootUrl)) {
+            // if $rootUrl is not set, then attempt to default to site root url by guessing it
+            $rootUrl = str_replace('/index.php', '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']);
+        }
         // intial form html
         $formHtml = '<!-- form "' . $this->sdmFormGetFormId() . '" --><form method="' . $this->method . '" action="' . $rootUrl . '/index.php?page=' . $this->form_handler . '">';
 
