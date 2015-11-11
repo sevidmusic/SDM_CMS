@@ -31,7 +31,7 @@ body {
     border-bottom-color:#ffffff;
     border-left-color:#000000;
     border-width:5px;
-    border-radius:0px;
+    border-radius:0;
     border-style:none none double none;
 }
 
