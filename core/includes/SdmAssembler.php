@@ -9,7 +9,7 @@
  *
  * @author foremase
  */
-class SdmAssembler extends SdmCore {
+class SdmAssembler extends SdmGatekeeper {
 
     /**
      * <p>Returns the HTML header for the page as a string. The SdmAssembler will give apps

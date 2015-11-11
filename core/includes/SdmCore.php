@@ -238,9 +238,20 @@ class SdmCore {
      * @return object <p>The content object loaded from $this->CoreDirectoryUrl/sdm/data.json or from the DB</p>
      */
     final public function sdmCoreLoadDataObject() {
+        $reqPage = $this->sdmCoreDetermineRequestedPage();
         $coreData = $this->sdmCoreCurlGrabContent($this->sdmCoreGetDataDirectoryUrl() . '/data.json');
         $data = json_decode($coreData);
-        return $data;
+        // filter out pages that are not the current page from core data so the Data Object is not so large. Also, for security reasons we don't want to pass around a DataObject that holds all pages content because it could put restricted content at risk of being discovered by mistake, for instance by a call to var_dump() in a user app that is not properly configured to restrict accses.
+        $dataObject = new stdClass(); // at some point a DataObject class should be created to define the basic structure of a DataObject
+        if (isset($data->content->$reqPage) === TRUE) {
+            $dataObject->content->$reqPage = $data->content->$reqPage;
+        }
+        if (!isset($dataObject->content)) {
+            $dataObject->content = new stdClass();
+        }
+        $dataObject->settings = $data->settings;
+        $dataObject->menus = $data->menus;
+        return $dataObject;
     }
 
     /**
