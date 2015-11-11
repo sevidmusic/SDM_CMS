@@ -42,7 +42,7 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
                 }
                 break;
             default:
-                error_log('PHP Warning: SdmGateKeeper - Invalid storage type requested for session with id ending in ' . substr(session_id(), -7) . '.');
+                error_log('PHP Warning: SdmGateKeeper - Invalid storage type requested for session "' . $sessionName . '" with id ending in ' . substr(session_id(), -7) . '.');
                 break;
         }
         return;
@@ -292,8 +292,7 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
      * @return array <p>Associative array of .gk params decoded from an array returned by loading a .gk file via file()</p>
      */
     final private static function sdmGatekeeperDecodeParams($gkfile) {
-
-        foreach ($gkfile as $param => $value) {
+        foreach ($gkfile as $value) {
             $paramName = SdmCore::sdmCoreStrSlice('->' . $value, '->', '=');
             $paramValuesString = SdmCore::sdmCoreStrSlice($value, '=', ';');
             $paramValuesArray[$paramName] = explode(',', $paramValuesString);
