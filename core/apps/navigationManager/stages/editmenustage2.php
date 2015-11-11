@@ -125,4 +125,4 @@ foreach ($menuItems as $menuItem) {
 $output .= '</ul></div>';
 $addMenuItemArguments = array('page=navigationManagerEditMenuStage3_addmenuitem', 'menuId=' . $menu->menuId, 'linkedBy=navigationManager_editmenustage2_addMenuItemLink');
 $output .= '<p><a href="' . $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?' . str_replace('%26', '&', str_replace('%3D', '=', urlencode(implode('&', $addMenuItemArguments)))) . '">Add Menu Item</a></p>';
-$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, $output . '<h3>Menu Settings</h3>' . $editMenuSelectMenuForm->sdmFormGetForm(), array('incpages' => array('navigationManagerEditMenuStage2')));
+$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, $output . '<h3>Menu Settings</h3>' . $editMenuSelectMenuForm->sdmFormGetForm(), array('incpages' => array('navigationManagerEditMenuStage2')));

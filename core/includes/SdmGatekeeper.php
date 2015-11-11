@@ -267,12 +267,12 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
      * file or false if no .gk file is exists.
      */
     final public static function sdmGatekeeperReadAppGkParams($app) {
-        $SdmCore = new SdmCore();
-        if (file_exists($SdmCore->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.gk')) {
-            $gkfile = file($SdmCore->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.gk');
+        $gkSdmCore = new SdmCore();
+        if (file_exists($gkSdmCore->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.gk')) {
+            $gkfile = file($gkSdmCore->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.gk');
             $params = SdmGatekeeper::sdmGatekeeperDecodeParams($gkfile);
-        } else if (file_exists($SdmCore->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.gk')) {
-            $gkfile = file($SdmCore->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.gk');
+        } else if (file_exists($gkSdmCore->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.gk')) {
+            $gkfile = file($gkSdmCore->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.gk');
             $params = SdmGatekeeper::sdmGatekeeperDecodeParams($gkfile);
         } else {
             $params = false;

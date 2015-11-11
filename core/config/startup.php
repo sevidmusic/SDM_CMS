@@ -20,4 +20,4 @@ $sdmGatekeeper->sessionStart();
 // initialize assembler
 $sdmassembler = new SdmAssembler();
 // load and assemble content | this var is used excluisively by the current themes page.php
-$sdmassembler_themeContentObject = $sdmassembler->sdmAssemblerLoadAndAssembleContentObject();
+$sdmAssemblerThemeContentObject = $sdmassembler->sdmAssemblerLoadAndAssembleContentObject();

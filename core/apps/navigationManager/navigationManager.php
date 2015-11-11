@@ -43,7 +43,7 @@ $options = array(
 $sdmassembler = $sdmassembler; // see SdmAssembler.php
 if (substr($sdmassembler->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationManager') {
     // CREATE A NEW CONTENT MANAGEMENT OBJECT
-    $sdmcms = SdmCms::sdmCmsInitializeCms();
+    $sdmcms = new SdmCms();
     // determine which section of the content manager was requested
     switch ($sdmassembler->sdmCoreDetermineRequestedPage()) {
         // Add Menu Stages
@@ -96,7 +96,7 @@ if (substr($sdmassembler->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigatio
             break;
         default:
             // present content manager menu
-            $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '
+            $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, '
                 <div id="navigationManager">
                 <p>Welcome to the Navigation Manager. Here you can create, edit, delete, and restore menus</p>
                     <ul>
