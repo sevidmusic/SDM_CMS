@@ -323,8 +323,8 @@ class SdmCore {
     }
 
     /**
-     *  Attempts to return a directory listing for the specified directory (i.e., $directory_name)
-     * @param string $directory_name <p>The name of the directory to create a listing of.</p>
+     *  Attempts to return a directory listing for the specified directory (i.e., $directoryName)
+     * @param string $directoryName <p>The name of the directory to create a listing of.</p>
      * @param string $directoryLocationReference <p>The name of a directory to be used as a starting reference point to search for the directory we want to create a listing for.
      * <br><br>
      * <i>$this->sdmCoreGetDirectoryListing('', 'core')</i>
@@ -332,33 +332,33 @@ class SdmCore {
      * would return a directory listing for '<b>SITESROOTURL</b>/core/'. (Note: passing an empty string will return the name of the directory being used as a locational reference.(i.e., $directoryLocationReference)
      * <br><br><b>(Note: there is one special value you can pass to this parameter, the 'CURRENT_THEME' value will return a directory listing for the current theme)</b>
      * </p>
-     * @return array A directory listing for $directory_name as an array.
+     * @return array A directory listing for $directoryName as an array.
      */
-    final public function sdmCoreGetDirectoryListing($directory_name, $directoryLocationReference) {
+    final public function sdmCoreGetDirectoryListing($directoryName, $directoryLocationReference) {
         switch ($directoryLocationReference) {
             // search for directory in site root
             case 'root':
-                return scandir($this->sdmCoreGetRootDirectoryPath() . '/' . $directory_name);
+                return scandir($this->sdmCoreGetRootDirectoryPath() . '/' . $directoryName);
                 break;
             // search for directory in site core
             case 'core':
-                return scandir($this->sdmCoreGetCoreDirectoryPath() . '/' . $directory_name);
+                return scandir($this->sdmCoreGetCoreDirectoryPath() . '/' . $directoryName);
                 break;
             // search for directory in site themes
             case 'themes':
-                return scandir($this->sdmCoreGetRootDirectoryPath() . '/themes/' . $directory_name);
+                return scandir($this->sdmCoreGetRootDirectoryPath() . '/themes/' . $directoryName);
                 break;
             case 'CURRENT_THEME':
-                return scandir($this->sdmCoreGetCurrentThemeDirectoryPath() . '/' . $directory_name);
+                return scandir($this->sdmCoreGetCurrentThemeDirectoryPath() . '/' . $directoryName);
                 break;
             case 'apps':
-                return scandir($this->sdmCoreGetUserAppDirectoryPath() . '/' . $directory_name);
+                return scandir($this->sdmCoreGetUserAppDirectoryPath() . '/' . $directoryName);
                 break;
             case 'coreapps':
-                return scandir($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $directory_name);
+                return scandir($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $directoryName);
                 break;
             case 'userapps':
-                return scandir($this->sdmCoreGetUserAppDirectoryPath() . '/' . $directory_name);
+                return scandir($this->sdmCoreGetUserAppDirectoryPath() . '/' . $directoryName);
                 break;
             default:
                 return array('error' => 'Unable to find requested directory');
