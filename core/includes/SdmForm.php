@@ -94,7 +94,7 @@ class SdmForm {
      * @var string $rootUrl the sites root url. Insures requests are made from site of origin.
      * @return The Form html
      */
-    public function sdmFormBuildForm($rootUrl) {
+    public function sdmFormBuildForm($rootUrl = null) {
         if (!isset($rootUrl)) {
             // if $rootUrl is not set, then attempt to default to site root url by guessing it
             $rootUrl = str_replace('/index.php', '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']);
