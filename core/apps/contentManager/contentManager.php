@@ -20,7 +20,7 @@ $options = array(
 $sdmassembler = $sdmassembler; // see SdmAssembler.php and the app loading methods
 if (substr($sdmassembler->sdmCoreDetermineRequestedPage(), 0, 14) === 'contentManager') {
     // CREATE A NEW CONTENT MANAGEMENT OBJECT
-    $sdmcms = SdmCms::sdmCmsInitializeCms();
+    $sdmcms = new SdmCms();
     // determine which section of the content manager was requested
     switch ($sdmassembler->sdmCoreDetermineRequestedPage()) {
         // edit content form
@@ -65,7 +65,7 @@ if (substr($sdmassembler->sdmCoreDetermineRequestedPage(), 0, 14) === 'contentMa
             break;
         default:
             // present content manager menu
-            $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '
+            $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, '
                 <div id="contentManager">
                 <p>Welcome to the Content Manager. Here you can create, edit, delete, and restore content</p>
                     <ul>

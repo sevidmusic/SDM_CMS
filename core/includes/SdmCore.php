@@ -237,10 +237,25 @@ class SdmCore {
      * <p>Loads the entire content object from data.json or the DB and returns it.</p>
      * @return object <p>The content object loaded from $this->CoreDirectoryUrl/sdm/data.json or from the DB</p>
      */
-    final public function sdmCoreLoadDataObject() {
-        $coreData = $this->sdmCoreCurlGrabContent($this->sdmCoreGetDataDirectoryUrl() . '/data.json');
-        $data = json_decode($coreData);
-        return $data;
+    final public function sdmCoreLoadDataObject($requestPageOnly = true) {
+        // determine requested page
+        $requestedPage = $this->sdmCoreDetermineRequestedPage();
+        // load json string from data.json via curl
+        $coreJson = $this->sdmCoreCurlGrabContent($this->sdmCoreGetDataDirectoryUrl() . '/data.json');
+        // decode json to get our Data Object
+        $dataObject = json_decode($coreJson);
+        // if $requestPageOnly === TRUE only load $dataObject->content->$requestedPage
+        if ($requestPageOnly === true) {
+            // get the requested pages page content | this will be used to restore $datObject->content after it is unset
+            $requestedPageContent = (isset($dataObject->content->$requestedPage) === true ? $dataObject->content->$requestedPage : new stdClass());
+            // unset $dataObject->content to remove all pags
+            unset($dataObject->content);
+            // init new $dataObject->content
+            $dataObject->content = new stdClass();
+            // add $requestedPage back into $dataObject->content
+            $dataObject->content->$requestedPage = $requestedPageContent;
+        }
+        return $dataObject;
     }
 
     /**
@@ -323,42 +338,42 @@ class SdmCore {
     }
 
     /**
-     *  Attempts to return a directory listing for the specified directory (i.e., $directory_name)
-     * @param string $directory_name <p>The name of the directory to create a listing of.</p>
-     * @param string $directory_location_reference <p>The name of a directory to be used as a starting reference point to search for the directory we want to create a listing for.
+     *  Attempts to return a directory listing for the specified directory (i.e., $directoryName)
+     * @param string $directoryName <p>The name of the directory to create a listing of.</p>
+     * @param string $directoryLocationReference <p>The name of a directory to be used as a starting reference point to search for the directory we want to create a listing for.
      * <br><br>
      * <i>$this->sdmCoreGetDirectoryListing('', 'core')</i>
      * <br><br>
-     * would return a directory listing for '<b>SITESROOTURL</b>/core/'. (Note: passing an empty string will return the name of the directory being used as a locational reference.(i.e., $directory_location_reference)
+     * would return a directory listing for '<b>SITESROOTURL</b>/core/'. (Note: passing an empty string will return the name of the directory being used as a locational reference.(i.e., $directoryLocationReference)
      * <br><br><b>(Note: there is one special value you can pass to this parameter, the 'CURRENT_THEME' value will return a directory listing for the current theme)</b>
      * </p>
-     * @return array A directory listing for $directory_name as an array.
+     * @return array A directory listing for $directoryName as an array.
      */
-    final public function sdmCoreGetDirectoryListing($directory_name, $directory_location_reference) {
-        switch ($directory_location_reference) {
+    final public function sdmCoreGetDirectoryListing($directoryName, $directoryLocationReference) {
+        switch ($directoryLocationReference) {
             // search for directory in site root
             case 'root':
-                return scandir($this->sdmCoreGetRootDirectoryPath() . '/' . $directory_name);
+                return scandir($this->sdmCoreGetRootDirectoryPath() . '/' . $directoryName);
                 break;
             // search for directory in site core
             case 'core':
-                return scandir($this->sdmCoreGetCoreDirectoryPath() . '/' . $directory_name);
+                return scandir($this->sdmCoreGetCoreDirectoryPath() . '/' . $directoryName);
                 break;
             // search for directory in site themes
             case 'themes':
-                return scandir($this->sdmCoreGetRootDirectoryPath() . '/themes/' . $directory_name);
+                return scandir($this->sdmCoreGetRootDirectoryPath() . '/themes/' . $directoryName);
                 break;
             case 'CURRENT_THEME':
-                return scandir($this->sdmCoreGetCurrentThemeDirectoryPath() . '/' . $directory_name);
+                return scandir($this->sdmCoreGetCurrentThemeDirectoryPath() . '/' . $directoryName);
                 break;
             case 'apps':
-                return scandir($this->sdmCoreGetUserAppDirectoryPath() . '/' . $directory_name);
+                return scandir($this->sdmCoreGetUserAppDirectoryPath() . '/' . $directoryName);
                 break;
             case 'coreapps':
-                return scandir($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $directory_name);
+                return scandir($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $directoryName);
                 break;
             case 'userapps':
-                return scandir($this->sdmCoreGetUserAppDirectoryPath() . '/' . $directory_name);
+                return scandir($this->sdmCoreGetUserAppDirectoryPath() . '/' . $directoryName);
                 break;
             default:
                 return array('error' => 'Unable to find requested directory');
@@ -416,12 +431,12 @@ class SdmCore {
         // attempt to format the array so the KEYS can be used for display, and the VALUES can be used in code | "pageName" will become "Page Name" and will be used as a key
         // Note: Pages not named with the camelCase convention may not display intuitivly...
         // @todo create a method that formats page names into camel case on page creation...
-        // intialize $available_pages array | will prevent PHP erros if no pages exist in CORE
-        $available_pages = array();
+        // intialize $availablePages array | will prevent PHP erros if no pages exist in CORE
+        $availablePages = array();
         foreach ($pages as $page) {
-            $available_pages[ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', $page))] = $page;
+            $availablePages[ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', $page))] = $page;
         }
-        return $available_pages;
+        return $availablePages;
     }
 
     /**
@@ -431,8 +446,8 @@ class SdmCore {
      */
     final public function sdmCoreDetermineEnabledApps() {
         $data = $this->sdmCoreGetDataObject();
-        $enabled_apps = $data->settings->enabledapps;
-        return $enabled_apps;
+        $enabledApps = $data->settings->enabledapps;
+        return $enabledApps;
     }
 
     /**

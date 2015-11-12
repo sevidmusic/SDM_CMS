@@ -9,7 +9,7 @@
  *
  * @author foremase
  */
-class SdmAssembler extends SdmCore {
+class SdmAssembler extends SdmGatekeeper {
 
     /**
      * <p>Returns the HTML header for the page as a string. The SdmAssembler will give apps
@@ -180,15 +180,15 @@ class SdmAssembler extends SdmCore {
     public function sdmAssemblerLoadAndAssembleContentObject() {
         $page = $this->sdmCoreDetermineRequestedPage();
         // load our data object
-        $sdmassembler_dataObject = $this->sdmCoreGetDataObject();
+        $sdmAssemblerDataObject = $this->sdmCoreGetDataObject();
         // load and assemble apps
-        $this->sdmAssemblerLoadApps($sdmassembler_dataObject);
+        $this->sdmAssemblerLoadApps($sdmAssemblerDataObject);
         // make sure content exists, if it does return it, if not, return a content not found message and log the bad request to the bad requests log
-        switch (isset($sdmassembler_dataObject->content->$page)) {
+        switch (isset($sdmAssemblerDataObject->content->$page)) {
             case true:
-                //var_dump($sdmassembler_dataObject->content->$page);
-                $sdmassembler_dataObject = $this->sdmAssemblerPreparePageForDisplay($sdmassembler_dataObject->content->$page);
-                return $sdmassembler_dataObject;
+                //var_dump($sdmAssemblerDataObject->content->$page);
+                $sdmAssemblerDataObject = $this->sdmAssemblerPreparePageForDisplay($sdmAssemblerDataObject->content->$page);
+                return $sdmAssemblerDataObject;
             default:
                 // log bad request to our badRequestsLog.log file
                 $badRequestId = chr(rand(65, 90)) . rand(10, 99) . chr(rand(65, 90)) . rand(10, 99);
@@ -230,16 +230,16 @@ class SdmAssembler extends SdmCore {
 
     /**
      * Loads enabled apps.
-     * @param object $sdmassembler_dataObject <p>The Content object for the requested page.</p>
+     * @param object $sdmAssemblerDataObject <p>The Content object for the requested page.</p>
      * @return bool <p>false if any apps failed to load, true if no problems occured when loading
      * all apps.</p><p><b>NOTE</b>:<i>This method will return true even if this methods call to
      * $this->sdmAssemblerLoadApp() fails to load an app as a result of user having insufficient
      * privlages. Only actual failures will result in this method returning false.</i></p>
      */
-    private function sdmAssemblerLoadApps($sdmassembler_dataObject) {
+    private function sdmAssemblerLoadApps($sdmAssemblerDataObject) {
         $enabledApps = $this->sdmCoreDetermineEnabledApps();
         foreach ($enabledApps as $app) {
-            $status[] = $this->sdmAssemblerLoadApp($app, $sdmassembler_dataObject);
+            $status[] = $this->sdmAssemblerLoadApp($app, $sdmAssemblerDataObject);
         }
         return (in_array(false, $status, true));
     }
@@ -252,7 +252,7 @@ class SdmAssembler extends SdmCore {
      * of an error, such as the app not being found, or the string 'accessDenied' if app was
      * not loaded as a result of user not having sufficient privlages to use app.</p>
      */
-    private function sdmAssemblerLoadApp($app, $sdmassembler_dataObject) {
+    private function sdmAssemblerLoadApp($app, $sdmAssemblerDataObject) {
         // store SdmAssembler object in an appropriatly named var to give apps easy access
         $sdmassembler = $this;
         // read app gatekeeper parameters
@@ -280,7 +280,7 @@ class SdmAssembler extends SdmCore {
             return false;
         }
         // user does not have permission to use this app
-        $this->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, 'You do not have permission to be here.', array('incpages' => array($app)));
+        $this->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, 'You do not have permission to be here.', array('incpages' => array($app)));
         return 'accessDenied';
     }
 
@@ -317,7 +317,7 @@ class SdmAssembler extends SdmCore {
      * <br /><br />i.e, http://example.com/index.php?page=NonExistentPage would work if we did not check for it in CORE
      * and in the 'incpages' array</p>
      * @param object $dataObject <p style="font-size:9px;">The sites data object. (This is most likely the
-     * $sdmassembler_dataObject var provided by the SDM_Assembler)<br />
+     * $sdmAssemblerDataObject var provided by the SDM_Assembler)<br />
      * Note: We need to typehint for security, however PHP has no common
      * object ancestor so we cant specify <i>object</i> because most likely
      * the type of this argument will be an instance of stdClass, which is
@@ -462,16 +462,16 @@ class SdmAssembler extends SdmCore {
      * <p>Assembles the html content for a given $wrapper and returns it as a string. This method
      * is meant to be called from within a themes page.php file.</p>
      * @param string $wrapper <p>The wrapper to assemble html</p>
-     * @param stdClass $dataObject <p>The $sdmassembler_themeContentObject variable that is created
+     * @param stdClass $dataObject <p>The $sdmAssemblerThemeContentObject variable that is created
      * by startup.php's call to SdmAssembler::sdmAssemblerLoadAndAssembleContentObject() during the
-     * startup process. The $sdmassembler_themeContentObject is always avaialbe to all themes.
+     * startup process. The $sdmAssemblerThemeContentObject is always avaialbe to all themes.
      * <br>See: <i>/core/config/startup.php</i> for more info</p>
      * @return type
      */
-    public static function sdmAssemblerGetContentHtml($wrapper, stdClass $sdmassembler_themeContentObject) {
+    public static function sdmAssemblerGetContentHtml($wrapper, stdClass $sdmAssemblerThemeContentObject) {
         // initialize the SdmNms so we can add our menus to the page.
         $nms = new SdmNms();
-        $wrapperAssembledContent = (isset($sdmassembler_themeContentObject->$wrapper) ? $sdmassembler_themeContentObject->$wrapper : '<!-- ' . $wrapper . ' placeholder -->');
+        $wrapperAssembledContent = (isset($sdmAssemblerThemeContentObject->$wrapper) ? $sdmAssemblerThemeContentObject->$wrapper : '<!-- ' . $wrapper . ' placeholder -->');
         $content = $nms->sdmNmsGetWrapperMenusHtml($wrapper, $wrapperAssembledContent);
         return $content;
     }

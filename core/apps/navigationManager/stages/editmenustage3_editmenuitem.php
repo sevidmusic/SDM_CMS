@@ -107,4 +107,4 @@ $editMenuItemForm->form_elements = array(
     ),
 );
 $editMenuItemForm->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
-$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, $editMenuItemForm->sdmFormGetForm(), array('incpages' => array('navigationManagerEditMenuStage3_editmenuitem')));
+$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, $editMenuItemForm->sdmFormGetForm(), array('incpages' => array('navigationManagerEditMenuStage3_editmenuitem')));

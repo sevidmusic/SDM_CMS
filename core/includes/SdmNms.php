@@ -116,15 +116,6 @@ class SdmMenu extends SdmMenuItem {
  */
 class SdmNms extends SdmCore {
 
-    private static $Initialized;
-
-    public static function sdmNmsInitializeNms() {
-        if (!isset(self::$Initialized)) {
-            self::$Initialized = new SdmNms;
-        }
-        return self::$Initialized;
-    }
-
     /**
      * Add a menu to our site.
      * @param mixed $menu <p>The new menu. It is preferable to pass in an SdmMenu object,

@@ -24,7 +24,7 @@ $finalSubmittedMenuItem->menuItemWrappingTagType = SdmForm::sdmFormGetSubmittedF
 // add the last submitted menu item to our menu items array
 $menuItems[$finalSubmittedMenuItem->menuItemId] = $finalSubmittedMenuItem;
 // display of preview of the menu so far
-$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<div style="border:2px solid #777777;border-radius:9px;padding:20px;height:120px;overflow:auto;"><h3>Last Submitted Menu Item:</h3><p>Display Name: <span style="color:blue;">' . SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName') . '</span> | Destination Type : <span style="color:blue;">' . $finalSubmittedMenuItem->destinationType . '</span> | Destination: <span style="color:blue;">' . $finalSubmittedMenuItem->destination . '</span></p><h3>Menu Preview:</h3>' . $sdmnms->sdmNmsBuildMenuItemsHtml($menuItems) . '</div>', array('incmethod' => 'prepend', 'incpages' => $options['incpages']));
+$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, '<div style="border:2px solid #777777;border-radius:9px;padding:20px;height:120px;overflow:auto;"><h3>Last Submitted Menu Item:</h3><p>Display Name: <span style="color:blue;">' . SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName') . '</span> | Destination Type : <span style="color:blue;">' . $finalSubmittedMenuItem->destinationType . '</span> | Destination: <span style="color:blue;">' . $finalSubmittedMenuItem->destination . '</span></p><h3>Menu Preview:</h3>' . $sdmnms->sdmNmsBuildMenuItemsHtml($menuItems) . '</div>', array('incmethod' => 'prepend', 'incpages' => $options['incpages']));
 $addMenuFormStage3 = new SdmForm();
 $addMenuFormStage3->form_handler = 'navigationManagerAddMenuStage4';
 $addMenuFormStage3->form_method = 'post';
@@ -102,5 +102,5 @@ $addMenuFormStage3->form_elements = array(
     ),
 );
 $addMenuFormStage3->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
-$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, $addMenuFormStage3->sdmFormGetForm(), array('incpages' => array('navigationManagerAddMenuStage3')));
-$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<h3>Configure Menu</h3>', array('incmethod' => 'prepend', 'incpages' => array('navigationManagerAddMenuStage3')));
+$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, $addMenuFormStage3->sdmFormGetForm(), array('incpages' => array('navigationManagerAddMenuStage3')));
+$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, '<h3>Configure Menu</h3>', array('incmethod' => 'prepend', 'incpages' => array('navigationManagerAddMenuStage3')));

@@ -8,7 +8,7 @@
 class SdmForm {
 
     // properties //
-    private $form_id;
+    private $formId;
     private $form;
     public $form_handler;
     public $form_elements;
@@ -20,7 +20,7 @@ class SdmForm {
      *
      * PROPERTIES:
      *
-     * $form_id : defined internally, upon the creation of an SdmForm instance. A unique ID is assigned to this property via the internal sdmFormGenerateFormId() function
+     * $formId : defined internally, upon the creation of an SdmForm instance. A unique ID is assigned to this property via the internal sdmFormGenerateFormId() function
      *
      * $form : The assembled form.
      *
@@ -32,7 +32,7 @@ class SdmForm {
      *
      */
     public function __construct() {
-        $this->form_id = (isset($this->form_id) ? $this->form_id : $this->sdmFormGenerateFormId());
+        $this->formId = (isset($this->formId) ? $this->formId : $this->sdmFormGenerateFormId());
         $this->form_elements = (isset($this->form_elements) ? $this->form_elements : array(
                     // default form element example
                     array(
@@ -85,7 +85,7 @@ class SdmForm {
         ));
         $this->method = (isset($this->method) ? $this->method : 'post');
         $this->form_handler = (isset($this->form_handler) ? $this->form_handler : '');
-        $this->form = (isset($this->form) ? $this->form : $this->sdmFormBuildForm(str_replace('/index.php', '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'])));
+        $this->form = (isset($this->form) ? $this->form : $this->sdmFormBuildForm());
         $this->submitLabel = (isset($this->submitLabel) ? $this->submitLabel : 'Submit');
     }
 
@@ -94,9 +94,13 @@ class SdmForm {
      * @var string $rootUrl the sites root url. Insures requests are made from site of origin.
      * @return The Form html
      */
-    public function sdmFormBuildForm($rootUrl) {
+    public function sdmFormBuildForm($rootUrl = null) {
+        if (!isset($rootUrl)) {
+            // if $rootUrl is not set, then attempt to default to site root url by guessing it
+            $rootUrl = str_replace('/index.php', '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']);
+        }
         // intial form html
-        $form_html = '<!-- form "' . $this->sdmFormGetFormId() . '" --><form method="' . $this->method . '" action="' . $rootUrl . '/index.php?page=' . $this->form_handler . '">';
+        $formHtml = '<!-- form "' . $this->sdmFormGetFormId() . '" --><form method="' . $this->method . '" action="' . $rootUrl . '/index.php?page=' . $this->form_handler . '">';
 
         // first sort elements based on element's "place"
         $element_order = array(); // used to sort items
@@ -109,43 +113,43 @@ class SdmForm {
         foreach ($this->form_elements as $key => $value) {
             switch ($value['type']) {
                 case 'text':
-                    $form_html = $form_html . '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><input name="SdmForm[' . $value['id'] . ']" type="text" ' . (isset($value['value']) ? 'value="' . $value['value'] . '"' : '') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+                    $formHtml = $formHtml . '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><input name="SdmForm[' . $value['id'] . ']" type="text" ' . (isset($value['value']) ? 'value="' . $value['value'] . '"' : '') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
                     break;
                 case 'password':
-                    $form_html = $form_html . '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><input name="SdmForm[' . $value['id'] . ']" type="password" ' . (isset($value['value']) ? 'value="' . $value['value'] . '"' : '') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+                    $formHtml = $formHtml . '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><input name="SdmForm[' . $value['id'] . ']" type="password" ' . (isset($value['value']) ? 'value="' . $value['value'] . '"' : '') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
                     break;
                 case 'textarea':
-                    $form_html = $form_html . '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><textarea name="SdmForm[' . $value['id'] . ']">' . (isset($value['value']) ? $value['value'] : '') . '</textarea><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+                    $formHtml = $formHtml . '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><textarea name="SdmForm[' . $value['id'] . ']">' . (isset($value['value']) ? $value['value'] : '') . '</textarea><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
                     break;
                 case 'select':
-                    $form_html = $form_html . '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><select name="SdmForm[' . $value['id'] . ']">';
+                    $formHtml = $formHtml . '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><select name="SdmForm[' . $value['id'] . ']">';
                     foreach ($value['value'] as $option => $option_value) {
-                        $form_html = $form_html . '<option value="' . (substr($option_value, 0, 8) === 'default_' ? $this->sdmFormEncode(str_replace('default_', '', $option_value)) . '" selected="selected"' : $this->sdmFormEncode($option_value) . '"') . '>' . $option . '</option>';
+                        $formHtml = $formHtml . '<option value="' . (substr($option_value, 0, 8) === 'default_' ? $this->sdmFormEncode(str_replace('default_', '', $option_value)) . '" selected="selected"' : $this->sdmFormEncode($option_value) . '"') . '>' . $option . '</option>';
                     }
-                    $form_html = $form_html . '</select><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+                    $formHtml = $formHtml . '</select><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
                     break;
                 case 'radio':
-                    $form_html = $form_html . '<!-- form element "SdmForm[' . $value['id'] . ']" --><p id="label-for-SdmForm[' . $value['id'] . ']">' . $value['element'] . '</p>';
+                    $formHtml = $formHtml . '<!-- form element "SdmForm[' . $value['id'] . ']" --><p id="label-for-SdmForm[' . $value['id'] . ']">' . $value['element'] . '</p>';
                     foreach ($value['value'] as $radio => $radio_value) {
-                        $form_html = $form_html . '<label  for="SdmForm[' . $value['id'] . ']">' . $radio . '</label><input type="radio" name="SdmForm[' . $value['id'] . ']" value="' . (substr($radio_value, 0, 8) === 'default_' ? $this->sdmFormEncode(str_replace('default_', '', $radio_value)) . '" checked="checked"' : $this->sdmFormEncode($radio_value) . '"') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+                        $formHtml = $formHtml . '<label  for="SdmForm[' . $value['id'] . ']">' . $radio . '</label><input type="radio" name="SdmForm[' . $value['id'] . ']" value="' . (substr($radio_value, 0, 8) === 'default_' ? $this->sdmFormEncode(str_replace('default_', '', $radio_value)) . '" checked="checked"' : $this->sdmFormEncode($radio_value) . '"') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
                     }
                     break;
                 case 'checkbox':
-                    $form_html = $form_html . '<!-- form element "SdmForm[' . $value['id'] . ']" --><p id="label-for-SdmForm[' . $value['id'] . ']">' . $value['element'] . '</p>';
+                    $formHtml = $formHtml . '<!-- form element "SdmForm[' . $value['id'] . ']" --><p id="label-for-SdmForm[' . $value['id'] . ']">' . $value['element'] . '</p>';
                     foreach ($value['value'] as $checkbox => $checkbox_value) {
-                        $form_html = $form_html . '<label  for="SdmForm[' . $value['id'] . ']">' . $checkbox . '</label><input type="checkbox" name="SdmForm[' . $value['id'] . '][]" value="' . (substr($checkbox_value, 0, 8) === 'default_' ? $this->sdmFormEncode(str_replace('default_', '', $checkbox_value)) . '" checked="checked"' : $this->sdmFormEncode($checkbox_value) . '"') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+                        $formHtml = $formHtml . '<label  for="SdmForm[' . $value['id'] . ']">' . $checkbox . '</label><input type="checkbox" name="SdmForm[' . $value['id'] . '][]" value="' . (substr($checkbox_value, 0, 8) === 'default_' ? $this->sdmFormEncode(str_replace('default_', '', $checkbox_value)) . '" checked="checked"' : $this->sdmFormEncode($checkbox_value) . '"') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
                     }
                     break;
                 case 'hidden':
-                    $form_html = $form_html . '<!-- form element "SdmForm[' . $value['id'] . ']" --><input name="SdmForm[' . $value['id'] . ']" type="hidden" value="' . $this->sdmFormEncode($value['value']) . '"><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+                    $formHtml = $formHtml . '<!-- form element "SdmForm[' . $value['id'] . ']" --><input name="SdmForm[' . $value['id'] . ']" type="hidden" value="' . $this->sdmFormEncode($value['value']) . '"><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
                     break;
                 default:
                     break;
             }
         }
         // add hidden element to store form id
-        $form_html .= '<!-- built-in form element "form_id" --><input type="hidden" name="SdmForm[form_id]" value="' . $this->sdmFormGetFormId() . '"><!-- close built-in form element "form_id" -->';
-        $this->form = $form_html . '<input value="' . $this->submitLabel . '" type="submit"></form><!-- close form ' . $this->sdmFormGetFormId() . ' -->';
+        $formHtml .= '<!-- built-in form element "form_id" --><input type="hidden" name="SdmForm[form_id]" value="' . $this->sdmFormGetFormId() . '"><!-- close built-in form element "form_id" -->';
+        $this->form = $formHtml . '<input value="' . $this->submitLabel . '" type="submit"></form><!-- close form ' . $this->sdmFormGetFormId() . ' -->';
         return $this->form;
     }
 
@@ -191,8 +195,8 @@ class SdmForm {
      */
     public function sdmFormGenerateFormId() {
         // we only set id if it is NOT already set | checked via terenary operator (condition ? true : false)
-        $this->form_id = (!isset($this->form_id) ? rand(1000, 9999) . '-' . $this->sdmFormAlphaRand(8) : $this->form_id);
-        return $this->form_id;
+        $this->formId = (!isset($this->formId) ? rand(1000, 9999) . '-' . $this->sdmFormAlphaRand(8) : $this->formId);
+        return $this->formId;
     }
 
     /**
@@ -200,21 +204,21 @@ class SdmForm {
      * @return string Form ID as a string.
      */
     public function sdmFormGetFormId() {
-        return (isset($this->form_id) ? $this->form_id : 'FORM ID NOT SET!');
+        return (isset($this->formId) ? $this->formId : 'FORM ID NOT SET!');
     }
 
-    /** sdm_alpha_rand($num_chars)
+    /** sdm_alpha_rand($numChars)
      * Random letter generator. Used in Player and Package ID generation.
-     * @param int $num_chars Number of letters to generate.
+     * @param int $numChars Number of letters to generate.
      * There are spaces and indents are NOT generated, so letters are clumped up into one long string of characters.
      * i.e., sdm_alpha_rand(4) may generate the string 'sonv', or 'bUsw', etc...
-     * @return string Random String $num_chars in length.
+     * @return string Random String $numChars in length.
      * i.e., sdmFormAlphaRand(3) would produce a string of random alphanumeric characters 3 characters in length
      */
-    public function sdmFormAlphaRand($num_chars) {
+    public function sdmFormAlphaRand($numChars) {
         $alphabet = 'aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ';
         $string = '';
-        for ($inc = 0; $inc <= $num_chars; $inc++) {
+        for ($inc = 0; $inc <= $numChars; $inc++) {
             $i = rand(0, 51);
             $string = $string . $alphabet[$i];
         }

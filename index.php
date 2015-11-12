@@ -7,7 +7,7 @@ require(__DIR__ . '/core/config/startup.php');
 echo $sdmassembler->sdmAssemblerAssembleHtmlHeader();
 
 // load our theme and build the page
-include($sdmcore->sdmCoreGetCurrentThemeDirectoryPath() . '/page.php');
+include($sdmassembler->sdmCoreGetCurrentThemeDirectoryPath() . '/page.php');
 
 // assemlbe the required closing html tags/data
 echo $sdmassembler->sdmAssemblerAssembleHtmlRequiredClosingTags();

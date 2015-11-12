@@ -15,4 +15,4 @@ $submittedMenuItem->menuItemMachineName = SdmCore::SdmCoreGenerateMachineName(Sd
 $submittedMenuItem->menuItemPosition = SdmForm::sdmFormGetSubmittedFormValue('menuItemPosition');
 $submittedMenuItem->menuItemWrappingTagType = SdmForm::sdmFormGetSubmittedFormValue('menuItemWrappingTagType');
 $sdmnms->sdmNmsUpdateMenuItem(SdmForm::sdmFormGetSubmittedFormValue('menuId'), $submittedMenuItem->menuItemId, $submittedMenuItem);
-$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmassembler_dataObject, '<p>Menu Item Edits Saved Successfully</p>', array('incpages' => array('navigationManagerEditMenuStage3_submitmenuitemchanges')));
+$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, '<p>Menu Item Edits Saved Successfully</p>', array('incpages' => array('navigationManagerEditMenuStage3_submitmenuitemchanges')));

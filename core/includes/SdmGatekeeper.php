@@ -42,7 +42,7 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
                 }
                 break;
             default:
-                error_log('PHP Warning: SdmGateKeeper - Invalid storage type requested for session with id ending in ' . substr(session_id(), -7) . '.');
+                error_log('PHP Warning: SdmGateKeeper - Invalid storage type requested for session "' . $sessionName . '" with id ending in ' . substr(session_id(), -7) . '.');
                 break;
         }
         return;
@@ -267,12 +267,12 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
      * file or false if no .gk file is exists.
      */
     final public static function sdmGatekeeperReadAppGkParams($app) {
-        $SdmCore = new SdmCore();
-        if (file_exists($SdmCore->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.gk')) {
-            $gkfile = file($SdmCore->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.gk');
+        $gkSdmCore = new SdmCore();
+        if (file_exists($gkSdmCore->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.gk')) {
+            $gkfile = file($gkSdmCore->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.gk');
             $params = SdmGatekeeper::sdmGatekeeperDecodeParams($gkfile);
-        } else if (file_exists($SdmCore->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.gk')) {
-            $gkfile = file($SdmCore->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.gk');
+        } else if (file_exists($gkSdmCore->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.gk')) {
+            $gkfile = file($gkSdmCore->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.gk');
             $params = SdmGatekeeper::sdmGatekeeperDecodeParams($gkfile);
         } else {
             $params = false;
@@ -292,8 +292,7 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
      * @return array <p>Associative array of .gk params decoded from an array returned by loading a .gk file via file()</p>
      */
     final private static function sdmGatekeeperDecodeParams($gkfile) {
-
-        foreach ($gkfile as $param => $value) {
+        foreach ($gkfile as $value) {
             $paramName = SdmCore::sdmCoreStrSlice('->' . $value, '->', '=');
             $paramValuesString = SdmCore::sdmCoreStrSlice($value, '=', ';');
             $paramValuesArray[$paramName] = explode(',', $paramValuesString);

@@ -8,15 +8,6 @@
  */
 class SdmCms extends SdmCore {
 
-    private static $Initialized;
-
-    public static function sdmCmsInitializeCms() {
-        if (!isset(self::$Initialized)) {
-            self::$Initialized = new SdmCms;
-        }
-        return self::$Initialized;
-    }
-
     /**
      * <p>Creates content for a specific page ($page) and content wrapper ($id)</p>
      * <p><b>Warning: This method will overwrite content if it already exists.
@@ -36,14 +27,14 @@ class SdmCms extends SdmCore {
     public function sdmCmsUpdateContent($page, $id, $html) {
         $content = $this->sdmCoreGetDataObject();
         // filter out problematic charaters from $html and insure UTF-8 using iconv()
-        $filtered_html = iconv("UTF-8", "UTF-8//IGNORE", $html);
-        $filtered_html2 = iconv("UTF-8", "ISO-8859-1//IGNORE", $filtered_html);
-        $filtered_html3 = iconv("ISO-8859-1", "UTF-8", $filtered_html2);
+        $filteredHtml = iconv("UTF-8", "UTF-8//IGNORE", $html);
+        $filteredHtml2 = iconv("UTF-8", "ISO-8859-1//IGNORE", $filteredHtml);
+        $filteredHtml3 = iconv("ISO-8859-1", "UTF-8", $filteredHtml2);
         // if the page does not already exist in CORE create a placeholder object for it
         if (!isset($content->content->$page) === true) {
             $content->content->$page = new stdClass();
         }
-        $content->content->$page->$id = htmlentities(utf8_encode(trim($filtered_html3)), ENT_SUBSTITUTE | ENT_DISALLOWED | ENT_HTML5, 'UTF-8');
+        $content->content->$page->$id = htmlentities(utf8_encode(trim($filteredHtml3)), ENT_SUBSTITUTE | ENT_DISALLOWED | ENT_HTML5, 'UTF-8');
         $data = json_encode($content);
         return file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $data, LOCK_EX);
     }
@@ -98,10 +89,10 @@ class SdmCms extends SdmCore {
         $ignore = array('.DS_Store', '.', '..');
         foreach ($themes as $theme) {
             if (!in_array($theme, $ignore)) {
-                $available_themes[ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', $theme))] = $theme;
+                $availableThemes[ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', $theme))] = $theme;
             }
         }
-        return $available_themes;
+        return $availableThemes;
     }
 
     /**
@@ -138,9 +129,9 @@ class SdmCms extends SdmCore {
      * </p>
      */
     public function sdmCmsDetermineAvailableApps() {
-        $user_apps = $this->sdmCoreGetDirectoryListing('', 'userapps');
-        $core_apps = $this->sdmCoreGetDirectoryListing('', 'coreapps');
-        $apps = array_merge($user_apps, $core_apps);
+        $userApps = $this->sdmCoreGetDirectoryListing('', 'userapps');
+        $coreApps = $this->sdmCoreGetDirectoryListing('', 'coreapps');
+        $apps = array_merge($userApps, $coreApps);
 
         // we dont want to list directories that are not apps
         $ignore = array('.DS_Store', '.', '..');
@@ -151,17 +142,6 @@ class SdmCms extends SdmCore {
         }
         return $available_apps;
     }
-
-    /** MOVED TO CORE
-     * <p>Determines what apps are enabled by checking the property
-     * values of the Enabled Apps object</p>
-     * @return object An object whose properties are apps that are currently enabled.
-     */
-//    public function sdmCoreDetermineEnabledApps() {
-//        $data = $this->sdmCoreGetDataObject();
-//        $enabled_apps = $data->settings->enabledapps;
-//        return $enabled_apps;
-//    }
 
     /**
      * Switches an app from on to off.

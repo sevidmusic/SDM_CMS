@@ -7,6 +7,7 @@
 */
 
 body {
+    background: -webkit-gradient(bottom right, black, #55eeff, black); /* For Chrome and Safari4+ */
     background: -webkit-linear-gradient(left top, black , #55eeff, black); /* For Safari 5.1 to 6.0 */
     background: -o-linear-gradient(bottom right, black , #55eeff, black); /* For Opera 11.1 to 12.0 */
     background: -moz-linear-gradient(bottom right, black , #55eeff, black); /* For Firefox 3.6 to 15 */
@@ -30,7 +31,7 @@ body {
     border-bottom-color:#ffffff;
     border-left-color:#000000;
     border-width:5px;
-    border-radius:0px;
+    border-radius:0;
     border-style:none none double none;
 }
 
