@@ -29,7 +29,7 @@ $i = 2;
 // array of available pages
 $available_pages = $sdmassembler->sdmCoreDetermineAvailablePages();
 // load in existing content to populate form fields
-$existing_content = $sdmassembler->sdmCoreGetDataObject()->content->$pagetoedit;
+$existing_content = $sdmassembler->sdmCoreLoadDataObject(false)->content->$pagetoedit;
 // create form elements for appropriate wrappers | i.e., page specific wrappers will only be shown if $pagetoedit matches exists in the wrappers name
 foreach ($sdmcms->sdmCmsDetermineAvailableWrappers() as $displayValue => $machineValue) {
     // create place holder string if any wrappers that do not exist in core
