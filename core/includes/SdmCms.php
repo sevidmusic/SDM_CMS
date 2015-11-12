@@ -25,7 +25,7 @@ class SdmCms extends SdmCore {
      * @return int The number of bytes written to data.json or the DB. Returns false on failure.
      */
     public function sdmCmsUpdateContent($page, $id, $html) {
-        $content = $this->sdmCoreGetDataObject();
+        $content = $this->sdmCoreLoadDataObject(false);
         // filter out problematic charaters from $html and insure UTF-8 using iconv()
         $filteredHtml = iconv("UTF-8", "UTF-8//IGNORE", $html);
         $filteredHtml2 = iconv("UTF-8", "ISO-8859-1//IGNORE", $filteredHtml);
@@ -101,7 +101,7 @@ class SdmCms extends SdmCore {
      * @return int The number of bytes written to data.json or the DB. Returns false on failure.
      */
     public function sdmCmsChangeTheme($theme) {
-        $data = $this->sdmCoreGetDataObject();
+        $data = $this->sdmCoreLoadDataObject(false);
         $data->settings->theme = $theme;
         $jsondata = json_encode($data);
         return file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $jsondata, LOCK_EX);
@@ -112,7 +112,7 @@ class SdmCms extends SdmCore {
      * @param string $pagename Name of the page to delete.
      */
     public function sdmCmsDeletePage($pagename) {
-        $data = $this->sdmCoreGetDataObject();
+        $data = $this->sdmCoreLoadDataObject(false);
         unset($data->content->$pagename);
         $jsondata = json_encode($data);
         return file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $jsondata, LOCK_EX);
@@ -150,7 +150,7 @@ class SdmCms extends SdmCore {
      * @return bool true on sucessful state change, false if unable to switch state.
      */
     public function sdmCmsSwitchAppState($app, $state) {
-        $data = $this->sdmCoreGetDataObject();
+        $data = $this->sdmCoreLoadDataObject(false);
         $enabledApps = $data->settings->enabledapps;
         switch ($state) {
             case 'on':

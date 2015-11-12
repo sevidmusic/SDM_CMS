@@ -129,7 +129,7 @@ class SdmNms extends SdmCore {
             $menu = json_decode(json_encode($menu));
         }
         // load our core data object
-        $data = $this->sdmCoreGetDataObject();
+        $data = $this->sdmCoreLoadDataObject(false);
         // either load stored menus object from our core data object or if no menus exist yet initilize a default object using stdClass()
         $menus = (isset($data->menus) === true ? $data->menus : new stdClass());
         // store the new $menu in $menus under it's $menu->menuId
@@ -158,7 +158,7 @@ class SdmNms extends SdmCore {
         // get menu item id
         $menuItemId = $menuItem->menuItemId;
         // load our core data object
-        $data = $this->sdmCoreGetDataObject();
+        $data = $this->sdmCoreLoadDataObject(false);
         // add menu item to menu
         $data->menus->$menuId->menuItems->$menuItemId = $menuItem;
         // encode $data as json to prep it for storage
@@ -187,7 +187,7 @@ class SdmNms extends SdmCore {
             $menu = json_decode(json_encode($menu));
         }
         // load our core data object
-        $data = $this->sdmCoreGetDataObject();
+        $data = $this->sdmCoreLoadDataObject(false);
         // load stored menus object from our core data object
         $menus = json_decode(json_encode($data->menus));
         // update menu with menuId === $menuId
@@ -217,7 +217,7 @@ class SdmNms extends SdmCore {
      */
     public function sdmNmsUpdateMenuItem($menuId, $menuItemId, $menuItem) {
         // load our core data object
-        $data = $this->sdmCoreGetDataObject();
+        $data = $this->sdmCoreLoadDataObject(false);
         // load stored menus object from our core data object
         $menus = $data->menus;
         // get the menu this menu item belongs to
@@ -244,7 +244,7 @@ class SdmNms extends SdmCore {
      * deleted then the boolean false is returned.</p>
      */
     public function sdmNmsDeleteMenu($menuId) {
-        $data = $this->sdmCoreGetDataObject();
+        $data = $this->sdmCoreLoadDataObject(false);
         $menuDisplayName = $data->menus->$menuId->menuDisplayName;
         unset($data->menus->$menuId);
         $json = json_encode($data);
@@ -259,7 +259,7 @@ class SdmNms extends SdmCore {
       @return mixed <p>If menu item was deleted then the display name of the deleted menu item is returned, if menu item could not be
      * deleted then the boolean false is returned.</p>     */
     public function sdmNmsDeleteMenuItem($menuId, $menuItemId) {
-        $data = $this->sdmCoreGetDataObject();
+        $data = $this->sdmCoreLoadDataObject(false);
         $menuItemDisplayName = $data->menus->$menuId->menuItems->$menuItemId->menuItemDisplayName;
         unset($data->menus->$menuId->menuItems->$menuItemId);
         $json = json_encode($data);
@@ -276,7 +276,7 @@ class SdmNms extends SdmCore {
      * @return string <p>The html for the menus.</p>
      */
     public function sdmNmsGetWrapperMenusHtml($wrapper, $wrapperAssembledContent) {
-        $data = $this->sdmCoreGetDataObject();
+        $data = $this->sdmCoreLoadDataObject(false);
         $prepend = '';
         $append = '';
         if (isset($data->menus)) {
@@ -318,7 +318,7 @@ class SdmNms extends SdmCore {
      * @return object <p>The menu with id $menuId</p>
      */
     public function sdmNmsGetMenu($menuId) {
-        $data = $this->sdmCoreGetDataObject();
+        $data = $this->sdmCoreLoadDataObject(false);
         return $data->menus->$menuId;
     }
 
@@ -329,7 +329,7 @@ class SdmNms extends SdmCore {
      * @return object <p>The menu item with id $menuItemId that belongs to the menu with id $menuId</p>
      */
     public function sdmNmsGetMenuItem($menuId, $menuItemId) {
-        $data = $this->sdmCoreGetDataObject();
+        $data = $this->sdmCoreLoadDataObject(false);
         $menu = $data->menus->$menuId;
         return $menu->menuItems->$menuItemId;
     }
@@ -406,7 +406,7 @@ class SdmNms extends SdmCore {
      * @return array <p>An array of all available menus indexed by menu->$propKey with values set to menu->$propValue</p>
      */
     public function sdmNmsGenerateMenuPropertiesArray($propKey, $propValue) {
-        $menus = $this->sdmCoreGetDataObject()->menus;
+        $menus = $this->sdmCoreLoadDataObject(false)->menus;
         foreach ($menus as $menu) {
             $availableMenus[$menu->$propKey] = $menu->$propValue;
         }
@@ -418,7 +418,7 @@ class SdmNms extends SdmCore {
      * @return type <p>An array of menu ids for all available menus.</p>
      */
     public function sdmNmsGetMenuIds() {
-        return array_keys(json_decode(json_encode($this->sdmCoreGetDataObject()->menus), true));
+        return array_keys(json_decode(json_encode($this->sdmCoreLoadDataObject(false)->menus), true));
     }
 
     /**
@@ -427,7 +427,7 @@ class SdmNms extends SdmCore {
      * @return type <p>An array of menu item ids for all menu items beloning to the menu.</p>
      */
     public function sdmNmsGetMenuItemIds($menuId) {
-        $menu = $this->sdmCoreGetDataObject()->menus->$menuId;
+        $menu = $this->sdmCoreLoadDataObject(false)->menus->$menuId;
         return array_keys(json_decode(json_encode($menu->menuItems), true));
     }
 
