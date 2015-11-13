@@ -183,9 +183,11 @@ class SdmAssembler extends SdmGatekeeper {
         $sdmAssemblerDataObject = $this->sdmCoreGetDataObject();
         // load and assemble apps
         $this->sdmAssemblerLoadApps($sdmAssemblerDataObject);
-        // make sure content exists, if it does return it, if not, return a content not found message and log the bad request to the bad requests log
-        switch (isset($sdmAssemblerDataObject->content->$page)) {
-            case true:
+        /** make sure content exists, if it does return it, if not, return a content not found message and log the bad request to the bad requests log */
+        // cast $sdmAssemblerDataObject->content->$page to an array so we can test if it is empty or not, works better then isset because the $sdmAssemblerDataObject->content->$page object may exist with no properties.
+        $pageContent = (array) $sdmAssemblerDataObject->content->$page;
+        switch (empty($pageContent)) {
+            case false:
                 //var_dump($sdmAssemblerDataObject->content->$page);
                 $sdmAssemblerDataObject = $this->sdmAssemblerPreparePageForDisplay($sdmAssemblerDataObject->content->$page);
                 return $sdmAssemblerDataObject;
