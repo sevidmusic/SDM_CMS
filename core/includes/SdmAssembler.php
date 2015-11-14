@@ -180,7 +180,7 @@ class SdmAssembler extends SdmGatekeeper {
     public function sdmAssemblerLoadAndAssembleContentObject() {
         $page = $this->sdmCoreDetermineRequestedPage();
         // load our data object
-        $sdmAssemblerDataObject = $this->sdmCoreGetDataObject();
+        $sdmAssemblerDataObject = $this->DataObject;
         // load and assemble apps
         $this->sdmAssemblerLoadApps($sdmAssemblerDataObject);
         /** make sure content exists, if it does return it, if not, return a content not found message and log the bad request to the bad requests log */
