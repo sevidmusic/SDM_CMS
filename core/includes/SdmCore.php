@@ -238,8 +238,6 @@ class SdmCore {
      * @return object <p>The content object loaded from $this->CoreDirectoryUrl/sdm/data.json or from the DB</p>
      */
     final public function sdmCoreLoadDataObject($requestPageOnly = true) {
-        $_SESSION['Data Object Loaded'] = (isset($_SESSION['Data Object Loaded']) ? $_SESSION['Data Object Loaded'] + 1 : 1);
-        $this->sdmCoreSdmReadArray(array('Times Data Object Loaded' => $_SESSION['Data Object Loaded']));
         // determine requested page
         $requestedPage = $this->sdmCoreDetermineRequestedPage();
         // load json string from data.json via curl

@@ -190,7 +190,10 @@ class SdmAssembler extends SdmGatekeeper {
             case false:
                 //var_dump($sdmAssemblerDataObject->content->$page);
                 $sdmAssemblerDataObject = $this->sdmAssemblerPreparePageForDisplay($sdmAssemblerDataObject->content->$page);
-                return $sdmAssemblerDataObject;
+                // now we need to update $this->DataObject with our changes
+                unset($this->DataObject);
+                $this->DataObject = $sdmAssemblerDataObject;
+                return true;
             default:
                 // log bad request to our badRequestsLog.log file
                 $badRequestId = chr(rand(65, 90)) . rand(10, 99) . chr(rand(65, 90)) . rand(10, 99);
@@ -464,16 +467,12 @@ class SdmAssembler extends SdmGatekeeper {
      * <p>Assembles the html content for a given $wrapper and returns it as a string. This method
      * is meant to be called from within a themes page.php file.</p>
      * @param string $wrapper <p>The wrapper to assemble html</p>
-     * @param stdClass $dataObject <p>The $sdmAssemblerThemeContentObject variable that is created
-     * by startup.php's call to SdmAssembler::sdmAssemblerLoadAndAssembleContentObject() during the
-     * startup process. The $sdmAssemblerThemeContentObject is always avaialbe to all themes.
-     * <br>See: <i>/core/config/startup.php</i> for more info</p>
      * @return type
      */
-    public static function sdmAssemblerGetContentHtml($wrapper, stdClass $sdmAssemblerThemeContentObject) {
+    public function sdmAssemblerGetContentHtml($wrapper) {
         // initialize the SdmNms so we can add our menus to the page.
         $nms = new SdmNms();
-        $wrapperAssembledContent = (isset($sdmAssemblerThemeContentObject->$wrapper) ? $sdmAssemblerThemeContentObject->$wrapper : '<!-- ' . $wrapper . ' placeholder -->');
+        $wrapperAssembledContent = (isset($this->DataObject->$wrapper) ? $this->DataObject->$wrapper : '<!-- ' . $wrapper . ' placeholder -->');
         $content = $nms->sdmNmsGetWrapperMenusHtml($wrapper, $wrapperAssembledContent);
         return $content;
     }
