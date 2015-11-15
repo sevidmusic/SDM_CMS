@@ -178,21 +178,16 @@ class SdmAssembler extends SdmGatekeeper {
      * @return object A content object for the requested page.
      */
     public function sdmAssemblerLoadAndAssembleContentObject() {
+        // determine requested page
         $page = $this->sdmCoreDetermineRequestedPage();
-        // load our data object
-        $sdmAssemblerDataObject = $this->DataObject;
         // load and assemble apps
-        $this->sdmAssemblerLoadApps($sdmAssemblerDataObject);
+        $this->sdmAssemblerLoadApps($this->DataObject);
         /** make sure content exists, if it does return it, if not, return a content not found message and log the bad request to the bad requests log */
         // cast $sdmAssemblerDataObject->content->$page to an array so we can test if it is empty or not, works better then isset because the $sdmAssemblerDataObject->content->$page object may exist with no properties.
-        $pageContent = (array) $sdmAssemblerDataObject->content->$page;
+        $pageContent = (array) $this->DataObject->content->$page;
         switch (empty($pageContent)) {
             case false:
-                //var_dump($sdmAssemblerDataObject->content->$page);
-                $sdmAssemblerDataObject = $this->sdmAssemblerPreparePageForDisplay($sdmAssemblerDataObject->content->$page);
-                // now we need to update $this->DataObject with our changes
-                unset($this->DataObject);
-                $this->DataObject = $sdmAssemblerDataObject;
+                $this->DataObject->content->$page = $this->sdmAssemblerPreparePageForDisplay($this->DataObject->content->$page);
                 return true;
             default:
                 // log bad request to our badRequestsLog.log file
@@ -209,7 +204,8 @@ class SdmAssembler extends SdmGatekeeper {
                         $linkedByInfo . PHP_EOL .
                         '---------------------------------------------------------------' . PHP_EOL;
                 error_log($errorMessage, 3, $this->sdmCoreGetCoreDirectoryPath() . '/logs/badRequestsLog.log');
-                return json_decode(json_encode(array('main_content' => '<p>The requested page at <b>' . $this->sdmCoreGetRootDirectoryUrl() . '/index.php?page=' . $page . '</b> could not be found. Check the url to for typos. If error persists and your sure this content should exist contact the site admin  at (@TODO:DYNAMICALLY PLACE ADMIN EMAIL HERE) to report the error.</p><p>' . 'Bad request id: ' . $badRequestId . '</p><p>' . 'Requested Page: ' . $page . '</p><p>Requested Url <i>(trimmed for display)</i>: ' . $truncatedBadRequsetUrl . '</p>')));
+                $this->DataObject->content->$page = json_decode(json_encode(array('main_content' => '<p>The requested page at <b>' . $this->sdmCoreGetRootDirectoryUrl() . '/index.php?page=' . $page . '</b> could not be found. Check the url to for typos. If error persists and your sure this content should exist contact the site admin  at (@TODO:DYNAMICALLY PLACE ADMIN EMAIL HERE) to report the error.</p><p>' . 'Bad request id: ' . $badRequestId . '</p><p>' . 'Requested Page: ' . $page . '</p><p>Requested Url <i>(trimmed for display)</i>: ' . $truncatedBadRequsetUrl . '</p>')));
+                return false;
         }
     }
 
@@ -472,7 +468,8 @@ class SdmAssembler extends SdmGatekeeper {
     public function sdmAssemblerGetContentHtml($wrapper) {
         // initialize the SdmNms so we can add our menus to the page.
         $nms = new SdmNms();
-        $wrapperAssembledContent = (isset($this->DataObject->$wrapper) ? $this->DataObject->$wrapper : '<!-- ' . $wrapper . ' placeholder -->');
+        $page = $this->sdmCoreDetermineRequestedPage();
+        $wrapperAssembledContent = (isset($this->DataObject->content->$page->$wrapper) ? $this->DataObject->content->$page->$wrapper : '<!-- ' . $wrapper . ' placeholder -->');
         $content = $nms->sdmNmsGetWrapperMenusHtml($wrapper, $wrapperAssembledContent);
         return $content;
     }
