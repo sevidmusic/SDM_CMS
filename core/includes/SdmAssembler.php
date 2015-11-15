@@ -257,15 +257,15 @@ class SdmAssembler extends SdmGatekeeper {
         // store SdmAssembler object in an appropriatly named var to give apps easy access
         $sdmassembler = $this;
         // read app gatekeeper parameters
-        $gkParams = SdmGatekeeper::sdmGatekeeperReadAppGkParams($app);
+        $gkParams = $this->sdmGatekeeperReadAppGkParams($app);
         /**
-         * If SdmGatekeeper::sdmGatekeeperReadAppGkParams()
+         * If $this->sdmGatekeeperReadAppGkParams()
          * returned false, then assume app is not restricted to role,
          * if .gk file exists then check the roles parameter to see which roles
          * have permission to use this app, if the roles parameter has the 'all' value
          * in it then all users will be able to use this app.
          */
-        $userClear = ($gkParams === false || in_array(SdmGatekeeper::SdmGatekeeperDetermineUserRole(), $gkParams['roles']) || in_array('all', $gkParams['roles']) ? true : false);
+        $userClear = ($gkParams === false || in_array($this->SdmGatekeeperDetermineUserRole(), $gkParams['roles']) || in_array('all', $gkParams['roles']) ? true : false);
         $appPath = '/' . $app . '/' . $app . '.php';
         if ($userClear === true) {
             // load apps
@@ -410,7 +410,7 @@ class SdmAssembler extends SdmGatekeeper {
             $options['roles'] = array('all');
         }
         // first we check if app output is restricted to certain roles. if it is we check that current user role matches one of the valid roles for the app. If the special 'all' role is in the $options['roles'] array then all users see the app output
-        $validUser = (in_array(SdmGatekeeper::SdmGatekeeperDetermineUserRole(), $options['roles']) || in_array('all', $options['roles']) ? true : false);
+        $validUser = (in_array($this->SdmGatekeeperDetermineUserRole(), $options['roles']) || in_array('all', $options['roles']) ? true : false);
         if ($validUser === true) {
             // Check that $requested page exists in CORE or or is passed in as an option via the options array's incpages array
             if (in_array($requestedPage, $this->sdmCoreDetermineAvailablePages()) === true || in_array($requestedPage, $options['incpages']) === true) {

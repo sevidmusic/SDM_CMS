@@ -246,7 +246,7 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
      * then the 'anonymous' role is returned.</p>
      * @return string <p>The user role</p>
      */
-    final public static function SdmGatekeeperDetermineUserRole() {
+    final public function SdmGatekeeperDetermineUserRole() {
         return (isset($_SESSION['userRole']) ? $_SESSION['userRole'] : 'anonymous');
     }
 
@@ -266,14 +266,13 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
      * @return array <p>Associative array of parameters from the app's .gk
      * file or false if no .gk file is exists.
      */
-    final public static function sdmGatekeeperReadAppGkParams($app) {
-        $gkSdmCore = new SdmCore();
-        if (file_exists($gkSdmCore->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.gk')) {
-            $gkfile = file($gkSdmCore->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.gk');
-            $params = SdmGatekeeper::sdmGatekeeperDecodeParams($gkfile);
-        } else if (file_exists($gkSdmCore->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.gk')) {
-            $gkfile = file($gkSdmCore->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.gk');
-            $params = SdmGatekeeper::sdmGatekeeperDecodeParams($gkfile);
+    final public function sdmGatekeeperReadAppGkParams($app) {
+        if (file_exists($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.gk')) {
+            $gkfile = file($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.gk');
+            $params = $this->sdmGatekeeperDecodeParams($gkfile);
+        } else if (file_exists($this->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.gk')) {
+            $gkfile = file($this->sdmCoreGetUserAppDirectoryPath() . '/' . $app . '/' . $app . '.gk');
+            $params = $this->sdmGatekeeperDecodeParams($gkfile);
         } else {
             $params = false;
         }
@@ -291,10 +290,10 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
      * </p>
      * @return array <p>Associative array of .gk params decoded from an array returned by loading a .gk file via file()</p>
      */
-    final private static function sdmGatekeeperDecodeParams($gkfile) {
+    final private function sdmGatekeeperDecodeParams($gkfile) {
         foreach ($gkfile as $value) {
-            $paramName = SdmCore::sdmCoreStrSlice('->' . $value, '->', '=');
-            $paramValuesString = SdmCore::sdmCoreStrSlice($value, '=', ';');
+            $paramName = $this->sdmCoreStrSlice('->' . $value, '->', '=');
+            $paramValuesString = $this->sdmCoreStrSlice($value, '=', ';');
             $paramValuesArray[$paramName] = explode(',', $paramValuesString);
         }
         return $paramValuesArray;

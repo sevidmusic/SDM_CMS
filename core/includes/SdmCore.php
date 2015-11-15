@@ -486,7 +486,7 @@ class SdmCore {
      * @param type $end <p>The ending string, i.e., the chars to end the slice at</p>
      * @return string <p>The slice of the string between $start and $end.</p>
      */
-    final public static function sdmCoreStrSlice($string, $start, $end) {
+    final public function sdmCoreStrSlice($string, $start, $end) {
         $string = " " . $string;
         $ini = strpos($string, $start);
         if ($ini == 0) {
