@@ -12,4 +12,4 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmCoreOverview') {
     $output .= ob_get_clean();
 }
 // incorporate core overview
-$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, $output, $options);
+$sdmassembler->sdmAssemblerIncorporateAppOutput($output, $options);

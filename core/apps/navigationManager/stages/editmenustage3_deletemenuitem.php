@@ -9,4 +9,4 @@ $menuName = $menu->menuDisplayName;
 $menuItemName = $menu->menuItems->$menuItemId->menuItemDisplayName;
 // delete the menu item
 $sdmnms->sdmNmsDeleteMenuItem($menuId, $menuItemId);
-$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, '<p>Deleted menu item "<b>' . $menuItemName . '</b>" with id "<b>' . $menuItemId . '</b>" from menu "<b>' . $menuName . '</b>" with id "<b>' . $menuId . '</b>".</p>', array('incpages' => array('navigationManagerEditMenuStage3_deletemenuitem')));
+$sdmassembler->sdmAssemblerIncorporateAppOutput('<p>Deleted menu item "<b>' . $menuItemName . '</b>" with id "<b>' . $menuItemId . '</b>" from menu "<b>' . $menuName . '</b>" with id "<b>' . $menuId . '</b>".</p>', array('incpages' => array('navigationManagerEditMenuStage3_deletemenuitem')));

@@ -13,5 +13,5 @@ $menu->menuPlacement = SdmForm::sdmFormGetSubmittedFormValue('menuPlacement'); /
 $menu->menuWrappingTagType = SdmForm::sdmFormGetSubmittedFormValue('menuWrappingTagType'); //
 $menu->wrapper = SdmForm::sdmFormGetSubmittedFormValue('wrapper'); //
 $sdmnms->sdmNmsAddMenu($menu);
-$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, '<p>Menu Added Successfully (Still in Dev, Does not necessarily indicate succsessful menu add yet)</p>', array('incpages' => array('navigationManagerAddMenuStage4')));
+$sdmassembler->sdmAssemblerIncorporateAppOutput('<p>Menu Added Successfully (Still in Dev, Does not necessarily indicate succsessful menu add yet)</p>', array('incpages' => array('navigationManagerAddMenuStage4')));
 

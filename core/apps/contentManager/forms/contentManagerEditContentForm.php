@@ -61,4 +61,4 @@ foreach ($sdmcms->sdmCmsDetermineAvailableWrappers() as $displayValue => $machin
 
 $editcontentform->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
 // add form to content
-$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, '<!-- contentManager Edit Content Form --><p><i>You are currently editing the <b>' . ucwords($pagetoedit) . '</b></i></p>' . $editcontentform->sdmFormGetForm() . '<!-- End contentManager Edit Content Form -->', $options);
+$sdmassembler->sdmAssemblerIncorporateAppOutput('<!-- contentManager Edit Content Form --><p><i>You are currently editing the <b>' . ucwords($pagetoedit) . '</b></i></p>' . $editcontentform->sdmFormGetForm() . '<!-- End contentManager Edit Content Form -->', $options);

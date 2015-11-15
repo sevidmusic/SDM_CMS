@@ -3,7 +3,7 @@
 $loginGateKeeper = new SdmGatekeeper();
 // check encrypted LAST_ACTIVITY against $_SESSION['auth_cleared'], if they don't match then user is NOT logged in
 if (SdmGatekeeper::sdmGatekeeperAuthenticate() === true) {
-    $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, '<!-- SdmAuth Login Form -->' . '<p>Your are currently logged in.</p><p>' . '<span style="font-size:.6em;"><a href="' . $sdmassembler->SdmCoreGetRootDirectoryUrl() . '/index.php?page=SdmAuthLogin&logout=' . session_id() . '">Logout</a></span></p>' . '<!-- End SdmAuth Login Form -->', $options);
+    $sdmassembler->sdmAssemblerIncorporateAppOutput('<!-- SdmAuth Login Form -->' . '<p>Your are currently logged in.</p><p>' . '<span style="font-size:.6em;"><a href="' . $sdmassembler->SdmCoreGetRootDirectoryUrl() . '/index.php?page=SdmAuthLogin&logout=' . session_id() . '">Logout</a></span></p>' . '<!-- End SdmAuth Login Form -->', $options);
 } else {
     // Build and display the Login form.
     $loginForm = new SdmForm();
@@ -34,5 +34,5 @@ if (SdmGatekeeper::sdmGatekeeperAuthenticate() === true) {
         ),
     );
     $loginForm->sdmFormBuildForm($sdmassembler->SdmCoreGetRootDirectoryUrl());
-    $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, '<!-- SdmAuth Login Form -->' . $loginForm->sdmFormGetForm() . '<!-- End SdmAuth Login Form -->', $options);
+    $sdmassembler->sdmAssemblerIncorporateAppOutput('<!-- SdmAuth Login Form -->' . $loginForm->sdmFormGetForm() . '<!-- End SdmAuth Login Form -->', $options);
 }

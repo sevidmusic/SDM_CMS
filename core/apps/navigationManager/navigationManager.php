@@ -96,7 +96,7 @@ if (substr($sdmassembler->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigatio
             break;
         default:
             // present content manager menu
-            $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, '
+            $sdmassembler->sdmAssemblerIncorporateAppOutput('
                 <div id="navigationManager">
                 <p>Welcome to the Navigation Manager. Here you can create, edit, delete, and restore menus</p>
                     <ul>
