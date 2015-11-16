@@ -440,14 +440,11 @@ class SdmCore {
     }
 
     /**
-     * <p>Determines what apps are enabled by checking the property
-     * values of the Enabled Apps object</p>
-     * @return object An object whose properties are apps that are currently enabled.
+     * <p>Returns object stored in DataObject->settings->enabledapps.</p>
+     * @return object <p>$this->DataObject->settings->enabledapps.</p>
      */
     final public function sdmCoreDetermineEnabledApps() {
-        $data = $this->sdmCoreGetDataObject();
-        $enabledApps = $data->settings->enabledapps;
-        return $enabledApps;
+        return $this->DataObject->settings->enabledapps;
     }
 
     /**
