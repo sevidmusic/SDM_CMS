@@ -16,4 +16,4 @@ $sdmassembler->sdmCoreConfigureCore();
 // start core session
 $sdmassembler->sessionStart();
 // load and assemble content | this var is used excluisively by the current themes page.php
-$sdmAssemblerThemeContentObject = $sdmassembler->sdmAssemblerLoadAndAssembleContentObject();
+$sdmassembler->sdmAssemblerLoadAndAssembleContentObject();

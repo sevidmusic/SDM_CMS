@@ -16,7 +16,7 @@ if (!empty($availableMenus) === true) {
         ),
     );
     $editMenuSelectMenuForm->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
-    $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, '<h3>Which menu do you wish to edit?</h3>' . $editMenuSelectMenuForm->sdmFormGetForm(), array('incpages' => array('navigationManagerEditMenuStage1')));
+    $sdmassembler->sdmAssemblerIncorporateAppOutput('<h3>Which menu do you wish to edit?</h3>' . $editMenuSelectMenuForm->sdmFormGetForm(), array('incpages' => array('navigationManagerEditMenuStage1')));
 } else {
-    $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, '<h3>There are no menus to edit.</h3>', array('incpages' => array('navigationManagerEditMenuStage1')));
+    $sdmassembler->sdmAssemblerIncorporateAppOutput('<h3>There are no menus to edit.</h3>', array('incpages' => array('navigationManagerEditMenuStage1')));
 }

@@ -17,7 +17,7 @@ if (!empty($availableMenus) === true) {
     $deleteMenuFormStage1->submitLabel = 'Delete Menu';
     $deleteMenuFormStage1->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
 
-    $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, '<h3>Delete Menu</h3>' . $deleteMenuFormStage1->sdmFormGetForm(), array('incpages' => array('navigationManagerDeleteMenuStage1')));
+    $sdmassembler->sdmAssemblerIncorporateAppOutput('<h3>Delete Menu</h3>' . $deleteMenuFormStage1->sdmFormGetForm(), array('incpages' => array('navigationManagerDeleteMenuStage1')));
 } else {
-    $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, '<h3>Delete Menu</h3><p>There are no menus to delete.</p>', array('incpages' => array('navigationManagerDeleteMenuStage1')));
+    $sdmassembler->sdmAssemblerIncorporateAppOutput('<h3>Delete Menu</h3><p>There are no menus to delete.</p>', array('incpages' => array('navigationManagerDeleteMenuStage1')));
 }

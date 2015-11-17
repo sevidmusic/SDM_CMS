@@ -1,7 +1,7 @@
 <?php
 
 // app description page | if you visit YOURSITE.com/index.php?page=SdmDevMenu this output will be dsiplayed
-$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, '<h2>DEV MENU</h2><p>The SDM DEV MENU app outputs a menu that has links to all pages available in core, and any page that matches the name of an enabled app. For now the meni itself is restricted to the user role "root", and the SdmDevMenu app page is not restricted at all. This is for testing the new role checking being done before loading our apps.</p>', array('wrapper' => 'main_content', 'incmethod' => 'overwrite', 'incpages' => array('SdmDevMenu')));
+$sdmassembler->sdmAssemblerIncorporateAppOutput('<h2>DEV MENU</h2><p>The SDM DEV MENU app outputs a menu that has links to all pages available in core, and any page that matches the name of an enabled app. For now the meni itself is restricted to the user role "root", and the SdmDevMenu app page is not restricted at all. This is for testing the new role checking being done before loading our apps.</p>', array('wrapper' => 'main_content', 'incmethod' => 'overwrite', 'incpages' => array('SdmDevMenu')));
 // add a dev menu to all pages that includes links to all pages and enabled apps
 $pages = $sdmassembler->sdmCoreDetermineAvailablePages();
 // Possibly incorporate the following few lines that put together a list of available apps and pages into one array into the sdmCoreDetermineAvailablePages() method
@@ -13,4 +13,4 @@ foreach ($availablePages as $link) {
 }
 $devMenu .= '</ul></div><!-- End Dev Menu -->';
 // incorporate devmenu
-$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, $devMenu, array('wrapper' => 'side-menu', 'incmethod' => 'append', 'incpages' => $availablePages, 'roles' => array('root')));
+$sdmassembler->sdmAssemblerIncorporateAppOutput($devMenu, array('wrapper' => 'side-menu', 'incmethod' => 'append', 'incpages' => $availablePages, 'roles' => array('root')));

@@ -25,4 +25,4 @@ else {
                 ';
 }
 
-$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, $output, $options);
+$sdmassembler->sdmAssemblerIncorporateAppOutput($output, $options);

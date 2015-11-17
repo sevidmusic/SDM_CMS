@@ -45,4 +45,4 @@ $cancelForm->form_elements = array(
     ),
 );
 $cancelForm->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
-$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, '<p>Are you sure you wish to delete menu item "<b>' . $menuItemName . '</b>" with id "<b>' . $menuItemId . '</b>" from menu "<b>' . $menuName . '</b>" with id "<b>' . $menuId . '</b>"?</p>' . $deleteForm->sdmFormGetForm() . $cancelForm->sdmFormGetForm(), array('incpages' => array('navigationManagerEditMenuStage3_confirmdeletemenuitem')));
+$sdmassembler->sdmAssemblerIncorporateAppOutput('<p>Are you sure you wish to delete menu item "<b>' . $menuItemName . '</b>" with id "<b>' . $menuItemId . '</b>" from menu "<b>' . $menuName . '</b>" with id "<b>' . $menuId . '</b>"?</p>' . $deleteForm->sdmFormGetForm() . $cancelForm->sdmFormGetForm(), array('incpages' => array('navigationManagerEditMenuStage3_confirmdeletemenuitem')));

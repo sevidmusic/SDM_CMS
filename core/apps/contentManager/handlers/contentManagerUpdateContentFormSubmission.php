@@ -36,4 +36,4 @@ if ($sdmForm->sdmFormGetSubmittedFormValue('page') !== 'contentManager') {
 } else {
     $output = '<p>Page could not be created because pages cannot use the name "contentManager" for security reasons. You can however add a page for one of the content managers stages.</p>';
 }
-$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, $output, $options);
+$sdmassembler->sdmAssemblerIncorporateAppOutput($output, $options);

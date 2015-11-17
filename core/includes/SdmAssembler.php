@@ -178,17 +178,17 @@ class SdmAssembler extends SdmGatekeeper {
      * @return object A content object for the requested page.
      */
     public function sdmAssemblerLoadAndAssembleContentObject() {
+        // determine requested page
         $page = $this->sdmCoreDetermineRequestedPage();
-        // load our data object
-        $sdmAssemblerDataObject = $this->sdmCoreGetDataObject();
         // load and assemble apps
-        $this->sdmAssemblerLoadApps($sdmAssemblerDataObject);
-        // make sure content exists, if it does return it, if not, return a content not found message and log the bad request to the bad requests log
-        switch (isset($sdmAssemblerDataObject->content->$page)) {
-            case true:
-                //var_dump($sdmAssemblerDataObject->content->$page);
-                $sdmAssemblerDataObject = $this->sdmAssemblerPreparePageForDisplay($sdmAssemblerDataObject->content->$page);
-                return $sdmAssemblerDataObject;
+        $this->sdmAssemblerLoadApps();
+        /** make sure content exists, if it does return it, if not, return a content not found message and log the bad request to the bad requests log */
+        // cast $sdmAssemblerDataObject->content->$page to an array so we can test if it is empty or not, works better then isset because the $sdmAssemblerDataObject->content->$page object may exist with no properties.
+        $pageContent = (array) $this->DataObject->content->$page;
+        switch (empty($pageContent)) {
+            case false:
+                $this->DataObject->content->$page = $this->sdmAssemblerPreparePageForDisplay($this->DataObject->content->$page);
+                return true;
             default:
                 // log bad request to our badRequestsLog.log file
                 $badRequestId = chr(rand(65, 90)) . rand(10, 99) . chr(rand(65, 90)) . rand(10, 99);
@@ -204,7 +204,8 @@ class SdmAssembler extends SdmGatekeeper {
                         $linkedByInfo . PHP_EOL .
                         '---------------------------------------------------------------' . PHP_EOL;
                 error_log($errorMessage, 3, $this->sdmCoreGetCoreDirectoryPath() . '/logs/badRequestsLog.log');
-                return json_decode(json_encode(array('main_content' => '<p>The requested page at <b>' . $this->sdmCoreGetRootDirectoryUrl() . '/index.php?page=' . $page . '</b> could not be found. Check the url to for typos. If error persists and your sure this content should exist contact the site admin  at (@TODO:DYNAMICALLY PLACE ADMIN EMAIL HERE) to report the error.</p><p>' . 'Bad request id: ' . $badRequestId . '</p><p>' . 'Requested Page: ' . $page . '</p><p>Requested Url <i>(trimmed for display)</i>: ' . $truncatedBadRequsetUrl . '</p>')));
+                $this->DataObject->content->$page = json_decode(json_encode(array('main_content' => '<p>The requested page at <b>' . $this->sdmCoreGetRootDirectoryUrl() . '/index.php?page=' . $page . '</b> could not be found. Check the url to for typos. If error persists and your sure this content should exist contact the site admin  at (@TODO:DYNAMICALLY PLACE ADMIN EMAIL HERE) to report the error.</p><p>' . 'Bad request id: ' . $badRequestId . '</p><p>' . 'Requested Page: ' . $page . '</p><p>Requested Url <i>(trimmed for display)</i>: ' . $truncatedBadRequsetUrl . '</p>')));
+                return false;
         }
     }
 
@@ -236,10 +237,10 @@ class SdmAssembler extends SdmGatekeeper {
      * $this->sdmAssemblerLoadApp() fails to load an app as a result of user having insufficient
      * privlages. Only actual failures will result in this method returning false.</i></p>
      */
-    private function sdmAssemblerLoadApps($sdmAssemblerDataObject) {
+    private function sdmAssemblerLoadApps() {
         $enabledApps = $this->sdmCoreDetermineEnabledApps();
         foreach ($enabledApps as $app) {
-            $status[] = $this->sdmAssemblerLoadApp($app, $sdmAssemblerDataObject);
+            $status[] = $this->sdmAssemblerLoadApp($app);
         }
         return (in_array(false, $status, true));
     }
@@ -252,35 +253,35 @@ class SdmAssembler extends SdmGatekeeper {
      * of an error, such as the app not being found, or the string 'accessDenied' if app was
      * not loaded as a result of user not having sufficient privlages to use app.</p>
      */
-    private function sdmAssemblerLoadApp($app, $sdmAssemblerDataObject) {
-        // store SdmAssembler object in an appropriatly named var to give apps easy access
+    private function sdmAssemblerLoadApp($app) {
+        // we make a copy of $this so apps will be able to utilize $this in their code through the $sdmassembler var. Basically, since we can't use $this from within our apps code, and even if we could it would not be wise as it would not be clear what $this was, $sdmassembler functions as a named alias so apps can do things like call $sdmassembler->SdmCoreSdmReadArray() from within their code.
         $sdmassembler = $this;
         // read app gatekeeper parameters
-        $gkParams = SdmGatekeeper::sdmGatekeeperReadAppGkParams($app);
+        $gkParams = $sdmassembler->sdmGatekeeperReadAppGkParams($app);
         /**
-         * If SdmGatekeeper::sdmGatekeeperReadAppGkParams()
+         * If $this->sdmGatekeeperReadAppGkParams()
          * returned false, then assume app is not restricted to role,
          * if .gk file exists then check the roles parameter to see which roles
          * have permission to use this app, if the roles parameter has the 'all' value
          * in it then all users will be able to use this app.
          */
-        $userClear = ($gkParams === false || in_array(SdmGatekeeper::SdmGatekeeperDetermineUserRole(), $gkParams['roles']) || in_array('all', $gkParams['roles']) ? true : false);
+        $userClear = ($gkParams === false || in_array($sdmassembler->SdmGatekeeperDetermineUserRole(), $gkParams['roles']) || in_array('all', $gkParams['roles']) ? true : false);
         $appPath = '/' . $app . '/' . $app . '.php';
         if ($userClear === true) {
             // load apps
-            if (file_exists($this->sdmCoreGetCoreAppDirectoryPath() . $appPath)) {
-                require_once($this->sdmCoreGetCoreAppDirectoryPath() . $appPath);
+            if (file_exists($sdmassembler->sdmCoreGetCoreAppDirectoryPath() . $appPath)) {
+                require_once($sdmassembler->sdmCoreGetCoreAppDirectoryPath() . $appPath);
                 return true;
-            } else if (file_exists($this->sdmCoreGetUserAppDirectoryPath() . $appPath)) {
-                require($this->sdmCoreGetUserAppDirectoryPath() . $appPath);
+            } else if (file_exists($sdmassembler->sdmCoreGetUserAppDirectoryPath() . $appPath)) {
+                require($sdmassembler->sdmCoreGetUserAppDirectoryPath() . $appPath);
                 return true;
             }
             // failed to load app | log error to error log so admin can debug problem.
-            error_log('Warning: SdmAssembler() could not load app "' . $app . '". Make sure the app is installed in either the core or user app directory and that it is configured properly. This error most likely occured becuase the assmebler could not locate the "' . $app . '" app at either "' . $this->sdmCoreGetCoreAppDirectoryPath() . $appPath . '" or "' . $this->sdmCoreGetUserAppDirectoryPath() . $appPath . '"');
+            error_log('Warning: SdmAssembler() could not load app "' . $app . '". Make sure the app is installed in either the core or user app directory and that it is configured properly. This error most likely occured becuase the assmebler could not locate the "' . $app . '" app at either "' . $sdmassembler->sdmCoreGetCoreAppDirectoryPath() . $appPath . '" or "' . $sdmassembler->sdmCoreGetUserAppDirectoryPath() . $appPath . '"');
             return false;
         }
         // user does not have permission to use this app
-        $this->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, 'You do not have permission to be here.', array('incpages' => array($app)));
+        $sdmassembler->sdmAssemblerIncorporateAppOutput('You do not have permission to be here.', array('incpages' => array($app)));
         return 'accessDenied';
     }
 
@@ -316,16 +317,6 @@ class SdmAssembler extends SdmGatekeeper {
      * to the page argument in the url and the SDM CMS would gnereate a page for it.
      * <br /><br />i.e, http://example.com/index.php?page=NonExistentPage would work if we did not check for it in CORE
      * and in the 'incpages' array</p>
-     * @param object $dataObject <p style="font-size:9px;">The sites data object. (This is most likely the
-     * $sdmAssemblerDataObject var provided by the SDM_Assembler)<br />
-     * Note: We need to typehint for security, however PHP has no common
-     * object ancestor so we cant specify <i>object</i> because most likely
-     * the type of this argument will be an instance of stdClass, which is
-     * technically an object but will not neccessarily return as type object
-     * when checked with typehinting.<b>*</b><br />
-     * @see <b>*</b>http://stackoverflow.com/questions/13287593/stdclass-and-type-hinting for more
-     * info on why this happens.<br />@TODO: It may be best NOT to typehint the $dataObject
-     * argument as it may introduce bugs if an actual object is passed to this method.</p>
      * @param string $output <p style="font-size:9px;"p>A plain text or HTML string to be used as the apps output.</p>
      * @param array $options (optional) <p style="font-size:9px;">Array of options that determine how an app's
      * output is incorporated. If not specified, then the app will be incorporated into
@@ -369,7 +360,7 @@ class SdmAssembler extends SdmGatekeeper {
      * will be displayed at the top of the page for the most every call to this method for the requested page. This is useful when developing apps.</p>
      * @return object <p style="font-size:9px;">The modified data object.</p>
      */
-    public function sdmAssemblerIncorporateAppOutput(stdClass $dataObject, $output, array $options = array(), $devmode = false) {
+    public function sdmAssemblerIncorporateAppOutput($output, array $options = array(), $devmode = false) {
         // determine which app this output came from
         $calledby = ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', str_replace(array('/', '.php'), '', strrchr(debug_backtrace()[0]['file'], '/')))); // trys to determine which app called this method using debug_backtrace() @see http://php.net/manual/en/function.debug-backtrace.php | basically were just filtering the name path of the file that this method was called to so it displays in a format that is easy to read, we know that the calling file will contain the app name since all apps must name their main php file according to this case insensitive naming convention : APPNAME.php
         // determine the requested page
@@ -397,8 +388,8 @@ class SdmAssembler extends SdmGatekeeper {
              * Also note that if inpages is empty then it will be assumed the developer
              * does NOT want to incorporate app output into any page.
              * i.e.,
-             *   sdmAssemblerIncorporateAppOutput($dataObject, $output, array('incpages' => array());// app out put will NOT be incorporated into any pages because incpages is empty
-             *   sdmAssemblerIncorporateAppOutput($dataObject, $output);// app out put will be incorporated into all pages because incpages does not exist, and will therefore be created and configured with pre-determined internal default values
+             *   sdmAssemblerIncorporateAppOutput($this->DataObject, $output, array('incpages' => array());// app out put will NOT be incorporated into any pages because incpages is empty
+             *   sdmAssemblerIncorporateAppOutput($this->DataObject, $output);// app out put will be incorporated into all pages because incpages does not exist, and will therefore be created and configured with pre-determined internal default values
              */
             $pages = $this->sdmCoreDetermineAvailablePages();
             $enabledApps = json_decode(json_encode($this->sdmCoreDetermineEnabledApps()), true);
@@ -409,69 +400,66 @@ class SdmAssembler extends SdmGatekeeper {
             $options['roles'] = array('all');
         }
         // first we check if app output is restricted to certain roles. if it is we check that current user role matches one of the valid roles for the app. If the special 'all' role is in the $options['roles'] array then all users see the app output
-        $validUser = (in_array(SdmGatekeeper::SdmGatekeeperDetermineUserRole(), $options['roles']) || in_array('all', $options['roles']) ? true : false);
+        $validUser = (in_array($this->SdmGatekeeperDetermineUserRole(), $options['roles']) || in_array('all', $options['roles']) ? true : false);
         if ($validUser === true) {
             // Check that $requested page exists in CORE or or is passed in as an option via the options array's incpages array
             if (in_array($requestedPage, $this->sdmCoreDetermineAvailablePages()) === true || in_array($requestedPage, $options['incpages']) === true) {
                 /* DATAOBJECT check | Make sure the properties we are modifying exist to prevent throwing any PHP errors */
                 // if no page exists for app in the CORE, then create a placeholder object for it to avoid PHP Errors, Notices, and Warnings
-                if (!isset($dataObject->content->$requestedPage)) {
-                    $dataObject->content->$requestedPage = new stdClass();
+                if (!isset($this->DataObject->content->$requestedPage)) {
+                    $this->DataObject->content->$requestedPage = new stdClass();
                 }
                 // if target wrapper doesn't exist then create a placeholder for it to avoid any PHP Errors, Notices, or Warnings
-                if (!isset($dataObject->content->$requestedPage->$options['wrapper'])) {
-                    $dataObject->content->$requestedPage->$options['wrapper'] = '';
+                if (!isset($this->DataObject->content->$requestedPage->$options['wrapper'])) {
+                    $this->DataObject->content->$requestedPage->$options['wrapper'] = '';
                 }
 
                 // make sure requested page is not in the ignorepages array
                 if (!in_array($requestedPage, $options['ignorepages'])) {
                     // PRE PROCESSING DEV MODE OUTPUT
                     if ($devmode === true) {
-                        $this->sdmCoreSdmReadArray(array('Call To Method' => 'sdmAssemblerIncorporateAppOutput()', 'Method called by app' => $calledby, 'STAGE' => 'PRE_PROCESSING', 'OPTIONS' => $options, 'App Output' => $output, 'Data Object State' => $dataObject,));
+                        $this->sdmCoreSdmReadArray(array('Call To Method' => 'sdmAssemblerIncorporateAppOutput()', 'Method called by app' => $calledby, 'STAGE' => 'PRE_PROCESSING', 'OPTIONS' => $options, 'App Output' => $output, 'Data Object State' => $this->DataObject,));
                     }
                     // if not in ignorepages array and incpages is empty assume any page not in ignore array can incorporate app output
                     // Only incorporate app output if requested page matches one of the items in incpages
                     if (in_array($requestedPage, $options['incpages'], true)) {
                         if ($options['incmethod'] === 'prepend') {
-                            $dataObject->content->$requestedPage->$options['wrapper'] = $output . $dataObject->content->$requestedPage->$options['wrapper'];
+                            $this->DataObject->content->$requestedPage->$options['wrapper'] = $output . $this->DataObject->content->$requestedPage->$options['wrapper'];
                             // PREPEND DEV MODE OUTPUT
                             if ($devmode === true) {
-                                $this->sdmCoreSdmReadArray(array('Call To Method' => 'sdmAssemblerIncorporateAppOutput()', 'Method called by app' => $calledby, 'STAGE' => 'PREPENDING', 'OPTIONS' => $options, 'App Output' => $output, 'Data Object State' => $dataObject,));
+                                $this->sdmCoreSdmReadArray(array('Call To Method' => 'sdmAssemblerIncorporateAppOutput()', 'Method called by app' => $calledby, 'STAGE' => 'PREPENDING', 'OPTIONS' => $options, 'App Output' => $output, 'Data Object State' => $this->DataObject,));
                             }
                         } else if ($options['incmethod'] === 'overwrite') {
-                            $dataObject->content->$requestedPage->$options['wrapper'] = $output;
+                            $this->DataObject->content->$requestedPage->$options['wrapper'] = $output;
                             // OVERWRITE DEV MODE OUTPUT
                             if ($devmode === true) {
-                                $this->sdmCoreSdmReadArray(array('Call To Method' => 'sdmAssemblerIncorporateAppOutput()', 'Method called by app' => $calledby, 'STAGE' => 'OVERWRITEING', 'OPTIONS' => $options, 'App Output' => $output, 'Data Object State' => $dataObject,));
+                                $this->sdmCoreSdmReadArray(array('Call To Method' => 'sdmAssemblerIncorporateAppOutput()', 'Method called by app' => $calledby, 'STAGE' => 'OVERWRITEING', 'OPTIONS' => $options, 'App Output' => $output, 'Data Object State' => $this->DataObject,));
                             }
                         } else { // default is to append
-                            $dataObject->content->$requestedPage->$options['wrapper'] .= $output;
+                            $this->DataObject->content->$requestedPage->$options['wrapper'] .= $output;
                             // APPEND (default) DEV MODE OUTPUT
                             if ($devmode === true) {
-                                $this->sdmCoreSdmReadArray(array('Call To Method' => 'sdmAssemblerIncorporateAppOutput()', 'Method called by app' => $calledby, 'STAGE' => 'APPENDING', 'OPTIONS' => $options, 'App Output' => $output, 'Data Object State' => $dataObject,));
+                                $this->sdmCoreSdmReadArray(array('Call To Method' => 'sdmAssemblerIncorporateAppOutput()', 'Method called by app' => $calledby, 'STAGE' => 'APPENDING', 'OPTIONS' => $options, 'App Output' => $output, 'Data Object State' => $this->DataObject,));
                             }
                         }
                     }
                 } // do nothing if in requested page is in ignore pages
             } // end check if requested page exists in CORE or as an enabled app
         } // end check roles
-        return $dataObject;
+        return $this->DataObject;
     }
 
     /**
      * <p>Assembles the html content for a given $wrapper and returns it as a string. This method
      * is meant to be called from within a themes page.php file.</p>
      * @param string $wrapper <p>The wrapper to assemble html</p>
-     * @param stdClass $dataObject <p>The $sdmAssemblerThemeContentObject variable that is created
-     * by startup.php's call to SdmAssembler::sdmAssemblerLoadAndAssembleContentObject() during the
-     * startup process. The $sdmAssemblerThemeContentObject is always avaialbe to all themes.
-     * <br>See: <i>/core/config/startup.php</i> for more info</p>
      * @return type
      */
-    public static function sdmAssemblerGetContentHtml($wrapper, stdClass $sdmAssemblerThemeContentObject) {
+    public function sdmAssemblerGetContentHtml($wrapper) {
         // initialize the SdmNms so we can add our menus to the page.
         $nms = new SdmNms();
-        $wrapperAssembledContent = (isset($sdmAssemblerThemeContentObject->$wrapper) ? $sdmAssemblerThemeContentObject->$wrapper : '<!-- ' . $wrapper . ' placeholder -->');
+        $page = $this->sdmCoreDetermineRequestedPage();
+        $wrapperAssembledContent = (isset($this->DataObject->content->$page->$wrapper) ? $this->DataObject->content->$page->$wrapper : '<!-- ' . $wrapper . ' placeholder -->');
         $content = $nms->sdmNmsGetWrapperMenusHtml($wrapper, $wrapperAssembledContent);
         return $content;
     }

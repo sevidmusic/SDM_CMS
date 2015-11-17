@@ -65,7 +65,7 @@ if (substr($sdmassembler->sdmCoreDetermineRequestedPage(), 0, 14) === 'contentMa
             break;
         default:
             // present content manager menu
-            $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, '
+            $sdmassembler->sdmAssemblerIncorporateAppOutput('
                 <div id="contentManager">
                 <p>Welcome to the Content Manager. Here you can create, edit, delete, and restore content</p>
                     <ul>

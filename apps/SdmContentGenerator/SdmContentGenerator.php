@@ -98,4 +98,4 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmContentGenerator') {
     }
     $output .= '</ul>';
 }
-$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, $output, $options);
+$sdmassembler->sdmAssemblerIncorporateAppOutput($output, $options);

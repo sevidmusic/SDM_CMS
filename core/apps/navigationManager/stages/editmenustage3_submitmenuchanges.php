@@ -13,4 +13,4 @@ $menu->menuPlacement = SdmForm::sdmFormGetSubmittedFormValue('menuPlacement'); /
 $menu->menuWrappingTagType = SdmForm::sdmFormGetSubmittedFormValue('menuWrappingTagType'); //
 $menu->wrapper = SdmForm::sdmFormGetSubmittedFormValue('wrapper'); //
 $sdmnms->sdmNmsUpdateMenu($menu->menuId, $menu);
-$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmAssemblerDataObject, '<p>Menu Edits Saved Successfully</p>', array('incpages' => array('navigationManagerEditMenuStage3_submitmenuchanges')));
+$sdmassembler->sdmAssemblerIncorporateAppOutput('<p>Menu Edits Saved Successfully</p>', array('incpages' => array('navigationManagerEditMenuStage3_submitmenuchanges')));
