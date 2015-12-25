@@ -1,7 +1,7 @@
 <?php
 
 // first check that the site has been configured, if it hasn't redirect to reset.php | we can do this by checking if data.json exists
-if(!file_exists('../core/sdm/data.json')) {
+if(!file_exists(__DIR__ . '/core/sdm/data.json')) {
     $rootUrl = str_replace(array('/index.php', '/reset.php'), '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']);
     header('Location:' . $rootUrl . '/reset.php');
     unset($rootUrl);
