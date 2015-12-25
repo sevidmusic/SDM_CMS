@@ -1,7 +1,10 @@
 # Ingore Configuration for the SDM CMS
 
 # FOLDERS #
+
 nbproject
+
+.idea
 
 # FILES #
 
