@@ -3,8 +3,16 @@
 <html>
     <head>
         <title>Reset Sdm Cms</title>
+        <link rel="stylesheet" href="themes/sdmResponsive/css/layout.css">
+        <link rel="stylesheet" href="themes/sdmResponsive/css/wrappers.css">
+        <link rel="stylesheet" href="themes/sdmResponsive/css/style-classes.css">
+        <link rel="stylesheet" href="themes/sdmResponsive/css/menus.css">
+        <link rel="stylesheet" href="themes/sdmResponsive/css/forms.css">
     </head>
-    <body>
+    <body class="sdmResponsive">
+    <!-- row 1 -->
+    <div class="row row-min-wid-fix padded-row">
+        <div id="main_content"class="<?php echo ($sideBarExists === true ? 'col-8 col-m-8' : 'col-12 col-m-12'); ?> rounded">
             <h1>SDM CMS</h1>
             <?php
             /** require SdmCore to allow reset.php to utilize core components */
@@ -47,6 +55,7 @@
                 }
             }
             $sdmcore->sdmCoreSdmReadArray($apps);
-            ?>
+            ?>        </div>
+    </div>
     </body>
 </html>
