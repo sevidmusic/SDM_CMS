@@ -17,4 +17,4 @@ $config = array(/** This array defines the default configuration for a SDM CMS s
     'menus' => $menus,
 ); // end $config array
 $data = utf8_encode(trim(json_encode($config)));
-echo (file_put_contents($sdmcore->sdmCoreGetDataDirectoryPath() . '/data.json', $data, LOCK_EX) != false ? '<h4 style="color:#00FF99">Site configuration reset to defaults succsessfully</h4><p><a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=homepage">Click Here</a> to view your new SDM CMS powered site</p>' : '<h2 style="color:red;">Could not configure site!Check config.php to determine the cause of the error.</h2>');
+echo (file_put_contents($sdmcore->sdmCoreGetDataDirectoryPath() . '/data.json', $data, LOCK_EX) != false ? '<h4 style="color:#00FF99">Site configuration reset to defaults successfully</h4><p><a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=homepage">Click Here</a> to view your new SDM CMS powered site</p>' : '<h2 style="color:red;">Could not configure site!Check config.php to determine the cause of the error.</h2>');
