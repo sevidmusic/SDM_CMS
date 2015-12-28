@@ -3,6 +3,7 @@
 <html>
 <head>
     <title>Reset Sdm Cms</title>
+    <!-- Use default themes stylesheets to style reset.php -->
     <link rel="stylesheet" href="themes/sdmResponsive/css/layout.css">
     <link rel="stylesheet" href="themes/sdmResponsive/css/wrappers.css">
     <link rel="stylesheet" href="themes/sdmResponsive/css/style-classes.css">
