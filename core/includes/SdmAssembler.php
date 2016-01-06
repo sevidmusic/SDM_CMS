@@ -9,7 +9,7 @@
  *
  * @author foremase
  */
-class SdmAssembler extends SdmGatekeeper {
+class SdmAssembler extends SdmNms {
 
     /**
      * <p>Returns the HTML header for the page as a string. The SdmAssembler will give apps
@@ -457,10 +457,10 @@ class SdmAssembler extends SdmGatekeeper {
      */
     public function sdmAssemblerGetContentHtml($wrapper) {
         // initialize the SdmNms so we can add our menus to the page.
-        $nms = new SdmNms();
+        // $nms = new SdmNms();
         $page = $this->sdmCoreDetermineRequestedPage();
         $wrapperAssembledContent = (isset($this->DataObject->content->$page->$wrapper) ? $this->DataObject->content->$page->$wrapper : '<!-- ' . $wrapper . ' placeholder -->');
-        $content = $nms->sdmNmsGetWrapperMenusHtml($wrapper, $wrapperAssembledContent);
+        $content = $this->sdmNmsGetWrapperMenusHtml($wrapper, $wrapperAssembledContent);
         return $content;
     }
 

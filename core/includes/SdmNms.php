@@ -110,7 +110,7 @@ class SdmMenu extends SdmMenuItem {
  *
  * @author Sevi Donnelly Foreman
  */
-class SdmNms extends SdmCore {
+class SdmNms extends SdmGatekeeper {
 
     /**
      * Add a menu to our site.
