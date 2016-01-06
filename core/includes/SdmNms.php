@@ -102,11 +102,7 @@ class SdmMenu extends SdmMenuItem {
 }
 
 /**
- * STILL IN DEV: THIS CLASS IS STILL IN DEVELOPMENT.
- *               COMPLETEING IT IS THE NEXT MAJOR STAGE
- *               IN THE DEVELOPMENT PROCESS OF THE SDM CMS
- *
- * The <b>SdmNms</b> is responsible for provideing the components necessary for
+ * The <b>SdmNms</b> is responsible for providing the components necessary for
  * navigation management, including CRUD, and security.
  *
  * Menu objects are stored in a JSON file or a DB depending on
@@ -304,10 +300,11 @@ class SdmNms extends SdmCore {
     public function sdmNmsGetMenuHtml($menuId) {
         $currentUserRole = (SdmGatekeeper::sdmGatekeeperAuthenticate() === true ? 'root' : 'basic_user'); // this is a dev role, the users role should be determined by the Sdm Gatekeeper once it is built
         $menu = $this->sdmNmsGetMenu($menuId);
-        $sdmcore = new SdmCore();
+        // @todo : there is no need to instatiate SdmCore() here since this class is a child of SdmCore().
+        //$sdmcore = new SdmCore()
 // if $currentUserRole exists in menuKeyholders array show menu || if the special role "all" exists in the menuKeyholders array we assume all users have accsess and show menu || we no longer  assume that all users have accsess to this menu if menuKeyholders is null
         if (in_array($currentUserRole, $menu->menuKeyholders) || in_array('all', $menu->menuKeyholders)) { // we check three things, if the menuKeyholders property is null we assume all users can accsess this menu, if it is not null we check if the users role exists in the menuKeyholders array, we also do a check to see if the 'all' value exists in the menuKeyholders array, if 'all' is present then the menu will be available to all users regardless of the other roles set in menuKeyholders
-            $html = (in_array($sdmcore->sdmCoreDetermineRequestedPage(), $menu->displaypages) === true || in_array('all', $menu->displaypages) === true ? $this->sdmNmsBuildMenuHtml($menu) : '<!-- Menu "' . $menu->menuDisplayName . '" Placeholder -->'); //$this->sdmNmsBuildMenuHtml($menu);
+            $html = (in_array($this->sdmCoreDetermineRequestedPage(), $menu->displaypages) === true || in_array('all', $menu->displaypages) === true ? $this->sdmNmsBuildMenuHtml($menu) : '<!-- Menu "' . $menu->menuDisplayName . '" Placeholder -->'); //$this->sdmNmsBuildMenuHtml($menu);
         }
         return (isset($html) && $html !== '' ? $html : false);
     }
