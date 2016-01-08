@@ -1,9 +1,8 @@
 <?php
-
 // IN DEV
 /**
- * This file defines three distinct classes,
- * two base classes called SdmMenuItem, and
+ * This file defines one of three distinct classes,
+ * the two base classes called SdmMenuItem, and
  * SdmMenu, as well as a final class called SdmNav.
  * The SdmMenuItem and SdmMenu objects are dependent
  * on each other, and the order in which the extend each
@@ -20,86 +19,6 @@
  * for creating and handling the menu objects.
  *
  */
-class SdmMenuItem {
-
-    public $menuItemId;
-    public $menuItemMachineName;
-    public $menuItemDisplayName;
-    public $menuItemWrappingTagType;
-    public $menuItemPosition;
-    public $menuItemCssId;
-    public $menuItemCssClasses;
-    public $destinationType;
-    public $destination;
-    public $arguments;
-    public $menuItemKeyholders;
-    public $menuItemEnabled;
-
-    public function __construct() {
-        $this->menuItemId = (isset($this->menuItemId) ? $this->menuItemId : rand(100000000000, 999999999999));
-        $this->menuItemMachineName = (isset($this->menuItemMachineName) ? $this->menuItemMachineName : rand(10000, 99999) . '_' . rand(100, 999) . '_' . rand(1000000, 9999999));
-        $this->menuItemDisplayName = (isset($this->menuItemDisplayName) ? $this->menuItemDisplayName : 'S ' . rand(100, 999) . ' D ' . rand(100, 999) . ' M');
-        $this->menuItemWrappingTagType = (isset($this->menuItemWrappingTagType) ? $this->menuItemWrappingTagType : '');
-        $this->menuItemPosition = (isset($this->menuItemPosition) ? $this->menuItemPosition : rand(-100, 100));
-        $this->menuItemCssId = (isset($this->menuItemCssId) ? $this->menuItemCssId : $this->menuItemMachineName);
-        $this->menuItemCssClasses = (isset($this->menuItemCssClasses) ? $this->menuItemCssClasses : array('sdm-menu-item', $this->menuItemMachineName));
-        $this->destinationType = (isset($this->destinationType) ? $this->destinationType : 'internal');
-        $this->destination = (isset($this->destination) ? $this->destination : 'homepage');
-        $this->arguments = (isset($this->arguments) ? $this->arguments : array('linkedby' => $this->menuItemMachineName));
-        $this->menuItemKeyholders = (isset($this->menuItemKeyholders) ? $this->menuItemKeyholders : array('root'));
-        $this->menuItemEnabled = (isset($this->menuItemEnabled) ? $this->menuItemEnabled : true);
-    }
-
-    public static function sdmMenuItemGenerateMenuItem() {
-        return new Self;
-    }
-
-}
-
-class SdmMenu extends SdmMenuItem {
-
-// initialize properties needed for a menu
-    public $menuId;
-    public $menuMachineName;
-    public $menuDisplayName;
-    public $wrapper;
-    public $menuWrappingTagType;
-    public $menuPlacement;
-    public $menuCssId;
-    public $menuCssClasses;
-    public $displaypages;
-    public $menuKeyholders;
-    public $menuItems;
-
-    public function __construct() {
-// unset parent properties
-        unset($this->menuItemId);
-        unset($this->menuItemMachineName);
-        unset($this->menuItemDisplayName);
-        unset($this->menuItemWrappingTagType);
-        unset($this->menuItemPosition);
-        unset($this->menuItemCssId);
-        unset($this->menuItemCssClasses);
-        unset($this->destinationType);
-        unset($this->destination);
-        unset($this->arguments);
-        unset($this->menuItemKeyholders);
-        unset($this->menuItemEnabled);
-// define menu object properties
-        $this->menuId = (isset($this->menuId) ? $this->menuId : rand(100000000000, 999999999999));
-        $this->menuMachineName = (isset($this->menuMachineName) ? $this->menuMachineName : rand(100000000000, 999999999999));
-        $this->menuDisplayName = (isset($this->menuDisplayName) ? $this->menuDisplayName : rand(1000, 9999));
-        $this->wrapper = (isset($this->wrapper) ? $this->wrapper : 'main_content');
-        $this->menuWrappingTagType = (isset($this->menuWrappingTagType) ? $this->menuWrappingTagType : '');
-        $this->menuPlacement = (isset($this->menuPlacement) ? $this->menuPlacement : 'prepend');
-        $this->menuCssId = (isset($this->menuCssId) ? $this->menuCssId : $this->menuMachineName);
-        $this->menuCssClasses = (isset($this->menuCssClasses) ? $this->menuCssClasses : array('sdm-menu', $this->menuMachineName));
-        $this->displaypages = (isset($this->displaypages) ? $this->displaypages : array('all'));
-        $this->menuKeyholders = (isset($this->menuKeyholders) ? $this->menuKeyholders : array('root'));
-        $this->menuItems = (isset($this->menuItems) ? $this->menuItems : array(SdmMenuItem::sdmMenuItemGenerateMenuItem(), SdmMenuItem::sdmMenuItemGenerateMenuItem(), SdmMenuItem::sdmMenuItemGenerateMenuItem()));
-    }
-
-}
 
 /**
  * The <b>SdmNms</b> is responsible for providing the components necessary for
@@ -301,8 +220,7 @@ class SdmNms extends SdmGatekeeper {
         $currentUserRole = (SdmGatekeeper::sdmGatekeeperAuthenticate() === true ? 'root' : 'basic_user'); // this is a dev role, the users role should be determined by the Sdm Gatekeeper once it is built
         $menu = $this->sdmNmsGetMenu($menuId);
         // @todo : there is no need to instatiate SdmCore() here since this class is a child of SdmCore().
-        //$sdmcore = new SdmCore()
-// if $currentUserRole exists in menuKeyholders array show menu || if the special role "all" exists in the menuKeyholders array we assume all users have accsess and show menu || we no longer  assume that all users have accsess to this menu if menuKeyholders is null
+        // if $currentUserRole exists in menuKeyholders array show menu || if the special role "all" exists in the menuKeyholders array we assume all users have accsess and show menu || we no longer  assume that all users have accsess to this menu if menuKeyholders is null
         if (in_array($currentUserRole, $menu->menuKeyholders) || in_array('all', $menu->menuKeyholders)) { // we check three things, if the menuKeyholders property is null we assume all users can accsess this menu, if it is not null we check if the users role exists in the menuKeyholders array, we also do a check to see if the 'all' value exists in the menuKeyholders array, if 'all' is present then the menu will be available to all users regardless of the other roles set in menuKeyholders
             $html = (in_array($this->sdmCoreDetermineRequestedPage(), $menu->displaypages) === true || in_array('all', $menu->displaypages) === true ? $this->sdmNmsBuildMenuHtml($menu) : '<!-- Menu "' . $menu->menuDisplayName . '" Placeholder -->'); //$this->sdmNmsBuildMenuHtml($menu);
         }

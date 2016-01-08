@@ -16,10 +16,13 @@
     <div id="main_content" class="col-12 col-m-12 rounded">
         <h1>SDM CMS</h1>
         <?php
-        /** require SdmCore to allow reset.php to utilize core components */
-        require(__DIR__ . '/core/includes/SdmCore.php');
-        /** require SdmNms to allow reset.php to utilize menu CRUD components */
-        require(__DIR__ . '/core/includes/SdmNms.php');
+
+        /** load classes | special PHP function, do not include in SDM CORE */
+        function __autoload($classes) {
+            $filename = $classes . '.php';
+            include_once(__DIR__ . '/core/includes/' . $filename);
+        }
+
         /** initialize a SdmCore() object for reset.php to use */
         $sdmcore = new SdmCore();
         /** Check that the sdm and logs directories exists | on a new installation they may or may not exists so we need to create them if they do not */
