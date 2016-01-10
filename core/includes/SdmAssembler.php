@@ -210,26 +210,6 @@ class SdmAssembler extends SdmNms {
     }
 
     /**
-     * <p>Prepares the $page for display in a theme. Basically, when
-     * a page is created it's content is filtered to insure no bad
-     * chars are included and that the encoding is UTF-8.
-     * In order to insure html tags are interpreted as html we need to
-     * reverse some of the filtering that was done when the page was created
-     * by the SdmCms() class. @see SdmCms::sdmCmsUpdateContent() for
-     * more information on how data is filtered on page creation</p>
-     * <p>This method should only be used internally by the SdmAssembler and should be kept <i>private</i>.</p>
-     * @param object $page <p>The page object to prepare.</p>
-     * @return object <p>The prepared page object.</p>
-     *
-     */
-    private function sdmAssemblerPreparePageForDisplay($page) {
-        foreach ($page as $wrapper => $content) {
-            $page->$wrapper = html_entity_decode($content, ENT_HTML5, 'UTF-8');
-        }
-        return $page;
-    }
-
-    /**
      * Loads enabled apps.
      * @param object $sdmAssemblerDataObject <p>The Content object for the requested page.</p>
      * @return bool <p>false if any apps failed to load, true if no problems occured when loading
@@ -283,20 +263,6 @@ class SdmAssembler extends SdmNms {
         // user does not have permission to use this app
         $sdmassembler->sdmAssemblerIncorporateAppOutput('You do not have permission to be here.', array('incpages' => array($app)));
         return 'accessDenied';
-    }
-
-    /**
-     * Returns <p>The required closing HTML tags for the page.</p>
-     * @return <p>string The required HTML closing tags as a string.</p>
-     */
-    public function sdmAssemblerAssembleHtmlRequiredClosingTags() {
-        return '
-    <!--This site was built using the SDM CMS content management system which was designed and developed by Sevi Donnelly Foreman in the year 2014.-->
-    <!--To contact the developer of the SDM CMS write to sdmwebsdm@gmail.com.-->
-    <!--Note: Sevi is not necessarily the author of this site, he is just the developer of Content Management System that is used to build/maintain this site.-->
-    </body>
-    </html>
-    ';
     }
 
     /**
@@ -391,7 +357,7 @@ class SdmAssembler extends SdmNms {
              *   sdmAssemblerIncorporateAppOutput($this->DataObject, $output, array('incpages' => array());// app out put will NOT be incorporated into any pages because incpages is empty
              *   sdmAssemblerIncorporateAppOutput($this->DataObject, $output);// app out put will be incorporated into all pages because incpages does not exist, and will therefore be created and configured with pre-determined internal default values
              */
-            $pages = $this->sdmCoreDetermineAvailablePages();
+            $pages = $this->sdmCoreListAvailablePages();
             $enabledApps = json_decode(json_encode($this->sdmCoreDetermineEnabledApps()), true);
             $options['incpages'] = array_merge($pages, $enabledApps);
         }
@@ -403,7 +369,7 @@ class SdmAssembler extends SdmNms {
         $validUser = (in_array($this->SdmGatekeeperDetermineUserRole(), $options['roles']) || in_array('all', $options['roles']) ? true : false);
         if ($validUser === true) {
             // Check that $requested page exists in CORE or or is passed in as an option via the options array's incpages array
-            if (in_array($requestedPage, $this->sdmCoreDetermineAvailablePages()) === true || in_array($requestedPage, $options['incpages']) === true) {
+            if (in_array($requestedPage, $this->sdmCoreListAvailablePages()) === true || in_array($requestedPage, $options['incpages']) === true) {
                 /* DATAOBJECT check | Make sure the properties we are modifying exist to prevent throwing any PHP errors */
                 // if no page exists for app in the CORE, then create a placeholder object for it to avoid PHP Errors, Notices, and Warnings
                 if (!isset($this->DataObject->content->$requestedPage)) {
@@ -447,6 +413,42 @@ class SdmAssembler extends SdmNms {
             } // end check if requested page exists in CORE or as an enabled app
         } // end check roles
         return $this->DataObject;
+    }
+
+    /**
+     * <p>Prepares the $page for display in a theme. Basically, when
+     * a page is created it's content is filtered to insure no bad
+     * chars are included and that the encoding is UTF-8.
+     * In order to insure html tags are interpreted as html we need to
+     * reverse some of the filtering that was done when the page was created
+     * by the SdmCms() class. @see SdmCms::sdmCmsUpdateContent() for
+     * more information on how data is filtered on page creation</p>
+     * <p>This method should only be used internally by the SdmAssembler and should be kept <i>private</i>.</p>
+     * @param object $page <p>The page object to prepare.</p>
+     * @return object <p>The prepared page object.</p>
+     *
+     */
+    private function sdmAssemblerPreparePageForDisplay($page)
+    {
+        foreach ($page as $wrapper => $content) {
+            $page->$wrapper = html_entity_decode($content, ENT_HTML5, 'UTF-8');
+        }
+        return $page;
+    }
+
+    /**
+     * Returns <p>The required closing HTML tags for the page.</p>
+     * @return <p>string The required HTML closing tags as a string.</p>
+     */
+    public function sdmAssemblerAssembleHtmlRequiredClosingTags()
+    {
+        return '
+    <!--This site was built using the SDM CMS content management system which was designed and developed by Sevi Donnelly Foreman in the year 2014.-->
+    <!--To contact the developer of the SDM CMS write to sdmwebsdm@gmail.com.-->
+    <!--Note: Sevi is not necessarily the author of this site, he is just the developer of Content Management System that is used to build/maintain this site.-->
+    </body>
+    </html>
+    ';
     }
 
     /**

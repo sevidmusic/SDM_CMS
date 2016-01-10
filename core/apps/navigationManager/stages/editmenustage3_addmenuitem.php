@@ -39,7 +39,7 @@ $addMenuItemForm->form_elements = array(
         'id' => 'destinationInternal',
         'type' => 'select',
         'element' => 'Destination <i style="font-size:.7em;">(<b>internal</b>: Select a pagename from this menu if this menu item\'s destination type is internal.)</i>',
-        'value' => array_merge($sdmassembler->sdmCoreDetermineAvailablePages(), json_decode(json_encode($sdmassembler->sdmCoreDetermineEnabledApps()), true)),
+        'value' => array_merge($sdmassembler->sdmCoreListAvailablePages(), json_decode(json_encode($sdmassembler->sdmCoreDetermineEnabledApps()), true)),
         'place' => '4',
     ),
     array(
