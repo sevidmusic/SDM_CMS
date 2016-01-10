@@ -15,8 +15,7 @@ if (SdmForm::sdmFormGetSubmittedFormValue('content_manager_form_submitted') === 
                     <!-- close contentManager div -->';
     // change the theme
     $sdmcms->sdmCmsChangeTheme(SdmForm::sdmFormGetSubmittedFormValue('theme'));
-}
-// form submitted but error occured
+} // form submitted but error occured
 else {
     $output .= '
                 <div id="contentManager">

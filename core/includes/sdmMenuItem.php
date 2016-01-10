@@ -19,7 +19,8 @@
  * for creating and handling the menu objects.
  *
  */
-class SdmMenuItem {
+class SdmMenuItem
+{
 
     public $menuItemId;
     public $menuItemMachineName;
@@ -34,7 +35,8 @@ class SdmMenuItem {
     public $menuItemKeyholders;
     public $menuItemEnabled;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->menuItemId = (isset($this->menuItemId) ? $this->menuItemId : rand(100000000000, 999999999999));
         $this->menuItemMachineName = (isset($this->menuItemMachineName) ? $this->menuItemMachineName : rand(10000, 99999) . '_' . rand(100, 999) . '_' . rand(1000000, 9999999));
         $this->menuItemDisplayName = (isset($this->menuItemDisplayName) ? $this->menuItemDisplayName : 'S ' . rand(100, 999) . ' D ' . rand(100, 999) . ' M');
@@ -49,7 +51,8 @@ class SdmMenuItem {
         $this->menuItemEnabled = (isset($this->menuItemEnabled) ? $this->menuItemEnabled : true);
     }
 
-    public static function sdmMenuItemGenerateMenuItem() {
+    public static function sdmMenuItemGenerateMenuItem()
+    {
         return new Self;
     }
 

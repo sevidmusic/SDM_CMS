@@ -8,7 +8,8 @@
  * @return array Array of integers within range of $s to $e
  * @todo Incorporate into one of the core classes: SDM NMS, or SDM Core.
  */
-function rangeArray($s, $e) {
+function rangeArray($s, $e)
+{
     $array = array();
     while ($s <= $e) {
         $array[$s] = $s;

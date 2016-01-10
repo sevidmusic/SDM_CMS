@@ -17,8 +17,7 @@ if ($sdmForm->sdmFormGetSubmittedFormValue('content_manager_form_submitted') ===
                             </ul></p>
                     </div>
                     <!-- close contentManager div -->';
-}
-// form submitted but error occured
+} // form submitted but error occured
 else {
     $output .= '
                 <div id="contentManager">

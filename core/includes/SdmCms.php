@@ -6,7 +6,8 @@
  *
  * @author Sevi Donnelly Foreman
  */
-class SdmCms extends SdmCore {
+class SdmCms extends SdmCore
+{
 
     /**
      * <p>Creates content for a specific page ($page) and content wrapper ($id)</p>
@@ -24,7 +25,8 @@ class SdmCms extends SdmCore {
      * @param string $html <p>The html for this content.</p>
      * @return int The number of bytes written to data.json or the DB. Returns false on failure.
      */
-    public function sdmCmsUpdateContent($page, $id, $html) {
+    public function sdmCmsUpdateContent($page, $id, $html)
+    {
         $content = $this->sdmCoreLoadDataObject(false);
         // filter out problematic charaters from $html and insure UTF-8 using iconv()
         $filteredHtml = iconv("UTF-8", "UTF-8//IGNORE", $html);
@@ -45,7 +47,8 @@ class SdmCms extends SdmCore {
      * <p>i.e. the requried "main_content" wrapper would be returned in an array formated as follows<br/><br/>
      * <b>array("Main Content" => 'main_content')</b></p>
      */
-    public function sdmCmsDetermineAvailableWrappers() {
+    public function sdmCmsDetermineAvailableWrappers()
+    {
         $html = file_get_contents($this->sdmCoreGetCurrentThemeDirectoryPath() . '/page.php');
         $dom = new DOMDocument();
         // for now we are surpressing any errors thrown by loadHTML() because it complains when malformed xml and html is loaded, and the errors were clogging up the error log during other development branches. Howver it is very important that a fix is found for this issue as it could lead to unknown bugs.
@@ -67,7 +70,8 @@ class SdmCms extends SdmCore {
      * @param string $contentWrapper <p>The content wrapper we want to load content from.</p>
      * @return string <p>The string of html for this $contentWrapper.</p>
      */
-    public function sdmCmsLoadSpecificContent($page = 'homepage', $contentWrapper = 'main_content') {
+    public function sdmCmsLoadSpecificContent($page = 'homepage', $contentWrapper = 'main_content')
+    {
         // load our json data from data.json and convert into an array
         $data = json_decode(file_get_contents($this->sdmCoreGetCoreDirectoryPath() . '/sdm/data.json'), true);
         return $data['content'][$page][$contentWrapper]; // @TODO : Use object notation instead of array notation
@@ -83,7 +87,8 @@ class SdmCms extends SdmCore {
      * i.e., array('Some Theme' => 'someTheme')
      * </p>
      */
-    public function sdmCmsDetermineAvailableThemes() {
+    public function sdmCmsDetermineAvailableThemes()
+    {
         $themes = $this->sdmCoreGetDirectoryListing('', 'themes');
         // we dont want to list directories that are not themes
         $ignore = array('.DS_Store', '.', '..');
@@ -100,7 +105,8 @@ class SdmCms extends SdmCore {
      * @param string $theme <p>The desired theme</p>
      * @return int The number of bytes written to data.json or the DB. Returns false on failure.
      */
-    public function sdmCmsChangeTheme($theme) {
+    public function sdmCmsChangeTheme($theme)
+    {
         $data = $this->sdmCoreLoadDataObject(false);
         $data->settings->theme = $theme;
         $jsondata = json_encode($data);
@@ -111,7 +117,8 @@ class SdmCms extends SdmCore {
      * Deletes a page.
      * @param string $pagename Name of the page to delete.
      */
-    public function sdmCmsDeletePage($pagename) {
+    public function sdmCmsDeletePage($pagename)
+    {
         $data = $this->sdmCoreLoadDataObject(false);
         unset($data->content->$pagename);
         $jsondata = json_encode($data);
@@ -128,7 +135,8 @@ class SdmCms extends SdmCore {
      * i.e., array('Some App' => 'someApp')
      * </p>
      */
-    public function sdmCmsDetermineAvailableApps() {
+    public function sdmCmsDetermineAvailableApps()
+    {
         $userApps = $this->sdmCoreGetDirectoryListing('', 'userapps');
         $coreApps = $this->sdmCoreGetDirectoryListing('', 'coreapps');
         $apps = array_merge($userApps, $coreApps);
@@ -146,10 +154,11 @@ class SdmCms extends SdmCore {
     /**
      * Switches an app from on to off.
      * @param string $app <p>Name of the app to switch on or of.</p>
-     * @param string $state  <p>State of the app, either on or off.</p>
+     * @param string $state <p>State of the app, either on or off.</p>
      * @return bool true on sucessful state change, false if unable to switch state.
      */
-    public function sdmCmsSwitchAppState($app, $state) {
+    public function sdmCmsSwitchAppState($app, $state)
+    {
         $data = $this->sdmCoreLoadDataObject(false);
         $enabledApps = $data->settings->enabledapps;
         switch ($state) {

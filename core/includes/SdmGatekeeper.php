@@ -9,12 +9,22 @@
  * filters, and random data generators that can be used to create unique ids,
  * security tokens, security keys, and cipher keys.
  */
-class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
+class SdmGatekeeper extends SdmCore implements SessionHandlerInterface
+{
 
     /** Properties */
     private $savePath;
 
     /** Custom Session Handler Methods */
+
+    /**
+     * Determines if user is logged in.
+     * @return bool <p>true if user is logged in, false if not.</p>
+     */
+    final public static function sdmGatekeeperAuthenticate()
+    {
+        return (isset($_SESSION['sdmauth']) && $_SESSION['sdmauth'] === 'auth' ? true : false);
+    }
 
     /**
      * <p>Initialize a session.</p>
@@ -32,7 +42,8 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
      *                 Note: This value is returned internally to PHP for
      *                 processing.</p>
      */
-    public function open($savePath, $sessionName, $storageType = 'FILE') {
+    public function open($savePath, $sessionName, $storageType = 'FILE')
+    {
         $this->savePath = $savePath;
         switch ($storageType) {
             case 'FILE':
@@ -48,17 +59,61 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
         return;
     }
 
-    public function read($sessionId) {
+    public function read($sessionId)
+    {
         // read and decrypt our session data
         $sessionData = $this->sdmNice(@file_get_contents($this->savePath . '/' . $sessionId));
-        return (string) $sessionData;
+        return (string)$sessionData;
     }
 
-    public function write($sessionId, $sessionData) {
+    /**
+     * <p>Decrypts a string encrypted with <b>sdmKind()</b></p>
+     * @param string $data <p>The string to be decrypted.</p>
+     * @return string <p>The decrypted string.</p>
+     */
+    final public function sdmNice($data)
+    {
+        $cipher = '>#|@zl)VR-1ZYP{8g~iJAxy^(\\?INr!*UBuMqt7nvk}&`wE6b:H03KXOm/f.c"[S]a<LGe\'p;o9,C2h%F=dDs$5jW_TQ+4';
+        $limit = strlen($cipher);
+        $key = explode('sdm', $data);
+        $offset = end($key);
+        $new = strstr($data, 'sdm', true);
+        $kind = '';
+        for ($sweet = 0; $sweet < strlen($new); $sweet++) {
+            $empathy = (strpos($cipher, $new[$sweet]) === false ? 'notfound' : strpos($cipher, $data[$sweet])); // current position in unencrypted string, to be encrypted it must be less than the cipher length because the encrypted chars will only be chars that exist in cipher, therefore any chars with positions greater than the cipher length will not be encrypted
+            $love = ($empathy + ($limit - $offset) >= $limit ? ($empathy - $offset) : ($empathy + ($limit - $offset)));
+            $kind .= ($empathy === 'notfound' ? $new[$sweet] : $cipher[$love]);
+        }
+        return $kind;
+    }
+
+    public function write($sessionId, $sessionData)
+    {
         // encrypt and write our session data
         $status = (file_put_contents($this->savePath . '/' . $sessionId, $this->sdmKind($sessionData), LOCK_EX) === false ? false : true);
         return $status;
     }
+
+    /**
+     * <p>Encrypts a string.</p>
+     * @param string $data <p>The data to be kind</p>
+     * @return string <p>The encrypted string</p>
+     */
+    final public function sdmKind($data)
+    {
+        $cipher = '>#|@zl)VR-1ZYP{8g~iJAxy^(\\?INr!*UBuMqt7nvk}&`wE6b:H03KXOm/f.c"[S]a<LGe\'p;o9,C2h%F=dDs$5jW_TQ+4';
+        $limit = strlen($cipher);
+        $offset = rand(0, $limit - 1);
+        $kind = '';
+        for ($sweet = 0; $sweet < strlen($data); $sweet++) {
+            $empathy = (strpos($cipher, $data[$sweet]) === false ? 'notfound' : strpos($cipher, $data[$sweet])); // current position in unencrypted string, to be encrypted it must be less than the cipher length because the encrypted chars will only be chars that exist in cipher, therefore any chars with positions greater than the cipher length will not be encrypted
+            $love = ($empathy + $offset >= $limit ? ($empathy - ($limit - $offset)) : ($empathy + $offset));
+            $kind .= ($empathy === 'notfound' ? $data[$sweet] : $cipher[$love]);
+        }
+        return $kind . 'sdm' . $offset;
+    }
+
+    /** Session Info Methods */
 
     /**
      * <p>Close a session.</p>
@@ -67,7 +122,8 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
      *                 Note: This value is returned internally to PHP for
      *                 processing.</p>
      */
-    public function close() {
+    public function close()
+    {
         /**
          * Closing the session occurs at the end of the session life cycle,
          * just after the session data has been written. No parameters are
@@ -79,7 +135,8 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
         return;
     }
 
-    public function destroy($sessionId) {
+    public function destroy($sessionId)
+    {
         $file = $this->savePath . '/' . $sessionId;
         if (file_exists($file)) {
             unlink($file);
@@ -87,7 +144,8 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
         return true;
     }
 
-    public function gc($maxlifetime) {
+    public function gc($maxlifetime)
+    {
         foreach (glob("$this->savePath/*") as $file) {
             if (filemtime($file) + $maxlifetime < time() && file_exists($file)) {
                 unlink($file);
@@ -96,7 +154,9 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
         return true;
     }
 
-    /** Session Info Methods */
+    /////////////////////////////////
+    ///// Security : Encryption /////
+    /////////////////////////////////
 
     /**
      * <p>Utilizes sdmCoreSdmReadArray() to show info
@@ -112,7 +172,8 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
      *                                or not. Defaults to false</p>
      * @return bool <p>Returns true.</p>
      */
-    public function sessionConfigInfo($returnData = false, $resizeableView = false) {
+    public function sessionConfigInfo($returnData = false, $resizeableView = false)
+    {
         $sessionConfigInfo = array(
             'session_module_name' => session_module_name(),
             'session_id' => (session_id() === '' ? 'There is no session id at the moment which means there is no active session' : session_id()),
@@ -145,7 +206,8 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
      * @return bool <p>true if session was started, false if session
      * could not be started.</p>
      */
-    public function sessionStart() {
+    public function sessionStart()
+    {
         $handler = $this;
         session_set_save_handler($handler, true);
         // set our session name | it is important for this to be unique to our site for security reasons
@@ -187,58 +249,9 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
         return ($startStatus && $regenStatus === true ? true : false);
     }
 
-    public function sessionDestroy() {
+    public function sessionDestroy()
+    {
         return session_destroy();
-    }
-
-    /////////////////////////////////
-    ///// Security : Encryption /////
-    /////////////////////////////////
-
-    /**
-     * <p>Encrypts a string.</p>
-     * @param string $data <p>The data to be kind</p>
-     * @return string <p>The encrypted string</p>
-     */
-    final public function sdmKind($data) {
-        $cipher = '>#|@zl)VR-1ZYP{8g~iJAxy^(\\?INr!*UBuMqt7nvk}&`wE6b:H03KXOm/f.c"[S]a<LGe\'p;o9,C2h%F=dDs$5jW_TQ+4';
-        $limit = strlen($cipher);
-        $offset = rand(0, $limit - 1);
-        $kind = '';
-        for ($sweet = 0; $sweet < strlen($data); $sweet++) {
-            $empathy = (strpos($cipher, $data[$sweet]) === false ? 'notfound' : strpos($cipher, $data[$sweet])); // current position in unencrypted string, to be encrypted it must be less than the cipher length because the encrypted chars will only be chars that exist in cipher, therefore any chars with positions greater than the cipher length will not be encrypted
-            $love = ($empathy + $offset >= $limit ? ($empathy - ($limit - $offset)) : ($empathy + $offset));
-            $kind .= ( $empathy === 'notfound' ? $data[$sweet] : $cipher[$love]);
-        }
-        return $kind . 'sdm' . $offset;
-    }
-
-    /**
-     * <p>Decrypts a string encrypted with <b>sdmKind()</b></p>
-     * @param string  $data <p>The string to be decrypted.</p>
-     * @return string <p>The decrypted string.</p>
-     */
-    final public function sdmNice($data) {
-        $cipher = '>#|@zl)VR-1ZYP{8g~iJAxy^(\\?INr!*UBuMqt7nvk}&`wE6b:H03KXOm/f.c"[S]a<LGe\'p;o9,C2h%F=dDs$5jW_TQ+4';
-        $limit = strlen($cipher);
-        $key = explode('sdm', $data);
-        $offset = end($key);
-        $new = strstr($data, 'sdm', true);
-        $kind = '';
-        for ($sweet = 0; $sweet < strlen($new); $sweet++) {
-            $empathy = (strpos($cipher, $new[$sweet]) === false ? 'notfound' : strpos($cipher, $data[$sweet])); // current position in unencrypted string, to be encrypted it must be less than the cipher length because the encrypted chars will only be chars that exist in cipher, therefore any chars with positions greater than the cipher length will not be encrypted
-            $love = ($empathy + ($limit - $offset) >= $limit ? ($empathy - $offset) : ($empathy + ($limit - $offset)));
-            $kind .= ( $empathy === 'notfound' ? $new[$sweet] : $cipher[$love]);
-        }
-        return $kind;
-    }
-
-    /**
-     * Determines if user is logged in.
-     * @return bool <p>true if user is logged in, false if not.</p>
-     */
-    final public static function sdmGatekeeperAuthenticate() {
-        return (isset($_SESSION['sdmauth']) && $_SESSION['sdmauth'] === 'auth' ? true : false);
     }
 
     /**
@@ -246,7 +259,8 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
      * then the 'anonymous' role is returned.</p>
      * @return string <p>The user role</p>
      */
-    final public function SdmGatekeeperDetermineUserRole() {
+    final public function SdmGatekeeperDetermineUserRole()
+    {
         return (isset($_SESSION['userRole']) ? $_SESSION['userRole'] : 'anonymous');
     }
 
@@ -266,7 +280,8 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
      * @return array <p>Associative array of parameters from the app's .gk
      * file or false if no .gk file is exists.
      */
-    final public function sdmGatekeeperReadAppGkParams($app) {
+    final public function sdmGatekeeperReadAppGkParams($app)
+    {
         if (file_exists($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.gk')) {
             $gkfile = file($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app . '/' . $app . '.gk');
             $params = $this->sdmGatekeeperDecodeParams($gkfile);
@@ -290,7 +305,8 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface {
      * </p>
      * @return array <p>Associative array of .gk params decoded from an array returned by loading a .gk file via file()</p>
      */
-    final private function sdmGatekeeperDecodeParams($gkfile) {
+    final private function sdmGatekeeperDecodeParams($gkfile)
+    {
         foreach ($gkfile as $value) {
             $paramName = $this->sdmCoreStrSlice('->' . $value, '->', '=');
             $paramValuesString = $this->sdmCoreStrSlice($value, '=', ';');

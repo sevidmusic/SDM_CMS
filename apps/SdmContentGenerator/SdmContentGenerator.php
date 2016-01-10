@@ -19,7 +19,8 @@ $cm = new SdmCms();
  * @return string <p>Rand string of either alpha-numerical, alphabetical, or numerical
  *                   chars depeding on $mode</p>
  */
-function randString($mode, $limit) {
+function randString($mode, $limit)
+{
     $strLen = rand(1, $limit);
     $string = '';
     switch ($mode) {
@@ -61,7 +62,8 @@ function randString($mode, $limit) {
  *                     </p>
  * @return string <p>Specified number of html paragraphs of random strings.</p>
  */
-function randPara($numPara, $wordPerPara = 12, $wordLen = 12, $mode = null) {
+function randPara($numPara, $wordPerPara = 12, $wordLen = 12, $mode = null)
+{
     $para = '';
     $modes = array('alphaNum', 'alpha', 'num');
     // limit by $numPara

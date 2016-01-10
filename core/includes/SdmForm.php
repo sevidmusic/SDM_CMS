@@ -5,15 +5,16 @@
  * @todo Make the static methods in this class non-static so they can self reference SdmForm() objects
  * @todo Consider making this class a child of Sdm Core so it can directly utilize it's methods and properties.
  */
-class SdmForm {
+class SdmForm
+{
 
     // properties //
-    private $formId;
-    private $form;
     public $form_handler;
     public $form_elements;
     public $method;
     public $submitLabel;
+    private $formId;
+    private $form;
 
     /**
      * Creates an HTML form based on the defined property values.
@@ -31,57 +32,58 @@ class SdmForm {
      * $method : The type of request, either 'get' or 'post', to issue.
      *
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->formId = (isset($this->formId) ? $this->formId : $this->sdmFormGenerateFormId());
         $this->form_elements = (isset($this->form_elements) ? $this->form_elements : array(
-                    // default form element example
-                    array(
-                        'id' => 'text_form_element',
-                        'type' => 'text',
-                        'element' => 'Text',
-                        'value' => 'defualt value',
-                        'place' => '0',
-                    ),
-                    // default form element example 2
-                    array(
-                        'id' => 'textarea_form_element',
-                        'type' => 'textarea',
-                        'element' => 'Textarea',
-                        'value' => 'defualt value2',
-                        'place' => '3',
-                    ),
-                    // default form element example 3
-                    array(
-                        'id' => 'password_form_element',
-                        'type' => 'password',
-                        'element' => 'Password',
-                        'value' => 'defualt value3',
-                        'place' => '3',
-                    ),
-                    // default form element example 4
-                    array(
-                        'id' => 'select_form_element',
-                        'type' => 'select',
-                        'element' => 'Select',
-                        'value' => array('yes' => 'yes', 'no' => 'no', 'maybe' => 'maybe'),
-                        'place' => '1',
-                    ),
-                    // default form element example 5
-                    array(
-                        'id' => 'radio_form_element',
-                        'type' => 'radio',
-                        'element' => 'Radio',
-                        'value' => array('yes' => 'yes', 'no' => 'no', 'maybe' => 'maybe'),
-                        'place' => '2',
-                    ),
-                    // default form element example 6
-                    array(
-                        'id' => 'hidden_form_element',
-                        'type' => 'hidden',
-                        'element' => 'Hidden',
-                        'value' => 'defualt hidden value',
-                        'place' => '4',
-                    ),
+            // default form element example
+            array(
+                'id' => 'text_form_element',
+                'type' => 'text',
+                'element' => 'Text',
+                'value' => 'defualt value',
+                'place' => '0',
+            ),
+            // default form element example 2
+            array(
+                'id' => 'textarea_form_element',
+                'type' => 'textarea',
+                'element' => 'Textarea',
+                'value' => 'defualt value2',
+                'place' => '3',
+            ),
+            // default form element example 3
+            array(
+                'id' => 'password_form_element',
+                'type' => 'password',
+                'element' => 'Password',
+                'value' => 'defualt value3',
+                'place' => '3',
+            ),
+            // default form element example 4
+            array(
+                'id' => 'select_form_element',
+                'type' => 'select',
+                'element' => 'Select',
+                'value' => array('yes' => 'yes', 'no' => 'no', 'maybe' => 'maybe'),
+                'place' => '1',
+            ),
+            // default form element example 5
+            array(
+                'id' => 'radio_form_element',
+                'type' => 'radio',
+                'element' => 'Radio',
+                'value' => array('yes' => 'yes', 'no' => 'no', 'maybe' => 'maybe'),
+                'place' => '2',
+            ),
+            // default form element example 6
+            array(
+                'id' => 'hidden_form_element',
+                'type' => 'hidden',
+                'element' => 'Hidden',
+                'value' => 'defualt hidden value',
+                'place' => '4',
+            ),
         ));
         $this->method = (isset($this->method) ? $this->method : 'post');
         $this->form_handler = (isset($this->form_handler) ? $this->form_handler : '');
@@ -90,11 +92,44 @@ class SdmForm {
     }
 
     /**
+     * Automatically assigns an id to a SdmForm instance. If the Form already has an id a new id is NOT created.
+     * There is NO need to call this function as it is run whenever an instance of this class is created.
+     * There is also no harm in calling it because this function CANNOT overwrite an ID that is already set.
+     * @return string Unique id made up of random alphanumeric characters.
+     */
+    public function sdmFormGenerateFormId()
+    {
+        // we only set id if it is NOT already set | checked via terenary operator (condition ? true : false)
+        $this->formId = (!isset($this->formId) ? rand(1000, 9999) . '-' . $this->sdmFormAlphaRand(8) : $this->formId);
+        return $this->formId;
+    }
+
+    /** sdm_alpha_rand($numChars)
+     * Random letter generator. Used in Player and Package ID generation.
+     * @param int $numChars Number of letters to generate.
+     * There are spaces and indents are NOT generated, so letters are clumped up into one long string of characters.
+     * i.e., sdm_alpha_rand(4) may generate the string 'sonv', or 'bUsw', etc...
+     * @return string Random String $numChars in length.
+     * i.e., sdmFormAlphaRand(3) would produce a string of random alphanumeric characters 3 characters in length
+     */
+    public function sdmFormAlphaRand($numChars)
+    {
+        $alphabet = 'aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ';
+        $string = '';
+        for ($inc = 0; $inc <= $numChars; $inc++) {
+            $i = rand(0, 51);
+            $string = $string . $alphabet[$i];
+        }
+        return $string;
+    }
+
+    /**
      * Builds the form.
      * @var string $rootUrl the sites root url. Insures requests are made from site of origin.
      * @return The Form html
      */
-    public function sdmFormBuildForm($rootUrl = null) {
+    public function sdmFormBuildForm($rootUrl = null)
+    {
         if (!isset($rootUrl)) {
             // if $rootUrl is not set, then attempt to default to site root url by guessing it
             $rootUrl = str_replace('/index.php', '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']);
@@ -154,6 +189,15 @@ class SdmForm {
     }
 
     /**
+     * Used to refernce the forms internal ID.
+     * @return string Form ID as a string.
+     */
+    public function sdmFormGetFormId()
+    {
+        return (isset($this->formId) ? $this->formId : 'FORM ID NOT SET!');
+    }
+
+    /**
      * <p>Utilizes serialize() and base64_encode() to encode a form value. This method
      * was created to fix bug#13</p>
      * <p><i>Note: Value is only encoded if value is not of type boolean. Booleans
@@ -170,59 +214,14 @@ class SdmForm {
      * @return mixed <p>The encoded value unless value was of type boolean, in whcih case the original
      * value is returned</p>
      */
-    final public function sdmFormEncode($value) {
+    final public function sdmFormEncode($value)
+    {
         if (is_bool($value) === false) {
             $encodedValue = base64_encode(serialize($value));
         } else {
             $encodedValue = $value;
         }
         return $encodedValue;
-    }
-
-    /**
-     * Used to get the Form's HTML
-     * @return type The assembled Form.
-     */
-    public function sdmFormGetForm() {
-        return (isset($this->form) ? $this->form : 'Unable to load form!');
-    }
-
-    /**
-     * Automatically assigns an id to a SdmForm instance. If the Form already has an id a new id is NOT created.
-     * There is NO need to call this function as it is run whenever an instance of this class is created.
-     * There is also no harm in calling it because this function CANNOT overwrite an ID that is already set.
-     * @return string Unique id made up of random alphanumeric characters.
-     */
-    public function sdmFormGenerateFormId() {
-        // we only set id if it is NOT already set | checked via terenary operator (condition ? true : false)
-        $this->formId = (!isset($this->formId) ? rand(1000, 9999) . '-' . $this->sdmFormAlphaRand(8) : $this->formId);
-        return $this->formId;
-    }
-
-    /**
-     * Used to refernce the forms internal ID.
-     * @return string Form ID as a string.
-     */
-    public function sdmFormGetFormId() {
-        return (isset($this->formId) ? $this->formId : 'FORM ID NOT SET!');
-    }
-
-    /** sdm_alpha_rand($numChars)
-     * Random letter generator. Used in Player and Package ID generation.
-     * @param int $numChars Number of letters to generate.
-     * There are spaces and indents are NOT generated, so letters are clumped up into one long string of characters.
-     * i.e., sdm_alpha_rand(4) may generate the string 'sonv', or 'bUsw', etc...
-     * @return string Random String $numChars in length.
-     * i.e., sdmFormAlphaRand(3) would produce a string of random alphanumeric characters 3 characters in length
-     */
-    public function sdmFormAlphaRand($numChars) {
-        $alphabet = 'aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ';
-        $string = '';
-        for ($inc = 0; $inc <= $numChars; $inc++) {
-            $i = rand(0, 51);
-            $string = $string . $alphabet[$i];
-        }
-        return $string;
     }
 
     /**
@@ -235,7 +234,8 @@ class SdmForm {
      * @param bool $devmode If set to true then this method will display dev information related to the different stages of decodeing on the page via SdmCore::sdmCoreSdmReadArray().
      * @return mixed <p>The value.</p>
      */
-    public static function sdmFormGetSubmittedFormValue($key, $devmode = false) {
+    public static function sdmFormGetSubmittedFormValue($key, $devmode = false)
+    {
         $sdmcore = new SdmCore();
         // if $key is not a string then just return the $key as the data
         if (!is_string($key) === true) {
@@ -261,7 +261,8 @@ class SdmForm {
      * @param bool $devmode If set to true then this method will display dev information related to the different stages of decodeing on the page via SdmCore::sdmCoreSdmReadArray().
      * @return mixed <p>The decoded value</p>
      */
-    public static function sdmFormDecode($value, $devmode = false, $key = null) {
+    public static function sdmFormDecode($value, $devmode = false, $key = null)
+    {
         if (is_string($value) === true) { // we only want to attempt to decode strings, other types should be handled seperatly
             $sdmcore = new SdmCore();
             // if the key string length is a multiple of 4 then it may be base64 encoded, if it is it will have to be decoded
@@ -326,7 +327,8 @@ class SdmForm {
      * @param bool $devmode If set to true then this method will display dev information related to the different stages of decodeing on the page via SdmCore::sdmCoreSdmReadArray().
      * @return array <p>The array with all it's values decoded with SdmForm::sdmFormDecode()</p>
      */
-    public static function sdmFormDecodeArrayValues($data, $devmode, $parentkey = null) {
+    public static function sdmFormDecodeArrayValues($data, $devmode, $parentkey = null)
+    {
         // if $data is an array at this point we want to decode any array values that are encoded.
         if (is_array($data)) {
             foreach ($data as $key => $value) {
@@ -351,7 +353,8 @@ class SdmForm {
      * @return array <p>The $values array with all values that matched $testvalue prepened with the string
      *                  'default_'.</p>
      */
-    public static function setDefaultValues(array $values, $testvalue) {
+    public static function setDefaultValues(array $values, $testvalue)
+    {
         switch (is_array($testvalue)) {
             case true:
                 foreach ($values as $key => $value) {
@@ -369,6 +372,15 @@ class SdmForm {
                 break;
         }
         return $values;
+    }
+
+    /**
+     * Used to get the Form's HTML
+     * @return type The assembled Form.
+     */
+    public function sdmFormGetForm()
+    {
+        return (isset($this->form) ? $this->form : 'Unable to load form!');
     }
 
 }

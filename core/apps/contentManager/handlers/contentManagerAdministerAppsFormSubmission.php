@@ -32,8 +32,7 @@ if (SdmForm::sdmFormGetSubmittedFormValue('content_manager_form_submitted') === 
                         <p>Form has been submitted.</p>
                     </div>
                     <!-- close contentManager div -->';
-}
-// form submitted but error occured
+} // form submitted but error occured
 else {
     $output .= '
                 <div id="contentManager">

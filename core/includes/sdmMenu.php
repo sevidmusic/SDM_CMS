@@ -19,8 +19,8 @@
  * for creating and handling the menu objects.
  *
  */
-
-class SdmMenu extends SdmMenuItem {
+class SdmMenu extends SdmMenuItem
+{
 
 // initialize properties needed for a menu
     public $menuId;
@@ -35,7 +35,8 @@ class SdmMenu extends SdmMenuItem {
     public $menuKeyholders;
     public $menuItems;
 
-    public function __construct() {
+    public function __construct()
+    {
 // unset parent properties
         unset($this->menuItemId);
         unset($this->menuItemMachineName);

@@ -4,7 +4,8 @@
 require_once('config.php');
 
 /** load classes | special PHP function, do not include in SDM CORE */
-function __autoload($classes) {
+function __autoload($classes)
+{
     $filename = $classes . '.php';
     include_once(__SDM_INCTDIR__ . '/' . $filename);
 }
