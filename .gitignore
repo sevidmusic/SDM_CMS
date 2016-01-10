@@ -8,6 +8,8 @@ nbproject
 
 # FILES #
 
+.DS_Store
+
 # FILETYPES #
 
 *.psd

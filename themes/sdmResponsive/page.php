@@ -1,6 +1,6 @@
 <!-- row 1 -->
 <div class="row row-min-wid-fix">
-    <div id="top-menu"class="col-12 col-m-12 border-bottom">
+    <div id="top-menu" class="col-12 col-m-12 border-bottom">
         <?php
         echo $sdmassembler->sdmAssemblerGetContentHtml('top-menu');
         ?>
@@ -20,7 +20,8 @@
             ?>    </div>
         <div id="locked-spacer" class="col-1 col-m-1 spacer"></div>
     <?php } ?>
-    <div id="main_content"class="<?php echo ($sideBarExists === true ? 'col-8 col-m-8' : 'col-12 col-m-12'); ?> rounded">
+    <div id="main_content"
+         class="<?php echo($sideBarExists === true ? 'col-8 col-m-8' : 'col-12 col-m-12'); ?> rounded">
         <?php
         echo $sdmassembler->sdmAssemblerGetContentHtml('main_content');
         ?>
@@ -28,7 +29,7 @@
 </div>
 <!-- row 3 -->
 <div class="row row-min-wid-fix">
-    <div id="footer"class="col-12 col-m-12">
+    <div id="footer" class="col-12 col-m-12">
         <?php
         echo $sdmassembler->sdmAssemblerGetContentHtml('footer');
         ?>

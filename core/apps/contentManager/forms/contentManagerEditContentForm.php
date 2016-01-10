@@ -27,7 +27,7 @@ $editcontentform->form_elements = array(
 // incrementer to determine place of additional form elements
 $i = 2;
 // array of available pages
-$available_pages = $sdmassembler->sdmCoreDetermineAvailablePages();
+$available_pages = $sdmassembler->sdmCoreListAvailablePages();
 // load in existing content to populate form fields
 $existing_content = $sdmassembler->sdmCoreLoadDataObject(false)->content->$pagetoedit;
 // create form elements for appropriate wrappers | i.e., page specific wrappers will only be shown if $pagetoedit matches exists in the wrappers name
