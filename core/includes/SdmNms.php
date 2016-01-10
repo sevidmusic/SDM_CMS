@@ -308,9 +308,7 @@ class SdmNms extends SdmGatekeeper {
      */
     public function sdmNmsGetMenuItem($menuId, $menuItemId)
     {
-        $data = $this->sdmCoreLoadDataObject(false);
-        $menu = $data->menus->$menuId;
-        return $menu->menuItems->$menuItemId;
+        return $this->DataObject->menus->$menuId->menuItems->$menuItemId;
     }
 
     /**
