@@ -47,7 +47,7 @@
             'Core Directory' => $sdmcore->sdmCoreGetCoreDirectoryPath(),
             'Core Url' => $sdmcore->sdmCoreGetCoreDirectoryUrl(),
             'Configuration Directory' => $sdmcore->sdmCoreGetConfiguratonDirectoryPath(),
-            'Configuration Url' => 'NO METHOD FOR PATH RETRIVAL',
+            'Configuration Url' => $sdmcore->sdmCoreGetConfiguratonDirectoryUrl(),
             'Includes Directory' => $sdmcore->sdmCoreGetIncludesDirectoryPath(),
             'Themes Directory' => $sdmcore->sdmCoreGetThemesDirectoryPath(),
             'Themes Url' => $sdmcore->sdmCoreGetThemesDirectoryUrl(),

@@ -349,6 +349,15 @@ class SdmCore
     }
 
     /**
+     * <p>Returns the path to the SDM CMS configuration directory</p>
+     * @return string <p>the path to the SDM CMS configuration directory as a string.</p>
+     */
+    final public function sdmCoreGetConfiguratonDirectoryUrl()
+    {
+        return $this->ConfigurationDirectoryUrl;
+    }
+
+    /**
      * <p>Reads an array and outputs its data as html via PHP's <b><i>echo</i></b></p>.
      * @param type $array : <p>The array to read</p>
      * @param type $sub : <p>Set internally, determines if were handling a sub array of the
