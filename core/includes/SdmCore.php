@@ -452,7 +452,7 @@ class SdmCore
     final public function sdmCoreDetermineAvailablePages()
     {
         // load our json data from data.json
-        $data = json_decode(file_get_contents($this->sdmCoreGetCoreDirectoryPath() . '/sdm/data.json'), true);
+        $data = json_decode(json_encode($this->sdmCoreLoadDataObject(false)), true);
         // we just want the KEYS from the content array as they correlate to the names of the pages of our site. i.e., $data['content']['homepage'] holds the homepage content.
         $pages = array_keys($data['content']);
         // attempt to format the array so the KEYS can be used for display, and the VALUES can be used in code | "pageName" will become "Page Name" and will be used as a key
