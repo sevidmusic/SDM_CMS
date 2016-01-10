@@ -190,13 +190,7 @@ class SdmCore
      */
     final public function sdmCoreDetermineCurrentTheme()
     {
-        /**
-         * For some reason, child classes are not able to call sdmCoreGetDataObject() from
-         * within this method and find data.json, so for now we use __DIR__ and str_replace()
-         * to figure out where data.json is.
-         */
-        $data = json_decode(file_get_contents(str_replace('/includes', '/sdm', __DIR__) . '/data.json'));
-        return $data->settings->theme;
+        return $this->DataObject->settings->theme;
     }
 
     /**
