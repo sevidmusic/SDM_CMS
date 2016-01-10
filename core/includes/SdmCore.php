@@ -56,9 +56,6 @@ class SdmCore
         $this->IncludesDirectoryPath = $this->sdmCoreGetCoreDirectoryPath() . '/includes';
         $this->ThemesDirectoryPath = $this->sdmCoreGetRootDirectoryPath() . '/themes';
         $this->ThemesDirectoryUrl = $this->sdmCoreGetRootDirectoryUrl() . '/themes';
-        $this->CurrentTheme = $this->sdmCoreDetermineCurrentTheme();
-        $this->CurrentThemeDirectoryPath = $this->sdmCoreGetThemesDirectoryPath() . '/' . $this->sdmCoreDetermineCurrentTheme();
-        $this->CurrentThemeDirectoryUrl = $this->sdmCoreGetThemesDirectoryUrl() . '/' . $this->sdmCoreDetermineCurrentTheme();
         $this->UserAppDirectoryPath = $this->sdmCoreGetRootDirectoryPath() . '/apps';
         $this->UserAppDirectoryUrl = $this->sdmCoreGetRootDirectoryUrl() . '/apps';
         $this->CoreAppDirectoryPath = $this->sdmCoreGetCoreDirectoryPath() . '/apps';
@@ -67,6 +64,9 @@ class SdmCore
         $this->DataDirectoryUrl = $this->sdmCoreGetCoreDirectoryUrl() . '/sdm';
         $this->requestedPage = (isset($_GET['page']) && $_GET['page'] != '' ? $_GET['page'] : 'homepage');
         $this->DataObject = (isset($this->DataObject) ? $this->DataObject : $this->sdmCoreLoadDataObject());
+        $this->CurrentTheme = $this->sdmCoreDetermineCurrentTheme();
+        $this->CurrentThemeDirectoryPath = $this->sdmCoreGetThemesDirectoryPath() . '/' . $this->sdmCoreDetermineCurrentTheme();
+        $this->CurrentThemeDirectoryUrl = $this->sdmCoreGetThemesDirectoryUrl() . '/' . $this->sdmCoreDetermineCurrentTheme();
     }
 
     /**
@@ -103,42 +103,6 @@ class SdmCore
     final public function sdmCoreGetCoreDirectoryUrl()
     {
         return $this->CoreDirectoryUrl;
-    }
-
-    /**
-     * <p>Attempts to determine the current theme based values stored in settings.json.
-     * If a theme is not set/found then the defual core theme will be returned.</p>
-     * @return string <p>The name of the Current site theme as a string</p>
-     */
-    final public function sdmCoreDetermineCurrentTheme()
-    {
-        /**
-         * For some reason, child classes are not able to call sdmCoreGetDataObject() from
-         * within this method and find data.json, so for now we use __DIR__ and str_replace()
-         * to figure out where data.json is.
-         */
-        $data = json_decode(file_get_contents(str_replace('/includes', '/sdm', __DIR__) . '/data.json'));
-        return $data->settings->theme;
-    }
-
-    /**
-     * <p>Returns the path to the SDM CMS themes directory
-     * (i.e., the directory where all themes are kept)</p>
-     * @return string <p>the path to the SDM CMS themes directory as a string.</p>
-     */
-    final public function sdmCoreGetThemesDirectoryPath()
-    {
-        return $this->ThemesDirectoryPath;
-    }
-
-    /**
-     * <p>Returns the url to the SDM CMS themes directory
-     * (i.e., the directory where all themes are kept)</p>
-     * @return string <p>the url to the SDM CMS themes directory as a string.</p>
-     */
-    final public function sdmCoreGetThemesDirectoryUrl()
-    {
-        return $this->ThemesDirectoryUrl;
     }
 
     /**
@@ -217,6 +181,42 @@ class SdmCore
     final public function sdmCoreGetDataDirectoryUrl()
     {
         return $this->DataDirectoryUrl;
+    }
+
+    /**
+     * <p>Attempts to determine the current theme based values stored in settings.json.
+     * If a theme is not set/found then the defual core theme will be returned.</p>
+     * @return string <p>The name of the Current site theme as a string</p>
+     */
+    final public function sdmCoreDetermineCurrentTheme()
+    {
+        /**
+         * For some reason, child classes are not able to call sdmCoreGetDataObject() from
+         * within this method and find data.json, so for now we use __DIR__ and str_replace()
+         * to figure out where data.json is.
+         */
+        $data = json_decode(file_get_contents(str_replace('/includes', '/sdm', __DIR__) . '/data.json'));
+        return $data->settings->theme;
+    }
+
+    /**
+     * <p>Returns the path to the SDM CMS themes directory
+     * (i.e., the directory where all themes are kept)</p>
+     * @return string <p>the path to the SDM CMS themes directory as a string.</p>
+     */
+    final public function sdmCoreGetThemesDirectoryPath()
+    {
+        return $this->ThemesDirectoryPath;
+    }
+
+    /**
+     * <p>Returns the url to the SDM CMS themes directory
+     * (i.e., the directory where all themes are kept)</p>
+     * @return string <p>the url to the SDM CMS themes directory as a string.</p>
+     */
+    final public function sdmCoreGetThemesDirectoryUrl()
+    {
+        return $this->ThemesDirectoryUrl;
     }
 
     /**
