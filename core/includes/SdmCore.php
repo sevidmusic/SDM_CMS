@@ -32,6 +32,7 @@ class SdmCore
     private $DataDirectoryPath;
     private $DataDirectoryUrl;
     private $requestedPage;
+    private $availablePages;
 
     final public function __construct()
     {
@@ -67,6 +68,7 @@ class SdmCore
         $this->CurrentTheme = $this->sdmCoreDetermineCurrentTheme();
         $this->CurrentThemeDirectoryPath = $this->sdmCoreGetThemesDirectoryPath() . '/' . $this->sdmCoreDetermineCurrentTheme();
         $this->CurrentThemeDirectoryUrl = $this->sdmCoreGetThemesDirectoryUrl() . '/' . $this->sdmCoreDetermineCurrentTheme();
+        $this->availablePages = $this->sdmCoreDetermineAvailablePages();
     }
 
     /**
@@ -211,6 +213,31 @@ class SdmCore
     final public function sdmCoreGetThemesDirectoryUrl()
     {
         return $this->ThemesDirectoryUrl;
+    }
+
+    /**
+     * Determines what pages exist for the current site returning an indexed array of all the pages.
+     * This method is used internally, and can also be used by developers to
+     * do things like create a security checks, for instance insuring only pages
+     * that actually exist and are part of the site are accessed.
+     * @return array An associative array structured array('Page Name' => 'pageName');
+     *
+     */
+    final public function sdmCoreDetermineAvailablePages()
+    {
+        // load our json data from data.json
+        $data = json_decode(json_encode($this->sdmCoreLoadDataObject(false)), true);
+        // we just want the KEYS from the content array as they correlate to the names of the pages of our site. i.e., $data['content']['homepage'] holds the homepage content.
+        $pages = array_keys($data['content']);
+        // attempt to format the array so the KEYS can be used for display, and the VALUES can be used in code | "pageName" will become "Page Name" and will be used as a key
+        // Note: Pages not named with the camelCase convention may not display intuitivly...
+        // @todo create a method that formats page names into camel case on page creation...
+        // intialize $availablePages array | will prevent PHP erros if no pages exist in CORE
+        $availablePages = array();
+        foreach ($pages as $page) {
+            $availablePages[ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', $page))] = $page;
+        }
+        return $availablePages;
     }
 
     /**
@@ -359,6 +386,10 @@ class SdmCore
         return true;
     }
 
+/////////////////////////////////
+///////////// Data //////////////
+/////////////////////////////////
+
     /**
      *  Attempts to return a directory listing for the specified directory (i.e., $directoryName)
      * @param string $directoryName <p>The name of the directory to create a listing of.</p>
@@ -404,10 +435,6 @@ class SdmCore
         }
     }
 
-/////////////////////////////////
-///////////// Data //////////////
-/////////////////////////////////
-
     /**
      * <p>Returns the path to the current chosen themes directory</p>
      * @return string <p>The path to the directory for the sites current theme as a string.</p>
@@ -436,28 +463,19 @@ class SdmCore
     }
 
     /**
-     * Determines what pages exist for the current site returning an indexed array of all the pages.
-     * This method is used internally, and can also be used by developers to
-     * do things like create a security checks, for instance insuring only pages
-     * that actually exist and are part of the site are accessed.
-     * @return array An associative array structured array('Page Name' => 'pageName');
-     *
+     * <p>Returns an array of available pages as stored in the availablePages property.</p>
+     * <p><i>Note: This method was created so that components that needed to determine
+     * that available pages did not have to call sdmCoreDetermineAvailablePages()
+     * which resulted in sdmCoreLoadDataObject() being called more then necessary.
+     * Instead the sdmCoreDetermineAvailablePages() is called from withing SdmCore's
+     * constructor and the resulting array is stored in the availablePages property
+     * upon instantiation of an SdmCore() object. Again, this change is one of many
+     * changes being made to reduce the number of times data.json is loaded either
+     * explicitly or via sdmCoreLoadDataObject().</i></p>
      */
-    final public function sdmCoreDetermineAvailablePages()
+    final public function sdmCoreListAvailablePages()
     {
-        // load our json data from data.json
-        $data = json_decode(json_encode($this->sdmCoreLoadDataObject(false)), true);
-        // we just want the KEYS from the content array as they correlate to the names of the pages of our site. i.e., $data['content']['homepage'] holds the homepage content.
-        $pages = array_keys($data['content']);
-        // attempt to format the array so the KEYS can be used for display, and the VALUES can be used in code | "pageName" will become "Page Name" and will be used as a key
-        // Note: Pages not named with the camelCase convention may not display intuitivly...
-        // @todo create a method that formats page names into camel case on page creation...
-        // intialize $availablePages array | will prevent PHP erros if no pages exist in CORE
-        $availablePages = array();
-        foreach ($pages as $page) {
-            $availablePages[ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', $page))] = $page;
-        }
-        return $availablePages;
+        return $this->availablePages;
     }
 
     /**
