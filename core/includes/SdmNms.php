@@ -233,20 +233,8 @@ class SdmNms extends SdmGatekeeper {
      * @return object <p>The menu with id $menuId</p>
      */
     public function sdmNmsGetMenu($menuId) {
-        $data = $this->sdmCoreLoadDataObject(false);
-        return $data->menus->$menuId;
-    }
-
-    /**
-     * get a stored menu item
-     * @param mixed $menuId<p>An integer or stirng that is equal to the id of the menu the menu item belongs to</p>
-     * @param mixed $menuItemId <p>An integer or stirng that is equal to the id of the menu item we wish to get</p>
-     * @return object <p>The menu item with id $menuItemId that belongs to the menu with id $menuId</p>
-     */
-    public function sdmNmsGetMenuItem($menuId, $menuItemId) {
-        $data = $this->sdmCoreLoadDataObject(false);
-        $menu = $data->menus->$menuId;
-        return $menu->menuItems->$menuItemId;
+        //$data = $this->sdmCoreLoadDataObject(false);
+        return $this->DataObject->menus->$menuId;
     }
 
     /**
@@ -254,7 +242,8 @@ class SdmNms extends SdmGatekeeper {
      * @param object $menu <p>The menu to object to build from.</p>
      * @return string <p>The Menu's html</p>
      */
-    public function sdmNmsBuildMenuHtml($menu) {
+    public function sdmNmsBuildMenuHtml($menu)
+    {
         $html = '<!-- MENU: ' . $menu->menuDisplayName . ' | MENUID: ' . $menu->menuId . ' | MENU MACHINE NAME: ' . $menu->menuMachineName . ' --><' . $menu->menuWrappingTagType . ' id="' . $menu->menuCssId . '" class="' . (is_array($menu->menuCssClasses) === true ? implode(' ', $menu->menuCssClasses) : str_replace(array(',', '|', ':', ';'), ' ', strval($menu->menuCssClasses))) . '">';
         $html .= $this->sdmNmsBuildMenuItemsHtml($menu->menuItems, $menu->menuId);
         $html .= '</' . $menu->menuWrappingTagType . '>';
@@ -270,7 +259,8 @@ class SdmNms extends SdmGatekeeper {
      * the menu items are configured before the menu itself.</p>
      * @return string <p>The Menu Item's html</p>
      */
-    public function sdmNmsBuildMenuItemsHtml($menuItems, $menuId = 'unknown') {
+    public function sdmNmsBuildMenuItemsHtml($menuItems, $menuId = 'unknown')
+    {
         $html = '';
         $currentUserRole = (SdmGatekeeper::sdmGatekeeperAuthenticate() === true ? 'root' : 'basic_user'); // this is a dev role, the users role should be determined by the Sdm Gatekeeper once it is built
         $orderedMenuItems = array();
@@ -308,6 +298,19 @@ class SdmNms extends SdmGatekeeper {
             }
         }
         return $html;
+    }
+
+    /**
+     * get a stored menu item
+     * @param mixed $menuId <p>An integer or stirng that is equal to the id of the menu the menu item belongs to</p>
+     * @param mixed $menuItemId <p>An integer or stirng that is equal to the id of the menu item we wish to get</p>
+     * @return object <p>The menu item with id $menuItemId that belongs to the menu with id $menuId</p>
+     */
+    public function sdmNmsGetMenuItem($menuId, $menuItemId)
+    {
+        $data = $this->sdmCoreLoadDataObject(false);
+        $menu = $data->menus->$menuId;
+        return $menu->menuItems->$menuItemId;
     }
 
     /**
