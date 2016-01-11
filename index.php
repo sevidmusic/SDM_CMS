@@ -1,6 +1,6 @@
 <?php
 
-// first check that the site has been configured, if it hasn't redirect to reset.php | we can do this by checking if data.json exists
+/* First check that the core site components have been configured, if not redirect to reset.php so site can be configured. */
 if (!file_exists(__DIR__ . '/core/sdm/data.json')) {
     $rootUrl = str_replace(array('/index.php', '/reset.php'), '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']);
     header('Location:' . $rootUrl . '/reset.php');
@@ -8,15 +8,14 @@ if (!file_exists(__DIR__ . '/core/sdm/data.json')) {
     die();
 }
 
-// require our startup file
-require(__DIR__ . '/core/config/startup.php');
+/* Require our startup file. */
+require_once(__DIR__ . '/core/config/startup.php');
 
-// assemble the HTML header
+/* Assemble the HTML header. */
 echo $sdmassembler->sdmAssemblerAssembleHtmlHeader();
 
-// load our theme and build the page
-include($sdmassembler->sdmCoreGetCurrentThemeDirectoryPath() . '/page.php');
+/* Require our current theme's page.php. */
+require_once($sdmassembler->sdmCoreGetCurrentThemeDirectoryPath() . '/page.php');
 
-// assemlbe the required closing html tags/data
+/* Assemble the required closing html tags. */
 echo $sdmassembler->sdmAssemblerAssembleHtmlRequiredClosingTags();
-

@@ -1,20 +1,23 @@
 <?php
 
-/** load site CONSTANTS as defined in config.php */
+/** Require our config.php file which defines the core constants. */
 require_once('config.php');
 
-/** load classes | special PHP function, do not include in SDM CORE */
+/** Auto-loader */
 function __autoload($classes)
 {
     $filename = $classes . '.php';
     include_once(__SDM_INCTDIR__ . '/' . $filename);
 }
 
-// create/configure core
+/* Initialize the SdmAssembler(). */
 $sdmassembler = new SdmAssembler;
-// configure core
+
+/* Configure core. */
 $sdmassembler->sdmCoreConfigureCore();
-// start core session
+
+/* Start or resume session. */
 $sdmassembler->sessionStart();
-// load and assemble content | this var is used excluisively by the current themes page.php
+
+/* Load and assemble the content object. | This var should be used exclusively by the current themes page.php. */
 $sdmassembler->sdmAssemblerLoadAndAssembleContentObject();
