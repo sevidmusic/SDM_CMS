@@ -11,37 +11,34 @@
     <link rel="stylesheet" href="themes/sdmResponsive/css/forms.css">
 </head>
 <body class="sdmResponsive">
-<!-- row 1 -->
 <div class="row row-min-wid-fix padded-row">
     <div id="main_content" class="col-12 col-m-12 rounded">
         <h1>SDM CMS</h1>
         <?php
-
-        /** load classes | special PHP function, do not include in SDM CORE */
+        /* Auto-loader */
         function __autoload($classes)
         {
             $filename = $classes . '.php';
             include_once(__DIR__ . '/core/includes/' . $filename);
         }
 
-        /** initialize a SdmCore() object for reset.php to use */
+        /* Instantiate an SdmCore() object for reset.php to use. */
         $sdmcore = new SdmCore();
-        /** Check that the sdm and logs directories exists | on a new installation they may or may not exists so we need to create them if they do not */
+        /* Check that the sdm and logs directories exists | on a new installation they may or may not exists so we need to create them if they do not */
         if (!file_exists(__DIR__ . '/core/sdm')) {
             mkdir(__DIR__ . '/core/sdm');
         }
         if (!file_exists(__DIR__ . '/core/logs')) {
             mkdir(__DIR__ . '/core/logs');
         }
-        /** Cleanup any old logs and session data that may exist */
+        /* Cleanup any old logs and session data that may exist. */
         require(__DIR__ . '/core/config/configCleanup.php');
-        /** Setup default menus | this must be done BEFORE setting up default data or default menus would be excluded fromt he default data */
+        /* Configure default menus. | Note: Default menus must be configured BEFORE setting up default data or else the default menus will be excluded from the default data. */
         require(__DIR__ . '/core/config/defaultMenuConfig.php');
-        /** Setup default data */
+        /* Configure default data. */
         require(__DIR__ . '/core/config/defaultDataConfig.php');
-        /** Display Configuration Status */
+        /* Display overview of the default core configuration. */
         echo '<p>Below is an overview of the sites current configuration:</p>';
-        /** Display Core Paths and Urls */
         $paths = array(
             'Root Directory' => $sdmcore->sdmCoreGetRootDirectoryPath(),
             'Root Url' => $sdmcore->sdmCoreGetRootDirectoryUrl(),
@@ -61,12 +58,13 @@
             'Data Directory Path' => $sdmcore->sdmCoreGetDataDirectoryPath(),
             'Data Directory Url' => $sdmcore->sdmCoreGetDataDirectoryUrl(),
         );
+        /* Display core paths and urls. */
         echo '<h3>Site Paths</h3>';
         $sdmcore->sdmCoreSdmReadArray($paths);
-        /** Display Current Theme */
+        /* Display current theme. */
         echo '<h3>Site Default Theme:</h3>';
         $sdmcore->sdmCoreSdmReadArray(array('Current Theme' => $sdmcore->sdmCoreDetermineCurrentTheme()));
-        /** Display List Of Available Apps */
+        /* Display list of available apps. */
         echo '<h3>Available Apps:</h3><p>(these apps are <b>not</b> necessarily enabled, you can enable/disable apps by logging in and using the content manager app which is enabled by default)</p>';
         $coreapps = $sdmcore->sdmCoreGetDirectoryListing('', 'coreapps');
         $userapps = $sdmcore->sdmCoreGetDirectoryListing('', 'userapps');
@@ -82,7 +80,7 @@
             }
         }
         $sdmcore->sdmCoreSdmReadArray($apps);
-        /** Display Enabled Apps */
+        /* Display list of currently enabled apps. */
         echo '<h3>Enabled Apps:</h3>';
         $sdmcore->sdmCoreSdmReadArray($sdmcore->sdmCoreDetermineEnabledApps());
         ?>
