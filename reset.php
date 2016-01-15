@@ -1,3 +1,12 @@
+<!-- WARNING: DO NOT INCLUDE THIS FILE ON YOUR PRODUCTION SITE, IT IS HIGHLY DANGEROUS AND IT
+              IS BEST TO LEAVE IT OUT TO INSURE NO ONE GETS UNAUTHORIZED ACCESS TO IT. THE REASON
+              THIS FILE IS DANGEROUS IS BECAUSE IT CAN DELETE YOUR ENTIRE SITE. IT IS ONLY MEANT
+              TO BE RUN AFTER INITIAL INSTALL OF THE SDM CMS, OR BY ADMIN IF A CORRUPTED SITE NEEDS
+              TO BE RESET IN WHICH CASE THE ADMIN MUST BE SURE THEY HAVE A BACKUP OF OF THE VERSION
+              OF data.json, OR DATABASE THAT THE DESIRED SITE DATA IS STORED IN.
+
+              REALLY THE BEST SOLUTION IS TO DISCARD THIS FILE AND WRITE YOUR OWN VERSION CONTROL APP
+              FOR THE SDM CMS, SOMETHING LIKE GIT BUT MUCH MORE LIGHT WEIGHT. -->
 <!-- Run this file to configure a new SDM CMS site or to reset a site to it's default state. -->
 <!DOCTYPE html>
 <html>
@@ -22,9 +31,13 @@
             include_once(__DIR__ . '/core/includes/' . $filename);
         }
 
-        /* Instantiate an SdmCore() object for reset.php to use. */
-        $sdmcore = new SdmCore();
-        /* Check that the sdm and logs directories exists | on a new installation they may or may not exists so we need to create them if they do not */
+        /* Instantiate an SdmGatekeeper() object for reset.php to use. We use the SdmGatekeeper() because we
+         * need to accsess some of the security and login methods provided by the SdmGatekeeper(). Since
+         * the SdmGatekeeper() is a child of SdmCore() we will still have access to the core methods.
+         */
+        $sdmcore = new SdmGatekeeper();
+        /* Check that the sdm and logs directories exists | on a new installation they may or may not exists
+         so we need to create them if they do not */
         if (!file_exists(__DIR__ . '/core/sdm')) {
             mkdir(__DIR__ . '/core/sdm');
         }
@@ -83,6 +96,10 @@
         /* Display list of currently enabled apps. */
         echo '<h3>Enabled Apps:</h3>';
         $sdmcore->sdmCoreSdmReadArray($sdmcore->sdmCoreDetermineEnabledApps());
+        /* Attempt to login user. */
+        $sessStarted = $sdmcore->sessionStart();
+        $_SESSION['sdmauth'] = 'auth';
+        $_SESSION['userRole'] = $devUserRole;
         ?>
     </div>
 </div>
