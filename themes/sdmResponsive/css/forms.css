@@ -22,7 +22,7 @@ select {
     margin-top: 15px;
 }
 [type*='radio'] {
-    display: inline;
+    display: inline-block;
     margin: 20px;
 }
 /* Tablet Styles */
