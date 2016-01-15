@@ -1,6 +1,6 @@
 <?php
 
-/* First check that the core site components have been configured, if not redirect to reset.php so site can be configured. */
+/* If core site components have been not been configured, redirect to reset.php. */
 if (!file_exists(__DIR__ . '/core/sdm/data.json')) {
     $rootUrl = str_replace(array('/index.php', '/reset.php'), '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']);
     header('Location:' . $rootUrl . '/reset.php');
