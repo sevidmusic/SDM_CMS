@@ -1,11 +1,9 @@
 <?php
 
 /**
- * The <b>SdmAssembler</b> is responsible for loading and assembleing page content.
- * It is also responsible for loading and assemlbing CORE and user apps.
- * During the assemlby process content is loaded and passed to apps to give apps
- * a chance to modify content before all the apps and content is finally asembled into
- * html and echoed to the page.
+ * The SdmAssembler() is responsible for loading and assembling page content.
+ * It is also responsible for incorporating output from core and user apps into a
+ * page.
  *
  * @author foremase
  */
@@ -99,7 +97,9 @@ class SdmAssembler extends SdmNms
                                 $html .= '<script src="' . $path . '/' . trim($property) . '.js"></script>';
                                 break;
                             case 'meta':
-                                // At the moment meta tags are being hardcoed until it is determined how to parse the values in a .as file and translate them into the more complex structure of a meta tag.
+                                /* At the moment meta tags are being hardcoed until it is determined
+                                how to parse the values in a .as file and translate them into the more
+                                complex structure of a meta tag. */
                                 $html .= '<meta name="description" content="Website powered by the SDM CMS"><meta name="author" content="Sevi Donnelly Foreman"><meta http-equiv="refresh" content="3000"><meta name="viewport" content="width=device-width, initial-scale=1.0">';
                                 break;
                             default:
@@ -467,7 +467,7 @@ class SdmAssembler extends SdmNms
             $this->DataObject->content->$requestedPage->$options['wrapper'] = '';
         }
         $status = (isset($this->DataObject->content->$requestedPage->$options['wrapper']) ? true : false);
-        return true;
+        return $status;
     }
 
     /**
