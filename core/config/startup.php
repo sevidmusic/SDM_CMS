@@ -3,7 +3,10 @@
 /** Require our config.php file which defines the core constants. */
 require_once('config.php');
 
-/** Auto-loader */
+/**
+ * Load Sdm Cms core classes.
+ * @param $classes string The class to load.
+ */
 function __autoload($classes)
 {
     $filename = $classes . '.php';
