@@ -138,11 +138,11 @@ class SdmForm
         $formHtml = '<!-- form "' . $this->sdmFormGetFormId() . '" --><form method="' . $this->method . '" action="' . $rootUrl . '/index.php?page=' . $this->form_handler . '">';
 
         // first sort elements based on element's "place"
-        $element_order = array(); // used to sort items
+        $elementOrder = array(); // used to sort items
         foreach ($this->form_elements as $key => $value) {
-            $element_order[$key] = $value['place'];
+            $elementOrder[$key] = $value['place'];
         }
-        array_multisort($element_order, SORT_ASC, $this->form_elements);
+        array_multisort($elementOrder, SORT_ASC, $this->form_elements);
 
         // build form
         foreach ($this->form_elements as $key => $value) {
