@@ -1,20 +1,48 @@
 <?php
 
 /**
- *
  * The SdmAssembler() is responsible for loading and assembling page content.
  * It is also responsible for incorporating output from core and user apps into a
  * page.
  *
  * @author foremase
+ *
  */
 class SdmAssembler extends SdmNms
 {
     /**
-     * Assembles the html header for a page. During assembly this method will reads
-     * any .as files provided by enabled apps or the current theme, and it will incorporate
-     * any stylesheets, scripts, or meta tags defined in those .as files into the
-     * html header by creating appropriately formatted link, script, or meta tags.
+     * Assembles the html header for a page and incorporates stylesheets, scripts, and meta tags
+     * defined in enabled user and core app .as files, and in the current theme's .as file into the
+     * html header.
+     *
+     * Note: App stylesheets, scripts, and meta tags will always be incorporated first since the
+     * purpose of apps is to extend, and we want to insure their .as settings take precedenct over
+     * the current theme's .as file settings.
+     *
+     * @return string The HTML header for the page.
+     *
+     */
+    public function sdmAssemblerAssembleHtmlHeader()
+    {
+        return '
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <title>' . (isset($_GET['page']) ? ucfirst($_GET['page']) : ucfirst('homepage')) . '</title>
+                    <!-- Header properties defined by enabled apps: -->
+                    ' . $this->sdmAssemblerAssembleEnabledAppProps() . '
+                    <!-- Header properties defined by current theme: -->
+                    ' . $this->sdmAssemblerAssembleCurrentThemeProps() . '
+                    <!-- Set base url. -->
+                    <base href="' . $this->sdmCoreGetRootDirectoryUrl() . '" target="_self">
+                </head>
+            <body class="' . $this->sdmCoreDetermineCurrentTheme() . '">
+            ';
+    }
+
+    /**
+     * Assembles the link, script, and meta tags that load the stylesheets scripts and meta tags
+     * for enabled apps that provide a .as file
      *
      * NOTE: At the moment apps are only allowed to define the scripts property in their .as files.
      * Apps will eventually be able to define meta tags in their .as files but may not ever be
@@ -33,15 +61,13 @@ class SdmAssembler extends SdmNms
      * to serve scripts from their .as files is because there may be rare circumstances where a developer
      * needs a script for a specific theme to work.
      *
-     * @return string The HTML header for the page.
+     * @return string String of link, script, and meta tags for any stylesheets, scripts, and meta tags defined
+     * in any enabled apps .as file.
      *
      */
-    public function sdmAssemblerAssembleHtmlHeader()
+    final private function sdmAssemblerAssembleEnabledAppProps()
     {
-        /**
-         * Get enabled app scripts.
-         */
-        // init $appScriptProps var
+        /* Assemble header properties for enabled core and user apps. */
         $appScriptProps = '';
         foreach ($this->sdmCoreDetermineEnabledApps() as $app) {
             // get userApp .as properties
@@ -49,21 +75,7 @@ class SdmAssembler extends SdmNms
             // get coreApp .as properties
             $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('scripts', 'coreApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('scripts', 'coreApp', $app));
         }
-        /** At the moment only app scipts are incorporated, stylesheets and meta tags are not yet supported for apps */
-        return '
-            <!DOCTYPE html>
-            <html>
-                <head>
-                    <title>' . (isset($_GET['page']) ? ucfirst($_GET['page']) : ucfirst('homepage')) . '</title>
-                    ' . ($appScriptProps !== false ? $appScriptProps : '') . '
-                    ' . $this->sdmAssemblerAssembleHeaderProperties('meta') . '
-                    ' . $this->sdmAssemblerAssembleHeaderProperties('stylesheets') . '
-                    ' . $this->sdmAssemblerAssembleHeaderProperties('scripts') . '
-                    <!-- set base url -->
-                    <base href="' . $this->sdmCoreGetRootDirectoryUrl() . '" target="_self">
-                </head>
-            <body class="' . $this->sdmCoreDetermineCurrentTheme() . '">
-            ';
+        return $appScriptProps;
     }
 
     /**
@@ -181,6 +193,23 @@ class SdmAssembler extends SdmNms
             }
         }
         return ($asFile === false ? false : (isset($properties) === true ? $properties : array()));
+    }
+
+    /**
+     * Assembles the link, script, and meta tags that load the stylesheets scripts and meta tags
+     * for the current theme if it provides a .as file.
+     *
+     * @return string  String of link, script, and meta tags for any stylesheets, scripts, and meta tags defined
+     * in the current theme's .as file if provided.
+     *
+     */
+
+    final private function sdmAssemblerAssembleCurrentThemeProps()
+    {
+        $themeProps = $this->sdmAssemblerAssembleHeaderProperties('meta') .
+            $this->sdmAssemblerAssembleHeaderProperties('stylesheets') .
+            $this->sdmAssemblerAssembleHeaderProperties('scripts');
+        return $themeProps;
     }
 
     /**
