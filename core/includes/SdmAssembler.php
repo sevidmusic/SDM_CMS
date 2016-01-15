@@ -12,7 +12,7 @@ class SdmAssembler extends SdmNms
 {
     /**
      * Assembles the html header for a page and incorporates stylesheets, scripts, and meta tags
-     * defined in enabled user and core app .as files, and in the current theme's .as file into the
+     * defined in enabled user and core app .as files, and in the current theme's .as file, into the
      * html header.
      *
      * Note: App stylesheets, scripts, and meta tags will always be incorporated first since the
