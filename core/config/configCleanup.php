@@ -9,7 +9,7 @@ foreach ($targets as $sessfile) {
 }
 
 /* Reset core error log. */
-file_put_contents($sdmcore->sdmCoreGetCoreDirectoryPath() . '/logs/sdm_core_errors.log', '', LOCK_EX);
+file_put_contents($sdmGatekeeper->sdmCoreGetCoreDirectoryPath() . '/logs/sdm_core_errors.log', '', LOCK_EX);
 
 /* Reset core bad request log. */
-file_put_contents($sdmcore->sdmCoreGetCoreDirectoryPath() . '/logs/badRequestsLog.log', '', LOCK_EX);
+file_put_contents($sdmGatekeeper->sdmCoreGetCoreDirectoryPath() . '/logs/badRequestsLog.log', '', LOCK_EX);

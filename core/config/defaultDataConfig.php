@@ -3,11 +3,13 @@
 /* Initialize default content */
 
 /* Homepage */
-$homepageMainContent = '<p>Welcome to your new SDM CMS powered site. To start adding content check out the <a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=contentManager">content manager</a></p>';
+$homepageMainContent = '<p>Welcome to your new SDM CMS powered site. To start adding content check out the <a href="' . $sdmGatekeeper->sdmCoreGetRootDirectoryUrl() . '/index.php?page=contentManager">content manager</a></p>';
 
 /* Sdm Cms Documentation */
 $sdmCmsDocumentationMainContent = '
-    <p>This page provides basic information about the Sdm Cms and it\'s components.</p>
+    <p>This page provides basic information about the Sdm Cms and it\'s components. At some point
+    it will revised to be much more descriptive of the SDM CMS and it\'s components. For now
+    this is a general overview.</p>
     <h3>Sdm Core :</h3>
     <p>Responsible for determining core paths and provides methods for interacting with core.</p>
     <h3>Sdm Assembler:</h3>
@@ -50,9 +52,9 @@ $config = array(
 $data = utf8_encode(trim(json_encode($config)));
 
 /* Store core data in data.json. */
-$dataStored = file_put_contents($sdmcore->sdmCoreGetDataDirectoryPath() . '/data.json', $data, LOCK_EX);
+$dataStored = file_put_contents($sdmGatekeeper->sdmCoreGetDataDirectoryPath() . '/data.json', $data, LOCK_EX);
 
 /* Display message indicating weather or not core data was written to data.json successfully. */
-$successMsg = '<h4 style="color:#00FF7F">Site configuration reset to defaults successfully</h4><p><a href="' . $sdmcore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=homepage">Click Here</a> to view your new SDM CMS powered site.</p>';
+$successMsg = '<h4 style="color:#00FF7F">Site configuration reset to defaults successfully</h4><p><a href="' . $sdmGatekeeper->sdmCoreGetRootDirectoryUrl() . '/index.php?page=homepage">Click Here</a> to view your new SDM CMS powered site.</p>';
 $failureMsg = '<h4 style="color:#FF0000">Error: Core data could not be written to data.json. Could not configure site!</h4>';
 echo($dataStored !== false ? $successMsg : $failureMsg);
