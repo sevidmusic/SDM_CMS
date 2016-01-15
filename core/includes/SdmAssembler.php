@@ -1,6 +1,7 @@
 <?php
 
 /**
+ *
  * The SdmAssembler() is responsible for loading and assembling page content.
  * It is also responsible for incorporating output from core and user apps into a
  * page.
@@ -9,26 +10,31 @@
  */
 class SdmAssembler extends SdmNms
 {
-
     /**
-     * <p>Returns the HTML header for the page as a string. The SdmAssembler will give apps
-     * a chance to modify the header prior to returning it. This method also reads app and theme
-     * .as files if provided and incorporates stylesheets scripts and meta
-     * tags defined in those files into the html header.</p>
-     * <p>NOTE: At the moment apps are only allowed to define the scripts property in their .as files.
-     * This will change in the future, however apps may not ever be allowed to provide stylesheets
-     * in order to keep styling and extended functionality separate, however this is debatable
-     * because not allowing apps to serve stylesheets defined in their .as files stylesheets
-     * property will force app developers to write clunky code into their apps in order
-     * to add app specific styles to their apps output without modifying the current theme.</p>
-     * <p>Also note, app scripts will always be loaded first so that they take precedent over theme scripts.
+     * Assembles the html header for a page. During assembly this method will reads
+     * any .as files provided by enabled apps or the current theme, and it will incorporate
+     * any stylesheets, scripts, or meta tags defined in those .as files into the
+     * html header by creating appropriately formatted link, script, or meta tags.
+     *
+     * NOTE: At the moment apps are only allowed to define the scripts property in their .as files.
+     * Apps will eventually be able to define meta tags in their .as files but may not ever be
+     * allowed to provide stylesheets because it is important to encourage developers to keep
+     * styling and extended functionality separate.
+     * However, not allowing apps to serve stylesheets via their .as files will force app developers
+     * to write clunky app code if an app requires custom styling not defined in the current theme. So
+     * it may be beneficial to allow apps to define stylesheets in their .as files. This is still
+     * up for debate.
+     *
+     * ALSO NOTE: App scripts will always be loaded first so that they take precedent over theme scripts.
      * This is done to encourage developers to build apps to serve their scripts rather then serving them
      * from a specific theme. Scripts served from a theme cannot be turned off from the UI and they will only
-     * work if the theme serving them is set to be the current theme, however scripts
-     * severed from apps can be turned off since apps can be turned off. The only reason themes are allowed
+     * work if the theme serving them is set to be the current theme, however scripts served from apps can
+     * be turned off by simply turning off the app that serves them. The only reason themes are allowed
      * to serve scripts from their .as files is because there may be rare circumstances where a developer
-     * needs a script for a specific theme.</p>
-     * @return string <p>The HTML header for the page.</p>
+     * needs a script for a specific theme to work.
+     *
+     * @return string The HTML header for the page.
+     *
      */
     public function sdmAssemblerAssembleHtmlHeader()
     {
