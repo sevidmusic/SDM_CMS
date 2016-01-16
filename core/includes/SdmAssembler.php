@@ -89,7 +89,7 @@ class SdmAssembler extends SdmNms
      * and assembles the necessary link, script, and meta tags needed to incorporate
      * them into the page.
      *
-     * @param $targetProperty string Header property to assemble.
+     * @param $targetProperty string Header property to assemble. (options: stylesheets, scripts, or meta)
      *
      * @param $source string Determines where the .as file should be loaded from. Either
      *                       theme, userApp, or coreApp.
