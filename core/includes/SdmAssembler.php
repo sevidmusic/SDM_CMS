@@ -209,18 +209,18 @@ class SdmAssembler extends SdmNms
         switch ($source) {
             case 'theme':
                 /* Read .as file into an array. */
-                $asFile = (file_exists($this->sdmCoreGetThemesDirectoryPath() . '/' . $sourceName . '/' . $sourceName . '.as') === true ? file($this->sdmCoreGetThemesDirectoryPath() . '/' . $sourceName . '/' . $sourceName . '.as') : false);
+                $asFile = $this->sdmAssemblerLoadAsFile($this->sdmCoreGetThemesDirectoryPath(), $sourceName);
                 break;
             case 'userApp':
                 /* Read .as file into an array. */
-                $asFile = (file_exists($this->sdmCoreGetUserAppDirectoryPath() . '/' . $sourceName . '/' . $sourceName . '.as') === true ? file($this->sdmCoreGetUserAppDirectoryPath() . '/' . $sourceName . '/' . $sourceName . '.as') : false);
+                $asFile = $this->sdmAssemblerLoadAsFile($this->sdmCoreGetUserAppDirectoryPath(), $sourceName);
                 break;
             case 'coreApp':
                 /* Read .as file into an array. */
-                $asFile = (file_exists($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $sourceName . '/' . $sourceName . '.as') === true ? file($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $sourceName . '/' . $sourceName . '.as') : false);
+                $asFile = $this->sdmAssemblerLoadAsFile($this->sdmCoreGetCoreAppDirectoryPath(), $sourceName);
                 break;
             default: /* Defaults to reading the current theme's .as file. */
-                $asFile = file($this->sdmCoreGetCurrentThemeDirectoryPath() . '/' . $this->sdmCoreDetermineCurrentTheme() . '.as');
+                $asFile = $this->sdmAssemblerLoadAsFile($this->sdmCoreGetThemesDirectoryPath(), $this->sdmCoreDetermineCurrentTheme());
                 break;
         }
         if ($asFile !== false) {
@@ -234,6 +234,22 @@ class SdmAssembler extends SdmNms
             }
         }
         return ($asFile === false ? false : (isset($properties) === true ? $properties : []));
+    }
+
+    /**
+     * Load a .as file from a specific path.
+     * @param $path The path where the .as file should exist.
+     * @param $sourceName The name associated with the .as file. (Do not include .as extension.)
+     *                    i.e., Load helloWorld user app's .as file
+     *                          GOOD CALL: loadAsFile('/path/to/userApps', 'helloWorld');
+     *                          BAD CALL: loadAsFile('/path/to/userApps', 'helloWorld.as');
+     * @return array|bool An array represent the .as file, or false on failure.
+     */
+    final private function sdmAssemblerLoadAsFile($path, $sourceName)
+    {
+        /* Build file path to our .as file */
+        $filePath = $path . '/' . $sourceName . '/' . $sourceName . '.as';
+        return (file_exists($filePath) === true ? file($filePath) : false);
     }
 
     /**
