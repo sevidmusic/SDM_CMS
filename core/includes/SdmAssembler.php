@@ -193,7 +193,7 @@ class SdmAssembler extends SdmNms
      *
      * @param string $sourceName The name of the theme or app whose .as file we are reading .as property values from.
      *
-     * @return array An array of values for the specified $property, or false on failure.
+     * @return array|bool An array of values for the specified $property, or false on failure.
      *
      *               Note: false will be returned if
      *               any of the following are true:
@@ -209,31 +209,22 @@ class SdmAssembler extends SdmNms
         switch ($source) {
             case 'theme':
                 /* Read .as file into an array. */
-                $asFile = $this->sdmAssemblerLoadAsFile($this->sdmCoreGetThemesDirectoryPath(), $sourceName);
+                $asFileArray = $this->sdmAssemblerLoadAsFile($this->sdmCoreGetThemesDirectoryPath(), $sourceName);
                 break;
             case 'userApp':
                 /* Read .as file into an array. */
-                $asFile = $this->sdmAssemblerLoadAsFile($this->sdmCoreGetUserAppDirectoryPath(), $sourceName);
+                $asFileArray = $this->sdmAssemblerLoadAsFile($this->sdmCoreGetUserAppDirectoryPath(), $sourceName);
                 break;
             case 'coreApp':
                 /* Read .as file into an array. */
-                $asFile = $this->sdmAssemblerLoadAsFile($this->sdmCoreGetCoreAppDirectoryPath(), $sourceName);
+                $asFileArray = $this->sdmAssemblerLoadAsFile($this->sdmCoreGetCoreAppDirectoryPath(), $sourceName);
                 break;
             default: /* Defaults to reading the current theme's .as file. */
-                $asFile = $this->sdmAssemblerLoadAsFile($this->sdmCoreGetThemesDirectoryPath(), $this->sdmCoreDetermineCurrentTheme());
+                $asFileArray = $this->sdmAssemblerLoadAsFile($this->sdmCoreGetThemesDirectoryPath(), $this->sdmCoreDetermineCurrentTheme());
                 break;
         }
-        if ($asFile !== false) {
-            /* loop through array | i.e., loop through each line of the .as file */
-            foreach ($asFile as $line) {
-                /* check if current $line is for $property */
-                if (strstr($line, '=', true) === $property) {
-                    /* store property values in an array */
-                    $properties = explode(',', $this->sdmCoreStrSlice($line, '=', ';'));
-                }
-            }
-        }
-        return ($asFile === false ? false : (isset($properties) === true ? $properties : []));
+        $properties = $this->sdmAssemblerRetrieveAsPropertyValues($property, $asFileArray);
+        return ($asFileArray === false || isset($properties) !== true ? false : $properties);
     }
 
     /**
@@ -250,6 +241,30 @@ class SdmAssembler extends SdmNms
         /* Build file path to our .as file. */
         $filePath = $path . '/' . $sourceName . '/' . $sourceName . '.as';
         return (file_exists($filePath) === true ? file($filePath) : false);
+    }
+
+    /**
+     * Retrieves a specified properties values from the array returned
+     * by sdmAssemblerLoadAsFile(). This method is for internal use only.
+     * @param string $property The property to retrieve values from.
+     * @param array|bool $asFileArray The return value from call to sdmAssemblerLoadAsFile().
+     *                                This will be either an array or the boolean value false.
+     * @return array|bool Array of property values for the specified property, or false on failure.
+     */
+    final private function sdmAssemblerRetrieveAsPropertyValues($property, $asFileArray)
+    {
+        if ($asFileArray !== false) {
+            /* Loop through array. i.e., loop through each line of the .as file. */
+            foreach ($asFileArray as $line) {
+                /* check if current $line is for $property */
+                if (strstr($line, '=', true) === $property) {
+                    /* store property values in an array */
+                    $properties = explode(',', $this->sdmCoreStrSlice($line, '=', ';'));
+                    return $properties;
+                }
+            }
+        }
+        return false;
     }
 
     /**
