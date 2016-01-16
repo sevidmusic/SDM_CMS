@@ -67,11 +67,13 @@ class SdmAssembler extends SdmNms
      */
     final private function sdmAssemblerAssembleEnabledAppProps()
     {
-        /* Assemble header properties for enabled core and user apps. */
+        /** Assemble header properties for enabled core and user apps. **/
+
         /* Initialize $appScriptProps var */
         $appScriptProps = '';
-        foreach ($this->sdmCoreDetermineEnabledApps() as $app) {
 
+        /* Loop through enabled apps. */
+        foreach ($this->sdmCoreDetermineEnabledApps() as $app) {
             /* We don't know if this is a user app or core app yet we look in both the user and core
             app dirs for a .as file in the apps dir if either exist. */
 
