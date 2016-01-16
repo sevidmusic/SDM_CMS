@@ -87,64 +87,82 @@ class SdmAssembler extends SdmNms
     /**
      * Assembles html for header properties specified in a theme or app's .as file
      * and assembles the necessary link, script, and meta tags needed to incorporate
-     * them into the page.
+     * them into the page. If no $source is specified then it is assumed that the
+     * header properties should be read from the current theme's .as file if it exists.
      *
      * @param $targetProperty string Header property to assemble. (options: stylesheets, scripts, or meta)
      *
-     * @param $source string Determines where the .as file should be loaded from. Either
-     *                       theme, userApp, or coreApp.
+     * @param $source string Determines where the .as file should be loaded from. (options: theme, userApp, or coreApp)
      *
-     *                       NOTE: If source is not set then it will be assumed that the $property
-     *                             values should be read from the current themes .as file.
+     *                       NOTE: Setting $targetProperty to 'theme' will reference the current theme's
+     *                             .as file. It is not possible to load header properties from any theme but
+     *                             the current theme.
+     *
+     *                       NOTE: If source is not set then it will be assumed that the header properties
+     *                             should be read from the current theme's .as file.
      *
      *                       IMPORTANT: If $source is set then $sourceName must also be set.
      *
-     * @param string $sourceName The name of the theme or app whose .as file we are reading .as property values from.
+     * @param string $sourceName The name of the theme or app whose .as file we are reading header properties from.
      *
-     * @return string <p>The html for the header property.
+     * @return string The html for the header properties.
      *
      */
     private function sdmAssemblerAssembleHeaderProperties($targetProperty, $source = null, $sourceName = null)
     {
-        /* initialize $html var */
+        /* Initialize $html var. */
         $html = '<!-- ' . ($source === null ? $this->sdmCoreDetermineCurrentTheme() . ' Theme ' . $targetProperty : ($source === 'userApp' ? 'User App' : ($source === 'coreApp' ? 'Core App' : 'Theme')) . ' ' . $sourceName . ' ' . $targetProperty) . ' -->';
-        /* store initial $html value so we can perform a check later to see if anything was appended
+
+        /* Store initial $html value so we can perform a check later to see if anything was appended
          to $html, if nothing was appended to $html by the end of this method then the attempt to
-        load the .as file properties failed */
+         load the .as file properties failed. */
         $initHtml = $html;
-        /* determine directory to load resources set by properties such as stylesheets, or scripts */
+
+        /* Determine path to resource directory. i.e., directory where stylesheets and scripts
+        defined in .as file are located. Defaults to current themes root directory. */
         $path = ($source === null ? $this->sdmCoreGetCurrentThemeDirectoryUrl() : ($source === 'theme' ? $this->sdmCoreGetThemesDirectoryUrl() . '/' . $sourceName : ($source === 'userApp' ? $this->sdmCoreGetUserAppDirectoryUrl() . '/' . $sourceName : ($source === 'coreApp' ? $this->sdmCoreGetCoreAppDirectoryUrl() . '/' . $sourceName : null))));
-        /* $this->sdmCoreSdmReadArray(array('path' => $path)); */
+
+        /* Attempt to read header properties from .as file if it exists. If no $source is specified
+         then the current themes .as file will be read if it exists. */
         $properties = ($source === null ? $this->sdmAssemblerGetAsProperty($targetProperty) : $this->sdmAssemblerGetAsProperty($targetProperty, $source, $sourceName));
-        if ($properties !== false) {
-            /* assemble property html */
-            if (!empty($properties) === true) {
-                foreach ($properties as $property) {
-                    if ($property == '') {
-                        error_log('.as file property "' . $targetProperty . '" has no value. | Source:  ' . $sourceName . '');
-                    } else {
-                        switch ($targetProperty) {
-                            case 'stylesheets':
-                                $html .= '<link rel="stylesheet" type="text/css" href="' . $path . '/' . trim($property) . '.css">';
-                                break;
-                            case 'scripts':
-                                $html .= '<script src="' . $path . '/' . trim($property) . '.js"></script>';
-                                break;
-                            case 'meta':
-                                /* At the moment meta tags are being hardcoded until it is determined
-                                how to parse the values in a .as file and translate them into the more
-                                complex structure of a meta tag. */
-                                $html .= '<meta name="description" content="Website powered by the SDM CMS"><meta name="author" content="Sevi Donnelly Foreman"><meta http-equiv="refresh" content="3000"><meta name="viewport" content="width=device-width, initial-scale=1.0">';
-                                break;
-                            default:
-                                error_log('Value "' . $property . '" from .as file property "' . $targetProperty . '" was not loaded, custom .as properties are not recognized. | Source:  ' . $sourceName);
-                                break;
-                        }
+
+        /* Create array of 'bad values' to check against prior to assembling the header properties html. */
+        $badValues = array('none', '', 'n/a', 'null', null, 'false', false);
+
+        /* Make sure $properties array is not false and is not empty. */
+        if ($properties !== false && !empty($properties) === true) {
+            /* Begin assembling  header property html for each of our header $properties. */
+            foreach ($properties as $property) {
+                /* Only assemble header property html if current $property value does not exist
+                 in our $badValues array */
+                if (!in_array($property, $badValues)) {
+                    switch ($targetProperty) {
+                        case 'stylesheets':
+                            $html .= '<link rel="stylesheet" type="text/css" href="' . $path . '/' . trim($property) . '.css">';
+                            break;
+                        case 'scripts':
+                            $html .= '<script src="' . $path . '/' . trim($property) . '.js"></script>';
+                            break;
+                        case 'meta':
+                            /* At the moment meta tags are being hardcoded until it is determined
+                            how to parse the meta header properties defined in a .as file and
+                            translate them into the more complex structure of a meta tag. */
+                            $html .= '
+                                    <meta name="description" content="Website powered by the SDM CMS">
+                                    <meta name="author" content="Sevi Donnelly Foreman">
+                                    <meta http-equiv="refresh" content="3000">
+                                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            ';
+                            break;
+                        default:
+                            $msg = 'Value "' . $property . '" from .as file property "' . $targetProperty . '" was
+                            not loaded, custom .as properties are not recognized. | Source:  ' . $sourceName;
+                            error_log($msg);
+                            break;
                     }
                 }
-            } else {
-                error_log('.as file property "' . $targetProperty . '" was not loaded because the "' . $targetProperty . '" property does not exist in the .as file. | Source:  ' . $sourceName);
             }
+
         }
         return ($html === $initHtml ? false : $html);
     }
