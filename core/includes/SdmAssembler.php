@@ -238,16 +238,16 @@ class SdmAssembler extends SdmNms
 
     /**
      * Load a .as file from a specific path.
-     * @param $path The path where the .as file should exist.
-     * @param $sourceName The name associated with the .as file. (Do not include .as extension.)
+     * @param string $path The path where the .as file should exist.
+     * @param string $sourceName The name associated with the .as file. (Do not include .as extension.)
      *                    i.e., Load helloWorld user app's .as file
      *                          GOOD CALL: loadAsFile('/path/to/userApps', 'helloWorld');
      *                          BAD CALL: loadAsFile('/path/to/userApps', 'helloWorld.as');
-     * @return array|bool An array represent the .as file, or false on failure.
+     * @return array|bool An array representing the data in the .as file, or false on failure.
      */
     final private function sdmAssemblerLoadAsFile($path, $sourceName)
     {
-        /* Build file path to our .as file */
+        /* Build file path to our .as file. */
         $filePath = $path . '/' . $sourceName . '/' . $sourceName . '.as';
         return (file_exists($filePath) === true ? file($filePath) : false);
     }
