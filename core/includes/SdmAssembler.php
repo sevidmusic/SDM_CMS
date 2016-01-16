@@ -68,6 +68,7 @@ class SdmAssembler extends SdmNms
     final private function sdmAssemblerAssembleEnabledAppProps()
     {
         /* Assemble header properties for enabled core and user apps. */
+        /* Initialize $appScriptProps var */
         $appScriptProps = '';
         foreach ($this->sdmCoreDetermineEnabledApps() as $app) {
 
@@ -85,27 +86,19 @@ class SdmAssembler extends SdmNms
     }
 
     /**
-     * Assembles html for header properties specified in a theme or app's .as file
-     * and assembles the necessary link, script, and meta tags needed to incorporate
-     * them into the page. If no $source is specified then it is assumed that the
-     * header properties should be read from the current theme's .as file if it exists.
+     * Assembles link script and meta tags for header properties defined in a specific theme or app's .as file.
      *
-     * @param $targetProperty string Header property to assemble. (options: stylesheets, scripts, or meta)
+     * @param $targetProperty string Property to read. (options: stylesheets, scripts, or meta)
      *
-     * @param $source string Determines where the .as file should be loaded from. (options: theme, userApp, or coreApp)
-     *
-     *                       NOTE: Setting $targetProperty to 'theme' will reference the current theme's
-     *                             .as file. It is not possible to load header properties from any theme but
-     *                             the current theme.
-     *
-     *                       NOTE: If source is not set then it will be assumed that the header properties
-     *                             should be read from the current theme's .as file.
+     * @param $source string Determines where the .as file should be loaded from. (options: theme, userApp, or coreApp).
+     *                       Defaults to current theme.
      *
      *                       IMPORTANT: If $source is set then $sourceName must also be set.
      *
      * @param string $sourceName The name of the theme or app whose .as file we are reading header properties from.
+     *                           $sourceName must be set if $source is set.
      *
-     * @return string The html for the header properties.
+     * @return string String of link script and meta tags formatted appropriately for html.
      *
      */
     private function sdmAssemblerAssembleHeaderProperties($targetProperty, $source = null, $sourceName = null)
@@ -131,7 +124,7 @@ class SdmAssembler extends SdmNms
 
         /* Make sure $properties array is not false and is not empty. */
         if ($properties !== false && !empty($properties) === true) {
-            /* Begin assembling  header property html for each of our header $properties. */
+            /* Begin assembling  link script and meta tags for each of our header $properties. */
             foreach ($properties as $property) {
                 /* Only assemble header property html if current $property value does not exist
                  in our $badValues array */
@@ -168,49 +161,66 @@ class SdmAssembler extends SdmNms
     }
 
     /**
-     * <p>Returns an array of values for a specified property from a
-     * specified theme or app <b>.as</b> file.</p>
-     * @param string $property <p>The property whose values should be returned in an array. (e.g., 'stylesheets')</p>
-     * @param string $source <p>Determines where the .as file should be loaded from. Either
-     *                       <b>theme</b>, <b>userApp</b>, or <b>coreApp</b>.</p>
-     *                       <p><i>NOTE: If source is not set then it will be assumed that the $property
-     *                          values should be read from the current themes .as file as this was the original
-     *                          purpose of this method. It evolved to target specific .as files from specific
-     *                          apps and themes so developers could have their themes and apps incorporate stylesheets,
-     *                          scripts, and add meta tags to the header of the page by providing a .as file.
-     *                          This method can also be used by developers in apps and themes to do things
-     *                          with the values set in a specific .as file. For instance, maybe an app
-     *                          provides a UI display to show the current .as settings of a specific theme or app.
-     *                          Such a feat would be accomplished by calling this method and then doing something
-     *                          with the returned array.<br/>
-     *                          <b>IMPORTANT: If $source is set then $sourceName must also be set.</b></i></p>
-     * @param string $sourceName <p>The name of the theme or app whose .as file we are reading .as property values from.</p>
-     * @return array <p>An array of values for the specified $property.
-     *               <br/><i><b>Note:</b> An empty array will be returned if
-     *               any of the following are true:</i></p>
-     *               <ul>
-     *                  <li>if property is not set in .as file</li>
-     *                  <li>if it is set but it does not have any values</li>
-     *                  <li>if the method failed to get the property values.</li>
-     *               </ul>
+     * Returns an array of values for a specified property from a
+     * specified theme or app's .as file.
+     *
+     * @param string $property The property whose values should be returned in an array. (e.g., 'stylesheets')
+     *
+     * @param string $source Determines where the .as file should be loaded from. Either
+     *                       theme, userApp, or coreApp.
+     *
+     *                       NOTE: If source is not set then it will be assumed that the $property
+     *                       values should be read from the current theme's .as file as this was the original
+     *                       purpose of this method. It evolved to target specific .as files from specific
+     *                       apps so developers could have their themes and apps incorporate stylesheets,
+     *                       scripts, and add meta tags to the header of the page by providing a .as file.
+     *                       This method can also be used by developers in apps and themes to target a specific
+     *                       .as file and read it's properties.
+     *
+     *                       e.g.,
+     *
+     *                         sdmAssemblerGetAsProperty('script', 'userApp', 'jQuery');
+     *
+     *                       Returns an array of scripts defined in
+     *                       the jQuery user app's .as file if it exists,
+     *                       or false on failure.
+     *
+     *                       IMPORTANT: If $source is set then $sourceName must also be set.
+     *
+     *                       sdmAssemblerGetAsProperty('script', 'userApp')
+     *
+     *                       The code above fails because no user app is specified.
+     *
+     * @param string $sourceName The name of the theme or app whose .as file we are reading .as property values from.
+     *
+     * @return array An array of values for the specified $property, or false on failure.
+     *
+     *               Note: false will be returned if
+     *               any of the following are true:
+     *
+     *               * If .as file does not exist.
+     *               * If property is not set in .as file.
+     *               * If listed but not defined, i.e., property is set in .as file but does not have any values.
+     *               * If the method failed to get the property values far any other reason.
+     *
      */
     private function sdmAssemblerGetAsProperty($property, $source = null, $sourceName = null)
     {
         switch ($source) {
             case 'theme':
-                /* read .as file into an array */
-                $asFile = @file($this->sdmCoreGetThemesDirectoryPath() . '/' . $sourceName . '/' . $sourceName . '.as');
+                /* Read .as file into an array. */
+                $asFile = (file_exists($this->sdmCoreGetThemesDirectoryPath() . '/' . $sourceName . '/' . $sourceName . '.as') === true ? file($this->sdmCoreGetThemesDirectoryPath() . '/' . $sourceName . '/' . $sourceName . '.as') : false);
                 break;
             case 'userApp':
-                /* read .as file into an array */
-                $asFile = @file($this->sdmCoreGetUserAppDirectoryPath() . '/' . $sourceName . '/' . $sourceName . '.as');
+                /* Read .as file into an array. */
+                $asFile = (file_exists($this->sdmCoreGetUserAppDirectoryPath() . '/' . $sourceName . '/' . $sourceName . '.as') === true ? file($this->sdmCoreGetUserAppDirectoryPath() . '/' . $sourceName . '/' . $sourceName . '.as') : false);
                 break;
             case 'coreApp':
-                /* read .as file into an array */
-                $asFile = @file($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $sourceName . '/' . $sourceName . '.as');
+                /* Read .as file into an array. */
+                $asFile = (file_exists($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $sourceName . '/' . $sourceName . '.as') === true ? file($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $sourceName . '/' . $sourceName . '.as') : false);
                 break;
-            default: /* defaults to reading the current theme's .as file */
-                $asFile = @file($this->sdmCoreGetCurrentThemeDirectoryPath() . '/' . $this->sdmCoreDetermineCurrentTheme() . '.as');
+            default: /* Defaults to reading the current theme's .as file. */
+                $asFile = file($this->sdmCoreGetCurrentThemeDirectoryPath() . '/' . $this->sdmCoreDetermineCurrentTheme() . '.as');
                 break;
         }
         if ($asFile !== false) {
