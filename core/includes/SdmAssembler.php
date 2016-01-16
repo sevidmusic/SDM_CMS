@@ -106,20 +106,21 @@ class SdmAssembler extends SdmNms
     private function sdmAssemblerAssembleHeaderProperties($targetProperty, $source = null, $sourceName = null)
     {
         /* Initialize $html var. */
-        $html = '<!-- ' . ($source === null ? $this->sdmCoreDetermineCurrentTheme() . ' Theme ' . $targetProperty : ($source === 'userApp' ? 'User App' : ($source === 'coreApp' ? 'Core App' : 'Theme')) . ' ' . $sourceName . ' ' . $targetProperty) . ' -->';
+        $html = $this->sdmAssemblerAssembleInitialHeaderPropertyHtml($targetProperty, $source, $sourceName);
 
         /* Store initial $html value so we can perform a check later to see if anything was appended
          to $html, if nothing was appended to $html by the end of this method then the attempt to
          load the .as file properties failed. */
         $initHtml = $html;
 
-        /* Determine path to resource directory. i.e., directory where stylesheets and scripts
-        defined in .as file are located. Defaults to current themes root directory. */
-        $path = ($source === null ? $this->sdmCoreGetCurrentThemeDirectoryUrl() : ($source === 'theme' ? $this->sdmCoreGetThemesDirectoryUrl() . '/' . $sourceName : ($source === 'userApp' ? $this->sdmCoreGetUserAppDirectoryUrl() . '/' . $sourceName : ($source === 'coreApp' ? $this->sdmCoreGetCoreAppDirectoryUrl() . '/' . $sourceName : null))));
+        /* Determine path to resource directory based on $source and $sourceName.
+        i.e., directory where stylesheets and scripts defined in .as file are
+        located. Defaults to current themes root directory. */
+        $path = $this->sdmAssemblerDetermineAsFilePath($source, $sourceName);
 
         /* Attempt to read header properties from .as file if it exists. If no $source is specified
          then the current themes .as file will be read if it exists. */
-        $properties = ($source === null ? $this->sdmAssemblerGetAsProperty($targetProperty) : $this->sdmAssemblerGetAsProperty($targetProperty, $source, $sourceName));
+        $properties = $this->sdmAssemblerGetAsProperty($targetProperty, $source, $sourceName);
 
         /* Create array of 'bad values' to check against prior to assembling the header properties html. */
         $badValues = array('none', '', 'n/a', 'null', null, 'false', false);
@@ -160,6 +161,42 @@ class SdmAssembler extends SdmNms
 
         }
         return ($html === $initHtml ? false : $html);
+    }
+
+    /**
+     * Assembles the initial header property html.
+     *
+     * @param $targetProperty string Property to read. (options: stylesheets, scripts, or meta)
+     *
+     * @param $source string Determines where the .as file should be loaded from. (options: theme, userApp, or coreApp).
+     *                       Defaults to current theme.
+     *
+     *                       IMPORTANT: If $source is set then $sourceName must also be set.
+     *
+     * @param string $sourceName The name of the theme or app whose .as file we are reading header properties from.
+     *                           $sourceName must be set if $source is set.
+     *
+     * @return string Initial header property html.
+     */
+    final private function sdmAssemblerAssembleInitialHeaderPropertyHtml($targetProperty, $source, $sourceName)
+    {
+        return '<!-- ' . ($source === null ? $this->sdmCoreDetermineCurrentTheme() . ' Theme ' . $targetProperty : ($source === 'userApp' ? 'User App' : ($source === 'coreApp' ? 'Core App' : 'Theme')) . ' ' . $sourceName . ' ' . $targetProperty) . ' -->';
+    }
+
+    /**
+     * Determines path to .as file for a specified app or theme.
+     *
+     * @param string $source Determines where the .as file should be loaded from. (options: theme, userApp, or coreApp).
+     *                Defaults to current theme.
+     *
+     * @param string $sourceName The name of the theme or app whose .as file we are reading header properties from.
+     *                    $sourceName must be set if $source is set.
+     *
+     * @return null|string The path to the .as file for the specified app or theme. Returns null on failure.
+     */
+    final private function sdmAssemblerDetermineAsFilePath($source, $sourceName)
+    {
+        return ($source === null ? $this->sdmCoreGetCurrentThemeDirectoryUrl() : ($source === 'theme' ? $this->sdmCoreGetThemesDirectoryUrl() . '/' . $sourceName : ($source === 'userApp' ? $this->sdmCoreGetUserAppDirectoryUrl() . '/' . $sourceName : ($source === 'coreApp' ? $this->sdmCoreGetCoreAppDirectoryUrl() . '/' . $sourceName : null))));
     }
 
     /**
