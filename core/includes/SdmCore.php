@@ -140,7 +140,6 @@ class SdmCore
 
         /* If $requestPageOnly === TRUE remove all pages but the requested page from the DataObject. */
         if ($requestPageOnly === true) {
-
             /* Get the requested pages page content. This will be used to
              restore $datObject->content after it is unset. */
             $requestedPageContent = (isset($dataObject->content->$requestedPage) === true ? $dataObject->content->$requestedPage : new stdClass());
