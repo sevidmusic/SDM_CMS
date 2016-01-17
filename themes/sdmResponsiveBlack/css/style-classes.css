@@ -1,0 +1,78 @@
+/*
+    Document   : style-classes
+    Created on : Oct 28, 2015, 5:27:39 PM
+    Author     : seviforeman
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+body {
+    background: #000000;
+    margin: 0;
+    /** the following three lines prevent bg from repeating **/
+    height: 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.sdmResponsiveBlack {
+    color: #ffffff;
+    font-size: 24px;
+    font-family: serif;
+}
+
+.border-bottom {
+    border-top-color: #FFFFFF;
+    border-right-color: #FFFFFF;
+    border-bottom-color: #FFFFFF;
+    border-left-color: #FFFFFF;
+    border-width: 5px;
+    border-radius: 0;
+    border-style: none none double none;
+}
+
+.row-min-wid-fix {
+    min-width: 0;
+}
+
+.rounded {
+    border-radius: 20px;
+}
+
+.padded-row {
+    padding: 20px;
+}
+
+/* Tablet Styles */
+@media only screen and (min-width: 600px) {
+    body {
+        background: #000000;
+        margin: 0;
+        /** the following three lines prevent bg from repeating **/
+        height: 100%;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+
+    .row-min-wid-fix {
+        min-width: 0;
+    }
+}
+
+/* Desktop Styles */
+@media only screen and (min-width: 768px) {
+    body {
+        background: #000000;
+        margin: 0;
+        /** the following three lines prevent bg from repeating **/
+        height: 100%;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+
+    /* Prevent elements from collapsing on window resize on desktops by setting min-width for desktops */
+    .row-min-wid-fix {
+        min-width: 1100px;
+    }
+}
+
