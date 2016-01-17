@@ -68,7 +68,7 @@ class SdmCore
         $this->CurrentTheme = $this->sdmCoreDetermineCurrentTheme();
         $this->CurrentThemeDirectoryPath = $this->sdmCoreGetThemesDirectoryPath() . '/' . $this->sdmCoreDetermineCurrentTheme();
         $this->CurrentThemeDirectoryUrl = $this->sdmCoreGetThemesDirectoryUrl() . '/' . $this->sdmCoreDetermineCurrentTheme();
-        $this->availablePages = $this->sdmCoreDetermineAvailablePages();
+        /* $this->availablePages is set internally by sdmCoreLoadDataObject(); */
     }
 
     /**
@@ -119,6 +119,9 @@ class SdmCore
         $coreJson = $this->sdmCoreCurlGrabContent($this->sdmCoreGetDataDirectoryUrl() . '/data.json');
         // decode json to get our Data Object
         $dataObject = json_decode($coreJson);
+        /* Before modifying the loaded Data Object create an array of available pages so we dont have to
+        load data.json whenever we need to know the available pages */
+        $this->availablePages = array_keys(get_object_vars($dataObject->content));
         // if $requestPageOnly === TRUE only load $dataObject->content->$requestedPage
         if ($requestPageOnly === true) {
             // get the requested pages page content | this will be used to restore $datObject->content after it is unset
@@ -225,19 +228,7 @@ class SdmCore
      */
     final public function sdmCoreDetermineAvailablePages()
     {
-        // load our json data from data.json
-        $data = json_decode(json_encode($this->sdmCoreLoadDataObject(false)), true);
-        // we just want the KEYS from the content array as they correlate to the names of the pages of our site. i.e., $data['content']['homepage'] holds the homepage content.
-        $pages = array_keys($data['content']);
-        // attempt to format the array so the KEYS can be used for display, and the VALUES can be used in code | "pageName" will become "Page Name" and will be used as a key
-        // Note: Pages not named with the camelCase convention may not display intuitivly...
-        // @todo create a method that formats page names into camel case on page creation...
-        // intialize $availablePages array | will prevent PHP erros if no pages exist in CORE
-        $availablePages = array();
-        foreach ($pages as $page) {
-            $availablePages[ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', $page))] = $page;
-        }
-        return $availablePages;
+        return $this->availablePages;
     }
 
     /**
