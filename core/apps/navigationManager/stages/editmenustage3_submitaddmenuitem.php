@@ -14,5 +14,5 @@ $submittedMenuItem->menuItemKeyholders = SdmForm::sdmFormGetSubmittedFormValue('
 $submittedMenuItem->menuItemMachineName = SdmCore::SdmCoreGenerateMachineName(SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName'));
 $submittedMenuItem->menuItemPosition = SdmForm::sdmFormGetSubmittedFormValue('menuItemPosition');
 $submittedMenuItem->menuItemWrappingTagType = SdmForm::sdmFormGetSubmittedFormValue('menuItemWrappingTagType');
-$sdmnms->sdmNmsAddMenuItem(SdmForm::sdmFormGetSubmittedFormValue('menuId'), $submittedMenuItem);
+$sdmassembler->sdmNmsAddMenuItem(SdmForm::sdmFormGetSubmittedFormValue('menuId'), $submittedMenuItem);
 $sdmassembler->sdmAssemblerIncorporateAppOutput('<p>Menu Item Edits Saved Successfully</p>', array('incpages' => array('navigationManagerEditMenuStage3_submitaddmenuitem')));

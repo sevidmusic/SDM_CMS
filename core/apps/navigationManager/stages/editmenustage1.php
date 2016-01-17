@@ -1,6 +1,6 @@
 <?php
 
-$availableMenus = $sdmnms->sdmNmsGenerateMenuPropertiesArray('menuDisplayName', 'menuId');
+$availableMenus = $sdmassembler->sdmNmsGenerateMenuPropertiesArray('menuDisplayName', 'menuId');
 if (!empty($availableMenus) === true) {
     $editMenuSelectMenuForm = new SdmForm();
     $editMenuSelectMenuForm->form_method = 'post';

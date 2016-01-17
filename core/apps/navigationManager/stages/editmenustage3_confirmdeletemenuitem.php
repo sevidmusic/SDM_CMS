@@ -3,7 +3,7 @@
 $menuId = (SdmForm::sdmFormGetSubmittedFormValue('menuId') !== null ? SdmForm::sdmFormGetSubmittedFormValue('menuId') : $_GET['menuId']);
 $menuItemId = (SdmForm::sdmFormGetSubmittedFormValue('menuItemId') !== null ? SdmForm::sdmFormGetSubmittedFormValue('menuItemId') : $_GET['menuItemId']);
 // get menu name | @todo : here, and anywhere else that needs to get menu name should use a method called getMenuDisplayName() which needs to be created...
-$menu = $sdmnms->sdmNmsGetMenu($menuId);
+$menu = $sdmassembler->sdmNmsGetMenu($menuId);
 $menuName = $menu->menuDisplayName;
 // get menu item name
 $menuItemName = $menu->menuItems->$menuItemId->menuItemDisplayName;

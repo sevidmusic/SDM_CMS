@@ -12,6 +12,6 @@ $menu->menuMachineName = SdmCore::SdmCoreGenerateMachineName(SdmForm::sdmFormGet
 $menu->menuPlacement = SdmForm::sdmFormGetSubmittedFormValue('menuPlacement'); //
 $menu->menuWrappingTagType = SdmForm::sdmFormGetSubmittedFormValue('menuWrappingTagType'); //
 $menu->wrapper = SdmForm::sdmFormGetSubmittedFormValue('wrapper'); //
-$sdmnms->sdmNmsAddMenu($menu);
+$sdmassembler->sdmNmsAddMenu($menu);
 $sdmassembler->sdmAssemblerIncorporateAppOutput('<p>Menu Added Successfully (Still in Dev, Does not necessarily indicate succsessful menu add yet)</p>', array('incpages' => array('navigationManagerAddMenuStage4')));
 

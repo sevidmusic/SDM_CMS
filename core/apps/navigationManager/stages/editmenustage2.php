@@ -4,14 +4,14 @@
 // get menu id from edit menu stage 1 form submission
 $menuId = SdmForm::sdmFormGetSubmittedFormValue('menuId');
 // use menu id to load the menu we want to edit
-$menu = $sdmnms->sdmNmsGetMenu($menuId);
+$menu = $sdmassembler->sdmNmsGetMenu($menuId);
 // get the menu html for the menu we want to edit, this will be used as a preview of the menu in it's current state
-$menuHtml = $sdmnms->sdmNmsBuildMenuHtml($menu);
+$menuHtml = $sdmassembler->sdmNmsBuildMenuHtml($menu);
 // format current menu properties for use with edit menu form
 // determine available wrappers | run through SdmForm::setDefaultValues to set current wrapper as default element
 $availableWrappers = SdmForm::setDefaultValues($sdmcms->sdmCmsDetermineAvailableWrappers(), $menu->wrapper);
 // get menu item ids, used to find the first menu item by id
-$menuItemIds = $sdmnms->sdmNmsGetMenuItemIds($menu->menuId);
+$menuItemIds = $sdmassembler->sdmNmsGetMenuItemIds($menu->menuId);
 // get first menu item by id to use as a reference to determine what wrapping tag types should be available to the menu and other menu items
 $firstMenuItem = $menu->menuItems->$menuItemIds[0];
 // get first menu item's wrapping tag type, this is used to determine which tag types should be available to the form element menuWrappingTagType
