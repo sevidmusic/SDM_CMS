@@ -506,7 +506,7 @@ class SdmAssembler extends SdmNms
         }
 
         /* Check that $requested page was found in core or listed in the options:incpages array */
-        $pageFoundInCore = in_array($requestedPage, $this->sdmCoreListAvailablePages());
+        $pageFoundInCore = in_array($requestedPage, $this->sdmCoreDetermineAvailablePages());
         $pageFoundInIncpages = in_array($requestedPage, $options['incpages']);
         if ($pageFoundInCore === false && $pageFoundInIncpages === false) {
             return $this->DataObject;
@@ -589,7 +589,7 @@ class SdmAssembler extends SdmNms
              *   sdmAssemblerIncorporateAppOutput($this->DataObject, $output);
              *
              */
-            $pages = $this->sdmCoreListAvailablePages();
+            $pages = $this->sdmCoreDetermineAvailablePages();
             $enabledApps = json_decode(json_encode($this->sdmCoreDetermineEnabledApps()), true);
             $options['incpages'] = array_merge($pages, $enabledApps);
         }

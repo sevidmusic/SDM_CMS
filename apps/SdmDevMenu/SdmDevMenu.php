@@ -11,7 +11,7 @@ being done before loading our apps.</p>',
 );
 
 /* Determine available pages */
-$pages = $sdmassembler->sdmCoreListAvailablePages();
+$pages = $sdmassembler->sdmCoreDetermineAvailablePages();
 
 /* Determine enabled apps */
 $enabledApps = json_decode(json_encode($sdmassembler->sdmCoreDetermineEnabledApps()), true);

@@ -27,7 +27,7 @@ $editcontentform->form_elements = array(
 $i = 2;
 
 // array of available pages
-$available_pages = $sdmassembler->sdmCoreListAvailablePages();
+$available_pages = $sdmassembler->sdmCoreDetermineAvailablePages();
 foreach ($sdmcms->sdmCmsDetermineAvailableWrappers() as $displayValue => $machineValue) {
     if (!in_array($machineValue, array_filter(arrstristrchars($available_pages, $machineValue)))) {
         array_push($editcontentform->form_elements, array(

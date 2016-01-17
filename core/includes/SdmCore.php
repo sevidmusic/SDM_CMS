@@ -218,18 +218,6 @@ class SdmCore
         return $this->ThemesDirectoryUrl;
     }
 
-    /**
-     * Determines what pages exist for the current site returning an indexed array of all the pages.
-     * This method is used internally, and can also be used by developers to
-     * do things like create a security checks, for instance insuring only pages
-     * that actually exist and are part of the site are accessed.
-     * @return array An associative array structured array('Page Name' => 'pageName');
-     *
-     */
-    final public function sdmCoreDetermineAvailablePages()
-    {
-        return $this->availablePages;
-    }
 
     /**
      * Returns get_object_vars() for the calling object.
@@ -463,17 +451,14 @@ class SdmCore
     }
 
     /**
-     * <p>Returns an array of available pages as stored in the availablePages property.</p>
-     * <p><i>Note: This method was created so that components that needed to determine
-     * that available pages did not have to call sdmCoreDetermineAvailablePages()
-     * which resulted in sdmCoreLoadDataObject() being called more then necessary.
-     * Instead the sdmCoreDetermineAvailablePages() is called from withing SdmCore's
-     * constructor and the resulting array is stored in the availablePages property
-     * upon instantiation of an SdmCore() object. Again, this change is one of many
-     * changes being made to reduce the number of times data.json is loaded either
-     * explicitly or via sdmCoreLoadDataObject().</i></p>
+     * Determines what pages exist for the current site returning an indexed array of all the pages.
+     * This method is used internally, and can also be used by developers to
+     * do things like create a security checks, for instance insuring only pages
+     * that actually exist and are part of the site are accessed.
+     * @return array An associative array structured array('Page Name' => 'pageName');
+     *
      */
-    final public function sdmCoreListAvailablePages()
+    final public function sdmCoreDetermineAvailablePages()
     {
         return $this->availablePages;
     }

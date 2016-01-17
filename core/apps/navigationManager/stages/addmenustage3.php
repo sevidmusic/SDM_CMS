@@ -90,7 +90,7 @@ $addMenuFormStage3->form_elements = array(
         'id' => 'displaypages',
         'type' => 'checkbox',
         'element' => 'Pages to display menu on<i style="font-size:.7em;">(THIS NEEDS TO BE FIGURED OUT BETTER, POSSIBLY A CHECKLIST OF AVAILABLE PAGES...) FOR NOW all IS THE ONLY OPTION</i>',
-        'value' => array_merge($sdmassembler->sdmCoreListAvailablePages(), json_decode(json_encode($sdmassembler->sdmCoreDetermineEnabledApps()), true), array('all' => 'all')),
+        'value' => array_merge($sdmassembler->sdmCoreDetermineAvailablePages(), json_decode(json_encode($sdmassembler->sdmCoreDetermineEnabledApps()), true), array('all' => 'all')),
         'place' => '9',
     ),
     array(
