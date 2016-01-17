@@ -82,7 +82,7 @@ function randPara($numPara, $wordPerPara = 12, $wordLen = 12, $mode = null)
 
 if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmContentGenerator') {
     ini_set('max_execution_time', 3000);
-    $pageLimit = 50; // form element
+    $pageLimit = 25; // form element
     $wrappers = $cm->sdmCmsDetermineAvailableWrappers(); // form element |
     $genPagenames = array();
     for ($index = 0; $index < $pageLimit; $index++) {
