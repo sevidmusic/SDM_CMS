@@ -193,6 +193,7 @@ class SdmAssembler extends SdmNms
      *                    $sourceName must be set if $source is set.
      *
      * @return null|string The path to the .as file for the specified app or theme. Returns null on failure.
+     *
      */
     final private function sdmAssemblerDetermineAsFilePath($source, $sourceName)
     {
@@ -494,32 +495,36 @@ class SdmAssembler extends SdmNms
     {
         /* determine the requested page */
         $requestedPage = $this->sdmCoreDetermineRequestedPage();
+
         /* filter options array to insure it's integrity */
         $this->filterOptionsArray($options);
-        /* first we check if app output is restricted to certain roles. if it is we check that
-        current user role matches one of the valid roles for the app. If the special 'all' role
-        is in the $options['roles'] array then all users see the app output */
-        $validUser = (in_array($this->SdmGatekeeperDetermineUserRole(), $options['roles']) || in_array('all', $options['roles']) ? true : false);
+
         /* make sure user has permission to use this app. if user does NOT, then return
         the DataObject without modification. */
-        if ($validUser !== true) {
+        if ($this->sdmAssemblerUserCanUseApp($options) !== true) {
             return $this->DataObject;
         }
+
         /* Check that $requested page was found in core or listed in the options:incpages array */
         $pageFoundInCore = in_array($requestedPage, $this->sdmCoreListAvailablePages());
         $pageFoundInIncpages = in_array($requestedPage, $options['incpages']);
         if ($pageFoundInCore === false && $pageFoundInIncpages === false) {
             return $this->DataObject;
         }
+
         /* DATAOBJECT check | Make sure the properties we are modifying exist to prevent throwing any PHP errors */
+
         /* Insure that page, weather in core or app generated, is accessible via the DataObject. */
         $this->sdmAssemblerPrepareAppGeneratedPage();
+
         /* Insure the target wrapper is accessible via the DataObject. */
         $this->sdmAssemblerPrepareTargetWrapper($options);
+
         /* make sure requested page is not in the ignorepages array, if it is return DataObject without modification. */
         if (in_array($requestedPage, $options['ignorepages'])) {
             return $this->DataObject;
         }
+
         /* Only incorporate app output if requested page matches one of the items in incpages */
         if (in_array($requestedPage, $options['incpages'], true)) {
             switch ($options['incmethod']) {
@@ -595,6 +600,23 @@ class SdmAssembler extends SdmNms
             $options['roles'] = ['all'];
         }
         return $options;
+    }
+
+    /**
+     * Determines if a user has permission to use app based on
+     * weather or not the current user role is found in the
+     * options array provided by the app.
+     *
+     * @param array $options The options array provided by the app.
+     *
+     * @return bool true if user has permission to use app, false if not.
+     */
+    final private function sdmAssemblerUserCanUseApp($options)
+    {
+        /* first we check if app output is restricted to certain roles. if it is we check that
+        current user role matches one of the valid roles for the app. If the special 'all' role
+        is in the $options['roles'] array then all users see the app output */
+        return (in_array($this->SdmGatekeeperDetermineUserRole(), $options['roles']) || in_array('all', $options['roles']) ? true : false);
     }
 
     /**
