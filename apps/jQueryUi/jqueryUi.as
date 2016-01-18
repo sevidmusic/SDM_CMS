@@ -1,1 +1,1 @@
-scripts=js/jquery-ui-1.11.2/jquery-ui;
+scripts=js/jquery-ui-1.11.2/jquery-ui, js/jQueryUiStatus;
