@@ -13,12 +13,11 @@ $(document).ready(function () {
      */
     function aniBg(target, colors, aniTime, index) {
         var limit = colors.length;
-        var lastIndex = index;
-        var newIndex = (index > limit) ? 0 : index + 1;
-        console.log('limit: ' + limit + ' | lastIndex: ' + lastIndex + ' | newIndex:' + newIndex);
-        $(target).animate({backgroundColor: colors[0]}, aniTime, function () {
+        var newIndex = ((index + 1) < limit) ? index + 1 : 0; // reset index if {index + 1} !< limit;
+        console.log('limit: ' + limit + ' | index: ' + index + ' | newIndex:' + newIndex);
+        $(target).animate({backgroundColor: colors[index]}, aniTime, function () {
 
-            $(target).animate({backgroundColor: colors[1]}, aniTime, function () {
+            $(target).animate({backgroundColor: colors[newIndex]}, aniTime, function () {
                 aniBg(target, colors, aniTime, newIndex);
             });
 
