@@ -11,16 +11,19 @@ $(document).ready(function () {
      * @param color
      * @param aniTime
      */
-    function aniBg(target, colors, aniTime) {
-
+    function aniBg(target, colors, aniTime, index) {
+        var limit = colors.length;
+        var lastIndex = index;
+        var newIndex = (index > limit) ? 0 : index + 1;
+        console.log('limit: ' + limit + ' | lastIndex: ' + lastIndex + ' | newIndex:' + newIndex);
         $(target).animate({backgroundColor: colors[0]}, aniTime, function () {
 
             $(target).animate({backgroundColor: colors[1]}, aniTime, function () {
-                anibg(target, colors, aniTime);
+                aniBg(target, colors, aniTime, newIndex);
             });
 
         });
     }
     /* Animate Background Color */
-    aniBg("html body",['#ffffff', '#FF3377'], 5420);
+    aniBg("html body",['#ffffff', '#00FF77'], 3420, 0);
 });
