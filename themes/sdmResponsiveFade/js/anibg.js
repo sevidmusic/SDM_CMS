@@ -1,18 +1,26 @@
 $(document).ready(function () {
-    /* Animate background color */
-    //$("html body").animate({backgroundColor: "#ffffff"}, 1420);
     /* Image url to background image we are inserting */
     var imageUrl = "http://localhost:8888/sdm_cms/themes/sdmResponsiveFade/imgs/sdm-cms-logo.png";
+
     /* Insert background image */
     $("html body").css('background-image', 'url(' + imageUrl + ')');
-    /* Pulsate */
-    var ar = $('html body');
 
-    function pulsate() {
-        ar.animate({backgroundColor: "#EEEEEE"}, 1420, function () {
-            ar.animate({backgroundColor: "#000000"}, 1420, pulsate);
+    /**
+     *
+     * @param target
+     * @param color
+     * @param aniTime
+     */
+    function aniBg(target, colors, aniTime) {
+
+        $(target).animate({backgroundColor: colors[0]}, aniTime, function () {
+
+            $(target).animate({backgroundColor: colors[1]}, aniTime, function () {
+                anibg(target, colors, aniTime);
+            });
+
         });
     }
-
-    pulsate();
+    /* Animate Background Color */
+    aniBg("html body",['#ffffff', '#FF3377'], 5420);
 });
