@@ -7,10 +7,10 @@ if (SdmGatekeeper::sdmGatekeeperAuthenticate() === true) {
 } else {
     // Build and display the Login form.
     $loginForm = new SdmForm();
-    $loginForm->form_handler = 'SdmAuthLogin';
+    $loginForm->formHandler = 'SdmAuthLogin';
     $loginForm->method = 'post';
     $loginForm->submitLabel = 'Login';
-    $loginForm->form_elements = array(
+    $loginForm->formElements = array(
         array(
             'id' => 'hidden_form_element',
             'type' => 'hidden',

@@ -5,9 +5,9 @@ require_once($sdmassembler->sdmCoreGetCoreAppDirectoryPath() . '/contentManager/
 
 // CREATE EDIT FORM OBJECT
 $editcontentform = new SdmForm();
-$editcontentform->form_handler = 'contentManagerUpdateContentFormSubmission';
+$editcontentform->formHandler = 'contentManagerUpdateContentFormSubmission';
 $editcontentform->method = 'post';
-$editcontentform->form_elements = array(
+$editcontentform->formElements = array(
     array(
         'id' => 'page',
         'type' => 'text',
@@ -23,14 +23,14 @@ $editcontentform->form_elements = array(
         'place' => '1',
     ),
 );
-// we need to set the 'place' attribute to be start at a great integer then the form elements already in our form_elements array, this form has defined 2 so we set our incrementer ($i) to 2
+// we need to set the 'place' attribute to be start at a great integer then the form elements already in our formElements array, this form has defined 2 so we set our incrementer ($i) to 2
 $i = 2;
 
 // array of available pages
 $available_pages = $sdmassembler->sdmCoreDetermineAvailablePages();
 foreach ($sdmcms->sdmCmsDetermineAvailableWrappers() as $displayValue => $machineValue) {
     if (!in_array($machineValue, array_filter(arrstristrchars($available_pages, $machineValue)))) {
-        array_push($editcontentform->form_elements, array(
+        array_push($editcontentform->formElements, array(
             'id' => $machineValue,
             'type' => 'textarea',
             'element' => "$displayValue (css id : <i>$machineValue</i>)",

@@ -2,7 +2,7 @@
 
 // CREATE EDIT FORM OBJECT
 $editcontentform = new SdmForm();
-$editcontentform->form_handler = 'contentManagerSelectThemeFormSubmission';
+$editcontentform->formHandler = 'contentManagerSelectThemeFormSubmission';
 $editcontentform->method = 'post';
 $available_themes = $sdmcms->sdmCmsDetermineAvailableThemes();
 $current_theme = $sdmcms->sdmCoreDetermineCurrentTheme();
@@ -17,7 +17,7 @@ foreach ($available_themes as $key => $value) {
 }
 
 
-$editcontentform->form_elements = array(
+$editcontentform->formElements = array(
     array(
         'id' => 'theme',
         'type' => 'select',

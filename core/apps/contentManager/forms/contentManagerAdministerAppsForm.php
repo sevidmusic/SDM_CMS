@@ -5,11 +5,11 @@ require_once($sdmassembler->sdmCoreGetCoreAppDirectoryPath() . '/contentManager/
 
 // CREATE EDIT FORM OBJECT
 $editcontentform = new SdmForm();
-$editcontentform->form_handler = 'contentManagerAdministerAppsFormSubmission';
+$editcontentform->formHandler = 'contentManagerAdministerAppsFormSubmission';
 $editcontentform->method = 'post';
 $available_apps = $sdmcms->sdmCmsDetermineAvailableApps();
 $enabled_apps = $sdmcms->sdmCoreDetermineEnabledApps();
-$editcontentform->form_elements = array(
+$editcontentform->formElements = array(
     array(
         'id' => 'content_manager_form_submitted',
         'type' => 'hidden',
@@ -23,7 +23,7 @@ $i = 1;
 // Create form elements for each available app
 foreach ($available_apps as $displayValue => $machineValue) {
     if (property_exists($enabled_apps, $machineValue)) {
-        array_push($editcontentform->form_elements, array(
+        array_push($editcontentform->formElements, array(
             'id' => $machineValue,
             'type' => 'radio',
             'element' => "$displayValue",
@@ -31,7 +31,7 @@ foreach ($available_apps as $displayValue => $machineValue) {
             'place' => $i,
         ));
     } else {
-        array_push($editcontentform->form_elements, array(
+        array_push($editcontentform->formElements, array(
             'id' => $machineValue,
             'type' => 'radio',
             'element' => "$displayValue",

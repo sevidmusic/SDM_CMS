@@ -8,9 +8,9 @@ switch (SdmForm::sdmFormGetSubmittedFormValue('menuItem') !== null) {
     case true:
         $addMenuFormStage2 = new SdmForm();
         $addMenuFormStage2->form_method = 'post';
-        $addMenuFormStage2->form_handler = (SdmForm::sdmFormGetSubmittedFormValue('menuItem') === SdmForm::sdmFormGetSubmittedFormValue('number_of_menu_items') ? 'navigationManagerAddMenuStage3' : 'navigationManagerAddMenuStage2');
+        $addMenuFormStage2->formHandler = (SdmForm::sdmFormGetSubmittedFormValue('menuItem') === SdmForm::sdmFormGetSubmittedFormValue('number_of_menu_items') ? 'navigationManagerAddMenuStage3' : 'navigationManagerAddMenuStage2');
         $addMenuFormStage2->submitLabel = 'Proceed to Edit Menu Settings';
-        $addMenuFormStage2->form_elements = array(
+        $addMenuFormStage2->formElements = array(
             array(// store number of menu items so each menu item form can reference it
                 'id' => 'number_of_menu_items',
                 'type' => 'hidden',
@@ -139,7 +139,7 @@ switch (SdmForm::sdmFormGetSubmittedFormValue('menuItem') !== null) {
                 'place' => '14',
             );
             // add the last submitted menu item to our menu items array
-            array_push($addMenuFormStage2->form_elements, $mi);
+            array_push($addMenuFormStage2->formElements, $mi);
             // display of preview of the menu so far
             $sdmassembler->sdmAssemblerIncorporateAppOutput('<div style="border:2px solid #777777;border-radius:9px;padding:20px;height:120px;overflow:auto;"><h3>Last Submitted Menu Item:</h3><p>Display Name: <span style="color:blue;">' . SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName') . '</span> | Destination Type : <span style="color:blue;">' . $lastSubmittedMenuItem->destinationType . '</span> | Destination: <span style="color:blue;">' . $lastSubmittedMenuItem->destination . '</span></p><h3>Menu Preview:</h3>' . $sdmassembler->sdmNmsBuildMenuItemsHtml($menuItems) . '</div>', array('incmethod' => 'prepend', 'incpages' => $options['incpages']));
         } else {
@@ -151,7 +151,7 @@ switch (SdmForm::sdmFormGetSubmittedFormValue('menuItem') !== null) {
                 'value' => $menuItems,
                 'place' => '14',
             );
-            array_push($addMenuFormStage2->form_elements, $mi);
+            array_push($addMenuFormStage2->formElements, $mi);
         }
         $addMenuFormStage2->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
         $sdmassembler->sdmAssemblerIncorporateAppOutput('<h3>Configure Menu Items</h3>' . $addMenuFormStage2->sdmFormGetForm(), array('incpages' => array('navigationManagerAddMenuStage2')));

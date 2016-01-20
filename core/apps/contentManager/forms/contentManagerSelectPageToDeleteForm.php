@@ -9,9 +9,9 @@ $available_pages = $sdmassembler->sdmCoreDetermineAvailablePages();
 $editable_pages = array_filter($available_pages, 'filter_content_manager_pages');
 // CREATE EDIT FORM OBJECT
 $editcontentform = new SdmForm();
-$editcontentform->form_handler = 'contentManagerDeletePageSubmission';
+$editcontentform->formHandler = 'contentManagerDeletePageSubmission';
 $editcontentform->method = 'post';
-$editcontentform->form_elements = array(
+$editcontentform->formElements = array(
     array(
         'id' => 'page_to_delete',
         'type' => 'select',

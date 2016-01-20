@@ -11,9 +11,9 @@ $firstMenuItemWrappingTagType = $firstMenuItem->menuItemWrappingTagType;
 $menuItem = $sdmassembler->sdmNmsGetMenuItem($_GET['menuId'], $_GET['menuItemId']);
 $editMenuItemForm = new SdmForm();
 $editMenuItemForm->form_method = 'post';
-$editMenuItemForm->form_handler = 'navigationManagerEditMenuStage3_submitmenuitemchanges';
+$editMenuItemForm->formHandler = 'navigationManagerEditMenuStage3_submitmenuitemchanges';
 $editMenuItemForm->submitLabel = 'Proceed to Edit Menu Settings';
-$editMenuItemForm->form_elements = array(
+$editMenuItemForm->formElements = array(
     array(
         'id' => 'menuId',
         'type' => 'hidden',
