@@ -13,7 +13,7 @@ $options = array(
 $output = '<h1>Sdm kind Demo:O</h1><p>The sdmKind() and sdmNice() methods are responsible for handling internal encryption and decryption for the SDM CMS.</p>';
 
 /* Text to be encrypted. */
-$text = 'This text will be encrypted differently each time it is passed to sdmKind(). What really cool is no matter how the text is encrypted sdmNice() will be able to decrypt it.';
+$text = 'This text will be encrypted differently each time it is passed to sdmKind() and no matter how the text is encrypted sdmNice() will be able to decrypt it.';
 
 /* Encrypt text. */
 $enc = $sdmassembler->sdmKind($text);
