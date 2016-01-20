@@ -2,8 +2,8 @@
 
 /**
  * The SdmAssembler() is responsible for loading and assembling page content.
- * It is also responsible for incorporating output from core and user apps into a
- * page.
+ * It is also responsible for incorporating output from core and user apps into
+ * a page.
  *
  * @author foremase
  *
@@ -42,27 +42,13 @@ class SdmAssembler extends SdmNms
 
     /**
      * Assembles the link, script, and meta tags that load the stylesheets scripts and meta tags
-     * for enabled apps that provide a .as file
+     * for all enabled apps that provide a .as file
      *
      * NOTE: At the moment apps are only allowed to define the scripts property in their .as files.
-     * Apps will eventually be able to define meta tags in their .as files but may not ever be
-     * allowed to provide stylesheets because it is important to encourage developers to keep
-     * styling and extended functionality separate.
-     * However, not allowing apps to serve stylesheets via their .as files will force app developers
-     * to write clunky app code if an app requires custom styling not defined in the current theme. So
-     * it may be beneficial to allow apps to define stylesheets in their .as files. This is still
-     * up for debate.
+     * Apps will eventually be able to define the meta and stylesheet properties.
      *
-     * ALSO NOTE: App scripts will always be loaded first so that they take precedent over theme scripts.
-     * This is done to encourage developers to build apps to serve their scripts rather then serving them
-     * from a specific theme. Scripts served from a theme cannot be turned off from the UI and they will only
-     * work if the theme serving them is set to be the current theme, however scripts served from apps can
-     * be turned off by simply turning off the app that serves them. The only reason themes are allowed
-     * to serve scripts from their .as files is because there may be rare circumstances where a developer
-     * needs a script for a specific theme to work.
-     *
-     * @return string String of link, script, and meta tags for any stylesheets, scripts, and meta tags defined
-     * in any enabled apps .as file.
+     * @return string String of link, script, and meta tags for any stylesheets, scripts, and meta properties
+     * defined in any enabled apps .as file.
      *
      */
     final private function sdmAssemblerAssembleEnabledAppProps()
@@ -74,8 +60,9 @@ class SdmAssembler extends SdmNms
 
         /* Loop through enabled apps. */
         foreach ($this->sdmCoreDetermineEnabledApps() as $app) {
-            /* We don't know if this is a user app or core app yet we look in both the user and core
-            app dirs for a .as file in the apps dir if either exist. */
+            /* We don't know if this is a user app or core app so we look in the user and core
+             app directories for any directory whose name matches the name of an enabled app
+             and then we check if a .as file is provided in those app's directories. */
 
             /* Look in user apps for .as file. */
             $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('scripts', 'userApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('scripts', 'userApp', $app));
@@ -100,7 +87,8 @@ class SdmAssembler extends SdmNms
      * @param string $sourceName The name of the theme or app whose .as file we are reading header properties from.
      *                           $sourceName must be set if $source is set.
      *
-     * @return string String of link script and meta tags formatted appropriately for html.
+     * @return string String of link script and meta tags for properties defined in .as file formatted appropriately
+     *                for html.
      *
      */
     private function sdmAssemblerAssembleHeaderProperties($targetProperty, $source = null, $sourceName = null)
