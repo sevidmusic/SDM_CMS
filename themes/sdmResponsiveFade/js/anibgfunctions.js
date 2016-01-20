@@ -31,7 +31,7 @@ function arrayRand(arr) {
  */
 function generateColors(numColors) {
     if (typeof(numColors) === 'undefined') numColors = 256;
-    colorsArr = [];
+    var colorsArr = [];
     var alpha = '0 1 2 3 4 5 6 7 8 9 A B C D E F';
     var alphaArr = alpha.split(" ");
     for (var i = 0; i < numColors; i++) {
