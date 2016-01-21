@@ -259,7 +259,7 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface
      * then the 'anonymous' role is returned.</p>
      * @return string <p>The user role</p>
      */
-    final public function SdmGatekeeperDetermineUserRole()
+    final public function sdmGatekeeperDetermineUserRole()
     {
         return (isset($_SESSION['userRole']) ? $_SESSION['userRole'] : 'anonymous');
     }

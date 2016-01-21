@@ -396,7 +396,7 @@ class SdmAssembler extends SdmNms
          * have permission to use this app, if the roles parameter has the 'all' value
          * in it then all users will be able to use this app.
          */
-        $userClear = ($gkParams === false || in_array($sdmassembler->SdmGatekeeperDetermineUserRole(), $gkParams['roles']) || in_array('all', $gkParams['roles']) ? true : false);
+        $userClear = ($gkParams === false || in_array($sdmassembler->sdmGatekeeperDetermineUserRole(), $gkParams['roles']) || in_array('all', $gkParams['roles']) ? true : false);
         $appPath = '/' . $app . '/' . $app . '.php';
         if ($userClear === true) {
             /* load apps */
@@ -605,7 +605,7 @@ class SdmAssembler extends SdmNms
         /* first we check if app output is restricted to certain roles. if it is we check that
         current user role matches one of the valid roles for the app. If the special 'all' role
         is in the $options['roles'] array then all users see the app output */
-        return (in_array($this->SdmGatekeeperDetermineUserRole(), $options['roles']) || in_array('all', $options['roles']) ? true : false);
+        return (in_array($this->sdmGatekeeperDetermineUserRole(), $options['roles']) || in_array('all', $options['roles']) ? true : false);
     }
 
     /**
