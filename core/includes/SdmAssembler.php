@@ -87,8 +87,8 @@ class SdmAssembler extends SdmNms
      * @param string $sourceName The name of the theme or app whose .as file we are reading header properties from.
      *                           $sourceName must be set if $source is set.
      *
-     * @return string String of link script and meta tags for properties defined in .as file formatted appropriately
-     *                for html.
+     * @return string String of link script and meta tags for properties defined in specified $sourceName's .as file
+     *                formatted appropriately for html.
      *
      */
     private function sdmAssemblerAssembleHeaderProperties($targetProperty, $source = null, $sourceName = null)
@@ -217,7 +217,8 @@ class SdmAssembler extends SdmNms
      *
      *                       sdmAssemblerGetAsProperty('script', 'userApp')
      *
-     *                       The code above fails because no user app is specified.
+     *                       The code above fails because no user app is specified, i.e., the $sourceName
+     *                       is not specified.
      *
      * @param string $sourceName The name of the theme or app whose .as file we are reading .as property values from.
      *
@@ -256,12 +257,12 @@ class SdmAssembler extends SdmNms
     }
 
     /**
-     * Load a .as file from a specific path.
+     * Load a .as file from a specific path and read it into an array.
      * @param string $path The path where the .as file should exist.
      * @param string $sourceName The name associated with the .as file. (Do not include .as extension.)
-     *                    i.e., Load helloWorld user app's .as file
-     *                          GOOD CALL: loadAsFile('/path/to/userApps', 'helloWorld');
-     *                          BAD CALL: loadAsFile('/path/to/userApps', 'helloWorld.as');
+     *                    i.e., Load helloWorld user app's .as file:
+     *                          GOOD CALL: loadAsFile('/path/to/userApps', 'helloWorld'); // succeeds
+     *                          BAD CALL: loadAsFile('/path/to/userApps', 'helloWorld.as'); // fails
      * @return array|bool An array representing the data in the .as file, or false on failure.
      */
     final private function sdmAssemblerLoadAsFile($path, $sourceName)
@@ -300,7 +301,7 @@ class SdmAssembler extends SdmNms
      * for the current theme if it provides a .as file.
      *
      * @return string  String of link, script, and meta tags for any stylesheets, scripts, and meta tags defined
-     * in the current theme's .as file if provided.
+     * in the current theme's .as file if provided, or false on failure.
      *
      */
 
@@ -309,10 +310,10 @@ class SdmAssembler extends SdmNms
         $themeProps = $this->sdmAssemblerAssembleHeaderProperties('meta') .
             $this->sdmAssemblerAssembleHeaderProperties('stylesheets') .
             $this->sdmAssemblerAssembleHeaderProperties('scripts');
-        return $themeProps;
+        return ($themeProps === '' || $themeProps === false ? false : $themeProps);
     }
 
-    /**
+    /** LAST CLEANUP CRUMB
      * <p>Loads and assembles a content object for the requested page.</p>
      * @return object A content object for the requested page.
      */
