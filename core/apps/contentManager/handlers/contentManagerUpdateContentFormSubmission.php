@@ -7,7 +7,7 @@ $options = array(
 );
 if ($sdmForm->sdmFormGetSubmittedFormValue('page') !== 'contentManager') {
     $output = '';
-// form submitted successfully
+    // form submitted successfully
     if ($sdmForm->sdmFormGetSubmittedFormValue('content_manager_form_submitted') === 'content_manager_form_submitted') {
         $output .= '
                     <!-- contentManager div -->

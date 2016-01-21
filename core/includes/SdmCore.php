@@ -406,10 +406,6 @@ class SdmCore
         return true;
     }
 
-/////////////////////////////////
-///////////// Data //////////////
-/////////////////////////////////
-
     /**
      *  Attempts to return a directory listing for the specified directory (i.e., $directoryName)
      * @param string $directoryName <p>The name of the directory to create a listing of.</p>
