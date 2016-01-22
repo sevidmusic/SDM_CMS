@@ -22,5 +22,5 @@ $sdmassembler->sdmCoreConfigureCore();
 /* Start or resume session. */
 $sdmassembler->sessionStart();
 
-/* Load and assemble the content object. | This var should be used exclusively by the current themes page.php. */
-$sdmassembler->sdmAssemblerLoadAndAssembleContentObject();
+/* Load and assemble the requested page's content. */
+$sdmassembler->sdmAssemblerLoadAndAssembleContent();

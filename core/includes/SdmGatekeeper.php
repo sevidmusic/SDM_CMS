@@ -255,13 +255,20 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface
     }
 
     /**
-     * <p>Determines user role, if user is not assigned a role
-     * then the 'anonymous' role is returned.</p>
-     * @return string <p>The user role</p>
+     * Checks if user has permission to use app based on .gk file settings.
+     *
+     * @param string $app The name of the app to check permissions for.
+     *
+     * @return bool Returns true if user has permission to use app, or false if
+     *              user does not have permission to use app.
      */
-    final public function sdmGatekeeperDetermineUserRole()
+    final protected function sdmGatekeeperUserClearToUseApp($app)
     {
-        return (isset($_SESSION['userRole']) ? $_SESSION['userRole'] : 'anonymous');
+        /* Read app gatekeeper parameters. */
+        $gkParams = $this->sdmGatekeeperReadAppGkParams($app);
+
+        /* Return true if user has permission to use app, or false if user does not have permission to use app */
+        return ($gkParams === false || in_array($this->sdmGatekeeperDetermineUserRole(), $gkParams['roles']) || in_array('all', $gkParams['roles']) ? true : false);
     }
 
     /**
@@ -313,6 +320,16 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface
             $paramValuesArray[$paramName] = explode(',', $paramValuesString);
         }
         return $paramValuesArray;
+    }
+
+    /**
+     * <p>Determines user role, if user is not assigned a role
+     * then the 'anonymous' role is returned.</p>
+     * @return string <p>The user role</p>
+     */
+    final public function sdmGatekeeperDetermineUserRole()
+    {
+        return (isset($_SESSION['userRole']) ? $_SESSION['userRole'] : 'anonymous');
     }
 
 }
