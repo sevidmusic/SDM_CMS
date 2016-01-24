@@ -5,8 +5,6 @@
  * It is also responsible for incorporating output from core and user apps into
  * a page.
  *
- * @author foremase
- *
  */
 class SdmAssembler extends SdmNms
 {
@@ -15,9 +13,8 @@ class SdmAssembler extends SdmNms
      * defined in enabled user and core app .as files, and in the current theme's .as file, into the
      * html header.
      *
-     * Note: App stylesheets, scripts, and meta tags will always be incorporated first since the
-     * purpose of apps is to extend, and we want to insure their .as settings take precedence over
-     * the current theme's .as file settings.
+     * Note: App stylesheets, scripts, and meta tags will always be assembled first because
+     * app .as settings must take precedence over the current theme's .as file settings.
      *
      * @return string The HTML header for the page.
      *
@@ -44,8 +41,8 @@ class SdmAssembler extends SdmNms
      * Assembles the link, script, and meta tags that load the stylesheets scripts and meta tags
      * for all enabled apps that provide a .as file
      *
-     * NOTE: At the moment apps are only allowed to define the scripts property in their .as files.
-     * Apps will eventually be able to define the meta and stylesheet properties.
+     * NOTE: At the moment only the scripts property is read from an app's .as file. In the future
+     * stylesheets and meta will also be read from an app's .as file.
      *
      * @return string String of link, script, and meta tags for any stylesheets, scripts, and meta properties
      * defined in any enabled apps .as file.
@@ -55,7 +52,7 @@ class SdmAssembler extends SdmNms
     {
         /** Assemble header properties for enabled core and user apps. **/
 
-        /* Initialize $appScriptProps var */
+        /* Initialize $appScriptProps var. */
         $appScriptProps = '';
 
         /* Loop through enabled apps. */
@@ -77,15 +74,16 @@ class SdmAssembler extends SdmNms
     /**
      * Assembles link script and meta tags for header properties defined in a specific theme or app's .as file.
      *
-     * @param $targetProperty string Property to read. (options: stylesheets, scripts, or meta)
+     * @param string $targetProperty Property to read. (options: stylesheets, scripts, or meta)
      *
-     * @param $source string Determines where the .as file should be loaded from. (options: theme, userApp, or coreApp).
-     *                       Defaults to current theme.
+     * @param string $source The type of component to assemble header properties for. (options: theme, userApp,
+     *                       or coreApp). Defaults to theme.
      *
      *                       IMPORTANT: If $source is set then $sourceName must also be set.
      *
      * @param string $sourceName The name of the theme or app whose .as file we are reading header properties from.
-     *                           $sourceName must be set if $source is set.
+     *
+     *                       IMPORTANT: $sourceName must be set if $source is set.
      *
      * @return string String of link script and meta tags for properties defined in specified $sourceName's .as file
      *                formatted appropriately for html.
@@ -101,9 +99,7 @@ class SdmAssembler extends SdmNms
          load the .as file properties failed. */
         $initHtml = $html;
 
-        /* Determine path to resource directory based on $source and $sourceName.
-        i.e., directory where stylesheets and scripts defined in .as file are
-        located. Defaults to current themes root directory. */
+        /* Determine path to resource directory based on $source and $sourceName. */
         $path = $this->sdmAssemblerDetermineAsFilePath($source, $sourceName);
 
         /* Attempt to read header properties from .as file if it exists. If no $source is specified
@@ -154,15 +150,16 @@ class SdmAssembler extends SdmNms
     /**
      * Assembles the initial header property html.
      *
-     * @param $targetProperty string Property to read. (options: stylesheets, scripts, or meta)
+     * @param string $targetProperty The target property. (options: stylesheets, scripts, or meta)
      *
-     * @param $source string Determines where the .as file should be loaded from. (options: theme, userApp, or coreApp).
-     *                       Defaults to current theme.
+     * @param string $source The type of component. (options: theme, userApp,
+     *                       or coreApp). Defaults to theme.
      *
      *                       IMPORTANT: If $source is set then $sourceName must also be set.
      *
-     * @param string $sourceName The name of the theme or app whose .as file we are reading header properties from.
-     *                           $sourceName must be set if $source is set.
+     * @param string $sourceName The name of the relevant theme or app.
+     *
+     *                       IMPORTANT: $sourceName must be set if $source is set.
      *
      * @return string Initial header property html.
      */
@@ -174,11 +171,13 @@ class SdmAssembler extends SdmNms
     /**
      * Determines path to .as file for a specified app or theme.
      *
-     * @param string $source Determines where the .as file should be loaded from. (options: theme, userApp, or coreApp).
-     *                Defaults to current theme.
+     * @param string $source The type of component (options: theme, userApp, or coreApp). Defaults to theme.
      *
-     * @param string $sourceName The name of the theme or app whose .as file we are reading header properties from.
-     *                    $sourceName must be set if $source is set.
+     *                    IMPORTANT: If $source is set then $sourceName must also be set.
+     *
+     * @param string $sourceName The name of the relevant theme or app.
+     *
+     *                    IMPORTANT: $sourceName must be set if $source is set.
      *
      * @return null|string The path to the .as file for the specified app or theme. Returns null on failure.
      *
@@ -189,48 +188,34 @@ class SdmAssembler extends SdmNms
     }
 
     /**
-     * Returns an array of values for a specified property from a
+     * Returns an array of values for a specified property defined in a
      * specified theme or app's .as file.
      *
-     * @param string $property The property whose values should be returned in an array. (e.g., 'stylesheets')
+     * NOTE: If $source is not set then the current themes .as file will be read.
      *
-     * @param string $source Determines where the .as file should be loaded from. Either
-     *                       theme, userApp, or coreApp.
+     * @param string $property The property whose values should be returned.
+     *                       (options: stylesheets, scripts, meta)
      *
-     *                       NOTE: If source is not set then it will be assumed that the $property
-     *                       values should be read from the current theme's .as file as this was the original
-     *                       purpose of this method. It evolved to target specific .as files from specific
-     *                       apps so developers could have their themes and apps incorporate stylesheets,
-     *                       scripts, and add meta tags to the header of the page by providing a .as file.
-     *                       This method can also be used by developers in apps and themes to target a specific
-     *                       .as file and read it's properties.
+     * @param string $source The type of component (options: theme, userApp, or coreApp). Defaults to theme.
      *
-     *                       e.g.,
+     *                    IMPORTANT: If $source is set then $sourceName must also be set.
      *
-     *                         sdmAssemblerGetAsProperty('script', 'userApp', 'jQuery');
+     * @param string $sourceName The name of the relevant theme or app.
      *
-     *                       Returns an array of scripts defined in
-     *                       the jQuery user app's .as file if it exists,
-     *                       or false on failure.
-     *
-     *                       IMPORTANT: If $source is set then $sourceName must also be set.
-     *
-     *                       sdmAssemblerGetAsProperty('script', 'userApp')
-     *
-     *                       The code above fails because no user app is specified, i.e., the $sourceName
-     *                       is not specified.
-     *
-     * @param string $sourceName The name of the theme or app whose .as file we are reading .as property values from.
+     *                       IMPORTANT: $sourceName must be set if $source is set.
      *
      * @return array|bool An array of values for the specified $property, or false on failure.
      *
      *               Note: false will be returned if
      *               any of the following are true:
      *
-     *               * If .as file does not exist.
-     *               * If property is not set in .as file.
-     *               * If listed but not defined, i.e., property is set in .as file but does not have any values.
-     *               * If the method failed to get the property values far any other reason.
+     *               - If .as file does not exist.
+     *
+     *               - If property is not set in .as file.
+     *
+     *               - If property listed in .as file but not defined.
+     *
+     *               - If the method failed to get the property values far any other reason.
      *
      */
     private function sdmAssemblerGetAsProperty($property, $source = null, $sourceName = null)
@@ -256,14 +241,17 @@ class SdmAssembler extends SdmNms
         return ($asFileArray === false || isset($properties) !== true ? false : $properties);
     }
 
-    /**
+    /***
      * Load a .as file from a specific path and read it into an array.
+     *
      * @param string $path The path where the .as file should exist.
-     * @param string $sourceName The name associated with the .as file. (Do not include .as extension.)
-     *                    i.e., Load helloWorld user app's .as file:
-     *                          GOOD CALL: loadAsFile('/path/to/userApps', 'helloWorld'); // succeeds
-     *                          BAD CALL: loadAsFile('/path/to/userApps', 'helloWorld.as'); // fails
+     *
+     * @param string $sourceName The name of the relevant theme or app.
+     *
+     *                       IMPORTANT: $sourceName must be set if $source is set.
+     *
      * @return array|bool An array representing the data in the .as file, or false on failure.
+     *
      */
     final private function sdmAssemblerLoadAsFile($path, $sourceName)
     {
@@ -275,19 +263,23 @@ class SdmAssembler extends SdmNms
     /**
      * Retrieves a specified properties values from the array returned
      * by sdmAssemblerLoadAsFile(). This method is for internal use only.
+     *
      * @param string $property The property to retrieve values from.
+     *
      * @param array|bool $asFileArray The return value from call to sdmAssemblerLoadAsFile().
      *                                This will be either an array or the boolean value false.
+     *
      * @return array|bool Array of property values for the specified property, or false on failure.
+     *
      */
     final private function sdmAssemblerRetrieveAsPropertyValues($property, $asFileArray)
     {
         if ($asFileArray !== false) {
             /* Loop through array. i.e., loop through each line of the .as file. */
             foreach ($asFileArray as $line) {
-                /* check if current $line is for $property */
+                /* Check if current $line matches $property. */
                 if (strstr($line, '=', true) === $property) {
-                    /* store property values in an array */
+                    /* Store property values in an array. */
                     $properties = explode(',', $this->sdmCoreStrSlice($line, '=', ';'));
                     return $properties;
                 }
@@ -438,13 +430,13 @@ class SdmAssembler extends SdmNms
     }
 
     /**
-     * <p style="font-size:9px;">Incorporates app output into the page.</p>
-     * <p style="font-size:9px;">This method is intended for use by CORE and User apps. It provides
+     * Incorporates app output into the page.
+     * This method is intended for use by CORE and User apps. It provides
      * a simple method for incorporating an app's output into the page. It is
-     * ok to call this method multiple times within an app.</p>
-     * <p style="font-size:9px;">If provided, the $options array is used to specify how the app's output
-     * is to be incorporated.</p>
-     * <p style="font-size:9px;"><b>NOTE</b>: If the requested page (determined internally) does not exist
+     * ok to call this method multiple times within an app.
+     * If provided, the $options array is used to specify how the app's output
+     * is to be incorporated.
+     * Note: If the requested page (determined internally) does not exist
      * in CORE, as an enabled app, or in the $options array's 'incpages' array then the dataObject will not be modified
      * and the apps output will not be incorporated. This is for security, and prevents requests to
      * non-existent pages from successfully taking user to a dynamically generated page.
@@ -453,51 +445,51 @@ class SdmAssembler extends SdmNms
      * So, if the requested page does not exist in CORE, it must at least exist as a on of the
      * pages specified in the $options array's 'incpages' array. Without this check we could pass anything
      * to the page argument in the url and the SDM CMS would generate a page for it.
-     * <br /><br />i.e, http://example.com/index.php?page=NonExistentPage would work if we did not check for it in CORE
-     * and in the 'incpages' array</p>
-     * @param string $output <p style="font-size:9px;"p>A plain text or HTML string to be used as the apps output.</p>
-     * @param array $options (optional) <p style="font-size:9px;">Array of options that determine how an app's
+     * i.e, http://example.com/index.php?page=NonExistentPage would work if we did not check for it in CORE
+     * and in the 'incpages' array
+     *
+     * @param string $output A plain text or HTML string to be used as the apps output.
+     *
+     * @param array $options (optional) Array of options that determine how an app's
      * output is incorporated. If not specified, then the app will be incorporated into
      * all pages and will be assigned to the 'main_content' wrapper that is part of, and,
-     * required by SDM CORE.<br />
-     * <br /><b>Overview of $options ARRAY:</b>
-     * <ul style="font-size:9px;">
-     *   <li>'wrapper' : The content wrapper the app is to be incorporated into.
-     *                   If not specified then 'main_content' is assumed</li>
-     *   <li>'incmethod' : Determines how app output should be incorporated.<br />
-     *                     Options for 'incmethod' are <b><i>append</i></b>,
-     *                     <b><i>prepend</i></b>, and <b><i>overwrite</i></b>. Defaults to <b>append</b>.
-     *   </li>
-     *   <li>'incpages' : Array of pages to incorporate the app output into. You can also pass in the name
+     * required by SDM CORE.
+     * Overview of $options ARRAY:
+     *
+     *   'wrapper' : The content wrapper the app is to be incorporated into.
+     *                   If not specified then 'main_content' is assumed.
+     *   'incmethod' : Determines how app output should be incorporated.
+     *                     Options for 'incmethod' are append,
+     *                     prepend, and overwrite. Defaults to append.
+     *   'incpages' : Array of pages to incorporate the app output into. You can also pass in the name
      *                    of an app and then any page that app generates will also incorporate the app out put
      *                    as long as the page the app generates shares the same name as the app itself.
      *                    (i.e. if you incpages has an item ExampleApp then the page ExampleApp
      *                          will incorporate app output even if the page ExampleApp does not
      *                          exist in CORE.)
-     *  <br />Note: If incpages is not set then it is assumed that all pages
+     *   Note: If incpages is not set then it is assumed that all pages
      *              are to incorporate app output. If an empty array is passed
      *              then NO pages will incorporate app output.
      *              (i.e., passing an empty array is basically the same as passing
      *                     in an ignorepages array that contains the names of all pages
-     *                     and enabled apps.</li>
-     *   <li>'ignorepages' : Array of pages NOT to incorporate the app output into. This
+     *                     and enabled apps.
+     *   'ignorepages' : Array of pages NOT to incorporate the app output into. This
      *                       array can include the names of Apps that should NOT incorporate
      *                       this output into pages that they generate.
-     *                      <br />(i.e, if an ExampleApp exists in ignorePages then any
+     *                      (i.e, if an ExampleApp exists in ignorePages then any
      *                             page generated by the ExampleApp app will not incorporate
-     *                             the app output)
-     *   </li>
-     *   <li>'roles' : Array of roles that can view this output.</li>
-     * </ul>
-     * <b>NOTE: If a page is found in both the 'incpages' and 'ignorepages' arrays then
+     *                             the app output).
+     *   'roles' : Array of roles that can view this output.
+     *
+     * NOTE: If a page is found in both the 'incpages' and 'ignorepages' arrays then
      *          the app output will be ignored on that page. This is for security, best to assume
      *          in such a case that the developer meant to ignore a page if the developer passes
-     *          a page to both the 'incpages' and 'ignorepages' arrays.</b>
-     * </p>
-     * @return object <p style="font-size:9px;">The DataObject with or without app modifications incorporated.
+     *          a page to both the 'incpages' and 'ignorepages' arrays.
+     *
+     * @return object The DataObject with or without app modifications incorporated.
      * The DataObject may be returned without modification for a number of reasons including the user not
      * having permission to view the app, the requested page being found in the options:ignorepages array or
-     * not being found in the options:incpages array, or a number of other factors.</p>
+     * not being found in the options:incpages array, or a number of other factors.
      */
     public function sdmAssemblerIncorporateAppOutput($output, array $options = [])
     {
