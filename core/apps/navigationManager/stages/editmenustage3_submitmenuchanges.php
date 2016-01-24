@@ -12,5 +12,5 @@ $menu->menuMachineName = SdmCore::SdmCoreGenerateMachineName(SdmForm::sdmFormGet
 $menu->menuPlacement = SdmForm::sdmFormGetSubmittedFormValue('menuPlacement'); //
 $menu->menuWrappingTagType = SdmForm::sdmFormGetSubmittedFormValue('menuWrappingTagType'); //
 $menu->wrapper = SdmForm::sdmFormGetSubmittedFormValue('wrapper'); //
-$sdmnms->sdmNmsUpdateMenu($menu->menuId, $menu);
+$sdmassembler->sdmNmsUpdateMenu($menu->menuId, $menu);
 $sdmassembler->sdmAssemblerIncorporateAppOutput('<p>Menu Edits Saved Successfully</p>', array('incpages' => array('navigationManagerEditMenuStage3_submitmenuchanges')));

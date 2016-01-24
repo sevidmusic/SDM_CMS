@@ -1,19 +1,19 @@
 <?php
 
-$menu = $sdmnms->sdmNmsGetMenu($_GET['menuId']);
+$menu = $sdmassembler->sdmNmsGetMenu($_GET['menuId']);
 // get menu item ids, used to find the first menu item by id
-$menuItemIds = $sdmnms->sdmNmsGetMenuItemIds($menu->menuId);
+$menuItemIds = $sdmassembler->sdmNmsGetMenuItemIds($menu->menuId);
 // get first menu item by id to use as a reference to determine what wrapping tag types should be available to the menu and other menu items
 $firstMenuItem = $menu->menuItems->$menuItemIds[0];
 // get first menu item's wrapping tag type, this is used to determine which tag types should be available to the form element menuWrappingTagType
 $firstMenuItemWrappingTagType = $firstMenuItem->menuItemWrappingTagType;
 // get the menu item we want to edit
-$menuItem = $sdmnms->sdmNmsGetMenuItem($_GET['menuId'], $_GET['menuItemId']);
+$menuItem = $sdmassembler->sdmNmsGetMenuItem($_GET['menuId'], $_GET['menuItemId']);
 $editMenuItemForm = new SdmForm();
 $editMenuItemForm->form_method = 'post';
-$editMenuItemForm->form_handler = 'navigationManagerEditMenuStage3_submitmenuitemchanges';
+$editMenuItemForm->formHandler = 'navigationManagerEditMenuStage3_submitmenuitemchanges';
 $editMenuItemForm->submitLabel = 'Proceed to Edit Menu Settings';
-$editMenuItemForm->form_elements = array(
+$editMenuItemForm->formElements = array(
     array(
         'id' => 'menuId',
         'type' => 'hidden',
@@ -39,7 +39,7 @@ $editMenuItemForm->form_elements = array(
         'id' => 'destinationInternal',
         'type' => 'select',
         'element' => 'Destination <i style="font-size:.7em;">(<b>internal</b>: Select a pagename from this menu if this menu item\'s destination type is internal.)</i>',
-        'value' => SdmForm::setDefaultValues(array_merge($sdmassembler->sdmCoreListAvailablePages(), json_decode(json_encode($sdmassembler->sdmCoreDetermineEnabledApps()), true)), $menuItem->destination),
+        'value' => SdmForm::setDefaultValues(array_merge($sdmassembler->sdmCoreDetermineAvailablePages(), json_decode(json_encode($sdmassembler->sdmCoreDetermineEnabledApps()), true)), $menuItem->destination),
         'place' => '4',
     ),
     array(

@@ -1,12 +1,12 @@
 <?php
 
-$availableMenus = $sdmnms->sdmNmsGenerateMenuPropertiesArray('menuDisplayName', 'menuId');
+$availableMenus = $sdmassembler->sdmNmsGenerateMenuPropertiesArray('menuDisplayName', 'menuId');
 if (!empty($availableMenus) === true) {
     $editMenuSelectMenuForm = new SdmForm();
     $editMenuSelectMenuForm->form_method = 'post';
-    $editMenuSelectMenuForm->form_handler = 'navigationManagerEditMenuStage2';
+    $editMenuSelectMenuForm->formHandler = 'navigationManagerEditMenuStage2';
     $editMenuSelectMenuForm->submitLabel = 'Proceed to Edit Menu Items';
-    $editMenuSelectMenuForm->form_elements = array(
+    $editMenuSelectMenuForm->formElements = array(
         array(
             'id' => 'menuId',
             'type' => 'select',

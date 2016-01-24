@@ -4,14 +4,14 @@
 require_once($sdmassembler->sdmCoreGetCoreAppDirectoryPath() . '/contentManager/includes/contentManagerFunctions.php');
 
 // determine available pages
-$available_pages = $sdmassembler->sdmCoreListAvailablePages();
+$available_pages = $sdmassembler->sdmCoreDetermineAvailablePages();
 // filter out "Content Manager" pages so they can not be editied
 $editable_pages = array_filter($available_pages, 'filter_content_manager_pages');
 // CREATE EDIT FORM OBJECT
 $editcontentform = new SdmForm();
-$editcontentform->form_handler = 'contentManagerEditContentForm';
+$editcontentform->formHandler = 'contentManagerEditContentForm';
 $editcontentform->method = 'post';
-$editcontentform->form_elements = array(
+$editcontentform->formElements = array(
     array(
         'id' => 'page_to_edit',
         'type' => 'select',

@@ -145,10 +145,10 @@ class SdmCms extends SdmCore
         $ignore = array('.DS_Store', '.', '..');
         foreach ($apps as $app) {
             if (!in_array($app, $ignore)) {
-                $available_apps[ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', $app))] = $app;
+                $availableApps[ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', $app))] = $app;
             }
         }
-        return $available_apps;
+        return $availableApps;
     }
 
     /**

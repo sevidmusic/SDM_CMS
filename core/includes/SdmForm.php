@@ -9,8 +9,8 @@ class SdmForm
 {
 
     // properties //
-    public $form_handler;
-    public $form_elements;
+    public $formHandler;
+    public $formElements;
     public $method;
     public $submitLabel;
     private $formId;
@@ -25,9 +25,9 @@ class SdmForm
      *
      * $form : The assembled form.
      *
-     * $form_handler : The form handler, either a path to a file that handles the form, or a the name of a function that handles the form
+     * $formHandler : The form handler, either a path to a file that handles the form, or a the name of a function that handles the form
      *
-     * $form_elements : (array) The elements that make up the form. i.e., <select>, <input>, <textarea>, etc...
+     * $formElements : (array) The elements that make up the form. i.e., <select>, <input>, <textarea>, etc...
      *
      * $method : The type of request, either 'get' or 'post', to issue.
      *
@@ -35,7 +35,7 @@ class SdmForm
     public function __construct()
     {
         $this->formId = (isset($this->formId) ? $this->formId : $this->sdmFormGenerateFormId());
-        $this->form_elements = (isset($this->form_elements) ? $this->form_elements : array(
+        $this->formElements = (isset($this->formElements) ? $this->formElements : array(
             // default form element example
             array(
                 'id' => 'text_form_element',
@@ -86,7 +86,7 @@ class SdmForm
             ),
         ));
         $this->method = (isset($this->method) ? $this->method : 'post');
-        $this->form_handler = (isset($this->form_handler) ? $this->form_handler : '');
+        $this->formHandler = (isset($this->formHandler) ? $this->formHandler : '');
         $this->form = (isset($this->form) ? $this->form : $this->sdmFormBuildForm());
         $this->submitLabel = (isset($this->submitLabel) ? $this->submitLabel : 'Submit');
     }
@@ -135,17 +135,17 @@ class SdmForm
             $rootUrl = str_replace('/index.php', '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']);
         }
         // intial form html
-        $formHtml = '<!-- form "' . $this->sdmFormGetFormId() . '" --><form method="' . $this->method . '" action="' . $rootUrl . '/index.php?page=' . $this->form_handler . '">';
+        $formHtml = '<!-- form "' . $this->sdmFormGetFormId() . '" --><form method="' . $this->method . '" action="' . $rootUrl . '/index.php?page=' . $this->formHandler . '">';
 
         // first sort elements based on element's "place"
-        $element_order = array(); // used to sort items
-        foreach ($this->form_elements as $key => $value) {
-            $element_order[$key] = $value['place'];
+        $elementOrder = array(); // used to sort items
+        foreach ($this->formElements as $key => $value) {
+            $elementOrder[$key] = $value['place'];
         }
-        array_multisort($element_order, SORT_ASC, $this->form_elements);
+        array_multisort($elementOrder, SORT_ASC, $this->formElements);
 
         // build form
-        foreach ($this->form_elements as $key => $value) {
+        foreach ($this->formElements as $key => $value) {
             switch ($value['type']) {
                 case 'text':
                     $formHtml = $formHtml . '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><input name="SdmForm[' . $value['id'] . ']" type="text" ' . (isset($value['value']) ? 'value="' . $value['value'] . '"' : '') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
@@ -158,21 +158,21 @@ class SdmForm
                     break;
                 case 'select':
                     $formHtml = $formHtml . '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><select name="SdmForm[' . $value['id'] . ']">';
-                    foreach ($value['value'] as $option => $option_value) {
-                        $formHtml = $formHtml . '<option value="' . (substr($option_value, 0, 8) === 'default_' ? $this->sdmFormEncode(str_replace('default_', '', $option_value)) . '" selected="selected"' : $this->sdmFormEncode($option_value) . '"') . '>' . $option . '</option>';
+                    foreach ($value['value'] as $option => $optionValue) {
+                        $formHtml = $formHtml . '<option value="' . (substr($optionValue, 0, 8) === 'default_' ? $this->sdmFormEncode(str_replace('default_', '', $optionValue)) . '" selected="selected"' : $this->sdmFormEncode($optionValue) . '"') . '>' . $option . '</option>';
                     }
                     $formHtml = $formHtml . '</select><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
                     break;
                 case 'radio':
                     $formHtml = $formHtml . '<!-- form element "SdmForm[' . $value['id'] . ']" --><p id="label-for-SdmForm[' . $value['id'] . ']">' . $value['element'] . '</p>';
-                    foreach ($value['value'] as $radio => $radio_value) {
-                        $formHtml = $formHtml . '<label  for="SdmForm[' . $value['id'] . ']">' . $radio . '</label><input type="radio" name="SdmForm[' . $value['id'] . ']" value="' . (substr($radio_value, 0, 8) === 'default_' ? $this->sdmFormEncode(str_replace('default_', '', $radio_value)) . '" checked="checked"' : $this->sdmFormEncode($radio_value) . '"') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+                    foreach ($value['value'] as $radio => $radioValue) {
+                        $formHtml = $formHtml . '<label  for="SdmForm[' . $value['id'] . ']">' . $radio . '</label><input type="radio" name="SdmForm[' . $value['id'] . ']" value="' . (substr($radioValue, 0, 8) === 'default_' ? $this->sdmFormEncode(str_replace('default_', '', $radioValue)) . '" checked="checked"' : $this->sdmFormEncode($radioValue) . '"') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
                     }
                     break;
                 case 'checkbox':
                     $formHtml = $formHtml . '<!-- form element "SdmForm[' . $value['id'] . ']" --><p id="label-for-SdmForm[' . $value['id'] . ']">' . $value['element'] . '</p>';
-                    foreach ($value['value'] as $checkbox => $checkbox_value) {
-                        $formHtml = $formHtml . '<label  for="SdmForm[' . $value['id'] . ']">' . $checkbox . '</label><input type="checkbox" name="SdmForm[' . $value['id'] . '][]" value="' . (substr($checkbox_value, 0, 8) === 'default_' ? $this->sdmFormEncode(str_replace('default_', '', $checkbox_value)) . '" checked="checked"' : $this->sdmFormEncode($checkbox_value) . '"') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+                    foreach ($value['value'] as $checkbox => $checkboxValue) {
+                        $formHtml = $formHtml . '<label  for="SdmForm[' . $value['id'] . ']">' . $checkbox . '</label><input type="checkbox" name="SdmForm[' . $value['id'] . '][]" value="' . (substr($checkboxValue, 0, 8) === 'default_' ? $this->sdmFormEncode(str_replace('default_', '', $checkboxValue)) . '" checked="checked"' : $this->sdmFormEncode($checkboxValue) . '"') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
                     }
                     break;
                 case 'hidden':

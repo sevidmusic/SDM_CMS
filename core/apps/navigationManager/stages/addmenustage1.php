@@ -7,9 +7,9 @@
  */
 $addMenuFormStage1 = new SdmForm();
 $addMenuFormStage1->form_method = 'post';
-$addMenuFormStage1->form_handler = 'navigationManagerAddMenuStage2';
+$addMenuFormStage1->formHandler = 'navigationManagerAddMenuStage2';
 $addMenuFormStage1->submitLabel = 'Proceed to Edit Menu Items';
-$addMenuFormStage1->form_elements = array(
+$addMenuFormStage1->formElements = array(
     array(
         'id' => 'number_of_menu_items',
         'type' => 'select',

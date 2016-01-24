@@ -11,7 +11,6 @@ $mainMenuItem1->menuItemDisplayName = 'Homepage';
 $mainMenuItem1->menuItemEnabled = '1';
 $mainMenuItem1->menuItemId = rand(100, 99999) . chr(rand(65, 90)) . rand(100, 99999) . chr(rand(65, 90)) . chr(rand(65, 90)) . rand(100, 99999);
 $mainMenuItem1->menuItemKeyholders = array('all');
-/** @todo change to admin once gatekeeper is developed */
 $mainMenuItem1->menuItemMachineName = 'homepage';
 $mainMenuItem1->menuItemPosition = 1;
 $mainMenuItem1->menuItemWrappingTagType = 'li';
@@ -26,7 +25,6 @@ $mainMenuItem2->menuItemDisplayName = 'Manage Content';
 $mainMenuItem2->menuItemEnabled = '1';
 $mainMenuItem2->menuItemId = rand(100, 99999) . chr(rand(65, 90)) . rand(100, 99999) . chr(rand(65, 90)) . chr(rand(65, 90)) . rand(100, 99999);
 $mainMenuItem2->menuItemKeyholders = array('root');
-/** @todo change to admin once gatekeeper is developed */
 $mainMenuItem2->menuItemMachineName = 'manage_content';
 $mainMenuItem2->menuItemPosition = 2;
 $mainMenuItem2->menuItemWrappingTagType = 'li';
@@ -41,7 +39,6 @@ $mainMenuItem3->menuItemDisplayName = 'Edit Menus';
 $mainMenuItem3->menuItemEnabled = '1';
 $mainMenuItem3->menuItemId = rand(100, 99999) . chr(rand(65, 90)) . rand(100, 99999) . chr(rand(65, 90)) . chr(rand(65, 90)) . rand(100, 99999);
 $mainMenuItem3->menuItemKeyholders = array('root');
-/** @todo change to admin once gatekeeper is developed */
 $mainMenuItem3->menuItemMachineName = 'edit_menus';
 $mainMenuItem3->menuItemPosition = 3;
 $mainMenuItem3->menuItemWrappingTagType = 'li';
@@ -56,7 +53,6 @@ $mainMenuItem4->menuItemDisplayName = 'Review Site Errors';
 $mainMenuItem4->menuItemEnabled = '1';
 $mainMenuItem4->menuItemId = rand(100, 99999) . chr(rand(65, 90)) . rand(100, 99999) . chr(rand(65, 90)) . chr(rand(65, 90)) . rand(100, 99999);
 $mainMenuItem4->menuItemKeyholders = array('root');
-/** @todo change to admin once gatekeeper is developed */
 $mainMenuItem4->menuItemMachineName = 'review_site_errors';
 $mainMenuItem4->menuItemPosition = 4;
 $mainMenuItem4->menuItemWrappingTagType = 'li';
@@ -71,7 +67,6 @@ $mainMenuItem5->menuItemDisplayName = 'Review Core';
 $mainMenuItem5->menuItemEnabled = '1';
 $mainMenuItem5->menuItemId = rand(100, 99999) . chr(rand(65, 90)) . rand(100, 99999) . chr(rand(65, 90)) . chr(rand(65, 90)) . rand(100, 99999);
 $mainMenuItem5->menuItemKeyholders = array('root');
-/** @todo change to admin once gatekeeper is developed */
 $mainMenuItem5->menuItemMachineName = 'review_core';
 $mainMenuItem5->menuItemPosition = 5;
 $mainMenuItem5->menuItemWrappingTagType = 'li';
@@ -86,7 +81,6 @@ $mainMenuItem6->menuItemDisplayName = 'Login';
 $mainMenuItem6->menuItemEnabled = '1';
 $mainMenuItem6->menuItemId = rand(100, 99999) . chr(rand(65, 90)) . rand(100, 99999) . chr(rand(65, 90)) . chr(rand(65, 90)) . rand(100, 99999);
 $mainMenuItem6->menuItemKeyholders = array('basic_user');
-/** @todo change to admin once gatekeeper is developed */
 $mainMenuItem6->menuItemMachineName = 'login';
 $mainMenuItem6->menuItemPosition = 50;
 $mainMenuItem6->menuItemWrappingTagType = 'li';
@@ -101,7 +95,6 @@ $mainMenuItem7->menuItemDisplayName = 'Logout';
 $mainMenuItem7->menuItemEnabled = '1';
 $mainMenuItem7->menuItemId = rand(100, 99999) . chr(rand(65, 90)) . rand(100, 99999) . chr(rand(65, 90)) . chr(rand(65, 90)) . rand(100, 99999);
 $mainMenuItem7->menuItemKeyholders = array('root');
-/** @todo change to admin once gatekeeper is developed */
 $mainMenuItem7->menuItemMachineName = 'login';
 $mainMenuItem7->menuItemPosition = 50;
 $mainMenuItem7->menuItemWrappingTagType = 'li';
@@ -120,7 +113,6 @@ $mainMenu->menuPlacement = 'prepend';
 $mainMenu->menuWrappingTagType = 'ul';
 $mainMenu->wrapper = 'top-menu';
 
-
 /** Footer Menu */
 $footerItem1 = new SdmMenuItem();
 $footerItem1->arguments = array('defaultMenuItem=true', 'linkedBy=footer_menu');
@@ -132,7 +124,6 @@ $footerItem1->menuItemDisplayName = 'Documentation';
 $footerItem1->menuItemEnabled = '1';
 $footerItem1->menuItemId = rand(100, 99999) . chr(rand(65, 90)) . rand(100, 99999) . chr(rand(65, 90)) . chr(rand(65, 90)) . rand(100, 99999);
 $footerItem1->menuItemKeyholders = array('all');
-/** @todo change to admin once gatekeeper is developed */
 $footerItem1->menuItemMachineName = 'documentation';
 $footerItem1->menuItemPosition = 1;
 $footerItem1->menuItemWrappingTagType = 'p';
@@ -147,7 +138,6 @@ $footerItem2->menuItemDisplayName = 'View SDM CMS on GitHub';
 $footerItem2->menuItemEnabled = '1';
 $footerItem2->menuItemId = rand(100, 99999) . chr(rand(65, 90)) . rand(100, 99999) . chr(rand(65, 90)) . chr(rand(65, 90)) . rand(100, 99999);
 $footerItem2->menuItemKeyholders = array('all');
-/** @todo change to admin once gatekeeper is developed */
 $footerItem2->menuItemMachineName = 'view_sdm_cms_on_github';
 $footerItem2->menuItemPosition = 2;
 $footerItem2->menuItemWrappingTagType = 'p';
@@ -162,11 +152,9 @@ $footerItem3->menuItemDisplayName = 'Go Home';
 $footerItem3->menuItemEnabled = '1';
 $footerItem3->menuItemId = rand(100, 99999) . chr(rand(65, 90)) . rand(100, 99999) . chr(rand(65, 90)) . chr(rand(65, 90)) . rand(100, 99999);
 $footerItem3->menuItemKeyholders = array('all');
-/** @todo change to admin once gatekeeper is developed */
 $footerItem3->menuItemMachineName = 'go_home';
 $footerItem3->menuItemPosition = 50;
 $footerItem3->menuItemWrappingTagType = 'p';
-
 $footerMenuItems = array($footerItem1->menuItemId => $footerItem1, $footerItem2->menuItemId => $footerItem2, $footerItem3->menuItemId => $footerItem3);
 
 $footerMenu = new SdmMenu();

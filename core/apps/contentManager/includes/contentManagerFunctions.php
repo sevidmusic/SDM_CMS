@@ -44,5 +44,3 @@ function filter_content_manager_pages($string)
 {
     return strpos($string, 'contentManager') === false;
 }
-
-?>

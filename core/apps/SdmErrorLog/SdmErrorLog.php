@@ -25,9 +25,9 @@ $sdmassembler->sdmAssemblerIncorporateAppOutput($output, array('wrapper' => 'mai
 
 // clear error form
 $clearErrorsForm = new SdmForm();
-$clearErrorsForm->form_handler = 'contentManagerAdministerAppsFormSubmission';
+$clearErrorsForm->formHandler = 'contentManagerAdministerAppsFormSubmission';
 $clearErrorsForm->method = 'post';
-$clearErrorsForm->form_elements = array(
+$clearErrorsForm->formElements = array(
     array(
         'id' => 'clear_error_log' . $clearErrorsForm->sdmFormGetFormId(),
         'type' => 'hidden',
@@ -36,7 +36,7 @@ $clearErrorsForm->form_elements = array(
         'place' => '0',
     ),
 );
-$clearErrorsForm->form_handler = 'SdmErrorLog';
+$clearErrorsForm->formHandler = 'SdmErrorLog';
 $clearErrorsForm->submitLabel = 'Clear Error Log';
 // build the form
 $clearErrorsForm->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());

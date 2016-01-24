@@ -18,8 +18,6 @@ function rangeArray($s, $e)
     return $array;
 }
 
-// create new naviagation management object | this varialbe will be accsessible by the various stages forms and handlers
-$sdmnms = new SdmNms();
 // this otpions array will be passed to sdmAssemblerIncorporateAppOutput() wherever this app outputs data.
 $options = array(
     'incpages' => array(
@@ -41,7 +39,6 @@ $options = array(
         'navigationManagerEditMenuStage3_submitaddmenuitem' // submit added menu item
     ),
 );
-$sdmassembler = $sdmassembler; // see SdmAssembler.php
 if (substr($sdmassembler->sdmCoreDetermineRequestedPage(), 0, 17) === 'navigationManager') {
     // CREATE A NEW CONTENT MANAGEMENT OBJECT
     $sdmcms = new SdmCms();

@@ -1,11 +1,15 @@
 <?php
-/** Delete any old session data and cleanup any old error logs */
+
+/** Delete any old session data. */
 $targets = scandir(session_save_path());
 foreach ($targets as $sessfile) {
     if ($sessfile != '.' && $sessfile != '..') {
         unlink(session_save_path() . '/' . $sessfile);
     }
 }
-// reset error logs
-file_put_contents($sdmcore->sdmCoreGetCoreDirectoryPath() . '/logs/sdm_core_errors.log', '', LOCK_EX);
-file_put_contents($sdmcore->sdmCoreGetCoreDirectoryPath() . '/logs/badRequestsLog.log', '', LOCK_EX);
+
+/* Reset core error log. */
+file_put_contents($sdmGatekeeper->sdmCoreGetCoreDirectoryPath() . '/logs/sdm_core_errors.log', '', LOCK_EX);
+
+/* Reset core bad request log. */
+file_put_contents($sdmGatekeeper->sdmCoreGetCoreDirectoryPath() . '/logs/badRequestsLog.log', '', LOCK_EX);

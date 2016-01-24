@@ -68,7 +68,7 @@ class SdmCore
         $this->CurrentTheme = $this->sdmCoreDetermineCurrentTheme();
         $this->CurrentThemeDirectoryPath = $this->sdmCoreGetThemesDirectoryPath() . '/' . $this->sdmCoreDetermineCurrentTheme();
         $this->CurrentThemeDirectoryUrl = $this->sdmCoreGetThemesDirectoryUrl() . '/' . $this->sdmCoreDetermineCurrentTheme();
-        $this->availablePages = $this->sdmCoreDetermineAvailablePages();
+        /* $this->availablePages is set internally by sdmCoreLoadDataObject(); */
     }
 
     /**
@@ -99,8 +99,8 @@ class SdmCore
     }
 
     /**
-     * <p>Returns the url to the SDM CMS core directory</p>
-     * @return string <p>the url to the SDM CMS core directory as a string.</p>
+     * Returns the url to the SDM CMS core directory
+     * @return string The url to the SDM CMS core directory as a string.
      */
     final public function sdmCoreGetCoreDirectoryUrl()
     {
@@ -108,26 +108,49 @@ class SdmCore
     }
 
     /**
-     * <p>Loads the entire content object from data.json or the DB and returns it.</p>
-     * @return object <p>The content object loaded from $this->CoreDirectoryUrl/sdm/data.json or from the DB</p>
+     * Loads the entire content object from data.json.
+     *
+     * @param bool $requestPageOnly If set to true only the currently requested page
+     *                              will exist in the DataObject, if set to false
+     *                              then all pages stored in data.json will exist
+     *                              in the DataObject.
+     *
+     * @return object The content object loaded from data.json.
+     *
      */
     final public function sdmCoreLoadDataObject($requestPageOnly = true)
     {
-        // determine requested page
+        /* Determine requested page. */
         $requestedPage = $this->sdmCoreDetermineRequestedPage();
-        // load json string from data.json via curl
+
+        /* Load json string from data.json via curl. */
         $coreJson = $this->sdmCoreCurlGrabContent($this->sdmCoreGetDataDirectoryUrl() . '/data.json');
-        // decode json to get our Data Object
+
+        /* Decode json to get our Data Object. */
         $dataObject = json_decode($coreJson);
-        // if $requestPageOnly === TRUE only load $dataObject->content->$requestedPage
+
+        /* Create array of available pages in unmodified DataObject. */
+        $availablePages = array_keys(get_object_vars($dataObject->content));
+
+        /* Create array of available pages formatted to be used as array keys */
+        $availablePagesKeys = array_map('ucwords', $availablePages);
+
+        /* Create core availablePages array using $availablePagesKeys and $availablePages arrays */
+        $this->availablePages = array_combine($availablePagesKeys, $availablePages);
+
+        /* If $requestPageOnly === TRUE remove all pages but the requested page from the DataObject. */
         if ($requestPageOnly === true) {
-            // get the requested pages page content | this will be used to restore $datObject->content after it is unset
+            /* Get the requested pages page content. This will be used to
+             restore $datObject->content after it is unset. */
             $requestedPageContent = (isset($dataObject->content->$requestedPage) === true ? $dataObject->content->$requestedPage : new stdClass());
-            // unset $dataObject->content to remove all pags
+
+            /* Unset $dataObject->content to remove all pages. */
             unset($dataObject->content);
-            // init new $dataObject->content
+
+            /* Initialize new object to be stored in $dataObject->content. */
             $dataObject->content = new stdClass();
-            // add $requestedPage back into $dataObject->content
+
+            /* add $requestedPage back into $dataObject->content */
             $dataObject->content->$requestedPage = $requestedPageContent;
         }
         return $dataObject;
@@ -142,16 +165,28 @@ class SdmCore
     }
 
     /**
-     * <p>Performs a simple CURL request one the given <b>$url</b></p>
-     * @param string $url <p>the url we are targeting</p>
-     * @param array $post <p>Array of post data to send, if array is empty
-     * no post data will be sent</p>
-     * @todo <p>At the moment this method will throw an error for empty files,
-     * as well as bad requests, you can fix this by checking for null instead of ''
-     * in your code.</p>
-     * <br><p>i.e.,<br><br><?php<br>if(sdm_curl_grab_content($url) === null)
-     * {<br>//do something<br>} else {<br>// do something else<br>}<br>?></p>
-     * @return string <p>Returns results as a string of HTML.</p>
+     * Fetches data from the specified $url via curl.
+     *
+     * NOTE: This method will throw an error for empty files, as well as bad urls,
+     * you can fix this by checking for null instead of '' in your code.
+     *
+     * i.e.,
+     *
+     * correct:
+     *
+     * (sdm_curl_grab_content($url) === null ? 'error' : 'success')
+     *
+     * incorrect:
+     *
+     * (sdm_curl_grab_content($url) === '' ? 'error' : 'success')
+     *
+     * @param string $url The url we are fetching data from.
+     *
+     * @param array $post Array of post data to send, if array is empty
+     * no post data will be sent.
+     *
+     *
+     * @return string Returns results as a string of HTML.
      */
     final public function sdmCoreCurlGrabContent($url, array $post = array())
     {
@@ -215,30 +250,6 @@ class SdmCore
         return $this->ThemesDirectoryUrl;
     }
 
-    /**
-     * Determines what pages exist for the current site returning an indexed array of all the pages.
-     * This method is used internally, and can also be used by developers to
-     * do things like create a security checks, for instance insuring only pages
-     * that actually exist and are part of the site are accessed.
-     * @return array An associative array structured array('Page Name' => 'pageName');
-     *
-     */
-    final public function sdmCoreDetermineAvailablePages()
-    {
-        // load our json data from data.json
-        $data = json_decode(json_encode($this->sdmCoreLoadDataObject(false)), true);
-        // we just want the KEYS from the content array as they correlate to the names of the pages of our site. i.e., $data['content']['homepage'] holds the homepage content.
-        $pages = array_keys($data['content']);
-        // attempt to format the array so the KEYS can be used for display, and the VALUES can be used in code | "pageName" will become "Page Name" and will be used as a key
-        // Note: Pages not named with the camelCase convention may not display intuitivly...
-        // @todo create a method that formats page names into camel case on page creation...
-        // intialize $availablePages array | will prevent PHP erros if no pages exist in CORE
-        $availablePages = array();
-        foreach ($pages as $page) {
-            $availablePages[ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', $page))] = $page;
-        }
-        return $availablePages;
-    }
 
     /**
      * Returns get_object_vars() for the calling object.
@@ -395,10 +406,6 @@ class SdmCore
         return true;
     }
 
-/////////////////////////////////
-///////////// Data //////////////
-/////////////////////////////////
-
     /**
      *  Attempts to return a directory listing for the specified directory (i.e., $directoryName)
      * @param string $directoryName <p>The name of the directory to create a listing of.</p>
@@ -472,17 +479,14 @@ class SdmCore
     }
 
     /**
-     * <p>Returns an array of available pages as stored in the availablePages property.</p>
-     * <p><i>Note: This method was created so that components that needed to determine
-     * that available pages did not have to call sdmCoreDetermineAvailablePages()
-     * which resulted in sdmCoreLoadDataObject() being called more then necessary.
-     * Instead the sdmCoreDetermineAvailablePages() is called from withing SdmCore's
-     * constructor and the resulting array is stored in the availablePages property
-     * upon instantiation of an SdmCore() object. Again, this change is one of many
-     * changes being made to reduce the number of times data.json is loaded either
-     * explicitly or via sdmCoreLoadDataObject().</i></p>
+     * Determines what pages exist for the current site returning an indexed array of all the pages.
+     * This method is used internally, and can also be used by developers to
+     * do things like create a security checks, for instance insuring only pages
+     * that actually exist and are part of the site are accessed.
+     * @return array An associative array structured array('Page Name' => 'pageName');
+     *
      */
-    final public function sdmCoreListAvailablePages()
+    final public function sdmCoreDetermineAvailablePages()
     {
         return $this->availablePages;
     }
@@ -529,8 +533,8 @@ class SdmCore
      * <p>sdmCoreStrSlice('Some string to slice.', 'to','.'); // returns 'slice'</p>
      * <p>Note: <i>Niether the $start or $end strings will be included in the slice.</i></p>
      * @param string $string <p>String to get slice from.</p>
-     * @param type $start <p>Starting string, i.e., the chars to start the slice after</p>
-     * @param type $end <p>The ending string, i.e., the chars to end the slice at</p>
+     * @param string $start <p>Starting string, i.e., the chars to start the slice after</p>
+     * @param string $end <p>The ending string, i.e., the chars to end the slice at</p>
      * @return string <p>The slice of the string between $start and $end.</p>
      */
     final public function sdmCoreStrSlice($string, $start, $end)

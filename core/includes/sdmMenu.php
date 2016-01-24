@@ -37,7 +37,7 @@ class SdmMenu extends SdmMenuItem
 
     public function __construct()
     {
-// unset parent properties
+        // unset parent properties
         unset($this->menuItemId);
         unset($this->menuItemMachineName);
         unset($this->menuItemDisplayName);
@@ -50,7 +50,7 @@ class SdmMenu extends SdmMenuItem
         unset($this->arguments);
         unset($this->menuItemKeyholders);
         unset($this->menuItemEnabled);
-// define menu object properties
+        // define menu object properties
         $this->menuId = (isset($this->menuId) ? $this->menuId : rand(100000000000, 999999999999));
         $this->menuMachineName = (isset($this->menuMachineName) ? $this->menuMachineName : rand(100000000000, 999999999999));
         $this->menuDisplayName = (isset($this->menuDisplayName) ? $this->menuDisplayName : rand(1000, 9999));
