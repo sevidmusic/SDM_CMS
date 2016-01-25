@@ -8,7 +8,7 @@ function aniBg(target, colors, aniTime, index) {
     var limit = colors.length;
     var newIndex = ((index + 1) < limit) ? index + 1 : 0; // reset index if {index + 1} !< limit;
     // display current color | newIndex represents the current color
-    fadeInText('#colors', 'Current Background Color: <span style="color:' + colors[index] + '">' + colors[index] + '</span>');
+    fadeInText('#colors', '<p>Color Cycle: ' + (index + 1) + '</p><p>Current Background Color: <span style="color:' + colors[index] + '">' + colors[index] + '</span></p>');
     $(target).animate({backgroundColor: colors[index]}, aniTime, function () {
         $(target).animate({backgroundColor: colors[newIndex]}, aniTime - (aniTime / 2), function () {
             aniBg(target, colors, aniTime, newIndex);
