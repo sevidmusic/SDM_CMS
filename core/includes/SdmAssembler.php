@@ -89,8 +89,11 @@ class SdmAssembler extends SdmNms
      *                formatted appropriately for html.
      *
      */
-    private function sdmAssemblerAssembleHeaderProperties($targetProperty, $source = null, $sourceName = null)
+    private function sdmAssemblerAssembleHeaderProperties($targetProperty, $source = 'theme', $sourceName = null)
     {
+        if ($sourceName === null) {
+            $sourceName = $this->sdmCoreDetermineCurrentTheme();
+        }
         /* Initialize $html var. */
         $html = $this->sdmAssemblerAssembleInitialHeaderPropertyHtml($targetProperty, $source, $sourceName);
 
@@ -220,23 +223,7 @@ class SdmAssembler extends SdmNms
      */
     private function sdmAssemblerGetAsProperty($property, $source = null, $sourceName = null)
     {
-        switch ($source) {
-            case 'theme':
-                /* Read .as file into an array. */
-                $asFileArray = $this->sdmAssemblerLoadAsFile($this->sdmCoreGetThemesDirectoryPath(), $sourceName);
-                break;
-            case 'userApp':
-                /* Read .as file into an array. */
-                $asFileArray = $this->sdmAssemblerLoadAsFile($this->sdmCoreGetUserAppDirectoryPath(), $sourceName);
-                break;
-            case 'coreApp':
-                /* Read .as file into an array. */
-                $asFileArray = $this->sdmAssemblerLoadAsFile($this->sdmCoreGetCoreAppDirectoryPath(), $sourceName);
-                break;
-            default: /* Defaults to reading the current theme's .as file. */
-                $asFileArray = $this->sdmAssemblerLoadAsFile($this->sdmCoreGetThemesDirectoryPath(), $this->sdmCoreDetermineCurrentTheme());
-                break;
-        }
+        $asFileArray = $this->sdmAssemblerLoadAsFile($source, $sourceName);
         $properties = $this->sdmAssemblerRetrieveAsPropertyValues($property, $asFileArray);
         return ($asFileArray === false || isset($properties) !== true ? false : $properties);
     }
@@ -244,7 +231,10 @@ class SdmAssembler extends SdmNms
     /***
      * Load a .as file from a specific path and read it into an array.
      *
-     * @param string $path The path where the .as file should exist.
+     * @param string $source The type of component. (options: theme, userApp,
+     *                       or coreApp). Defaults to theme.
+     *
+     *                       IMPORTANT: If $source is set then $sourceName must also be set.
      *
      * @param string $sourceName The name of the relevant theme or app.
      *
@@ -253,8 +243,22 @@ class SdmAssembler extends SdmNms
      * @return array|bool An array representing the data in the .as file, or false on failure.
      *
      */
-    final private function sdmAssemblerLoadAsFile($path, $sourceName)
+    final private function sdmAssemblerLoadAsFile($source, $sourceName)
     {
+        switch ($source) {
+            case 'theme':
+                $path = $this->sdmCoreGetThemesDirectoryPath();
+                break;
+            case 'userApp':
+                $path = $this->sdmCoreGetUserAppDirectoryPath();
+                break;
+            case 'coreApp':
+                $path = $this->sdmCoreGetCoreAppDirectoryPath();
+                break;
+            default:
+                $path = $this->sdmCoreGetCurrentThemeDirectoryPath();
+                break;
+        }
         /* Build file path to our .as file. */
         $filePath = $path . '/' . $sourceName . '/' . $sourceName . '.as';
         return (file_exists($filePath) === true ? file($filePath) : false);
