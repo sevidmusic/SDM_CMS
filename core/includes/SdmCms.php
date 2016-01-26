@@ -10,35 +10,49 @@ class SdmCms extends SdmCore
 {
 
     /**
-     * <p>Creates content for a specific page ($page) and content wrapper ($id)</p>
-     * <p><b>Warning: This method will overwrite content if it already exists.
-     * @TODO we may need to split the update and add processes into 2 methods to prevent
-     * overwriting of content. Though at the moment the contentManager app does this check for
-     * us but it could make it hard when developing other content manager like apps to sperate
-     * add and update if they arent seperate in thsi core class.</b></p>
-     * @param string $page <p>The <b>name</b> of the page this content belongs to.</p>
-     * @param string $id <p>Machine safe string that correlates to the css id associated
-     * with the div used in the <i>current themes</i> page.php to display this content.
-     * <br>i.e., A piece of content with an <b><i>$id</i></b> set to <b>'main_content'</b> will correlate
-     * to a div with an <b><i>id</i></b> of <b>'main_content'</b> in the current themes page.php and that div
-     * will display the content with an <b><i>$id</i></b> of <b>'main_content'</b></p>
-     * @param string $html <p>The html for this content.</p>
-     * @return int The number of bytes written to data.json or the DB. Returns false on failure.
+     * Updates or creates a page.
+     *
+     * This method uses PHP's iconv() and utf8_encode() to insure $html is UTF-8 encoded prior to
+     * storage. This method also uses PHP's htmlentities() to convert all applicable characters
+     * in $html to HTML entities prior to storage.
+     *
+     * Warning: This method will overwrite content if it already exists.
+     *
+     * @TODO: It may be benificial to split the update and add logic into 2 seperate methods.
+     *
+     * @param string $page The name of the page this content belongs to.
+     *
+     * @param string $wrapper The wrapper this content belongs in. (e.g., 'main_content')
+     *
+     * @param string $html The content's html. Note: This parameter will be filtered internally
+     *               via PHP's iconv() and utf8_encode() to insure UTF-8. Also, this parameter will be
+     *               filtered internally via htmlentities() to insure all applicable characters
+     *               are converted to HTML entities prior to storage.
+     *
+     * @return bool True if update was succsessfull, or false on failure.
      */
-    public function sdmCmsUpdateContent($page, $id, $html)
+    public function sdmCmsUpdateContent($page, $wrapper, $html)
     {
-        $content = $this->sdmCoreLoadDataObject(false);
-        // filter out problematic charaters from $html and insure UTF-8 using iconv()
+        /* Load the entire data object */
+        $dataObject = $this->sdmCoreLoadDataObject(false);
+        /* Filter $html to insure encoding is UTF-8. */
         $filteredHtml = iconv("UTF-8", "UTF-8//IGNORE", $html);
         $filteredHtml2 = iconv("UTF-8", "ISO-8859-1//IGNORE", $filteredHtml);
         $filteredHtml3 = iconv("ISO-8859-1", "UTF-8", $filteredHtml2);
-        // if the page does not already exist in CORE create a placeholder object for it
-        if (!isset($content->content->$page) === true) {
-            $content->content->$page = new stdClass();
+        $utf8Html = utf8_encode(trim($filteredHtml3));
+        /* If the page does not already exist in the DataObject create a placeholder object for it. */
+        if (!isset($dataObject->content->$page) === true) {
+            $dataObject->content->$page = new stdClass();
         }
-        $content->content->$page->$id = htmlentities(utf8_encode(trim($filteredHtml3)), ENT_SUBSTITUTE | ENT_DISALLOWED | ENT_HTML5, 'UTF-8');
-        $data = json_encode($content);
-        return file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $data, LOCK_EX);
+        /* Convert all applicable characters in $html to HTML entities. */
+        $dataObject->content->$page->$wrapper = htmlentities($utf8Html, ENT_SUBSTITUTE | ENT_DISALLOWED | ENT_HTML5, 'UTF-8');
+        /* Encode the updated dataObject as json to prepare for storage. */
+        $data = json_encode($dataObject);
+        /* Store the updates. */
+        $update = file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $data, LOCK_EX);
+        /* Determine weather the update succeeded or failed.*/
+        $status = ($update < 0 || $update !== false ? true : false);
+        return $status;
     }
 
     /**
