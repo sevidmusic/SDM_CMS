@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The SdmAssembler() is responsible for loading and assembling page content.
+ * The SdmAssembler() is responsible for loading and assembling a page.
  * It is also responsible for incorporating output from core and user apps into
  * a page.
  *
@@ -16,7 +16,7 @@ class SdmAssembler extends SdmNms
      * Note: App stylesheets, scripts, and meta tags will always be assembled first because
      * app .as settings must take precedence over the current theme's .as file settings.
      *
-     * @return string The HTML header for the page.
+     * @return string The html header for the page.
      *
      */
     public function sdmAssemblerAssembleHtmlHeader()
@@ -38,14 +38,14 @@ class SdmAssembler extends SdmNms
     }
 
     /**
-     * Assembles the link, script, and meta tags that load the stylesheets scripts and meta tags
+     * Assembles the header properties defined in a .as file
      * for all enabled apps that provide a .as file
      *
      * NOTE: At the moment only the scripts property is read from an app's .as file. In the future
      * stylesheets and meta will also be read from an app's .as file.
      *
-     * @return string String of link, script, and meta tags for any stylesheets, scripts, and meta properties
-     * defined in any enabled apps .as file.
+     * @return string Html formatted string of link, script, and meta tags for any stylesheets, scripts, and meta
+     * properties defined in any enabled apps .as file.
      *
      */
     final private function sdmAssemblerAssembleEnabledAppProps()
@@ -74,6 +74,8 @@ class SdmAssembler extends SdmNms
     /**
      * Assembles link script and meta tags for header properties defined in a specific theme or app's .as file.
      *
+     * By default this method assembles header properties for the current theme.
+     *
      * @param string $targetProperty Property to read. (options: stylesheets, scripts, or meta)
      *
      * @param string $source The type of component to assemble header properties for. (options: theme, userApp,
@@ -85,19 +87,14 @@ class SdmAssembler extends SdmNms
      *
      *                       IMPORTANT: $sourceName must be set if $source is set.
      *
-     * @return string String of link script and meta tags for properties defined in specified $sourceName's .as file
-     *                formatted appropriately for html.
+     * @return string Html formatted string of link script and meta tags for properties defined in specified $sourceName's .as file.
      *
      */
-    private function sdmAssemblerAssembleHeaderProperties($targetProperty, $source = 'theme', $sourceName = null)
+    private function sdmAssemblerAssembleHeaderProperties($targetProperty, $source = null, $sourceName = null)
     {
-        if ($sourceName === null) {
-            $sourceName = $this->sdmCoreDetermineCurrentTheme();
-        }
         /* Initialize $html var. */
         $html = $this->sdmAssemblerAssembleInitialHeaderPropertyHtml($targetProperty, $source, $sourceName);
-
-        /* Store initial $html value so we can perform a check later to see if anything was appended
+        /* Store initial $html value so a check can be performed later to see if anything was appended
          to $html, if nothing was appended to $html by the end of this method then the attempt to
          load the .as file properties failed. */
         $initHtml = $html;
@@ -114,7 +111,7 @@ class SdmAssembler extends SdmNms
 
         /* Make sure $properties array is not false and is not empty. */
         if ($properties !== false && !empty($properties) === true) {
-            /* Begin assembling  link script and meta tags for each of our header $properties. */
+            /* Begin assembling  link script and meta tags for each of the header $properties. */
             foreach ($properties as $property) {
                 /* Only assemble header property html if current $property value does not exist
                  in our $badValues array */
@@ -174,7 +171,7 @@ class SdmAssembler extends SdmNms
     /**
      * Determines path to .as file for a specified app or theme.
      *
-     * @param string $source The type of component (options: theme, userApp, or coreApp). Defaults to theme.
+     * @param string $source The type of component (options: theme, userApp, or coreApp).
      *
      *                    IMPORTANT: If $source is set then $sourceName must also be set.
      *
@@ -196,8 +193,7 @@ class SdmAssembler extends SdmNms
      *
      * NOTE: If $source is not set then the current themes .as file will be read.
      *
-     * @param string $property The property whose values should be returned.
-     *                       (options: stylesheets, scripts, meta)
+     * @param string $property The property whose values should be returned. (options: stylesheets, scripts, meta)
      *
      * @param string $source The type of component (options: theme, userApp, or coreApp). Defaults to theme.
      *
@@ -229,14 +225,16 @@ class SdmAssembler extends SdmNms
     }
 
     /***
-     * Load a .as file from a specific path and read it into an array.
+     * Load a .as file from a specific path and read it into an array. BY DEFAULT THIS METHDO DEFAULTS
+     * TO THE CURRENT THEME.
      *
      * @param string $source The type of component. (options: theme, userApp,
      *                       or coreApp). Defaults to theme.
      *
      *                       IMPORTANT: If $source is set then $sourceName must also be set.
      *
-     * @param string $sourceName The name of the relevant theme or app.
+     * @param string $sourceName The name of the relevant theme or app. Defaults to
+     *                           name of current theme.
      *
      *                       IMPORTANT: $sourceName must be set if $source is set.
      *
@@ -245,6 +243,10 @@ class SdmAssembler extends SdmNms
      */
     final private function sdmAssemblerLoadAsFile($source, $sourceName)
     {
+        /* If $sourceName is not defined default to current theme. */
+        if ($sourceName === null) {
+            $sourceName = $this->sdmCoreDetermineCurrentTheme();
+        }
         switch ($source) {
             case 'theme':
                 $path = $this->sdmCoreGetThemesDirectoryPath();
@@ -256,7 +258,7 @@ class SdmAssembler extends SdmNms
                 $path = $this->sdmCoreGetCoreAppDirectoryPath();
                 break;
             default:
-                $path = $this->sdmCoreGetCurrentThemeDirectoryPath();
+                $path = str_replace('/' . $sourceName, '', $this->sdmCoreGetCurrentThemeDirectoryPath());
                 break;
         }
         /* Build file path to our .as file. */
