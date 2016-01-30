@@ -1,3 +1,2 @@
-scripts =;
-stylesheets = hw;
-meta =;
+scripts=hw;
+stylesheets=hw;

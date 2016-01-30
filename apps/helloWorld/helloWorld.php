@@ -10,7 +10,7 @@ $options = array(
     'incmethod' => 'overwrite',
     'incpages' => array('helloWorld'),
     'ignorepages' => array(),
-    'roles' => array('root'),
+    'roles' => array('all'),
 );
 
 /* Create some output. */
