@@ -41,9 +41,6 @@ class SdmAssembler extends SdmNms
      * Assembles the header properties defined in a .as file
      * for all enabled apps that provide a .as file
      *
-     * NOTE: At the moment only the scripts property is read from an app's .as file. In the future
-     * stylesheets and meta will also be read from an app's .as file.
-     *
      * @return string Html formatted string of link, script, and meta tags for any stylesheets, scripts, and meta
      * properties defined in any enabled apps .as file.
      *
@@ -63,6 +60,8 @@ class SdmAssembler extends SdmNms
 
             /* Look in user apps for .as file. */
             $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('scripts', 'userApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('scripts', 'userApp', $app));
+            $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('stylesheets', 'userApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('stylesheets', 'userApp', $app));
+            $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('meta', 'userApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('meta', 'userApp', $app));
 
             /* Look in core apps for .as file. */
             $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('scripts', 'coreApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('scripts', 'coreApp', $app));
