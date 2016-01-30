@@ -10,3 +10,9 @@ $options = array(
 );
 
 $sdmassembler->sdmAssemblerIncorporateAppOutput($output, $options);
+
+$sdmassembler->sdmAssemblerIncorporateAppOutput('
+<p>Note: The jQuery app must be enabled before any apps or themes dependent on
+jQuery can be used. If an app or theme that depends on jQuery was enabled before
+the jQuery app then you will have to disable the dependent app, make sure jQuery is enabled,
+and then re-enable the dependent app</p>', ['incpages' => ['jQuery'], 'incmethod' => 'append']);
