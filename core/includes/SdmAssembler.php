@@ -120,10 +120,8 @@ class SdmAssembler extends SdmNms
          load the .as file properties failed. */
         $initHtml = $html;
 
-        /* Determine path to $sourceName's root directory based on where .as file is located.
-         This works because .as files must be located in the root directory of the app or theme
-         they belong to. */
-        $path = $this->sdmAssemblerDetermineAsFilePath($source, $sourceName);
+        /* Determine url to components root directory.  */
+        $componentUrl = $this->sdmAssemblerDetermineComponentUrl($source, $sourceName);
 
         /* Attempt to read header properties from .as file if it exists. If no $source is specified
          then the current themes .as file will be read if it exists. */
@@ -141,10 +139,10 @@ class SdmAssembler extends SdmNms
                 if (!in_array($property, $badValues)) {
                     switch ($targetProperty) {
                         case 'stylesheets':
-                            $html .= '<link rel="stylesheet" type="text/css" href="' . $path . '/' . trim($property) . '.css">';
+                            $html .= '<link rel="stylesheet" type="text/css" href="' . $componentUrl . '/' . trim($property) . '.css">';
                             break;
                         case 'scripts':
-                            $html .= '<script src="' . $path . '/' . trim($property) . '.js"></script>';
+                            $html .= '<script src="' . $componentUrl . '/' . trim($property) . '.js"></script>';
                             break;
                         case 'meta':
                             /* At the moment meta tags are being hardcoded until it is determined
@@ -192,7 +190,9 @@ class SdmAssembler extends SdmNms
     }
 
     /**
-     * Determines path to .as file for a specified app or theme.
+     * Determines url to a specified theme or apps root directory.
+     *
+     * By default this method returns url to the current theme's root directory.
      *
      * @param string $source The type of component (options: theme, userApp, or coreApp).
      *
@@ -202,10 +202,10 @@ class SdmAssembler extends SdmNms
      *
      *                    IMPORTANT: $sourceName must be set if $source is set.
      *
-     * @return null|string The path to the .as file for the specified app or theme. Returns null on failure.
+     * @return null|string The url to the specified app or theme's root directory. Returns null on failure.
      *
      */
-    final private function sdmAssemblerDetermineAsFilePath($source, $sourceName)
+    final private function sdmAssemblerDetermineComponentUrl($source, $sourceName)
     {
         return ($source === null ? $this->sdmCoreGetCurrentThemeDirectoryUrl() : ($source === 'theme' ? $this->sdmCoreGetThemesDirectoryUrl() . '/' . $sourceName : ($source === 'userApp' ? $this->sdmCoreGetUserAppDirectoryUrl() . '/' . $sourceName : ($source === 'coreApp' ? $this->sdmCoreGetCoreAppDirectoryUrl() . '/' . $sourceName : null))));
     }
@@ -460,21 +460,21 @@ class SdmAssembler extends SdmNms
 
     /**
      * Incorporates app output into the page.
-     * This method is intended for use by CORE and User apps. It provides
+     * This method is intended for use by core and user apps. It provides
      * a simple method for incorporating an app's output into the page. It is
      * ok to call this method multiple times within an app.
      * If provided, the $options array is used to specify how the app's output
      * is to be incorporated.
      * Note: If the requested page (determined internally) does not exist
-     * in CORE, as an enabled app, or in the $options array's 'incpages' array then the dataObject will not be modified
+     * in core, as an enabled app, or in the $options array's 'incpages' array then the dataObject will not be modified
      * and the apps output will not be incorporated. This is for security, and prevents requests to
      * non-existent pages from successfully taking user to a dynamically generated page.
-     * This method, in order to allow apps to function without creating a page for their output in CORE,
-     * creates a place holder page in the datObject for when the requested page does not exist in CORE.
-     * So, if the requested page does not exist in CORE, it must at least exist as a on of the
+     * This method, in order to allow apps to function without creating a page for their output in core,
+     * creates a place holder page in the datObject for when the requested page does not exist in core.
+     * So, if the requested page does not exist in core, it must at least exist as a on of the
      * pages specified in the $options array's 'incpages' array. Without this check we could pass anything
      * to the page argument in the url and the SDM CMS would generate a page for it.
-     * i.e, http://example.com/index.php?page=NonExistentPage would work if we did not check for it in CORE
+     * i.e, http://example.com/index.php?page=NonExistentPage would work if we did not check for it in core
      * and in the 'incpages' array
      *
      * @param string $output A plain text or HTML string to be used as the apps output.
@@ -482,7 +482,7 @@ class SdmAssembler extends SdmNms
      * @param array $options (optional) Array of options that determine how an app's
      * output is incorporated. If not specified, then the app will be incorporated into
      * all pages and will be assigned to the 'main_content' wrapper that is part of, and,
-     * required by SDM CORE.
+     * required by SDM core.
      * Overview of $options ARRAY:
      *
      *   'wrapper' : The content wrapper the app is to be incorporated into.
@@ -495,7 +495,7 @@ class SdmAssembler extends SdmNms
      *                    as long as the page the app generates shares the same name as the app itself.
      *                    (i.e. if you incpages has an item ExampleApp then the page ExampleApp
      *                          will incorporate app output even if the page ExampleApp does not
-     *                          exist in CORE.)
+     *                          exist in core.)
      *   Note: If incpages is not set then it is assumed that all pages
      *              are to incorporate app output. If an empty array is passed
      *              then NO pages will incorporate app output.
@@ -606,7 +606,7 @@ class SdmAssembler extends SdmNms
             /* For security, we check to see if the incpages array was passed to the options array.
              * If it was then leave it alone and use it as it is, if it wasn't then we assume the
              * developer meant to incorporate into all pages so we create an incpages array that
-             * contains all the pages in CORE as well as any enabled apps so any app generated pages
+             * contains all the pages in core as well as any enabled apps so any app generated pages
              * will also incorporate app output.
              * Also note that if inpages is empty then it will be assumed the developer
              * does NOT want to incorporate app output into any page.
@@ -662,7 +662,7 @@ class SdmAssembler extends SdmNms
     final private function sdmAssemblerPrepareAppGeneratedPage()
     {
         $requestedPage = $this->sdmCoreDetermineRequestedPage();
-        /* if no page exists for app in the CORE, then create a placeholder
+        /* if no page exists for app in the core, then create a placeholder
          object for it to avoid PHP Errors, Notices, and Warnings */
         if (!isset($this->DataObject->content->$requestedPage)) {
             $this->DataObject->content->$requestedPage = new stdClass();
