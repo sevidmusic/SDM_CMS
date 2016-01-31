@@ -13,9 +13,13 @@ class SdmAssembler extends SdmNms
      * defined in enabled user and core app .as files, and in the current theme's .as file, into the
      * html header.
      *
-     * Note: Header properties defined in app .as files will always be assembled first because
-     * app .as settings must take precedence over the current theme's .as file settings. The
-     * order app header properties are assembled relative to other apps depends on the order
+     * Header properties defined in app .as files will always be assembled before header properties
+     * defined in current theme's .as file because app header properties must take precedence over the
+     * current theme's header properties. Additionally, header properties defined in core app .as files
+     * will always be assembled before header properties defined in user app .as files because core app
+     * header properties must take precedence over user app header properties.
+     *
+     * The order app header properties are assembled relative to other apps depends on the order
      * in which the apps were enabled. The most recent app to be enabled will have it's header
      * properties assembled last. So if apps A and C were enabled before app B then app B's
      * header properties will be assembled after apps A and app C have their header properties
@@ -61,20 +65,19 @@ class SdmAssembler extends SdmNms
 
         /* Loop through enabled apps. */
         foreach ($this->sdmCoreDetermineEnabledApps() as $app) {
-            /* We don't know if this is a user app or core app so we look in the user and core
+            /* We don't know if this is a core app or user app so we look in the core and user
              app directories for any directory whose name matches the name of an enabled app
-             and then we check if a .as file is provided in those app's directories. */
-
-            /* Look in user apps for .as file. */
-            $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('scripts', 'userApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('scripts', 'userApp', $app));
-            $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('stylesheets', 'userApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('stylesheets', 'userApp', $app));
-            $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('meta', 'userApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('meta', 'userApp', $app));
+             and then we check if a .as file is provided in those app's root directories. */
 
             /* Look in core apps for .as file. */
             $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('scripts', 'coreApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('scripts', 'coreApp', $app));
             $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('stylesheets', 'coreApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('stylesheets', 'coreApp', $app));
             $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('meta', 'coreApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('meta', 'coreApp', $app));
 
+            /* Look in user apps for .as file. */
+            $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('scripts', 'userApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('scripts', 'userApp', $app));
+            $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('stylesheets', 'userApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('stylesheets', 'userApp', $app));
+            $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('meta', 'userApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('meta', 'userApp', $app));
         }
         return $appScriptProps;
     }
@@ -111,12 +114,15 @@ class SdmAssembler extends SdmNms
     {
         /* Initialize $html var. */
         $html = $this->sdmAssemblerAssembleInitialHeaderPropertyHtml($targetProperty, $source, $sourceName);
+
         /* Store initial $html value so a check can be performed later to see if anything was appended
          to $html, if nothing was appended to $html by the end of this method then the attempt to
          load the .as file properties failed. */
         $initHtml = $html;
 
-        /* Determine path to resource directory based on $source and $sourceName. */
+        /* Determine path to $sourceName's root directory based on where .as file is located.
+         This works because .as files must be located in the root directory of the app or theme
+         they belong to. */
         $path = $this->sdmAssemblerDetermineAsFilePath($source, $sourceName);
 
         /* Attempt to read header properties from .as file if it exists. If no $source is specified
