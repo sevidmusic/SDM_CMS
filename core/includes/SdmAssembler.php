@@ -13,8 +13,15 @@ class SdmAssembler extends SdmNms
      * defined in enabled user and core app .as files, and in the current theme's .as file, into the
      * html header.
      *
-     * Note: App stylesheets, scripts, and meta tags will always be assembled first because
-     * app .as settings must take precedence over the current theme's .as file settings.
+     * Note: Header properties defined in app .as files will always be assembled first because
+     * app .as settings must take precedence over the current theme's .as file settings. The
+     * order app header properties are assembled relative to other apps depends on the order
+     * in which the apps were enabled. The most recent app to be enabled will have it's header
+     * properties assembled last. So if apps A and C were enabled before app B then app B's
+     * header properties will be assembled after apps A and app C have their header properties
+     * assembled. However, if app A and B and C were enabled at the same time then the order
+     * is alphabetical, so app B will have its header properties assembled after app A and
+     * before app C.
      *
      * @return string The html header for the page.
      *
@@ -39,7 +46,7 @@ class SdmAssembler extends SdmNms
 
     /**
      * Assembles the header properties defined in a .as file
-     * for all enabled apps that provide a .as file
+     * for all enabled apps that provide a .as file.
      *
      * @return string Html formatted string of link, script, and meta tags for any stylesheets, scripts, and meta
      * properties defined in any enabled apps .as file.
@@ -65,6 +72,8 @@ class SdmAssembler extends SdmNms
 
             /* Look in core apps for .as file. */
             $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('scripts', 'coreApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('scripts', 'coreApp', $app));
+            $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('stylesheets', 'coreApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('stylesheets', 'coreApp', $app));
+            $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('meta', 'coreApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('meta', 'coreApp', $app));
 
         }
         return $appScriptProps;
@@ -75,10 +84,18 @@ class SdmAssembler extends SdmNms
      *
      * By default this method assembles header properties for the current theme.
      *
+     * i.e.,
+     *
+     *   // assembles header properties for current theme.
+     *   sdmAssemblerAssembleHeaderProperties('theme');
+     *
+     *   // assembles header properties for the core contentManager app.
+     *   sdmAssemblerAssembleHeaderProperties('theme', 'coreApp', 'contentManager');
+     *
      * @param string $targetProperty Property to read. (options: stylesheets, scripts, or meta)
      *
      * @param string $source The type of component to assemble header properties for. (options: theme, userApp,
-     *                       or coreApp). Defaults to theme.
+     *                       or coreApp).
      *
      *                       IMPORTANT: If $source is set then $sourceName must also be set.
      *
@@ -86,7 +103,8 @@ class SdmAssembler extends SdmNms
      *
      *                       IMPORTANT: $sourceName must be set if $source is set.
      *
-     * @return string Html formatted string of link script and meta tags for properties defined in specified $sourceName's .as file.
+     * @return string Html formatted string of link script and meta tags for properties defined in specified
+     *                $sourceName's .as file.
      *
      */
     private function sdmAssemblerAssembleHeaderProperties($targetProperty, $source = null, $sourceName = null)
