@@ -1,0 +1,36 @@
+/*
+    Document   : forms
+    Created on : Oct 28, 2015, 5:20:40 PM
+    Author     : seviforeman
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/** Forms */
+input, text, textarea, select {
+    display: block;
+    border-radius: 4px;
+    margin: 5px 0 20px 0;
+}
+
+textarea {
+    max-width: 100%;
+    min-width: 100%;
+    min-height: 150px;
+}
+select {
+    margin-top: 15px;
+}
+[type*='radio'] {
+    display: inline-block;
+    margin: 20px;
+}
+/* Tablet Styles */
+@media only screen and (min-width: 600px) {
+
+}
+
+/* Desktop Styles */
+@media only screen and (min-width: 768px) {
+
+}
