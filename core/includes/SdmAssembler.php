@@ -22,7 +22,7 @@ class SdmAssembler extends SdmNms
      * The order app header properties are assembled relative to other apps depends on the order
      * in which the apps were enabled. The most recent app to be enabled will have it's header
      * properties assembled last. So if apps A and C were enabled before app B then app B's
-     * header properties will be assembled after apps A and app C have their header properties
+     * header properties will be assembled after apps A and C have their header properties
      * assembled. However, if app A and B and C were enabled at the same time then the order
      * is alphabetical, so app B will have its header properties assembled after app A and
      * before app C.
@@ -145,15 +145,7 @@ class SdmAssembler extends SdmNms
                             $html .= '<script src="' . $componentUrl . '/' . trim($property) . '.js"></script>';
                             break;
                         case 'meta':
-                            /* At the moment meta tags are being hardcoded until it is determined
-                            how to parse the meta header properties defined in a .as file and
-                            translate them into the more complex structure of a meta tag. */
-                            $html .= '
-                                    <meta name="description" content="Website powered by the SDM CMS">
-                                    <meta name="author" content="Sevi Donnelly Foreman">
-                                    <meta http-equiv="refresh" content="3000">
-                                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                            ';
+                            $html .= '<meta ' . trim($property) . '>';
                             break;
                         default:
                             $msg = 'Value "' . $property . '" from .as file property "' . $targetProperty . '" was
@@ -308,13 +300,40 @@ class SdmAssembler extends SdmNms
             foreach ($asFileArray as $line) {
                 /* Check if current $line matches $property. */
                 if (strstr($line, '=', true) === $property) {
-                    /* Store property values in an array. */
-                    $properties = explode(',', $this->sdmCoreStrSlice($line, '=', ';'));
+                    switch ($property) {
+                        case 'meta':
+                            $properties = $this->sdmAssemblerExtractMeta($line);
+                            break;
+                        default:
+                            /* Store property values in an array. */
+                            $properties = explode(',', $this->sdmCoreStrSlice($line, '=', ';'));
+                    }
                     return $properties;
                 }
             }
         }
         return false;
+    }
+
+    /**
+     * Responsible for extracting and interpreting the meta data defined in a .as meta property string.
+     * @param $metaPropertyString The meta property string to extract and interpret meta data from.
+     * @return array Returns an array of strings that make of the internal structure of the meta tags
+     *               defined by apps and themes.
+     */
+    final private function sdmAssemblerExtractMeta($metaPropertyString)
+    {
+        $metaProps = $this->sdmCoreStrSlice($metaPropertyString, '=', ';');
+        $metaData = explode('],', $metaProps);
+        $meta = array();
+        foreach ($metaData as $data) {
+            $data = str_replace(['[', ']'], '', $data);
+            $data = str_replace(',', '"', $data);
+            $data = str_replace(':', '="', $data);
+            $data = str_replace('|', ' ', $data) . '"';
+            $meta[] = $data;
+        }
+        return $meta;
     }
 
     /**
