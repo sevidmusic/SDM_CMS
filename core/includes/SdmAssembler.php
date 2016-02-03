@@ -87,13 +87,21 @@ class SdmAssembler extends SdmNms
      *
      * By default this method assembles header properties for the current theme.
      *
+     * This method will return false on failure.
+     *
      * i.e.,
      *
-     *   // assembles header properties for current theme.
-     *   sdmAssemblerAssembleHeaderProperties('theme');
+     *   // assembles 'stylesheets' header properties for current theme because $source and $sourceName are not set.
+     *   sdmAssemblerAssembleHeaderProperties('stylesheets');
      *
-     *   // assembles header properties for the core contentManager app.
-     *   sdmAssemblerAssembleHeaderProperties('theme', 'coreApp', 'contentManager');
+     *   // assembles 'stylesheets' header properties for the sdmResponsive theme.
+     *   sdmAssemblerAssembleHeaderProperties('stylesheets', 'theme', 'sdmResponsive');
+     *
+     *   // assembles 'scripts' header properties for the contentManager core app.
+     *   sdmAssemblerAssembleHeaderProperties('scripts', 'coreApp', 'contentManager');
+     *
+     *   // assembles 'meta' header properties for the helloWorld user app.
+     *   sdmAssemblerAssembleHeaderProperties('meta', 'userApp', 'helloWorld');
      *
      * @param string $targetProperty Property to read. (options: stylesheets, scripts, or meta)
      *
@@ -107,7 +115,7 @@ class SdmAssembler extends SdmNms
      *                       IMPORTANT: $sourceName must be set if $source is set.
      *
      * @return string Html formatted string of link script and meta tags for properties defined in specified
-     *                $sourceName's .as file.
+     *                $sourceName's .as file. Returns false on failure.
      *
      */
     private function sdmAssemblerAssembleHeaderProperties($targetProperty, $source = null, $sourceName = null)
@@ -120,10 +128,7 @@ class SdmAssembler extends SdmNms
          load the .as file properties failed. */
         $initHtml = $html;
 
-        /* Determine url to components root directory.  */
-        $componentUrl = $this->sdmAssemblerDetermineComponentUrl($source, $sourceName);
-
-        /* Attempt to read header properties from .as file if it exists. If no $source is specified
+        /* Attempt to read header properties from .as file if it exists. If $source and $sourceName aren't specified
          then the current themes .as file will be read if it exists. */
         $properties = $this->sdmAssemblerGetAsProperty($targetProperty, $source, $sourceName);
 
@@ -132,23 +137,28 @@ class SdmAssembler extends SdmNms
 
         /* Make sure $properties array is not false and is not empty. */
         if ($properties !== false && !empty($properties) === true) {
+
+            /* Determine url to components root directory. | Used in assembly of link and script tags for
+             property values defined in 'stylesheets' and 'scripts' header properties respectively. */
+            $componentUrl = trim($this->sdmAssemblerDetermineComponentUrl($source, $sourceName));
+
             /* Begin assembling  link script and meta tags for each of the header $properties. */
-            foreach ($properties as $property) {
-                /* Only assemble header property html if current $property value does not exist
+            foreach ($properties as $propertyValue) {
+                /* Only assemble header property html if current $propertyValue does not exist
                  in our $badValues array */
-                if (!in_array($property, $badValues)) {
+                if (!in_array($propertyValue, $badValues)) {
                     switch ($targetProperty) {
                         case 'stylesheets':
-                            $html .= '<link rel="stylesheet" type="text/css" href="' . $componentUrl . '/' . trim($property) . '.css">';
+                            $html .= '<link rel="stylesheet" type="text/css" href="' . $componentUrl . '/' . trim($propertyValue) . '.css">';
                             break;
                         case 'scripts':
-                            $html .= '<script src="' . $componentUrl . '/' . trim($property) . '.js"></script>';
+                            $html .= '<script src="' . $componentUrl . '/' . trim($propertyValue) . '.js"></script>';
                             break;
                         case 'meta':
-                            $html .= '<meta ' . trim($property) . '>';
+                            $html .= '<meta ' . trim($propertyValue) . '>';
                             break;
                         default:
-                            $msg = 'Value "' . $property . '" from .as file property "' . $targetProperty . '" was
+                            $msg = 'Value "' . $propertyValue . '" from .as file property "' . $targetProperty . '" was
                             not loaded, custom .as properties are not recognized. | Source:  ' . $sourceName;
                             error_log($msg);
                             break;
@@ -162,6 +172,12 @@ class SdmAssembler extends SdmNms
 
     /**
      * Assembles the initial header property html.
+     *
+     * Specifically, assembles an html code comment in the following format to help make html markup generated
+     * for a page more readable by making it clear what component, app or theme, is defining the $targetProperty
+     * being assembled:
+     *
+     *     <!-- $source $sourceName $targetProperty-->
      *
      * @param string $targetProperty The target property. (options: stylesheets, scripts, or meta)
      *
@@ -179,27 +195,6 @@ class SdmAssembler extends SdmNms
     final private function sdmAssemblerAssembleInitialHeaderPropertyHtml($targetProperty, $source, $sourceName)
     {
         return '<!-- ' . ($source === null ? $this->sdmCoreDetermineCurrentTheme() . ' Theme ' . $targetProperty : ($source === 'userApp' ? 'User App' : ($source === 'coreApp' ? 'Core App' : 'Theme')) . ' ' . $sourceName . ' ' . $targetProperty) . ' -->';
-    }
-
-    /**
-     * Determines url to a specified theme or apps root directory.
-     *
-     * By default this method returns url to the current theme's root directory.
-     *
-     * @param string $source The type of component (options: theme, userApp, or coreApp).
-     *
-     *                    IMPORTANT: If $source is set then $sourceName must also be set.
-     *
-     * @param string $sourceName The name of the relevant theme or app.
-     *
-     *                    IMPORTANT: $sourceName must be set if $source is set.
-     *
-     * @return null|string The url to the specified app or theme's root directory. Returns null on failure.
-     *
-     */
-    final private function sdmAssemblerDetermineComponentUrl($source, $sourceName)
-    {
-        return ($source === null ? $this->sdmCoreGetCurrentThemeDirectoryUrl() : ($source === 'theme' ? $this->sdmCoreGetThemesDirectoryUrl() . '/' . $sourceName : ($source === 'userApp' ? $this->sdmCoreGetUserAppDirectoryUrl() . '/' . $sourceName : ($source === 'coreApp' ? $this->sdmCoreGetCoreAppDirectoryUrl() . '/' . $sourceName : null))));
     }
 
     /**
@@ -234,17 +229,23 @@ class SdmAssembler extends SdmNms
      */
     private function sdmAssemblerGetAsProperty($property, $source = null, $sourceName = null)
     {
+        /* Load .as file. */
         $asFileArray = $this->sdmAssemblerLoadAsFile($source, $sourceName);
+
+        /* Retrieve properties defined in the loaded .as file. */
         $properties = $this->sdmAssemblerRetrieveAsPropertyValues($property, $asFileArray);
+
+        /* Return $properties retrieved from the loaded .as file, Return false if no properties were retrieved. */
         return ($asFileArray === false || isset($properties) !== true ? false : $properties);
     }
 
     /***
-     * Load a .as file from a specific path and read it into an array. BY DEFAULT THIS METHDO DEFAULTS
-     * TO THE CURRENT THEME.
+     * Load a .as file from a specified app or theme and read it into an array.
+     *
+     * By default this method will attempt to load the current themes .as file if provided.
      *
      * @param string $source The type of component. (options: theme, userApp,
-     *                       or coreApp). Defaults to theme.
+     *                       or coreApp).
      *
      *                       IMPORTANT: If $source is set then $sourceName must also be set.
      *
@@ -302,24 +303,32 @@ class SdmAssembler extends SdmNms
                 if (strstr($line, '=', true) === $property) {
                     switch ($property) {
                         case 'meta':
+                            /* Extract meta data. Because the definition of a meta property is more complex
+                             it has to be retrieved separately. */
                             $properties = $this->sdmAssemblerExtractMeta($line);
                             break;
                         default:
-                            /* Store property values in an array. */
+                            /* Retrieve stylesheet and scripts properties. */
                             $properties = explode(',', $this->sdmCoreStrSlice($line, '=', ';'));
                     }
+
+                    /* Return any properties that were retrieved. */
                     return $properties;
                 }
             }
         }
+
+        /* Return false if no properties were retrieved. */
         return false;
     }
 
     /**
      * Responsible for extracting and interpreting the meta data defined in a .as meta property string.
-     * @param $metaPropertyString The meta property string to extract and interpret meta data from.
-     * @return array Returns an array of strings that make of the internal structure of the meta tags
-     *               defined by apps and themes.
+     *
+     * @param $metaProperty String The meta property string to extract and interpret meta data from.
+     *
+     * @return array Returns an array of strings that make up the internal structure of the meta tags
+     *               for a page.
      */
     final private function sdmAssemblerExtractMeta($metaPropertyString)
     {
@@ -337,36 +346,65 @@ class SdmAssembler extends SdmNms
     }
 
     /**
-     * Assembles the link, script, and meta tags that load the stylesheets scripts and meta tags
-     * for the current theme if it provides a .as file.
+     * Determines url to a specified theme or apps root directory.
      *
-     * @return string  String of link, script, and meta tags for any stylesheets, scripts, and meta tags defined
-     * in the current theme's .as file if provided, or false on failure.
+     * By default this method returns url to the current theme's root directory.
+     *
+     * @param string $source The type of component (options: theme, userApp, or coreApp).
+     *
+     *                    IMPORTANT: If $source is set then $sourceName must also be set.
+     *
+     * @param string $sourceName The name of the relevant theme or app.
+     *
+     *                    IMPORTANT: $sourceName must be set if $source is set.
+     *
+     * @return null|string The url to the specified app or theme's root directory. Returns null on failure.
+     *
+     */
+    final private function sdmAssemblerDetermineComponentUrl($source, $sourceName)
+    {
+        return ($source === null ? $this->sdmCoreGetCurrentThemeDirectoryUrl() : ($source === 'theme' ? $this->sdmCoreGetThemesDirectoryUrl() . '/' . $sourceName : ($source === 'userApp' ? $this->sdmCoreGetUserAppDirectoryUrl() . '/' . $sourceName : ($source === 'coreApp' ? $this->sdmCoreGetCoreAppDirectoryUrl() . '/' . $sourceName : null))));
+    }
+
+    /**
+     * Assembles the html tags for the link, script, and meta properties defined in the current theme's .as file
+     * if it provides one.
+     *
+     * @return string  String of link, script, and meta tags for any stylesheets, scripts, and
+     * meta properties defined in the current theme's .as file if provided, or false on failure.
      *
      */
 
     final private function sdmAssemblerAssembleCurrentThemeProps()
     {
-        $themeProps = $this->sdmAssemblerAssembleHeaderProperties('meta') .
-            $this->sdmAssemblerAssembleHeaderProperties('stylesheets') .
-            $this->sdmAssemblerAssembleHeaderProperties('scripts');
-        return ($themeProps === '' || $themeProps === false ? false : $themeProps);
+        /* Array of valid properties to assemble. */
+        $properties = array('meta', 'stylesheets', 'scripts');
+
+        /* Initialize $themeProps which will store any successfully assembled header properties. */
+        $themeProps = '';
+
+        /* Assemble current theme's header properties. */
+        foreach ($properties as $property) {
+            $themeProps .= $this->sdmAssemblerAssembleHeaderProperties($property);
+        }
+
+        /* Return the assembled properties or false on failure. */
+        return ($themeProps === false ? false : $themeProps);
     }
 
     /**
-     * Loads and assembles a content for the requested page and updates the current DataObject
-     * accordingly.
+     * Loads and assembles the content for the requested page and updates the current DataObject.
      *
-     * If requested page exists in the current DataObject or is dynamically generated
-     * by an app then this method will update the current DataObject's content object
-     * with the newly assembled content.
+     * If requested page exists or is dynamically generated by an app then this method will
+     * update the current DataObject's content object with the newly assembled content.
      *
-     * If the requested page does not exist in the DataObject or as a dynamically generated
-     * app page then this method will update the current DataObject's content object with
-     * "Page Not Found" content and will log a bad request to the Bad Requests Log.
+     * If the requested page does not exist or is not dynamically generated by an app then this
+     * method will update the current DataObject's content object with an internally generated
+     * "Page Not Found" message and will log a bad request to the badRequestsLog.
      *
-     * @return bool Returns true if requested page exists or is generated by app, or
-     *              false if requested page does not exist or is not generated by an app.
+     * @return bool Returns true if requested page exists or is dynamically generated by an app.
+     *              Will return false if requested page does not exist or is not dynamically
+     *              generated by an app.
      */
     public function sdmAssemblerLoadAndAssembleContent()
     {
@@ -376,9 +414,10 @@ class SdmAssembler extends SdmNms
         /* Load and assemble enabled apps. */
         $this->sdmAssemblerLoadApps();
 
-        /* Cast $sdmAssemblerDataObject->content->$page to an array to test if it is empty or not,
-           works better then isset() because the $sdmAssemblerDataObject->content->$page object may exist with
-           no properties. */
+        /* Cast $sdmAssemblerDataObject->content->$page to an array so PHP's empty() can be used to test if there is any
+           content to be assembled. empty() works better then isset() because the DataObject's content object may exist
+           with no properties which would cause an isset() check to return true even if there isn't any content to be
+           assembled. */
         $pageContent = (array)$this->DataObject->content->$page;
 
         /* Make sure page exists in DataObject or as a dynamically generated app page by checking
