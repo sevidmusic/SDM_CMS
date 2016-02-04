@@ -58,26 +58,41 @@ class SdmAssembler extends SdmNms
      */
     final private function sdmAssemblerAssembleEnabledAppProps()
     {
-        /** Assemble header properties for enabled core and user apps. **/
-
-        /* Initialize $appScriptProps var. */
+        /* Initialize $appScriptProps var. This will store the assembled header properties. */
         $appScriptProps = '';
 
-        /* Loop through enabled apps. */
-        foreach ($this->sdmCoreDetermineEnabledApps() as $app) {
-            /* We don't know if this is a core app or user app so we look in the core and user
-             app directories for any directory whose name matches the name of an enabled app
-             and then we check if a .as file is provided in those app's root directories. */
+        /* Properties to assemble. */
+        $properties = array('meta', 'scripts', 'stylesheets');
 
-            /* Look in core apps for .as file. */
-            $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('scripts', 'coreApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('scripts', 'coreApp', $app));
-            $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('stylesheets', 'coreApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('stylesheets', 'coreApp', $app));
-            $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('meta', 'coreApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('meta', 'coreApp', $app));
+        /* Sources to try and assemble header properties from. i.e., core or user apps. */
+        $sources = array('coreApp' => $properties, 'userApp' => $properties);
 
-            /* Look in user apps for .as file. */
-            $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('scripts', 'userApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('scripts', 'userApp', $app));
-            $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('stylesheets', 'userApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('stylesheets', 'userApp', $app));
-            $appScriptProps .= ($this->sdmAssemblerAssembleHeaderProperties('meta', 'userApp', $app) === false ? '' : $this->sdmAssemblerAssembleHeaderProperties('meta', 'userApp', $app));
+        /* Enabled apps to try and assemble header properties for. */
+        $enabledApps = $this->sdmCoreDetermineEnabledApps();
+
+        /* Assemble header properties for enabled core and user apps. **/
+        foreach ($enabledApps as $sourceName) {
+            /* Try to assemble header properties from each $source. */
+            foreach ($sources as $source => $properties) {
+                /* Store the current state of $appScriptProps to test against later. */
+                $initAppScripts = $appScriptProps;
+
+                /* Assemble properties */
+                foreach ($properties as $targetProperty) {
+                    /* Try to assemble the $targetProperty for the current app. */
+                    $assembledHeaderProperties = $this->sdmAssemblerAssembleHeaderProperties($targetProperty, $source, $sourceName);
+
+                    /* If $target property was successfully assembled append it to $appScriptProps, otherwise
+                     append an empty string. */
+                    $appScriptProps .= ($assembledHeaderProperties === false ? '' : $assembledHeaderProperties);
+                }
+
+                /* If properties were assembled from this $source for this app then move onto the next app.
+                 Otherwise continue the loop in order to try next $source. */
+                if ($initAppScripts !== $appScriptProps) {
+                    break 1;
+                }
+            }
         }
         return $appScriptProps;
     }
