@@ -14,7 +14,7 @@ that will allow admin to switch to a database for storage. The supported
 databases at first will most likely be MySql and SQLite, also considering Mongo DB.
 
 Im currently working on the documentation for the SDM CMS, and as soon as
-I finish checking for typos and insuring clarity the documentation will
+I finished checking for typos and insuring clarity the documentation will
 be available.
 
 I built this CMS out of a love for coding, particularly in PHP. I had worked with other CMS's
