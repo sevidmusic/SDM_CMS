@@ -623,7 +623,14 @@ class SdmAssembler extends SdmNms
      *
      *   'roles' :       Array of roles that have permission to view app output. Passing the special
      *                   value 'all' will give all users permission to view app output. Current options
-     *                   for roles are root, basicUser, and the special value all.
+     *                   for roles are root, basicUser, and the special value all. If an empty array is
+     *                   passed it will be assumed that no users can see this app output.
+     *
+     *                   // All users will have permission to view this app output. //
+     *                   sdmAssemblerIncorporateAppOutput($output, array('roles' => array('all')));
+     *
+     *                   // No users will have permission to view this app output because 'roles' is empty. //
+     *                   sdmAssemblerIncorporateAppOutput($output, array('roles' => array()));
      *
      *
      * @return bool True if output was incorporated, or false on failure.
@@ -693,49 +700,39 @@ class SdmAssembler extends SdmNms
      */
     final private function filterOptionsArray(&$options)
     {
-        /* OPTIONS ARRAY check| Review $options array values to insure they exist
-        in prep for checks that determine how app should be incorporated | If they
-        weren't passed in via the $options argument then they will be assigned a
-        default value and stored in the $options array */
-        // if $options['wrapper'] is not set
+        /* Review $options array values to insure they exist. If they don't
+        then they will be created and assigned a default value */
+
+        /* If $options['wrapper'] is not set create it with value 'main_content'. */
         if (!isset($options['wrapper'])) {
             $options['wrapper'] = 'main_content';
         }
-        // if incmethod was not passed to the $options array create it
+
+        /* If $options['incmethod'] is not set create it with value 'append'. */
         if (!isset($options['incmethod'])) {
             $options['incmethod'] = 'append';
         }
-        // if ingorepages array was not passed to the $options array create it
+
+        /* If $options['ignorepages'] was not set create it and assign an empty array as it's value. */
         if (!isset($options['ignorepages'])) {
             $options['ignorepages'] = [];
         }
-        // if incpages array was not passed to the $options array create it
+
+        /* If $options['incpages'] was not set create it and assign an array filled with all pages in
+         the DataObject and with the names of all enabled apps. */
         if (!isset($options['incpages'])) {
-            /* For security, we check to see if the incpages array was passed to the options array.
-             * If it was then leave it alone and use it as it is, if it wasn't then we assume the
-             * developer meant to incorporate into all pages so we create an incpages array that
-             * contains all the pages in core as well as any enabled apps so any app generated pages
-             * will also incorporate app output.
-             * Also note that if inpages is empty then it will be assumed the developer
-             * does NOT want to incorporate app output into any page.
-             * i.e.,
-             *   // app out put will NOT be incorporated into any pages because incpages is empty
-             *   sdmAssemblerIncorporateAppOutput($this->DataObject, $output, array('incpages' => array());
-             *   //app out put will be incorporated into all pages because incpages does not exist, and will
-             *     therefore be created and configured with pre-determined internal default values
-             *   sdmAssemblerIncorporateAppOutput($this->DataObject, $output);
-             *
-             */
             $pages = $this->sdmCoreDetermineAvailablePages();
             $enabledApps = json_decode(json_encode($this->sdmCoreDetermineEnabledApps()), true);
             $options['incpages'] = array_merge($pages, $enabledApps);
         }
-        /* If $options['roles'] is not set then we assume all users should see this app output and we add
-        the special 'all' value to the $options['roles'] array, if $options['roles'] is empty we assume
-        no users can see this app output.*/
+
+        /* If $options['roles'] is not set create it and assign an array containing the special 'all' value.
+         If $options['roles'] is empty it will be assumed that no users can see this app output. */
         if (!isset($options['roles'])) {
             $options['roles'] = ['all'];
         }
+
+        /* Return the filtered $options array. */
         return $options;
     }
 
