@@ -442,25 +442,25 @@ class SdmAssembler extends SdmNms
     public function sdmAssemblerLoadAndAssembleContent()
     {
         /* Determine requested page. */
-        $page = $this->sdmCoreDetermineRequestedPage();
+        $requestedPage = $this->sdmCoreDetermineRequestedPage();
 
         /* Load and assemble enabled apps. */
         $this->sdmAssemblerLoadApps();
 
-        /* Cast $sdmAssemblerDataObject->content->$page to an array so PHP's empty() can be used to test if there is any
+        /* Cast $sdmAssemblerDataObject->content->$requestedPage to an array so PHP's empty() can be used to test if there is any
            content to be assembled. empty() works better then isset() because the DataObject's content object may exist
            with no properties which would cause an isset() check to return true even if there isn't any content to be
            assembled. */
-        $pageContent = (array)$this->DataObject->content->$page;
+        $requestedPageContent = (array)$this->DataObject->content->$requestedPage;
 
         /* Make sure page exists in DataObject or as a dynamically generated app page by checking
-           if the $pageContent array is empty. If the page exists update the current DataObject
+           if the $requestedPageContent array is empty. If the page exists update the current DataObject
            with assembled content, if not, then log the bad request to the bad requests log, generate
            a page not found page, and update the current DataObject. */
-        switch (empty($pageContent)) {
+        switch (empty($requestedPageContent)) {
             case false:
                 /* Update DataObject with assembled content. */
-                $this->DataObject->content->$page = $this->sdmAssemblerPreparePageForDisplay($this->DataObject->content->$page);
+                $this->DataObject->content->$requestedPage = $this->sdmAssemblerPreparePageForDisplay();
                 return true;
             default:
                 /* Assemble Bad Request Message */
@@ -471,7 +471,7 @@ class SdmAssembler extends SdmNms
                 $linkedByInfo = (isset($_GET['linkedByMenu']) === true ? 'Request Origin: Internal' . PHP_EOL . '- Menu:' . $_GET['linkedByMenu'] . PHP_EOL . (isset($_GET['linkedByMenuItem']) ? '- Menu Item: ' . $_GET['linkedByMenuItem'] : 'menu item unknown') : (isset($_GET['linkedBy']) === true ? 'Request Origin: ' . $_GET['linkedBy'] : 'Request Origin: Unknown'));
                 $errorMessage = '----- BAD REQUEST [' . $badRequestDate . '] -----' . PHP_EOL .
                     'Bad request id: ' . $badRequestId . PHP_EOL .
-                    'Requested Page: ' . $page . PHP_EOL .
+                    'Requested Page: ' . $requestedPage . PHP_EOL .
                     'Requested Url: ' . $badRequestUrl . PHP_EOL .
                     'Request Made by User: ' . 'anonymous' . PHP_EOL .
                     $linkedByInfo . PHP_EOL .
@@ -481,7 +481,7 @@ class SdmAssembler extends SdmNms
                 error_log($errorMessage, 3, $this->sdmCoreGetCoreDirectoryPath() . '/logs/badRequestsLog.log');
 
                 /* Update DataObject with "Page Not Found" content. */
-                $this->DataObject->content->$page = json_decode(json_encode(['main_content' => '<p>The requested page at <b>' . $this->sdmCoreGetRootDirectoryUrl() . '/index.php?page=' . $page . '</b> could not be found. Check the url to for typos. If error persists and your sure this content should exist contact the site admin  at (@TODO:DYNAMICALLY PLACE ADMIN EMAIL HERE) to report the error.</p><p>' . 'Bad request id: ' . $badRequestId . '</p><p>' . 'Requested Page: ' . $page . '</p><p>Requested Url <i>(trimmed for display)</i>: ' . $truncatedBadRequestUrl . '</p>']));
+                $this->DataObject->content->$requestedPage = json_decode(json_encode(['main_content' => '<p>The requested page at <b>' . $this->sdmCoreGetRootDirectoryUrl() . '/index.php?page=' . $requestedPage . '</b> could not be found. Check the url to for typos. If error persists and your sure this content should exist contact the site admin  at (@TODO:DYNAMICALLY PLACE ADMIN EMAIL HERE) to report the error.</p><p>' . 'Bad request id: ' . $badRequestId . '</p><p>' . 'Requested Page: ' . $requestedPage . '</p><p>Requested Url <i>(trimmed for display)</i>: ' . $truncatedBadRequestUrl . '</p>']));
                 return false;
         }
     }
@@ -494,7 +494,7 @@ class SdmAssembler extends SdmNms
     private function sdmAssemblerLoadApps()
     {
         $enabledApps = $this->sdmCoreDetermineEnabledApps();
-        $status = [];
+        $status = array();
         foreach ($enabledApps as $app) {
             $status[] = $this->sdmAssemblerLoadApp($app);
         }
@@ -635,7 +635,7 @@ class SdmAssembler extends SdmNms
      *
      * @return bool True if output was incorporated, or false on failure.
      */
-    public function sdmAssemblerIncorporateAppOutput($output, array $options = [])
+    public function sdmAssemblerIncorporateAppOutput($output, array $options = array())
     {
         /* Determine the requested page. */
         $requestedPage = $this->sdmCoreDetermineRequestedPage();
@@ -809,22 +809,22 @@ class SdmAssembler extends SdmNms
     }
 
     /**
-     * Prepares the $page for display in a theme. Basically, when a page is created it's content is filtered to insure
+     * Prepares the requested page for display in a theme. Basically, when a page is created it's content is filtered to insure
      * no bad chars are included and that the encoding is UTF-8.
      *
      * In order to insure html tags are interpreted as html we need to reverse some of the filtering that was done when
      * the page was created by the SdmCms() class. @see SdmCms::sdmCmsUpdateContent() for more information on how data
      * is filtered on page creation.
      *
-     * This method should only be used internally by the SdmAssembler and should be kept private.
+     * This method should only be used internally by sdmAssemblerLoadAndAssembleContent().
      *
-     * @param object $page The page object to prepare.
-     *
-     * @return object The prepared page object.
+     * @return object The prepared page.
      *
      */
-    private function sdmAssemblerPreparePageForDisplay($page)
+    private function sdmAssemblerPreparePageForDisplay()
     {
+        $requestedPage = $this->sdmCoreDetermineRequestedPage();
+        $page = $this->DataObject->content->$requestedPage;
         foreach ($page as $wrapper => $content) {
             $page->$wrapper = html_entity_decode($content, ENT_HTML5, 'UTF-8');
         }
