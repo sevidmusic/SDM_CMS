@@ -695,8 +695,7 @@ class SdmAssembler extends SdmNms
      * @param array $options The options array as it was passed to sdmAssemblerIncorporateAppOutput().
      *
      * @return array The filtered options array. This method handles the options array by reference so there is
-     * no need to assign it's return value to a var in sdmAssemblerIncorporateAppOutput(). Just call:
-     * $this->filterOptionsArray($options) and the options array will be filtered.
+     * no need to assign it's return value to a variable.
      */
     final private function filterOptionsArray(&$options)
     {
@@ -715,7 +714,7 @@ class SdmAssembler extends SdmNms
 
         /* If $options['ignorepages'] was not set create it and assign an empty array as it's value. */
         if (!isset($options['ignorepages'])) {
-            $options['ignorepages'] = [];
+            $options['ignorepages'] = array();
         }
 
         /* If $options['incpages'] was not set create it and assign an array filled with all pages in
@@ -729,7 +728,7 @@ class SdmAssembler extends SdmNms
         /* If $options['roles'] is not set create it and assign an array containing the special 'all' value.
          If $options['roles'] is empty it will be assumed that no users can see this app output. */
         if (!isset($options['roles'])) {
-            $options['roles'] = ['all'];
+            $options['roles'] = array('all');
         }
 
         /* Return the filtered $options array. */
@@ -738,8 +737,14 @@ class SdmAssembler extends SdmNms
 
     /**
      * Determines if a user has permission to use app based on
-     * weather or not the current user role is found in the
-     * options array provided by the app.
+     * weather or not the current user's role is found in the
+     * $options['roles'] array.
+     *
+     * If the special value 'all' is found in the $options['roles'] array
+     * then all users will be given permission to use the app.
+     *
+     * This method should only be called internally by sdmAssemblerIncorporateAppOutput(), it is not
+     * designed for use by other components.
      *
      * @param array $options The options array provided by the app.
      *
@@ -747,9 +752,8 @@ class SdmAssembler extends SdmNms
      */
     final private function sdmAssemblerUserCanUseApp($options)
     {
-        /* first we check if app output is restricted to certain roles. if it is we check that
-        current user role matches one of the valid roles for the app. If the special 'all' role
-        is in the $options['roles'] array then all users see the app output */
+        /* Return true if current user's role is found in the $options['roles'] array, or if the special 'all'
+         value is found in the $options['roles'] array, otherwise return false. */
         return (in_array($this->sdmGatekeeperDetermineUserRole(), $options['roles'], true) || in_array('all', $options['roles'], true) ? true : false);
     }
 
@@ -809,8 +813,8 @@ class SdmAssembler extends SdmNms
      * no bad chars are included and that the encoding is UTF-8.
      *
      * In order to insure html tags are interpreted as html we need to reverse some of the filtering that was done when
-     * the page was created by the SdmCms() class. @see SdmCms::sdmCmsUpdateContent() for
-     * more information on how data is filtered on page creation.
+     * the page was created by the SdmCms() class. @see SdmCms::sdmCmsUpdateContent() for more information on how data
+     * is filtered on page creation.
      *
      * This method should only be used internally by the SdmAssembler and should be kept private.
      *
