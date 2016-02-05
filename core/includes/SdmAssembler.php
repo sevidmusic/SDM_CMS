@@ -107,15 +107,19 @@ class SdmAssembler extends SdmNms
      * i.e.,
      *
      *   // assembles 'stylesheets' header properties for current theme because $source and $sourceName are not set.
+     *
      *   sdmAssemblerAssembleHeaderProperties('stylesheets');
      *
      *   // assembles 'stylesheets' header properties for the sdmResponsive theme.
+     *
      *   sdmAssemblerAssembleHeaderProperties('stylesheets', 'theme', 'sdmResponsive');
      *
      *   // assembles 'scripts' header properties for the contentManager core app.
+     *
      *   sdmAssemblerAssembleHeaderProperties('scripts', 'coreApp', 'contentManager');
      *
      *   // assembles 'meta' header properties for the helloWorld user app.
+     *
      *   sdmAssemblerAssembleHeaderProperties('meta', 'userApp', 'helloWorld');
      *
      * @param string $targetProperty Property to read. (options: stylesheets, scripts, or meta)
@@ -186,7 +190,8 @@ class SdmAssembler extends SdmNms
     }
 
     /**
-     * Assembles the initial header property html.
+     * Assembles the initial header property html. By default this method generates the initial header property
+     * html for the current theme.
      *
      * Specifically, assembles an html code comment in the following format to help make html markup generated
      * for a page more readable by making it clear what component, app or theme, is defining the $targetProperty
@@ -197,7 +202,7 @@ class SdmAssembler extends SdmNms
      * @param string $targetProperty The target property. (options: stylesheets, scripts, or meta)
      *
      * @param string $source The type of component. (options: theme, userApp,
-     *                       or coreApp). Defaults to theme.
+     *                       or coreApp).
      *
      *                       IMPORTANT: If $source is set then $sourceName must also be set.
      *
@@ -216,11 +221,11 @@ class SdmAssembler extends SdmNms
      * Returns an array of values for a specified property defined in a
      * specified theme or app's .as file.
      *
-     * NOTE: If $source is not set then the current themes .as file will be read.
+     * By default properties are retrieved from the current themes .as file.
      *
      * @param string $property The property whose values should be returned. (options: stylesheets, scripts, meta)
      *
-     * @param string $source The type of component (options: theme, userApp, or coreApp). Defaults to theme.
+     * @param string $source The type of component (options: theme, userApp, or coreApp).
      *
      *                    IMPORTANT: If $source is set then $sourceName must also be set.
      *
@@ -257,7 +262,7 @@ class SdmAssembler extends SdmNms
     /***
      * Load a .as file from a specified app or theme and read it into an array.
      *
-     * By default this method will attempt to load the current themes .as file if provided.
+     * By default this method will attempt to load the current theme's .as file if provided.
      *
      * @param string $source The type of component. (options: theme, userApp,
      *                       or coreApp).
@@ -347,16 +352,29 @@ class SdmAssembler extends SdmNms
      */
     final private function sdmAssemblerExtractMeta($metaPropertyString)
     {
+        /* Extract characters between the first '=' and the last ';' to get the property values */
         $metaProps = $this->sdmCoreStrSlice($metaPropertyString, '=', ';');
+
+        /* Explode property values into an array, splitting string by '],' */
         $metaData = explode('],', $metaProps);
+
+        /* Initialize $meta array. */
         $meta = array();
+
+        /* Assemble internal meta structures */
         foreach ($metaData as $data) {
+            /* Remove '[' and ']' from each piece of meta $data*/
             $data = str_replace(['[', ']'], '', $data);
+            /* Replace ',' with '"' in each piece of meta $data*/
             $data = str_replace(',', '"', $data);
+            /* Replace ':' with '=' in each piece of meta $data*/
             $data = str_replace(':', '="', $data);
+            /* Replace '|' with ' ' in each piece of meta $data*/
             $data = str_replace('|', ' ', $data) . '"';
+            /* Add extracted meta $data to $meta array. */
             $meta[] = $data;
         }
+        /* Return $meta array. */
         return $meta;
     }
 
@@ -496,7 +514,7 @@ class SdmAssembler extends SdmNms
     private function sdmAssemblerLoadApp($app)
     {
         /* Create an appropriately named reference to $this so apps can utilize the properties and methods
-         of $this without having to instantiate their own SdmAssembler() object. */
+         of the SdmAssembler() without having to instantiate their own SdmAssembler() object. */
         $sdmassembler = $this;
 
         /* Assemble relative path to app. */
@@ -532,100 +550,115 @@ class SdmAssembler extends SdmNms
     }
 
     /**
-     * Incorporates app output into the page.
+     * Incorporates app $output into the page.
+     *
      * This method is intended for use by core and user apps. It provides
-     * a simple method for incorporating an app's output into the page. It is
-     * ok to call this method multiple times within an app.
-     * If provided, the $options array is used to specify how the app's output
-     * is to be incorporated.
-     * Note: If the requested page (determined internally) does not exist
-     * in core, as an enabled app, or in the $options array's 'incpages' array then the dataObject will not be modified
-     * and the apps output will not be incorporated. This is for security, and prevents requests to
-     * non-existent pages from successfully taking user to a dynamically generated page.
-     * This method, in order to allow apps to function without creating a page for their output in core,
-     * creates a place holder page in the datObject for when the requested page does not exist in core.
-     * So, if the requested page does not exist in core, it must at least exist as a on of the
-     * pages specified in the $options array's 'incpages' array. Without this check we could pass anything
-     * to the page argument in the url and the SDM CMS would generate a page for it.
-     * i.e, http://example.com/index.php?page=NonExistentPage would work if we did not check for it in core
-     * and in the 'incpages' array
+     * a simple method for incorporating an app's $output into the page.
      *
-     * @param string $output A plain text or HTML string to be used as the apps output.
+     * It is ok to call this method multiple times within an app.
      *
-     * @param array $options (optional) Array of options that determine how an app's
-     * output is incorporated. If not specified, then the app will be incorporated into
-     * all pages and will be assigned to the 'main_content' wrapper that is part of, and,
-     * required by SDM core.
-     * Overview of $options ARRAY:
+     * This method will return true if app $output was successfully incorporated,
+     * or false if app $output could not be incorporated.
      *
-     *   'wrapper' : The content wrapper the app is to be incorporated into.
-     *                   If not specified then 'main_content' is assumed.
-     *   'incmethod' : Determines how app output should be incorporated.
-     *                     Options for 'incmethod' are append,
-     *                     prepend, and overwrite. Defaults to append.
-     *   'incpages' : Array of pages to incorporate the app output into. You can also pass in the name
-     *                    of an app and then any page that app generates will also incorporate the app out put
-     *                    as long as the page the app generates shares the same name as the app itself.
-     *                    (i.e. if you incpages has an item ExampleApp then the page ExampleApp
-     *                          will incorporate app output even if the page ExampleApp does not
-     *                          exist in core.)
-     *   Note: If incpages is not set then it is assumed that all pages
-     *              are to incorporate app output. If an empty array is passed
-     *              then NO pages will incorporate app output.
-     *              (i.e., passing an empty array is basically the same as passing
-     *                     in an ignorepages array that contains the names of all pages
-     *                     and enabled apps.
-     *   'ignorepages' : Array of pages NOT to incorporate the app output into. This
-     *                       array can include the names of Apps that should NOT incorporate
-     *                       this output into pages that they generate.
-     *                      (i.e, if an ExampleApp exists in ignorePages then any
-     *                             page generated by the ExampleApp app will not incorporate
-     *                             the app output).
-     *   'roles' : Array of roles that can view this output.
+     * @param string $output A plain text or html string to be used as the apps output.
      *
-     * NOTE: If a page is found in both the 'incpages' and 'ignorepages' arrays then
-     *          the app output will be ignored on that page. This is for security, best to assume
-     *          in such a case that the developer meant to ignore a page if the developer passes
-     *          a page to both the 'incpages' and 'ignorepages' arrays.
+     * @param array $options Array of options that determine how an app's $output is incorporated.
+     *                       If not specified, then the app $output will be incorporated into all pages,
+     *                       will be accessible to all users, and will be appended to the 'main_content'
+     *                       wrapper of each page.
      *
-     * @return object The DataObject with or without app modifications incorporated.
-     * The DataObject may be returned without modification for a number of reasons including the user not
-     * having permission to view the app, the requested page being found in the options:ignorepages array or
-     * not being found in the options:incpages array, or a number of other factors.
+     * Overview of $options array:
+     *
+     *   'wrapper' :     The content wrapper the app $output is to be incorporated into.
+     *                   Defaults to 'main_content'.
+     *
+     *   'incmethod' :   Determines how app $output should be incorporated. Options
+     *                   for 'incmethod' are append, prepend, and overwrite.
+     *                   Defaults to append.
+     *
+     *   'incpages' :    Array of pages to incorporate the app output into. If set, then app
+     *                   $output will be incorporated exclusively into the pages in this
+     *                   array. If not set, then the app output will be incorporated
+     *                   into all pages. If a page in this array does not already exist in the
+     *                   DataObject then it will be generated dynamically.
+     *
+     *                   NOTE: If an empty array is passed to 'incpages' then the app output will not be incorporated
+     *                   into any page. Passing an empty array to 'incpages' is basically the same as passing the
+     *                   special value 'all' to the 'ignorepages' option.
+     *
+     *                   i.e,
+     *
+     *                   To incorporate app output into all pages DO NOT set the 'incpages' option:
+     *
+     *                   e.g.,
+     *                   sdmAssemblerIncorporateAppOutput($output);
+     *
+     *                   To incorporate app output into specific pages pass an array of the pages
+     *                   that should incorporate the app output to the 'incpages' option.
+     *
+     *                   e.g.,
+     *                   sdmAssemblerIncorporateAppOutput($output, array('incpages'=> array('page1', 'page2', ...)));
+     *
+     *                   Remember, passing an empty array to 'incpages' is the same as passing
+     *                   all pages to the 'ignorepages' option.
+     *
+     *                   e.g.,
+     *
+     *                   sdmAssemblerIncorporateAppOutput($output, array('incpages'=> array()));
+     *
+     *                   // is basically the same as //
+     *
+     *                   sdmAssemblerIncorporateAppOutput($output, array('ignorepages'=> array('all')));
+     *
+     *   'ignorepages' : Array of pages that should not incorporate the app output. Passing the special
+     *                   value 'all' will result in the app output not being incorporated into any
+     *                   page. This parameter is useful while developing apps so the developer can
+     *                   enable the app being developed without having the output actually get
+     *                   incorporated into any page.
+     *
+     *                   NOTE: If a page is found in both the 'incpages' and 'ignorepages' arrays then
+     *                   the app output will be ignored on that page. This is for security, best to assume
+     *                   in such a case that the developer meant to ignore a page if the developer passes
+     *                   a page to both the 'incpages' and 'ignorepages' arrays.
+     *
+     *   'roles' :       Array of roles that have permission to view app output. Passing the special
+     *                   value 'all' will give all users permission to view app output. Current options
+     *                   for roles are root, basicUser, and the special value all.
+     *
+     *
+     * @return bool True if output was incorporated, or false on failure.
      */
     public function sdmAssemblerIncorporateAppOutput($output, array $options = [])
     {
-        /* determine the requested page */
+        /* Determine the requested page. */
         $requestedPage = $this->sdmCoreDetermineRequestedPage();
 
-        /* filter options array to insure it's integrity */
+        /* Filter options array to insure it's integrity. */
         $this->filterOptionsArray($options);
 
-        /* make sure user has permission to use this app. if user does NOT, then return
-        the DataObject without modification. */
+        /* Make sure user has permission to use this app. If user does not have permission, then return false. */
         if ($this->sdmAssemblerUserCanUseApp($options) !== true) {
-            return $this->DataObject;
+            return false;
         }
 
-        /* Check that $requested page was found in core or listed in the options:incpages array */
-        $pageFoundInCore = in_array($requestedPage, $this->sdmCoreDetermineAvailablePages());
-        $pageFoundInIncpages = in_array($requestedPage, $options['incpages']);
+        /* Check that $requested page was found in core or listed in the $options['incpages'] array */
+        $pageFoundInCore = in_array($requestedPage, $this->sdmCoreDetermineAvailablePages(), true);
+        $pageFoundInIncpages = in_array($requestedPage, $options['incpages'], true);
         if ($pageFoundInCore === false && $pageFoundInIncpages === false) {
-            return $this->DataObject;
+            return false;
         }
 
-        /* DATAOBJECT check | Make sure the properties we are modifying exist to prevent throwing any PHP errors */
+        /* Make sure requested page is not in the $options['ignorepages'] array, If it is return false. */
+        if (in_array($requestedPage, $options['ignorepages'], true) || in_array('all', $options['ignorepages'], true)) {
+            return false;
+        }
 
-        /* Insure that page, weather in core or app generated, is accessible via the DataObject. */
+        /* Dynamically create app generated pages. These are pages specified in $options['incpages'] array that do
+         not already exist in the DataObject. */
         $this->sdmAssemblerPrepareAppGeneratedPage();
 
         /* Insure the target wrapper is accessible via the DataObject. */
         $this->sdmAssemblerPrepareTargetWrapper($options);
-
-        /* make sure requested page is not in the ignorepages array, if it is return DataObject without modification. */
-        if (in_array($requestedPage, $options['ignorepages'])) {
-            return $this->DataObject;
-        }
 
         /* Only incorporate app output if requested page matches one of the items in incpages */
         if (in_array($requestedPage, $options['incpages'], true)) {
@@ -643,18 +676,20 @@ class SdmAssembler extends SdmNms
         }
 
         /* return the modified DataObject. */
-        return $this->DataObject;
+        return true;
     }
 
     /**
-     * <p>Insures the integrity of the $options array before it is used by sdmAssemblerIncorporateAppOutput().</p><br>
-     * <p><b>NOTE: This method should only be called internally by sdmAssemblerIncorporateAppOutput(), it is NOT
-     * designed for use by other components.</b></p>
-     * @param array $options <p>The options array as it was passed to sdmAssemblerIncorporateAppOutput().</p>
-     * @return array <p>The filtered options array. This method handles the options array by reference so there is
-     * no need to assign it's return value to a var in sdmAssemblerIncorporateAppOutput(). Just call...
-     * $this->filterOptionsArray($options)
-     * ...and the options array will be filtered.</p>
+     * Insures the integrity of the $options array before it is used by sdmAssemblerIncorporateAppOutput().
+     *
+     * NOTE: This method should only be called internally by sdmAssemblerIncorporateAppOutput(), it is NOT
+     * designed for use by other components.
+     *
+     * @param array $options The options array as it was passed to sdmAssemblerIncorporateAppOutput().
+     *
+     * @return array The filtered options array. This method handles the options array by reference so there is
+     * no need to assign it's return value to a var in sdmAssemblerIncorporateAppOutput(). Just call:
+     * $this->filterOptionsArray($options) and the options array will be filtered.
      */
     final private function filterOptionsArray(&$options)
     {
@@ -718,38 +753,46 @@ class SdmAssembler extends SdmNms
         /* first we check if app output is restricted to certain roles. if it is we check that
         current user role matches one of the valid roles for the app. If the special 'all' role
         is in the $options['roles'] array then all users see the app output */
-        return (in_array($this->sdmGatekeeperDetermineUserRole(), $options['roles']) || in_array('all', $options['roles']) ? true : false);
+        return (in_array($this->sdmGatekeeperDetermineUserRole(), $options['roles'], true) || in_array('all', $options['roles'], true) ? true : false);
     }
 
     /**
-     * <p>This method prepares app generated #pages, for display by insuring they
-     * exist in the DataObject.</p><br>
-     * <p><i>#pages used by an app to display app output will not necessarily exist in core,
-     * so to insure they can be referenced via the DataObject we need to manually add them
-     * to the DataObject if they do not already exist in the DataObject.</i></p><br>
-     * <p><b>NOTE: This method should only be called internally by sdmAssemblerIncorporateAppOutput(), it is NOT
-     * designed for use by other components.</b></p>
-     * @return bool <p>true if page exists or was successfully added to the DataObject,
-     * false if neither of the previous two statements is true.</p>
+     * This method dynamically adds a page to the DataObject during page assembly for enabled apps that generate
+     * app output for a page that does not already exist in the DataObject.
+     *
+     * If the requested page already exists then this method will simply return true.
+     *
+     * This method should only be called internally by sdmAssemblerIncorporateAppOutput(), it is not
+     * designed for use by other components.
+     *
+     * @return bool Returns true if page exists or was successfully added to the DataObject dynamically,
+     * false if neither of the previous two statements is true.
      */
     final private function sdmAssemblerPrepareAppGeneratedPage()
     {
         $requestedPage = $this->sdmCoreDetermineRequestedPage();
-        /* if no page exists for app in the core, then create a placeholder
-         object for it to avoid PHP Errors, Notices, and Warnings */
+        /* If requested page does not exist in the DataObject, then dynamically create it in the DataObject. */
         if (!isset($this->DataObject->content->$requestedPage)) {
             $this->DataObject->content->$requestedPage = new stdClass();
         }
+
+        /* Make sure the page exists. */
         $status = (isset($this->DataObject->content->$requestedPage) ? true : false);
+
+        /* Return true if page exists, false if page still does not exist. */
         return $status;
     }
 
     /**
-     * <p>This method insures the targeted wrapper actually exists in the DataObject.
-     * If it does not it is created so that it can be accessed via the DataObject.</p><br>
-     * <p><b>NOTE: This method should only be called internally by sdmAssemblerIncorporateAppOutput(), it is NOT
-     * designed for use by other components.</b></p>
-     * @param array $options <p>The $options array passed to sdmAssemblerIncorporateAppOutput().</p>
+     * This method insures the targeted wrapper actually exists for the requested page in the DataObject.
+     *
+     * If it does not it is dynamically created for the requested page in the DataObject.
+     *
+     * This method should only be called internally by sdmAssemblerIncorporateAppOutput(), it is not
+     * designed for use by other components!
+     *
+     * @param array $options The $options array passed to sdmAssemblerIncorporateAppOutput().
+     *
      * @return bool True if wrapper exists or was created successfully, false wrapper does not exist.
      */
     final private function sdmAssemblerPrepareTargetWrapper($options)
@@ -765,16 +808,18 @@ class SdmAssembler extends SdmNms
     }
 
     /**
-     * <p>Prepares the $page for display in a theme. Basically, when
-     * a page is created it's content is filtered to insure no bad
-     * chars are included and that the encoding is UTF-8.
-     * In order to insure html tags are interpreted as html we need to
-     * reverse some of the filtering that was done when the page was created
-     * by the SdmCms() class. @see SdmCms::sdmCmsUpdateContent() for
-     * more information on how data is filtered on page creation</p>
-     * <p>This method should only be used internally by the SdmAssembler and should be kept <i>private</i>.</p>
-     * @param object $page <p>The page object to prepare.</p>
-     * @return object <p>The prepared page object.</p>
+     * Prepares the $page for display in a theme. Basically, when a page is created it's content is filtered to insure
+     * no bad chars are included and that the encoding is UTF-8.
+     *
+     * In order to insure html tags are interpreted as html we need to reverse some of the filtering that was done when
+     * the page was created by the SdmCms() class. @see SdmCms::sdmCmsUpdateContent() for
+     * more information on how data is filtered on page creation.
+     *
+     * This method should only be used internally by the SdmAssembler and should be kept private.
+     *
+     * @param object $page The page object to prepare.
+     *
+     * @return object The prepared page object.
      *
      */
     private function sdmAssemblerPreparePageForDisplay($page)
