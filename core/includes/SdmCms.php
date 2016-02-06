@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The <b>SdmCms</b> is responsible for provideing the components necessary for
+ * The SdmCms is responsible for providing the components necessary for
  * content management.
  *
  * @author Sevi Donnelly Foreman
@@ -35,37 +35,52 @@ class SdmCms extends SdmCore
     {
         /* Load the entire data object */
         $dataObject = $this->sdmCoreLoadDataObject(false);
+
         /* Filter $html to insure encoding is UTF-8. */
         $filteredHtml = iconv("UTF-8", "UTF-8//IGNORE", $html);
         $filteredHtml2 = iconv("UTF-8", "ISO-8859-1//IGNORE", $filteredHtml);
         $filteredHtml3 = iconv("ISO-8859-1", "UTF-8", $filteredHtml2);
         $utf8Html = utf8_encode(trim($filteredHtml3));
+
         /* If the page does not already exist in the DataObject create a placeholder object for it. */
         if (!isset($dataObject->content->$page) === true) {
             $dataObject->content->$page = new stdClass();
         }
+
         /* Convert all applicable characters in $html to HTML entities. */
         $dataObject->content->$page->$wrapper = htmlentities($utf8Html, ENT_SUBSTITUTE | ENT_DISALLOWED | ENT_HTML5, 'UTF-8');
+
         /* Encode the updated dataObject as json to prepare for storage. */
         $data = json_encode($dataObject);
+
         /* Store the updates. */
         $update = file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $data, LOCK_EX);
+
         /* Determine weather the update succeeded or failed.*/
         $status = ($update < 0 || $update !== false ? true : false);
+
+        /**/
         return $status;
     }
 
     /**
-     * <p>Determines available content wrappers for current theme by looking in the <i>current theme's</i> page.php file.</p>
-     * @return array An array formated key => value where key is formated for display, and value is formated to be <b>code-safe</b>
-     * <p>i.e. the requried "main_content" wrapper would be returned in an array formated as follows<br/><br/>
-     * <b>array("Main Content" => 'main_content')</b></p>
+     * Determines available content wrappers for current theme by looking in the current theme's page.php file.
+     *
+     * @return array An array formatted key => value where key is formatted for display, and value is formatted to be
+     * code-safe.
+     *
+     * i.e. the 'main_content' wrapper would be returned in an array formatted as follows:
+     *
+     * array("Main Content" => 'main_content')
      */
     public function sdmCmsDetermineAvailableWrappers()
     {
         $html = file_get_contents($this->sdmCoreGetCurrentThemeDirectoryPath() . '/page.php');
         $dom = new DOMDocument();
-        // for now we are surpressing any errors thrown by loadHTML() because it complains when malformed xml and html is loaded, and the errors were clogging up the error log during other development branches. Howver it is very important that a fix is found for this issue as it could lead to unknown bugs.
+        /* For now we are suppressing any errors thrown by loadHTML() because it complains
+         when malformed xml and html is loaded, and the errors were clogging up the error
+         log during other development branches. However it is very important that a fix is
+         found for this issue as it could lead to unknown bugs. */
         @$dom->loadHTML($html);
         $xpath = new DOMXPath($dom);
         $tags = $xpath->query('//div[@id]');
@@ -79,14 +94,18 @@ class SdmCms extends SdmCore
     }
 
     /**
-     * <p>Loads a specific piece of content.</p>
-     * @param string $page <p>The page we want to load content from.</p>
-     * @param string $contentWrapper <p>The content wrapper we want to load content from.</p>
-     * @return string <p>The string of html for this $contentWrapper.</p>
+     * Loads a specific piece of content.
+     *
+     * @param string $page The name of the page whose content we want to load. Defaults to 'homepage'.
+     *
+     * @param string $contentWrapper The name of the content wrapper we want to load content from. Defaults
+     *                               to 'main_content'
+     *
+     * @return string String of html for the $contentWrapper.
      */
     public function sdmCmsLoadSpecificContent($page = 'homepage', $contentWrapper = 'main_content')
     {
-        // load our json data from data.json and convert into an array
+        /* load our json data from data.json and convert into an array */
         $data = json_decode(file_get_contents($this->sdmCoreGetCoreDirectoryPath() . '/sdm/data.json'), true);
         return $data['content'][$page][$contentWrapper]; // @TODO : Use object notation instead of array notation
     }
