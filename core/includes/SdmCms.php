@@ -106,8 +106,8 @@ class SdmCms extends SdmCore
     public function sdmCmsLoadSpecificContent($page = 'homepage', $contentWrapper = 'main_content')
     {
         /* load our json data from data.json and convert into an array */
-        $data = json_decode(file_get_contents($this->sdmCoreGetCoreDirectoryPath() . '/sdm/data.json'), true);
-        return $data['content'][$page][$contentWrapper]; // @TODO : Use object notation instead of array notation
+        $data = json_decode(file_get_contents($this->sdmCoreGetCoreDirectoryPath() . '/sdm/data.json'), false);
+        return $data->content->$page->$contentWrapper;
     }
 
     /**
