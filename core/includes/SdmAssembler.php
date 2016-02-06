@@ -5,6 +5,8 @@
  * It is also responsible for incorporating output from core and user apps into
  * a page.
  *
+ * @author Sevi Donnelly Foreman
+ *
  */
 class SdmAssembler extends SdmNms
 {
@@ -363,13 +365,13 @@ class SdmAssembler extends SdmNms
 
         /* Assemble internal meta structures */
         foreach ($metaData as $data) {
-            /* Remove '[' and ']' from each piece of meta $data*/
+            /* Remove '[' and ']' from each piece of meta $data. */
             $data = str_replace(['[', ']'], '', $data);
-            /* Replace ',' with '"' in each piece of meta $data*/
+            /* Replace ',' with '"' in each piece of meta $data. */
             $data = str_replace(',', '"', $data);
-            /* Replace ':' with '=' in each piece of meta $data*/
+            /* Replace ':' with '=' in each piece of meta $data. */
             $data = str_replace(':', '="', $data);
-            /* Replace '|' with ' ' in each piece of meta $data*/
+            /* Replace '|' with ' ' in each piece of meta $data. */
             $data = str_replace('|', ' ', $data) . '"';
             /* Add extracted meta $data to $meta array. */
             $meta[] = $data;
@@ -447,10 +449,10 @@ class SdmAssembler extends SdmNms
         /* Load and assemble enabled apps. */
         $this->sdmAssemblerLoadApps();
 
-        /* Cast $sdmAssemblerDataObject->content->$requestedPage to an array so PHP's empty() can be used to test if there is any
-           content to be assembled. empty() works better then isset() because the DataObject's content object may exist
-           with no properties which would cause an isset() check to return true even if there isn't any content to be
-           assembled. */
+        /* Cast $sdmAssemblerDataObject->content->$requestedPage to an array so PHP's empty() can be used
+           to test if there is any content to be assembled. empty() works better then isset() because the
+           DataObject's content object may exist with no properties which would cause an isset() check to
+           return true even if there isn't any content to be assembled. */
         $requestedPageContent = (array)$this->DataObject->content->$requestedPage;
 
         /* Make sure page exists in DataObject or as a dynamically generated app page by checking
@@ -856,7 +858,6 @@ class SdmAssembler extends SdmNms
      * @param string $wrapper The wrapper to assemble html for.
      *
      * @return string String of html for specified wrapper.
-     *
      */
     public function sdmAssemblerGetContentHtml($wrapper)
     {
