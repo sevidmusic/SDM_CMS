@@ -190,12 +190,15 @@ class SdmNms extends SdmGatekeeper
     }
 
     /**
-     * <p>Gets the html needed to display the wrappers menus and incorporates it into the page</p>
-     * @param string $wrapper <p>The wrapper to get menus for</p>
-     * @param string $wrapperAssembledContent <p>The wrapper html as it is assembled so far,
+     * Gets the html needed to display the wrappers menus and incorporates it into the page.
+     *
+     * @param string $wrapper The wrapper to get menus for.
+     *
+     * @param string $wrapperAssembledContent The wrapper html as it is assembled so far,
      * the menu incorporation happens last in order to allow apps to modify menus prior to
-     * incorporating them into the page</p>
-     * @return string <p>The html for the menus.</p>
+     * incorporating them into the page.
+     *
+     * @return string The html for the menus.
      */
     public function sdmNmsGetWrapperMenusHtml($wrapper, $wrapperAssembledContent)
     {
@@ -219,18 +222,27 @@ class SdmNms extends SdmGatekeeper
     }
 
     /**
-     * Get a single stored menu and return it as an html formatted string
-     * @param mixed $menuId An integer or stirng that is equal to the id of the menu we wish to get
-     * @return string An html formated string representation of the menu
+     * Get a single stored menu and return it as an html formatted string.
+     *
+     * @param mixed $menuId An integer or string that is equal to the id of the menu we wish to get
+     *
+     * @return string An html formatted string representation of the menu.
      */
     public function sdmNmsGetMenuHtml($menuId)
     {
+        /* Determine current user's role. */
         $currentUserRole = (SdmGatekeeper::sdmGatekeeperAuthenticate() === true ? 'root' : 'basic_user'); // this is a dev role, the users role should be determined by the Sdm Gatekeeper once it is built
+
+        /* Get the menu's html. */
         $menu = $this->sdmNmsGetMenu($menuId);
-        // @todo : there is no need to instatiate SdmCore() here since this class is a child of SdmCore().
-        // if $currentUserRole exists in menuKeyholders array show menu || if the special role "all" exists in the menuKeyholders array we assume all users have accsess and show menu || we no longer  assume that all users have accsess to this menu if menuKeyholders is null
-        if (in_array($currentUserRole, $menu->menuKeyholders) || in_array('all', $menu->menuKeyholders)) { // we check three things, if the menuKeyholders property is null we assume all users can accsess this menu, if it is not null we check if the users role exists in the menuKeyholders array, we also do a check to see if the 'all' value exists in the menuKeyholders array, if 'all' is present then the menu will be available to all users regardless of the other roles set in menuKeyholders
-            $html = (in_array($this->sdmCoreDetermineRequestedPage(), $menu->displaypages) === true || in_array('all', $menu->displaypages) === true ? $this->sdmNmsBuildMenuHtml($menu) : '<!-- Menu "' . $menu->menuDisplayName . '" Placeholder -->'); //$this->sdmNmsBuildMenuHtml($menu);
+
+        /* Make sure user has permission to use this menu. *.
+         * - If the menuKeyholders property is null we assume all users can accsess this menu,
+         * - If it is not null we check if the users role exists in the menuKeyholders array,
+         * - If the special value 'all' is present then the menu will be available to all users
+         *   regardless of what other roles are set in $menu->menuKeyholders. */
+        if (in_array($currentUserRole, $menu->menuKeyholders) || in_array('all', $menu->menuKeyholders)) {
+            $html = (in_array($this->sdmCoreDetermineRequestedPage(), $menu->displaypages) === true || in_array('all', $menu->displaypages) === true ? $this->sdmNmsBuildMenuHtml($menu) : '<!-- Menu "' . $menu->menuDisplayName . '" Placeholder -->');
         }
         return (isset($html) && $html !== '' ? $html : false);
     }

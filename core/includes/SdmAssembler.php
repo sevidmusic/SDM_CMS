@@ -832,17 +832,18 @@ class SdmAssembler extends SdmNms
     }
 
     /**
-     * Returns The required closing HTML tags for the page.
+     * Returns the required closing html tags for the page.
+     *
      * @return string The required HTML closing tags as a string.
      */
     public function sdmAssemblerAssembleHtmlRequiredClosingTags()
     {
         return '
-    <!--This site was built using the SDM CMS content management system which was
-        designed and developed by Sevi Donnelly Foreman in the year 2014.-->
-    <!--To contact the developer of the SDM CMS write to sdmwebsdm@gmail.com.-->
-    <!--Note: Sevi is not necessarily the author of this site, he is just the
-        developer of Content Management System that is used to build/maintain this site.-->
+    <!-- This site was built using the SDM CMS content management system which was
+         designed and developed by Sevi Donnelly Foreman in the year 2014. -->
+    <!-- To contact the developer of the SDM CMS write to sdmwebsdm@gmail.com. -->
+    <!-- Note: Sevi is not necessarily the author of this site, he is just the
+         developer of the Content Management System that is used to build and maintain this site. -->
     </body>
     </html>
     ';
@@ -859,9 +860,16 @@ class SdmAssembler extends SdmNms
      */
     public function sdmAssemblerGetContentHtml($wrapper)
     {
+        /* Determine requested page. */
         $page = $this->sdmCoreDetermineRequestedPage();
+
+        /* Assemble the wrapper. */
         $wrapperAssembledContent = (isset($this->DataObject->content->$page->$wrapper) ? $this->DataObject->content->$page->$wrapper : '<!-- ' . $wrapper . ' placeholder -->');
+
+        /* Get any menus that belong to this wrapper. */
         $content = $this->sdmNmsGetWrapperMenusHtml($wrapper, $wrapperAssembledContent);
+
+        /* Return the assembled wrapper. */
         return $content;
     }
 
