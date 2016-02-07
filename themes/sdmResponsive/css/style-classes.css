@@ -49,6 +49,7 @@ body {
 /* Tablet Styles */
 @media only screen and (min-width: 600px) {
     body {
+        background: -webkit-gradient(bottom right, black, #55eeff, black); /* For Chrome and Safari4+ */
         background: -webkit-linear-gradient(left top, black , #77ddff, black); /* For Safari 5.1 to 6.0 */
         background: -o-linear-gradient(bottom right, black ,  #77ddff, black); /* For Opera 11.1 to 12.0 */
         background: -moz-linear-gradient(bottom right, black ,  #77ddff, black); /* For Firefox 3.6 to 15 */
@@ -67,6 +68,7 @@ body {
 /* Desktop Styles */
 @media only screen and (min-width: 768px) {
     body{
+        background: -webkit-gradient(bottom right, black, #55eeff, black); /* For Chrome and Safari4+ */
         background: -webkit-linear-gradient(left top, black , #99ccff, black); /* For Safari 5.1 to 6.0 */
         background: -o-linear-gradient(bottom right, black , #99ccff, black); /* For Opera 11.1 to 12.0 */
         background: -moz-linear-gradient(bottom right, black , #99ccff, black); /* For Firefox 3.6 to 15 */
