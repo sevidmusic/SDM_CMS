@@ -129,17 +129,17 @@ class SdmCore
         /* Decode json to get our Data Object. */
         $dataObject = json_decode($coreJson);
 
-        /* Create array of available pages in unmodified DataObject. */
-        $availablePages = array_keys(get_object_vars($dataObject->content));
-
-        /* Create array of available pages formatted to be used as array keys */
-        $availablePagesKeys = array_map('ucwords', $availablePages);
-
-        /* Create core availablePages array using $availablePagesKeys and $availablePages arrays */
-        $this->availablePages = array_combine($availablePagesKeys, $availablePages);
-
         /* If $requestPageOnly === TRUE remove all pages but the requested page from the DataObject. */
         if ($requestPageOnly === true) {
+            /* Create array of available pages in unmodified DataObject. */
+            $availablePages = array_keys(get_object_vars($dataObject->content));
+
+            /* Create array of available pages formatted to be used as array keys */
+            $availablePagesKeys = array_map('ucwords', $availablePages);
+
+            /* Create core availablePages array using $availablePagesKeys and $availablePages arrays */
+            $this->availablePages = array_combine($availablePagesKeys, $availablePages);
+
             /* Get the requested pages page content. This will be used to
              restore $datObject->content after it is unset. */
             $requestedPageContent = (isset($dataObject->content->$requestedPage) === true ? $dataObject->content->$requestedPage : new stdClass());

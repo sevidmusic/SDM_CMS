@@ -18,7 +18,7 @@ class SdmCms extends SdmCore
      *
      * Warning: This method will overwrite content if it already exists.
      *
-     * @TODO: It may be benificial to split the update and add logic into 2 seperate methods.
+     * @todo: It may be benificial to split the update and add logic into 2 seperate methods.
      *
      * @param string $page The name of the page this content belongs to.
      *
@@ -59,37 +59,62 @@ class SdmCms extends SdmCore
         /* Determine weather the update succeeded or failed.*/
         $status = ($update < 0 || $update !== false ? true : false);
 
-        /**/
+        /* Return true if update succeeded, or false if update failed. */
         return $status;
     }
 
     /**
-     * Determines available content wrappers for current theme by looking in the current theme's page.php file.
+     * Returns an array of available content wrappers for the current theme.
      *
-     * @return array An array formatted key => value where key is formatted for display, and value is formatted to be
-     * code-safe.
+     * Note: only content wrappers whose names do not begin with the special value 'locked'
+     * will be included in the returned array.
      *
-     * i.e. the 'main_content' wrapper would be returned in an array formatted as follows:
+     * The names of the content wrappers are used as keys and values. Keys are formatted for display
+     * and values are formatted for use in code.
      *
-     * array("Main Content" => 'main_content')
+     *
+     * e.g.,
+     *
+     * // For a theme with 2 wrappers, 'site-logo' and 'main_content', the following array would be returned:
+     *
+     * array('Site Logo' => 'site-logo', 'Main Content' => 'main_content');
+     *
+     * Note: Content wrappers whose name begins with "locked" will not be included in the array.
+     *
+     * @return array An array of content wrapper names for the current theme.
      */
     public function sdmCmsDetermineAvailableWrappers()
     {
+        /* Load html from current themes page.php. */
         $html = file_get_contents($this->sdmCoreGetCurrentThemeDirectoryPath() . '/page.php');
+
+        /* Instantiate a new DOMDocument() object. */
         $dom = new DOMDocument();
-        /* For now we are suppressing any errors thrown by loadHTML() because it complains
-         when malformed xml and html is loaded, and the errors were clogging up the error
-         log during other development branches. However it is very important that a fix is
+
+        /* Load $html into the $dom object. For now we are suppressing any errors thrown by loadHTML()
+         because it complains when malformed xml and html is loaded, and the errors were clogging up
+         the error log during other development branches. However it is very important that a fix is
          found for this issue as it could lead to unknown bugs. */
         @$dom->loadHTML($html);
+
+        /* Instantiate new DOMXPath() object and pass it the $dom object. */
         $xpath = new DOMXPath($dom);
+
+        /* Extract all div tags that have an id attribute. */
         $tags = $xpath->query('//div[@id]');
+
+        /* Initialize $data array. This array will store the extracted wrappers. */
         $data = array();
+
+        /* Extract the wrappers from each of the extracted $tags */
         foreach ($tags as $tag) {
+
             if (substr(trim($tag->getAttribute('id')), 0, 6) != 'locked') {
                 $data[ucwords(str_replace(array('-', '_'), ' ', trim($tag->getAttribute('id'))))] = trim($tag->getAttribute('id'));
             }
         }
+
+        /* Return the array of available content wrappers. */
         return $data;
     }
 
@@ -105,20 +130,27 @@ class SdmCms extends SdmCore
      */
     public function sdmCmsLoadSpecificContent($page = 'homepage', $contentWrapper = 'main_content')
     {
-        /* load our json data from data.json and convert into an array */
-        $data = json_decode(file_get_contents($this->sdmCoreGetCoreDirectoryPath() . '/sdm/data.json'), false);
+        /* Load the entire DataObject so all pages are accessible */
+        $data = $this->sdmCoreLoadDataObject(false);
+
+        /* Return specified $contentWrapper for the specified $page. */
         return $data->content->$page->$contentWrapper;
     }
 
     /**
-     * <p>Determines what themes are available themes, and
-     * returns them in an array where the KEYS are formatted
-     * for display and the VALUES are formatted for use in code.</p>
-     * @return array <p>Array of available themes.
-     * <br/>
-     * <br/>
-     * i.e., array('Some Theme' => 'someTheme')
-     * </p>
+     * Returns an array of available themes for the current theme.
+     *
+     * The names of the available themes are used as keys and values. Keys are formatted for display
+     * and values are formatted for use in code.
+     *
+     * e.g.,
+     *
+     * // Returned array will look something like:
+     *
+     * array('Theme 1' => 'theme1', 'Theme 2' => 'theme2')
+     *
+     * @return array Array of available themes.
+     *
      */
     public function sdmCmsDetermineAvailableThemes()
     {
