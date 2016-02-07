@@ -17,4 +17,31 @@ $output = "<div style='clear:both;color: #66CCCC; background: #000000; border-ra
 
 $sdmassembler->sdmAssemblerIncorporateAppOutput($output, array('incmethod' => 'prepend'));
 
-$sdmassembler->sdmAssemblerIncorporateAppOutput('<h3>Git Tools</h3><p>This app provides tools for working with git. At the moment the only tool is a <i>branch viewer</i> that show the current git branch at the top of the main_content menu wrapper on every page.</p><p>Further development of this app will occur in the future, and this app will have a variety of tools for using git with your SDM CMS site.</p>', array('incpages' => array('gitTools'), 'incmethod' => 'append'));
+unset($output);
+$output = '
+    <h3>Git Tools</h3>
+        <p>This app provides tools for working with git. When enalbed the current branch will appear at the top of
+        every page\'s main_content wrapper. In addition, the gitTools page displays a variety of information related
+        to your current working branch.</p>
+        <h3 style="color:red;">Warning!</h3>
+        <p style="color:red;">This app should never be enabled on a live site, it uses PHP\'s exec() function which is
+        very dangerous on a live server as it can potentially give a malicious user the power to execute
+        commands on the server your site is hosted on. This app was created for local use by developers, and should
+        only be enabled when working on a local, non-production, site.</p>
+        ';
+
+/* Execute some git commands to create an overview of the current branch */
+$gitOutput = array();
+
+/* Git Status */
+$gitStatus = exec('git status', $gitStatusOutput);
+$gitInfo = '<h4>Git Status:</h4><div style="border: 5px double #ffffff; padding: 20px;">' . implode('<br>', $gitStatusOutput) . '</div>';
+/* Git Log */
+$gitLog = exec('git log master..' . $branchname . ' -stat --no-merges', $gitLogOutput);
+$gitInfo .= '<h4>Git Log:</h4><div style="border: 5px double #ffffff; padding: 20px;">' . implode('<br>', $gitLogOutput) . '</div>';
+
+$output .= '
+    <h3>Overview of Current Branch "' . $branchname . '":</h3>
+    <div style="border: 5px double #ffffff; padding: 20px;">' . $gitInfo . '</div>
+    ';
+$sdmassembler->sdmAssemblerIncorporateAppOutput($output, array('incpages' => array('gitTools'), 'incmethod' => 'append'));

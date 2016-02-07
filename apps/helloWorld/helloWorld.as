@@ -1,0 +1,2 @@
+scripts=hw;
+stylesheets=hw;

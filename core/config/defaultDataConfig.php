@@ -3,7 +3,31 @@
 /* Initialize default content */
 
 /* Homepage */
-$homepageMainContent = '<p>Welcome to your new SDM CMS powered site. To start adding content check out the <a href="' . $sdmGatekeeper->sdmCoreGetRootDirectoryUrl() . '/index.php?page=contentManager">content manager</a></p>';
+$homepageMainContent = '
+<p>Welcome to your new SDM CMS powered site. To start adding content check out the
+<a href="' . $sdmGatekeeper->sdmCoreGetRootDirectoryUrl() . '/index.php?page=contentManager">content manager</a></p>
+<p>The SDM CMS is a unique JSON driven CMS. Still in development, this CMS is designed to be easy to use, and easy to
+develop with. The user interface provided by the core apps makes it easy to build a site without writing a single
+line of code, and for the more hands on users, the SDM CMS can easily be customized and extended via the development
+of custom themes and user apps.</p>
+<p>The SDM CMS uses json to store site data, i.e., in place of a database a json file is used
+to store site data. Json was chosen because it is highly portable, is highly used,
+and because it is highly compatible with javascript, and other languages, and many
+languages like PHP have built in functions and methods for interacting with json.</p>
+<p>@todo: I am planning on developing a core app that will come packaged with the SDM CMS
+that will allow admin to switch to a database for storage. The supported
+databases at first will most likely be MySql and SQLite, also considering Mongo DB.</p>
+<p>Im currently working on the documentation for the SDM CMS, and as soon as
+I finish checking for typos and insuring clarity the documentation will
+be available.</p>
+<p>I built this CMS out of a love for coding, particularly in PHP. I had worked with other CMS\'s
+like Drupal, and WordPress, and wanted a simpler more portable CMS that was easier to grasp
+under the hood. I also wanted to get a better understanding of how a CMS works, and figured
+why not dive in and learn from experience.</p>
+<p>I am very passionate about this project, and will continue to develop and improve the SDM CMS.</p>
+<p>Thank you for trying out the Sdm Cms.</p>
+<p>Sevi Donnelly Foreman</p>
+';
 
 /* Sdm Cms Documentation */
 $sdmCmsDocumentationMainContent = '

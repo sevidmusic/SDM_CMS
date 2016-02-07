@@ -1,7 +1,7 @@
 <?php
 
 /**
- * The <b>SdmCms</b> is responsible for provideing the components necessary for
+ * The SdmCms is responsible for providing the components necessary for
  * content management.
  *
  * @author Sevi Donnelly Foreman
@@ -10,82 +10,147 @@ class SdmCms extends SdmCore
 {
 
     /**
-     * <p>Creates content for a specific page ($page) and content wrapper ($id)</p>
-     * <p><b>Warning: This method will overwrite content if it already exists.
-     * @TODO we may need to split the update and add processes into 2 methods to prevent
-     * overwriting of content. Though at the moment the contentManager app does this check for
-     * us but it could make it hard when developing other content manager like apps to sperate
-     * add and update if they arent seperate in thsi core class.</b></p>
-     * @param string $page <p>The <b>name</b> of the page this content belongs to.</p>
-     * @param string $id <p>Machine safe string that correlates to the css id associated
-     * with the div used in the <i>current themes</i> page.php to display this content.
-     * <br>i.e., A piece of content with an <b><i>$id</i></b> set to <b>'main_content'</b> will correlate
-     * to a div with an <b><i>id</i></b> of <b>'main_content'</b> in the current themes page.php and that div
-     * will display the content with an <b><i>$id</i></b> of <b>'main_content'</b></p>
-     * @param string $html <p>The html for this content.</p>
-     * @return int The number of bytes written to data.json or the DB. Returns false on failure.
+     * Updates or creates a page.
+     *
+     * This method uses PHP's iconv() and utf8_encode() to insure $html is UTF-8 encoded prior to
+     * storage. This method also uses PHP's htmlentities() to convert all applicable characters
+     * in $html to HTML entities prior to storage.
+     *
+     * Warning: This method will overwrite content if it already exists.
+     *
+     * @todo: It may be benificial to split the update and add logic into 2 seperate methods.
+     *
+     * @param string $page The name of the page this content belongs to.
+     *
+     * @param string $wrapper The wrapper this content belongs in. (e.g., 'main_content')
+     *
+     * @param string $html The content's html. Note: This parameter will be filtered internally
+     *               via PHP's iconv() and utf8_encode() to insure UTF-8. Also, this parameter will be
+     *               filtered internally via htmlentities() to insure all applicable characters
+     *               are converted to HTML entities prior to storage.
+     *
+     * @return bool True if update was succsessfull, or false on failure.
      */
-    public function sdmCmsUpdateContent($page, $id, $html)
+    public function sdmCmsUpdateContent($page, $wrapper, $html)
     {
-        $content = $this->sdmCoreLoadDataObject(false);
-        // filter out problematic charaters from $html and insure UTF-8 using iconv()
+        /* Load the entire data object */
+        $dataObject = $this->sdmCoreLoadDataObject(false);
+
+        /* Filter $html to insure encoding is UTF-8. */
         $filteredHtml = iconv("UTF-8", "UTF-8//IGNORE", $html);
         $filteredHtml2 = iconv("UTF-8", "ISO-8859-1//IGNORE", $filteredHtml);
         $filteredHtml3 = iconv("ISO-8859-1", "UTF-8", $filteredHtml2);
-        // if the page does not already exist in CORE create a placeholder object for it
-        if (!isset($content->content->$page) === true) {
-            $content->content->$page = new stdClass();
+        $utf8Html = utf8_encode(trim($filteredHtml3));
+
+        /* If the page does not already exist in the DataObject create a placeholder object for it. */
+        if (!isset($dataObject->content->$page) === true) {
+            $dataObject->content->$page = new stdClass();
         }
-        $content->content->$page->$id = htmlentities(utf8_encode(trim($filteredHtml3)), ENT_SUBSTITUTE | ENT_DISALLOWED | ENT_HTML5, 'UTF-8');
-        $data = json_encode($content);
-        return file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $data, LOCK_EX);
+
+        /* Convert all applicable characters in $html to HTML entities. */
+        $dataObject->content->$page->$wrapper = htmlentities($utf8Html, ENT_SUBSTITUTE | ENT_DISALLOWED | ENT_HTML5, 'UTF-8');
+
+        /* Encode the updated dataObject as json to prepare for storage. */
+        $data = json_encode($dataObject);
+
+        /* Store the updates. */
+        $update = file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $data, LOCK_EX);
+
+        /* Determine weather the update succeeded or failed.*/
+        $status = ($update < 0 || $update !== false ? true : false);
+
+        /* Return true if update succeeded, or false if update failed. */
+        return $status;
     }
 
     /**
-     * <p>Determines available content wrappers for current theme by looking in the <i>current theme's</i> page.php file.</p>
-     * @return array An array formated key => value where key is formated for display, and value is formated to be <b>code-safe</b>
-     * <p>i.e. the requried "main_content" wrapper would be returned in an array formated as follows<br/><br/>
-     * <b>array("Main Content" => 'main_content')</b></p>
+     * Returns an array of available content wrappers for the current theme.
+     *
+     * Note: only content wrappers whose names do not begin with the special value 'locked'
+     * will be included in the returned array.
+     *
+     * The names of the content wrappers are used as keys and values. Keys are formatted for display
+     * and values are formatted for use in code.
+     *
+     *
+     * e.g.,
+     *
+     * // For a theme with 2 wrappers, 'site-logo' and 'main_content', the following array would be returned:
+     *
+     * array('Site Logo' => 'site-logo', 'Main Content' => 'main_content');
+     *
+     * Note: Content wrappers whose name begins with "locked" will not be included in the array.
+     *
+     * @return array An array of content wrapper names for the current theme.
      */
     public function sdmCmsDetermineAvailableWrappers()
     {
+        /* Load html from current themes page.php. */
         $html = file_get_contents($this->sdmCoreGetCurrentThemeDirectoryPath() . '/page.php');
+
+        /* Instantiate a new DOMDocument() object. */
         $dom = new DOMDocument();
-        // for now we are surpressing any errors thrown by loadHTML() because it complains when malformed xml and html is loaded, and the errors were clogging up the error log during other development branches. Howver it is very important that a fix is found for this issue as it could lead to unknown bugs.
+
+        /* Load $html into the $dom object. For now we are suppressing any errors thrown by loadHTML()
+         because it complains when malformed xml and html is loaded, and the errors were clogging up
+         the error log during other development branches. However it is very important that a fix is
+         found for this issue as it could lead to unknown bugs. */
         @$dom->loadHTML($html);
+
+        /* Instantiate new DOMXPath() object and pass it the $dom object. */
         $xpath = new DOMXPath($dom);
+
+        /* Extract all div tags that have an id attribute. */
         $tags = $xpath->query('//div[@id]');
+
+        /* Initialize $data array. This array will store the extracted wrappers. */
         $data = array();
+
+        /* Extract the wrappers from each of the extracted $tags */
         foreach ($tags as $tag) {
+
             if (substr(trim($tag->getAttribute('id')), 0, 6) != 'locked') {
                 $data[ucwords(str_replace(array('-', '_'), ' ', trim($tag->getAttribute('id'))))] = trim($tag->getAttribute('id'));
             }
         }
+
+        /* Return the array of available content wrappers. */
         return $data;
     }
 
     /**
-     * <p>Loads a specific piece of content.</p>
-     * @param string $page <p>The page we want to load content from.</p>
-     * @param string $contentWrapper <p>The content wrapper we want to load content from.</p>
-     * @return string <p>The string of html for this $contentWrapper.</p>
+     * Loads a specific piece of content.
+     *
+     * @param string $page The name of the page whose content we want to load. Defaults to 'homepage'.
+     *
+     * @param string $contentWrapper The name of the content wrapper we want to load content from. Defaults
+     *                               to 'main_content'
+     *
+     * @return string String of html for the $contentWrapper.
      */
     public function sdmCmsLoadSpecificContent($page = 'homepage', $contentWrapper = 'main_content')
     {
-        // load our json data from data.json and convert into an array
-        $data = json_decode(file_get_contents($this->sdmCoreGetCoreDirectoryPath() . '/sdm/data.json'), true);
-        return $data['content'][$page][$contentWrapper]; // @TODO : Use object notation instead of array notation
+        /* Load the entire DataObject so all pages are accessible */
+        $data = $this->sdmCoreLoadDataObject(false);
+
+        /* Return specified $contentWrapper for the specified $page. */
+        return $data->content->$page->$contentWrapper;
     }
 
     /**
-     * <p>Determines what themes are available themes, and
-     * returns them in an array where the KEYS are formatted
-     * for display and the VALUES are formatted for use in code.</p>
-     * @return array <p>Array of available themes.
-     * <br/>
-     * <br/>
-     * i.e., array('Some Theme' => 'someTheme')
-     * </p>
+     * Returns an array of available themes for the current theme.
+     *
+     * The names of the available themes are used as keys and values. Keys are formatted for display
+     * and values are formatted for use in code.
+     *
+     * e.g.,
+     *
+     * // Returned array will look something like:
+     *
+     * array('Theme 1' => 'theme1', 'Theme 2' => 'theme2')
+     *
+     * @return array Array of available themes.
+     *
      */
     public function sdmCmsDetermineAvailableThemes()
     {
