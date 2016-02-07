@@ -108,7 +108,7 @@ class SdmCms extends SdmCore
 
         /* Extract the wrappers from each of the extracted $tags */
         foreach ($tags as $tag) {
-
+            /* As long as the wrapper does not start with the string "locked" extract it. */
             if (substr(trim($tag->getAttribute('id')), 0, 6) != 'locked') {
                 $data[ucwords(str_replace(array('-', '_'), ' ', trim($tag->getAttribute('id'))))] = trim($tag->getAttribute('id'));
             }
