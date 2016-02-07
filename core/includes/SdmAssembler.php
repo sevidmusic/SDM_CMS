@@ -158,7 +158,6 @@ class SdmAssembler extends SdmNms
 
         /* Make sure $properties array is not false and is not empty. */
         if ($properties !== false && !empty($properties) === true) {
-
             /* Determine url to components root directory. | Used in assembly of link and script tags for
              property values defined in 'stylesheets' and 'scripts' header properties respectively. */
             $componentUrl = trim($this->sdmAssemblerDetermineComponentUrl($source, $sourceName));
