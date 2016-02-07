@@ -18,7 +18,7 @@ class SdmCms extends SdmCore
      *
      * Warning: This method will overwrite content if it already exists.
      *
-     * @todo: It may be benificial to split the update and add logic into 2 seperate methods.
+     * @todo: It may be beneficial to split the update and add logic into 2 separate methods.
      *
      * @param string $page The name of the page this content belongs to.
      *
@@ -29,7 +29,7 @@ class SdmCms extends SdmCore
      *               filtered internally via htmlentities() to insure all applicable characters
      *               are converted to HTML entities prior to storage.
      *
-     * @return bool True if update was succsessfull, or false on failure.
+     * @return bool True if update was successful, or false on failure.
      */
     public function sdmCmsUpdateContent($page, $wrapper, $html)
     {
@@ -155,19 +155,26 @@ class SdmCms extends SdmCore
     public function sdmCmsDetermineAvailableThemes()
     {
         $themes = $this->sdmCoreGetDirectoryListing('', 'themes');
-        // we dont want to list directories that are not themes
+
+        /* we dont want to list directories that are not themes */
         $ignore = array('.DS_Store', '.', '..');
+
+        /* */
         foreach ($themes as $theme) {
             if (!in_array($theme, $ignore)) {
                 $availableThemes[ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', $theme))] = $theme;
             }
         }
+
+        /* */
         return $availableThemes;
     }
 
     /**
-     * <p>Changes the sites theme.</p>
-     * @param string $theme <p>The desired theme</p>
+     * Changes the sites theme.
+     *
+     * @param string $theme The desired theme.
+     *
      * @return int The number of bytes written to data.json or the DB. Returns false on failure.
      */
     public function sdmCmsChangeTheme($theme)
@@ -228,13 +235,16 @@ class SdmCms extends SdmCore
         $enabledApps = $data->settings->enabledapps;
         switch ($state) {
             case 'on':
-                // As long as the app is not already enabled, enable it. No need to enable an already enabled app, and doing so could cause bugs as it might clutter the enabledApps array with duplicate values.
+                /* As long as the app is not already enabled, enable it. No need to enable an already enabled app,
+                  and doing so could cause bugs as it might clutter the enabledApps array with duplicate values. */
                 if (!property_exists($enabledApps, $app)) {
                     $enabledApps->$app = $app;
                 }
                 break;
             case 'off':
-                // We only need to remove the app from the enabled apps object if it already exists as a property. No need to tamper with our data if the app being disabled is already excluded from the enabled apps array.
+                /* We only need to remove the app from the enabled apps object if it already exists as a property.
+                 No need to tamper with our data if the app being disabled is already excluded from the enabled
+                 apps array. */
                 if (property_exists($enabledApps, $app)) {
                     unset($enabledApps->$app);
                 }
