@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Administer Apps form submission handler for the Content Manager core app.
+ */
+
 $output = ''; // passed to SdmAssembler::SdmAssemlberIncorporateAppOutput()
 $on = array(); // used for display
 $off = array(); // used for display

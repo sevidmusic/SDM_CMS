@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Administer Apps form for the Content Manager core app.
+ */
+
 // load contentManager functions || this is only needed if this form requires the functions, some forms may not
 require_once($sdmassembler->sdmCoreGetCoreAppDirectoryPath() . '/contentManager/includes/contentManagerFunctions.php');
 

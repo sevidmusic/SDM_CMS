@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Delete Page form submission handler for the Content Manager core app.
+ */
+
 // initialize a form object so we can get the last forms sumbitted values
 $sdmForm = new SdmForm();
 $output = '';
