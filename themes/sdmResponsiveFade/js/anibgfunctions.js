@@ -1,8 +1,8 @@
 /**
  * Animates the background color of a specified element.
- * @param target The target element.
- * @param colors An array of colors to animate through.
- * @param aniTime The time in mili-seconds it takes to animate between each color.
+ * @param {string} target The target element.
+ * @param {Array} colors An array of colors to animate through.
+ * @param {int} aniTime The time in mili-seconds it takes to animate between each color.
  */
 function aniBg(target, colors, aniTime, index) {
     var limit = colors.length;
