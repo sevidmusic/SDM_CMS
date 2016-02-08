@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * This file is used by reset.php to setup default menus.
+ */
+
 /** Setup default menus for new site */
 /** Main Menu */
 $mainMenuItem1 = new SdmMenuItem();
