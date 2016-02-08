@@ -61,8 +61,8 @@ class SdmCms extends SdmCore
         /* Store the updates. */
         $update = file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $data, LOCK_EX);
 
-        /* Determine weather the update succeeded or failed.*/
-        $status = ($update < 0 || $update !== false ? true : false);
+        /* Determine weather the update succeeded or failed. */
+        $status = ($update < 0 && $update !== false ? true : false);
 
         /* Return true if update succeeded, or false if update failed. */
         return $status;
