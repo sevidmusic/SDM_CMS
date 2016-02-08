@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Sdm Error Log core app: Outputs the site's error log, and color codes the error messages.
+ */
+
 // app description page | if you visit YOURSITE.com/index.php?page=SdmDevMenu this output will be dsiplayed
 $sdmassembler->sdmAssemblerIncorporateAppOutput('<h2>Site Errors</h2><p>The SDM Error Log app displays the sites error log and color codes the errors as follows:</p><p style="border:1px solid; border-radius: 20px; color:#DD0000;padding:20px;background:#303030">Fatal</p><p style="border:1px solid; border-radius: 20px; color:#FDD017;padding:20px;background:#000000">Warning</p><p style="border:1px solid; border-radius: 20px; color:#6C7DCC;padding:20px;background:#303030">Notice</p><p style="border:1px solid; border-radius: 20px; color:#FFFFFF;padding:20px;background:#000000">Other</p>', array('wrapper' => 'main_content', 'incmethod' => 'append', 'incpages' => array('SdmErrorLog')));
 // get the error log with file() so we have each line as an array item. gives us some formating flexablitly later on

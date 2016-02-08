@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * Sdm Core Overview core app: Outputs an overview of the sites content and current configuration.
+ */
+
 /* Only run this code if on SdmCoreOverview page */
 if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmCoreOverview') {
     /**

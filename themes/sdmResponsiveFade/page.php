@@ -1,3 +1,9 @@
+<?php
+/**
+ * This file defines the basic html structure for the sdmResponsiveFade theme.
+ */
+?>
+
 <!-- This theme requires both jQuery and jQuery Ui for it's visual effects to work -->
 <!-- row 1 -->
 <div class="row row-min-wid-fix">

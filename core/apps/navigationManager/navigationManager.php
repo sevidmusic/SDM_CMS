@@ -1,6 +1,10 @@
 <?php
 
 /**
+ * Navigation Manager core app: Provides tools for managing site menus.
+ */
+
+/**
  * Returns an array of integers within the range $s to $e.
  * i.e., rangeArray(4,7) would return the array : array(4 => 4, 5 => 5, 6 => 6, 7 => 7)
  * @param type $s Starting integer

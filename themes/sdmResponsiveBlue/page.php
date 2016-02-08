@@ -1,3 +1,9 @@
+<?php
+/**
+ * This file defines the basic html structure for the sdmResponsiveBlue theme.
+ */
+?>
+
 <!-- row 1 -->
 <div class="row row-min-wid-fix">
     <div id="top-menu" class="col-12 col-m-12 border-bottom">
