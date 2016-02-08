@@ -1,9 +1,15 @@
 <?php
+/**
+ * Git Tools User App: This app provides tools for working with git. When enabled the current branch will appear at the
+ * top of every page's main_content wrapper. In addition, the gitTools page displays a variety of information related
+ * to your current working branch.
+ */
 
 /**
  * @filename: currentgitbranch.php
  * @usage: Include this file after the '<body>' tag in your project
  * @author Kevin Ridgway
+ * This code was adopted from @see http://stackoverflow.com/questions/7447472/how-could-i-display-the-current-git-branch-name-at-the-top-of-the-page-of-my-de
  */
 $stringfromfile = file('.git/HEAD', FILE_USE_INCLUDE_PATH);
 
@@ -20,7 +26,7 @@ $sdmassembler->sdmAssemblerIncorporateAppOutput($output, array('incmethod' => 'p
 unset($output);
 $output = '
     <h3>Git Tools</h3>
-        <p>This app provides tools for working with git. When enalbed the current branch will appear at the top of
+        <p>This app provides tools for working with git. When enabled the current branch will appear at the top of
         every page\'s main_content wrapper. In addition, the gitTools page displays a variety of information related
         to your current working branch.</p>
         <h3 style="color:red;">Warning!</h3>

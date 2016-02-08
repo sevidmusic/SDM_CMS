@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * This file is used by reset.php to cleanup old sessions and site logs.
+ */
+
 /** Delete any old session data. */
 $targets = scandir(session_save_path());
 foreach ($targets as $sessfile) {

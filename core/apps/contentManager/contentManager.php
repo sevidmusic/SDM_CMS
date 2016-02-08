@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Content Manager core app: Provides basic content management tools to the Sdm Cms.
+ */
+
 // this otpions array will be passed to sdmAssemblerIncorporateAppOutput() wherever this app outputs data.
 $options = array(
     'incpages' => array(

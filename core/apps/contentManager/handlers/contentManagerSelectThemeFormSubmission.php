@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Select Theme form submission handler for the Content Manager core app.
+ */
+
 $output = '';
 // form submitted successfully
 if (SdmForm::sdmFormGetSubmittedFormValue('content_manager_form_submitted') === 'content_manager_form_submitted') {

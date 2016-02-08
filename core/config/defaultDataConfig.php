@@ -1,6 +1,8 @@
 <?php
 
-/* Initialize default content */
+/**
+ * This file is used by reset.php to setup default content.
+ */
 
 /* Homepage */
 $homepageMainContent = '

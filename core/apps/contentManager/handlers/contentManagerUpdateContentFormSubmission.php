@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Update Content form submission handler for the Content Manager core app.
+ */
+
 /** initialize form */
 $sdmForm = new SdmForm();
 $options = array(

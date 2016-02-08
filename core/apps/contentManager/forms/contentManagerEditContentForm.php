@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Edit content form for the Content Manager core app.
+ */
+
 // load contentManager functions
 require_once($sdmassembler->sdmCoreGetCoreAppDirectoryPath() . '/contentManager/includes/contentManagerFunctions.php');
 

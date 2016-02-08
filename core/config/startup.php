@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * This file starts up the SDM CMS.
+ */
+
 /** Require our config.php file which defines the core constants. */
 require_once('config.php');
 

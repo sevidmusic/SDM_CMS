@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Sdm Auth core app: Provides UI components for logging users in and out.
+ */
+
 $options = array(
     'incpages' => array('SdmAuth', 'SdmAuthLogin'),
 );

@@ -1,8 +1,9 @@
 /**
  * Animates the background color of a specified element.
- * @param target The target element.
- * @param colors An array of colors to animate through.
- * @param aniTime The time in mili-seconds it takes to animate between each color.
+ * @param {string} target The target element.
+ * @param {Array} colors An array of colors to animate through.
+ * @param {int} aniTime The time in mili-seconds it takes to animate between each color.
+ * @param {int} index The array index to start at.
  */
 function aniBg(target, colors, aniTime, index) {
     var limit = colors.length;
@@ -21,8 +22,8 @@ function aniBg(target, colors, aniTime, index) {
 
 /**
  * Fades text into an element.
- * @param string target The target element.
- * @param string text The text to fade into the target element.
+ * @param {string} target The target element.
+ * @param {string} text The text to fade into the target element.
  *                    Note: text will replace any existing content.
  */
 function fadeInText(target, text) {

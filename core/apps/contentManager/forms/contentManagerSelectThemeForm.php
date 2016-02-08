@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Select Theme form for the Content Manager core app.
+ */
+
 // CREATE EDIT FORM OBJECT
 $editcontentform = new SdmForm();
 $editcontentform->formHandler = 'contentManagerSelectThemeFormSubmission';
