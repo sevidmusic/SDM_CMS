@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Sdm Kind user app: Demonstrates the Sdm Cms's internal encryption and decryption algorithms.
+ */
+
 /* Options array. */
 $options = array(
     'wrapper' => 'main_content',

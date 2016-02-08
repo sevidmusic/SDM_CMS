@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This app demonstrates a simple app.
+ * Hello World user app: This app demonstrates a simple Sdm Cms user app.
  */
 
 /* Configure incorporation options. */

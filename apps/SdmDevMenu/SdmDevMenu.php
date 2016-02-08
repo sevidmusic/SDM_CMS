@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Sdm Dev Menu user app: This app adds a dev menu to the page that contains links to all pages and
+ * enabled core and user apps.
+ */
+
 /* Incorporate output for app generated page. */
 $sdmassembler->sdmAssemblerIncorporateAppOutput('
 <h2>DEV MENU</h2><p>The SDM DEV MENU app outputs a menu that has links to all
