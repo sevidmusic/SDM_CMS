@@ -18,7 +18,12 @@ class SdmCms extends SdmCore
      *
      * Warning: This method will overwrite content if it already exists.
      *
-     * @todo: It may be beneficial to split the update and add logic into 2 separate methods.
+     * @todo: It may be beneficial to split the update and add logic into 2 separate methods to
+     *        prevent accidental overwriting of pages that already exist. The other option
+     *        would be to create a parameter that dictates weather or not pages
+     *        that already exist should be overwritten. One final option would be to
+     *        create a method that called sdmCmsAddContent() that utilizes sdmCmsUpdateContent()
+     *        but performs a check to make sure existing pages are not overwritten.
      *
      * @param string $page The name of the page this content belongs to.
      *
@@ -72,7 +77,6 @@ class SdmCms extends SdmCore
      * The names of the content wrappers are used as keys and values. Keys are formatted for display
      * and values are formatted for use in code.
      *
-     *
      * e.g.,
      *
      * // For a theme with 2 wrappers, 'site-logo' and 'main_content', the following array would be returned:
@@ -93,7 +97,7 @@ class SdmCms extends SdmCore
 
         /* Load $html into the $dom object. For now we are suppressing any errors thrown by loadHTML()
          because it complains when malformed xml and html is loaded, and the errors were clogging up
-         the error log during other development branches. However it is very important that a fix is
+         the error log during other development. However it is very important that a fix is
          found for this issue as it could lead to unknown bugs. */
         @$dom->loadHTML($html);
 
@@ -108,8 +112,9 @@ class SdmCms extends SdmCore
 
         /* Extract the wrappers from each of the extracted $tags */
         foreach ($tags as $tag) {
-            /* As long as the wrapper does not start with the string "locked" extract it. */
+            /* As long as the wrapper does not start with the string "locked" add the wrapper to $data array. */
             if (substr(trim($tag->getAttribute('id')), 0, 6) != 'locked') {
+                /* Format array so keys are for display, and values for use in code. */
                 $data[ucwords(str_replace(array('-', '_'), ' ', trim($tag->getAttribute('id'))))] = trim($tag->getAttribute('id'));
             }
         }
@@ -138,14 +143,14 @@ class SdmCms extends SdmCore
     }
 
     /**
-     * Returns an array of available themes for the current theme.
+     * Returns an array of available themes.
      *
      * The names of the available themes are used as keys and values. Keys are formatted for display
      * and values are formatted for use in code.
      *
      * e.g.,
      *
-     * // Returned array will look something like:
+     * Returned array will look something like:
      *
      * array('Theme 1' => 'theme1', 'Theme 2' => 'theme2')
      *
@@ -154,86 +159,134 @@ class SdmCms extends SdmCore
      */
     public function sdmCmsDetermineAvailableThemes()
     {
+        /* Get a listing of all the themes in the themes directory. */
         $themes = $this->sdmCoreGetDirectoryListing('', 'themes');
 
-        /* we dont want to list directories that are not themes */
+        /* Ignore directories that are not themes. */
         $ignore = array('.DS_Store', '.', '..');
 
-        /* */
+        /* Create array of available themes. */
         foreach ($themes as $theme) {
+            /* Only add directories that actually are themes. */
             if (!in_array($theme, $ignore)) {
+                /* Format array so keys are for display, and values for use in code. */
                 $availableThemes[ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', $theme))] = $theme;
             }
         }
 
-        /* */
+        /* Return an array of available themes. */
         return $availableThemes;
     }
 
     /**
      * Changes the sites theme.
      *
-     * @param string $theme The desired theme.
+     * @param string $theme The desired theme to switch to.
      *
-     * @return int The number of bytes written to data.json or the DB. Returns false on failure.
+     * @return bool True if site theme was changed successfully, or false on failure.
      */
     public function sdmCmsChangeTheme($theme)
     {
-        $data = $this->sdmCoreLoadDataObject(false);
-        $data->settings->theme = $theme;
-        $jsondata = json_encode($data);
-        return file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $jsondata, LOCK_EX);
+        /* Load the entire data object */
+        $dataObject = $this->sdmCoreLoadDataObject(false);
+
+        /* Set theme to $theme. */
+        $dataObject->settings->theme = $theme;
+
+        /* Prepare DataObject for storage. */
+        $jsonData = json_encode($dataObject);
+
+        /* Attempt to store the updated DataObject. */
+        $status = file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $jsonData, LOCK_EX);
+
+        /* Return true if DataObject was written to data.json successfully, or false on failure. */
+        return ($status > 0 && $status !== false ? true : false);
     }
 
     /**
-     * Deletes a page.
-     * @param string $pagename Name of the page to delete.
+     * Delete a page.
+     *
+     * @param string $pageName Name of the page to delete.
+     *
+     * returns
      */
-    public function sdmCmsDeletePage($pagename)
+    public function sdmCmsDeletePage($pageName)
     {
+        /* Load the entire DataObject in order to be able to access all pages. */
         $data = $this->sdmCoreLoadDataObject(false);
-        unset($data->content->$pagename);
-        $jsondata = json_encode($data);
-        return file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $jsondata, LOCK_EX);
+
+        /* Delete the page from the DataObject. */
+        unset($data->content->$pageName);
+
+        /* Prepare the modified DataObject for storage. */
+        $jsonData = json_encode($data);
+
+        /* Attempt to store the modified DataObject. */
+        $status = file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $jsonData, LOCK_EX);
+
+        /* Return true if page was deleted and DataObject was updated, or false on failure. */
+        return ($status > 0 && $status !== false ? true : false);
     }
 
     /**
-     * <p>Determines what apps <i>(core and user)</i> are available, and
-     * returns them in an array where the KEYS are formatted
-     * for display and the VALUES are formatted for use in code.</p>
-     * @return array <p>Array of available apps.
-     * <br/>
-     * <br/>
-     * i.e., array('Some App' => 'someApp')
-     * </p>
+     * Returns an array of available core and user apps.
+     *
+     * The names of the available apps are used as keys and values. Keys are formatted for display
+     * and values are formatted for use in code.
+     *
+     * e.g.,
+     *
+     * Returned array will look something like:
+     *
+     * array('Some App' => 'someApp', 'Some Other App' => 'someOtherApp')
+     *
+     * @return array Array of available apps.
+     *
      */
     public function sdmCmsDetermineAvailableApps()
     {
+        /* Get a listing of apps in the user apps directory. */
         $userApps = $this->sdmCoreGetDirectoryListing('', 'userapps');
+
+        /* Get a listing of apps in the user apps directory. */
         $coreApps = $this->sdmCoreGetDirectoryListing('', 'coreapps');
+
+        /* Create an initial array of core and user apps. */
         $apps = array_merge($userApps, $coreApps);
 
-        // we dont want to list directories that are not apps
+        /* Ignore directories that are not apps. */
         $ignore = array('.DS_Store', '.', '..');
+
+        /* Create array of available apps. */
         foreach ($apps as $app) {
+            /* Only add directories that actually are apps. */
             if (!in_array($app, $ignore)) {
+                /* Format array so keys are for display, and values for use in code. */
                 $availableApps[ucwords(preg_replace('/(?<!\ )[A-Z]/', ' $0', $app))] = $app;
             }
         }
+
+        /* Return array of available apps. */
         return $availableApps;
     }
 
     /**
-     * Switches an app from on to off.
-     * @param string $app <p>Name of the app to switch on or of.</p>
-     * @param string $state <p>State of the app, either on or off.</p>
-     * @return bool true on sucessful state change, false if unable to switch state.
+     * Enable or disable an app.
+     *
+     * @param string $app Name of the app to enable or disable.
+     *
+     * @param string $state New state of the app. Determines weather app should be enabled
+     *                      or disabled. (options: on, off)
+     * @todo: change options for $state to 'enabled' and 'disabled' instead of 'on' and 'off'.
+     *
+     * @return bool True on successful state change, false if unable to switch state.
      */
     public function sdmCmsSwitchAppState($app, $state)
     {
         $data = $this->sdmCoreLoadDataObject(false);
         $enabledApps = $data->settings->enabledapps;
         switch ($state) {
+            /* Enable app */
             case 'on':
                 /* As long as the app is not already enabled, enable it. No need to enable an already enabled app,
                   and doing so could cause bugs as it might clutter the enabledApps array with duplicate values. */
@@ -241,6 +294,8 @@ class SdmCms extends SdmCore
                     $enabledApps->$app = $app;
                 }
                 break;
+
+            /* Disable app */
             case 'off':
                 /* We only need to remove the app from the enabled apps object if it already exists as a property.
                  No need to tamper with our data if the app being disabled is already excluded from the enabled
@@ -249,14 +304,25 @@ class SdmCms extends SdmCore
                     unset($enabledApps->$app);
                 }
                 break;
-        }
-        // unset old enabledapps object
-        unset($data->settings->enabledapps);
-        // create new enabledapps object
-        $data->settings->enabledapps = $enabledApps;
-        //$this->sdmCoreSdmReadArray(array('DATA OBJECT TO BE SAVED' => $data));
-        $jsondata = json_encode($data);
-        return (file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $jsondata, LOCK_EX) > 0 ? true : false);
-    }
 
+            /* Error, invalid value passed to $state */
+            default:
+                /* If $state not equal to 'on' or 'off' return false, and log an error. */
+                $msg = 'Invalid $state "' . $state . '" passed to sdmCmsSwitchAppState(), unable to switch state of app "' . $app . '"';
+                error_log($msg);
+                return false;
+        }
+
+        /* Unset old enabledapps object. */
+        unset($data->settings->enabledapps);
+
+        /* Create new enabledapps object. */
+        $data->settings->enabledapps = $enabledApps;
+
+        /* Prepare updated DataObject for storage. */
+        $jsonData = json_encode($data);
+
+        /* Return true if updated DataObject was stored successfully, or false on failure. */
+        return (file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $jsonData, LOCK_EX) > 0 ? true : false);
+    }
 }
