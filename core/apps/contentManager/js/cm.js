@@ -23,7 +23,7 @@ $(document).ready(function () {
 
         /* mouseover effect */
         $(property).on("mouseover", function () {
-            $(this).css("color", "red");
+            $(this).css("color", "#00ff33");
         });
 
         /* mouseout effect */

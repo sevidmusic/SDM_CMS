@@ -33,8 +33,8 @@ if ($page !== 'contentManager') {
             $wrapperStatusHtml .= '<div class="border-rounded padded-15 highlight">';
             $wrapperStatusHtml .= '<p>wrapper name: "' . $dispalyValue . '"';
             $wrapperStatusHtml .= '<p>wrapper id: "' . $machineValue . '"</p>';
-            $wrapperStatusHtml .= '<p>wrapper content:</p>';
-            $wrapperStatusHtml .= '<div class="border-rounded padded-15 border-dotted">' . $sdmForm->sdmFormGetSubmittedFormValue($machineValue) . '</p></div>';
+            $wrapperStatusHtml .= '<p>wrapper content:';
+            $wrapperStatusHtml .= ($sdmForm->sdmFormGetSubmittedFormValue($machineValue) === '' ? ' This wrapper has no content.</p>' : '</p><div class="border-rounded padded-15 border-dotted">' . $sdmForm->sdmFormGetSubmittedFormValue($machineValue) . '</p></div>');
             $wrapperStatusHtml .= '</div>';
         }
 
