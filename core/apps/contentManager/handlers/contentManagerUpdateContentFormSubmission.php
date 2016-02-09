@@ -4,39 +4,57 @@
  * Update Content form submission handler for the Content Manager core app.
  */
 
-/** initialize form */
+/** Initialize form */
 $sdmForm = new SdmForm();
+
+/* Configure $options array */
 $options = array(
     'incpages' => array('contentManagerUpdateContentFormSubmission'),
 );
-if ($sdmForm->sdmFormGetSubmittedFormValue('page') !== 'contentManager') {
+
+/* Get submitted page name */
+$page = $sdmForm->sdmFormGetSubmittedFormValue('page');
+
+/* Make sure the user does not accidently create a page called contentManager. */
+if ($page !== 'contentManager') {
+    /* Initialize $output var */
     $output = '';
-    // form submitted successfully
+
+    /* Check if form was submitted successfully. */
     if ($sdmForm->sdmFormGetSubmittedFormValue('content_manager_form_submitted') === 'content_manager_form_submitted') {
-        $output .= '
-                    <!-- contentManager div -->
-                    <div id"contentManager">
-                        <p>Form has been submitted with the following values.
-                            <ul>
-                                <li>PAGE : <a href="' . $sdmassembler->sdmCoreGetRootDirectoryUrl() . '?page=' . $sdmForm->sdmFormGetSubmittedFormValue('page') . '">' . $sdmForm->sdmFormGetSubmittedFormValue('page') . '</a></li>';
-        // loop through and update wrappers
+        /* Initialize $wrapperStatusHtml. */
+        $wrapperStatusHtml = '';
+        /* Update each wrapper. */
         foreach ($sdmcms->sdmCmsDetermineAvailableWrappers() as $dispalyValue => $machineValue) {
-            $sdmcms->sdmCmsUpdateContent($sdmForm->sdmFormGetSubmittedFormValue('page'), $machineValue, nl2br($sdmForm->sdmFormGetSubmittedFormValue($machineValue)));
-            $output .= '<li>Wrapper : "' . $dispalyValue . '" (<i>' . $machineValue . '</i>)</li><li>Wrapper Content : <xmp>' . $sdmForm->sdmFormGetSubmittedFormValue($machineValue) . '</xmp></li>';
+            /* Update the wrapper in the DataObject. */
+            $sdmcms->sdmCmsUpdateContent($page, $machineValue, nl2br($sdmForm->sdmFormGetSubmittedFormValue($machineValue)));
+
+            /* Get html that will be used along with the rest of the app $output for each wrapper. */
+            $wrapperStatusHtml .= '<div class="border-rounded padded-15 highlight">';
+            $wrapperStatusHtml .= '<p>wrapper name: "' . $dispalyValue . '"';
+            $wrapperStatusHtml .= '<p>wrapper id: "' . $machineValue . '"</p>';
+            $wrapperStatusHtml .= '<p>wrapper content:</p>';
+            $wrapperStatusHtml .= '<div class="border-rounded padded-15 border-dotted">' . $sdmForm->sdmFormGetSubmittedFormValue($machineValue) . '</p></div>';
+            $wrapperStatusHtml .= '</div>';
         }
-        $output .= '
-                            </ul></p>
-                    </div>
-                    <!-- close contentManager div -->';
-    } // form submitted but error occured
+
+        /* App $output for successful update. */
+        $output .= '<!-- contentManager div -->';
+        $output .= '<div id="contentManager">';
+        $output .= '<p>Page updated successfully.</p>';
+        $output .= '<p>Go to <a href="' . $sdmassembler->sdmCoreGetRootDirectoryUrl() . '?page=' . $page . '">' . $page . '</a></p>';
+        $output .= '<p>Overview of content wrappers for this page:</p>';
+        $output .= $wrapperStatusHtml;
+        $output .= '</div><!-- close contentManager div -->';
+    }
     else {
-        $output .= '
-                <div id="contentManager">
-                    <p>And error occured and the form could not be submitted</p>
-                </div>
-                ';
+        /* App $output if form could not be submitted. */
+        $output .= '<div id="contentManager"><p>And error occurred and the form could not be submitted</p></div>';
     }
 } else {
-    $output = '<p>Page could not be created because pages cannot use the name "contentManager" for security reasons. You can however add a page for one of the content managers stages.</p>';
+    /* App $output if user tried to create a page called "contentManager". */
+    $output = '<p>Sorry, you cannot create a page with the name "contentManager" for security reasons.</p>';
 }
+
+/* Incorporate app $output. */
 $sdmassembler->sdmAssemblerIncorporateAppOutput($output, $options);
