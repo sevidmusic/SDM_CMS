@@ -18,8 +18,7 @@ $availableApps = $sdmcms->sdmCmsDetermineAvailableApps();
 
 /* Check if form was submitted successfully. */
 if (SdmForm::sdmFormGetSubmittedFormValue('content_manager_form_submitted') === 'content_manager_form_submitted') {
-
-    /**/
+    /* Loop through available apps updating state if necessary. */
     foreach ($availableApps as $appname => $app) {
         $newAppState = SdmForm::sdmFormGetSubmittedFormValue($app);
         $sdmcms->sdmCmsSwitchAppState($app, $newAppState);

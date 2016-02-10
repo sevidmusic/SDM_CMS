@@ -18,12 +18,8 @@ class SdmCms extends SdmCore
      *
      * Warning: This method will overwrite content if it already exists.
      *
-     * @todo: It may be beneficial to split the update and add logic into 2 separate methods to
-     *        prevent accidental overwriting of pages that already exist. The other option
-     *        would be to create a parameter that dictates weather or not pages
-     *        that already exist should be overwritten. One final option would be to
-     *        create a method that called sdmCmsAddContent() that utilizes sdmCmsUpdateContent()
-     *        but performs a check to make sure existing pages are not overwritten.
+     * @todo: It may be beneficial to refactor the update logic to insure
+     *       pages that already exist do not get overwritten by mistake.
      *
      * @param string $page The name of the page this content belongs to.
      *
