@@ -25,13 +25,13 @@ if ($page !== 'contentManager') {
         /* Initialize $wrapperStatusHtml. */
         $wrapperStatusHtml = '';
         /* Update each wrapper. */
-        foreach ($sdmcms->sdmCmsDetermineAvailableWrappers() as $dispalyValue => $machineValue) {
+        foreach ($sdmcms->sdmCmsDetermineAvailableWrappers() as $displayValue => $machineValue) {
             /* Update the wrapper in the DataObject. */
             $sdmcms->sdmCmsUpdateContent($page, $machineValue, nl2br($sdmForm->sdmFormGetSubmittedFormValue($machineValue)));
 
             /* Get html that will be used along with the rest of the app $output for each wrapper. */
             $wrapperStatusHtml .= '<div class="border-rounded padded-15 highlight">';
-            $wrapperStatusHtml .= '<p>wrapper name: "' . $dispalyValue . '"';
+            $wrapperStatusHtml .= '<p>wrapper name: "' . $displayValue . '"';
             $wrapperStatusHtml .= '<p>wrapper id: "' . $machineValue . '"</p>';
             $wrapperStatusHtml .= '<p>wrapper content:';
             $wrapperStatusHtml .= ($sdmForm->sdmFormGetSubmittedFormValue($machineValue) === '' ? ' This wrapper has no content.</p>' : '</p><div class="border-rounded padded-15 border-dotted">' . $sdmForm->sdmFormGetSubmittedFormValue($machineValue) . '</p></div>');
