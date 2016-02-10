@@ -4,19 +4,28 @@
  * Administer Apps form submission handler for the Content Manager core app.
  */
 
-$output = ''; // passed to SdmAssembler::SdmAssemlberIncorporateAppOutput()
-$on = array(); // used for display
-$off = array(); // used for display
-// form submitted successfully
+/* Initialize app $output. */
+$output = '';
+
+/* Tracks enabled apps. */
+$on = null;
+
+/* Tracks disabled apps. */
+$off = array();
+
+/* Determine currently enabled apps. */
+$availableApps = $sdmcms->sdmCmsDetermineAvailableApps();
+
+/* Check if form was submitted successfully. */
 if (SdmForm::sdmFormGetSubmittedFormValue('content_manager_form_submitted') === 'content_manager_form_submitted') {
-    //$sdmassembler->sdmCoreSdmReadArray($_POST['SdmForm']);
-    foreach ($sdmcms->sdmCmsDetermineAvailableApps() as $appname => $app) {
+
+    /**/
+    foreach ($availableApps as $appname => $app) {
         $newAppState = SdmForm::sdmFormGetSubmittedFormValue($app);
         $sdmcms->sdmCmsSwitchAppState($app, $newAppState);
-        if ($newAppState === 'on') {
-            $on[] = $appname;
-        } else {
-            $off[] = $appname;
+        $on = $sdmcms->sdmCoreDetermineEnabledApps();
+        if ($newAppState !== 'on') {
+            $off[0] = '<span style="color:red;">Reworking the display of disabled apps.!</span>';
         }
     }
     $output .= '<h4>The following apps are enabled:</h4><ul>';
