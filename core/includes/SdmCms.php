@@ -284,10 +284,30 @@ class SdmCms extends SdmCore
         switch ($state) {
             /* Enable app */
             case 'on':
+                /* Determine if the $app has any dependencies. */
+                $dependencies = $this->sdmCmsDetermineAppDependencies($app);
+
+                /* If the $app has any dependencies make sure any apps the app is dependent on are enabled. */
+                if(!empty($dependencies)) {
+                    foreach($dependencies as $dependency) {
+                        /* Temporarily disable the $app. Doing this will help insure all apps
+                           this app is dependent on are loaded before the $app during page assembly. */
+                        unset($enabledApps->$app);
+
+                        /* If the required app is not already enabled enable it. */
+                        if(!property_exists($enabledApps, $dependency)) {
+                            $enabledApps->$dependency = trim($dependency);
+                        }
+
+                        /* Re-enable the $app. */
+                        $enabledApps->$app = trim($app);
+                    }
+                }
+
                 /* As long as the app is not already enabled, enable it. No need to enable an already enabled app,
                   and doing so could cause bugs as it might clutter the enabledApps array with duplicate values. */
                 if (!property_exists($enabledApps, $app)) {
-                    $enabledApps->$app = $app;
+                    $enabledApps->$app = trim($app);
                 }
                 break;
 
@@ -320,5 +340,18 @@ class SdmCms extends SdmCore
 
         /* Return true if updated DataObject was stored successfully, or false on failure. */
         return (file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $jsonData, LOCK_EX) > 0 ? true : false);
+    }
+
+    /**
+     * Returns the names of apps a specified $app is dependent on in an array.
+     *
+     * If the app has no dependencies then an empty array will be returned.
+     *
+     * @param $app The app to look for dependencies for.
+     *
+     * @return array Array of apps the $app is dependent on.
+     */
+    final public function sdmCmsDetermineAppDependencies($app) {
+        return array('jQuery','jQueryUi');
     }
 }
