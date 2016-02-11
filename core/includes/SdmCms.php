@@ -352,6 +352,17 @@ class SdmCms extends SdmCore
      * @return array Array of apps the $app is dependent on.
      */
     final public function sdmCmsDetermineAppDependencies($app) {
-        return array('jQuery','jQueryUi');
+        /* Determine path to $app's directory. */
+       $appPath = (file_exists($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app) ? $this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app : $this->sdmCoreGetUserAppDirectoryPath() . '/' . $app);
+
+        /* Build path to .cm file */
+        $cmFilePath = $appPath . '/' . $app . '.cm';
+
+        /* If it exists, load the $app.cm file. */
+        if(file_exists($cmFilePath)){
+            $definedDependencies = file_get_contents($cmFilePath);
+            $dependencies = explode(', ', $definedDependencies);
+        }
+        return (empty($dependencies) === true ? array() : $dependencies);
     }
 }
