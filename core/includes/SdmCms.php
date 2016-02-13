@@ -279,10 +279,14 @@ class SdmCms extends SdmCore
      */
     public function sdmCmsSwitchAppState($app, $state)
     {
+        /** Load the entire DataObject. */
         $data = $this->sdmCoreLoadDataObject(false);
+
+        /* Currently enabled apps. */
         $enabledApps = $data->settings->enabledapps;
+        $this->sdmCoreSdmReadArray(['App' => $app, 'New State' => $state, 'Enabled Apps Prior to State Change' => $enabledApps]);
+        /* Determine weather to turn app on or off based on $state. */
         switch ($state) {
-            /* Enable app */
             case 'on':
                 /* Determine if the $app has any dependencies. */
                 $dependencies = $this->sdmCmsDetermineAppDependencies($app);
@@ -295,7 +299,7 @@ class SdmCms extends SdmCore
                         unset($enabledApps->$app);
 
                         /* If the required app is not already enabled enable it. */
-                        if(!property_exists($enabledApps, $dependency)) {
+                        if (!property_exists($enabledApps, $dependency)) {
                             $enabledApps->$dependency = trim($dependency);
                         }
 
@@ -303,9 +307,12 @@ class SdmCms extends SdmCore
                         $enabledApps->$app = trim($app);
                     }
                 }
+                $dev = ['App' => $app,'Dependencies' => (empty($dependencies) ? 'No dependencies.' : $dependencies),'Apps To Be Enabled' => $enabledApps];
+                $this->sdmCoreSdmReadArray($dev);
+
 
                 /* As long as the app is not already enabled, enable it. No need to enable an already enabled app,
-                  and doing so could cause bugs as it might clutter the enabledApps array with duplicate values. */
+                  and doing so could cause bugs. */
                 if (!property_exists($enabledApps, $app)) {
                     $enabledApps->$app = trim($app);
                 }
@@ -316,6 +323,58 @@ class SdmCms extends SdmCore
                 /* We only need to remove the app from the enabled apps object if it already exists as a property.
                  No need to tamper with our data if the app being disabled is already excluded from the enabled
                  apps array. */
+                /* @todo It is very important to create a mechanisim that insures apps that are required by other apps
+                 *       do not get turned off without requireing the user to turn off any dependent apps first. This
+                 *       responsibility will fall on both the SdmCms() and the contentManager core app.
+                 *
+                 * One solution:
+                 * File cache, perhaps two files, .dependents (which would replace .cm files, and .dependencies
+                 * which would list any apps that depend on an $app.
+                 *
+                 * Another solution:
+                 * In the DataObject, perhaps in settings, create a
+                 * reqruiredApps object that is structured as follows:
+                 * array(
+                 *   'requiredApp' => array(dependencies);
+                 * );
+                 * DataObject->settings->requiredApps->$requiredAppName->$dependents;
+                 *
+                 * For example the helloWorld app requires the jQuery and jQueryUi apps.
+                 * To insure they do not get turned off if helloWorld is enabled, which would cause
+                 * helloWorld to loose any functionality provided by the jQuery and jQueryUi apps,
+                 * helloWorld would register it's dependencies in the DataObject as soon as it is enabled.
+                 *
+                 * // the helloWorld app would register the following in the DataObject upon being enabled.
+                 *
+                 * DataObject->settings->requiredApps->jQuery->helloWorld
+                 * DataObject->settings->requiredApps->jQueryUi->helloWprld
+                 *
+                 * If any other app is enabled that requires jQuery or jQueryUi it would simply
+                 * register itslef in the requiredApps object under the appropriate app
+                 *
+                 * // the contentManager also needs jQuery and jQueryUi, if it is enabled after helloWorld then
+                 * // just needs to register itself under the jQuery and jQueryUi required apps in the DataObject
+                 *
+                 * DataObject->settings->requiredApps->jQuery->helloWorld
+                 * DataObject->settings->requiredApps->jQueryUi->helloWorld
+                 *
+                 * Now the DataObject->settings->requiredApps object looks like this
+                 *
+                   DataObject {
+                      [settings] =>
+                          [requiredApps] =>
+                              [jQuery] => [helloWorld, contentManager],
+                              [jQueryUI] => [helloWorld, contentManager],
+                   }
+                 *
+                 * This will all be done internally whenever an app is enabled.
+                 * This way before an app is disabled a check can be made to insure it won't be turned off
+                 * till any apps that depend on it are off.
+                 *
+                 *
+                 *
+                 *
+                 */
                 if (property_exists($enabledApps, $app)) {
                     unset($enabledApps->$app);
                 }
@@ -351,15 +410,16 @@ class SdmCms extends SdmCore
      *
      * @return array Array of apps the $app is dependent on.
      */
-    final public function sdmCmsDetermineAppDependencies($app) {
+    final public function sdmCmsDetermineAppDependencies($app)
+    {
         /* Determine path to $app's directory. */
-       $appPath = (file_exists($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app) ? $this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app : $this->sdmCoreGetUserAppDirectoryPath() . '/' . $app);
+        $appPath = (file_exists($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app) ? $this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app : $this->sdmCoreGetUserAppDirectoryPath() . '/' . $app);
 
         /* Build path to .cm file */
         $cmFilePath = $appPath . '/' . $app . '.cm';
 
         /* If it exists, load the $app.cm file. */
-        if(file_exists($cmFilePath)){
+        if (file_exists($cmFilePath)) {
             $definedDependencies = file_get_contents($cmFilePath);
             $dependencies = explode(', ', $definedDependencies);
         }
