@@ -69,6 +69,7 @@ $config = array(
             'SdmDevMenu' => 'SdmDevMenu',
             'SdmErrorLog' => 'SdmErrorLog',
         ),
+        'requiredApps' => new stdClass(),
     ),
     /* Menus | @see "core/config/defaultMenuConfig.php" for default menu configuration */
     'menus' => $menus,

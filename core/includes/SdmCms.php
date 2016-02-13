@@ -284,104 +284,35 @@ class SdmCms extends SdmCore
 
         /* Currently enabled apps. */
         $enabledApps = $data->settings->enabledapps;
-        $this->sdmCoreSdmReadArray(['App' => $app, 'New State' => $state, 'Enabled Apps Prior to State Change' => $enabledApps]);
+
         /* Determine weather to turn app on or off based on $state. */
         switch ($state) {
-            case 'on':
-                /* Determine if the $app has any dependencies. */
-                $dependencies = $this->sdmCmsDetermineAppDependencies($app);
+            case 'on': // Enable App //
+                /* Enable any apps this $app is dependent on. */
+                $dependencies = $this->sdmCmsEnableAppDependencies($app, $enabledApps, $data);
 
-                /* If the $app has any dependencies make sure any apps the app is dependent on are enabled. */
-                if(!empty($dependencies)) {
-                    foreach($dependencies as $dependency) {
-                        /* Temporarily disable the $app. Doing this will help insure all apps
-                           this app is dependent on are loaded before the $app during page assembly. */
-                        unset($enabledApps->$app);
-
-                        /* If the required app is not already enabled enable it. */
-                        if (!property_exists($enabledApps, $dependency)) {
-                            $enabledApps->$dependency = trim($dependency);
-                        }
-
-                        /* Re-enable the $app. */
-                        $enabledApps->$app = trim($app);
-                    }
-                }
-                $dev = ['App' => $app,'Dependencies' => (empty($dependencies) ? 'No dependencies.' : $dependencies),'Apps To Be Enabled' => $enabledApps];
-                $this->sdmCoreSdmReadArray($dev);
-
-
-                /* As long as the app is not already enabled, enable it. No need to enable an already enabled app,
-                  and doing so could cause bugs. */
+                /* As long as the app is not already enabled, enable it. */
                 if (!property_exists($enabledApps, $app)) {
                     $enabledApps->$app = trim($app);
                 }
+
+                // dev
+                $dev = ['App' => $app, 'State' => $state, 'Dependencies' => (empty($dependencies) ? 'No dependencies.' : $dependencies),'Apps To Be Enabled' => $enabledApps];
+                $this->sdmCoreSdmReadArray($dev);
                 break;
 
-            /* Disable app */
-            case 'off':
-                /* We only need to remove the app from the enabled apps object if it already exists as a property.
-                 No need to tamper with our data if the app being disabled is already excluded from the enabled
-                 apps array. */
-                /* @todo It is very important to create a mechanisim that insures apps that are required by other apps
-                 *       do not get turned off without requireing the user to turn off any dependent apps first. This
-                 *       responsibility will fall on both the SdmCms() and the contentManager core app.
-                 *
-                 * One solution:
-                 * File cache, perhaps two files, .dependents (which would replace .cm files, and .dependencies
-                 * which would list any apps that depend on an $app.
-                 *
-                 * Another solution:
-                 * In the DataObject, perhaps in settings, create a
-                 * reqruiredApps object that is structured as follows:
-                 * array(
-                 *   'requiredApp' => array(dependencies);
-                 * );
-                 * DataObject->settings->requiredApps->$requiredAppName->$dependents;
-                 *
-                 * For example the helloWorld app requires the jQuery and jQueryUi apps.
-                 * To insure they do not get turned off if helloWorld is enabled, which would cause
-                 * helloWorld to loose any functionality provided by the jQuery and jQueryUi apps,
-                 * helloWorld would register it's dependencies in the DataObject as soon as it is enabled.
-                 *
-                 * // the helloWorld app would register the following in the DataObject upon being enabled.
-                 *
-                 * DataObject->settings->requiredApps->jQuery->helloWorld
-                 * DataObject->settings->requiredApps->jQueryUi->helloWprld
-                 *
-                 * If any other app is enabled that requires jQuery or jQueryUi it would simply
-                 * register itslef in the requiredApps object under the appropriate app
-                 *
-                 * // the contentManager also needs jQuery and jQueryUi, if it is enabled after helloWorld then
-                 * // just needs to register itself under the jQuery and jQueryUi required apps in the DataObject
-                 *
-                 * DataObject->settings->requiredApps->jQuery->helloWorld
-                 * DataObject->settings->requiredApps->jQueryUi->helloWorld
-                 *
-                 * Now the DataObject->settings->requiredApps object looks like this
-                 *
-                   DataObject {
-                      [settings] =>
-                          [requiredApps] =>
-                              [jQuery] => [helloWorld, contentManager],
-                              [jQueryUI] => [helloWorld, contentManager],
-                   }
-                 *
-                 * This will all be done internally whenever an app is enabled.
-                 * This way before an app is disabled a check can be made to insure it won't be turned off
-                 * till any apps that depend on it are off.
-                 *
-                 *
-                 *
-                 *
-                 */
-                if (property_exists($enabledApps, $app)) {
+            case 'off': // Disable App //
+                /* If app was enabled, disable it. */
+                if (property_exists($enabledApps, $app) && !property_exists($data->settings->requiredApps, $app)) {
                     unset($enabledApps->$app);
                 }
+
+                // dev
+                $dev = ['App' => $app, 'State' => $state, 'Dependencies' => (empty($dependencies) ? 'No dependencies.' : $dependencies),'Apps To Be Enabled' => $enabledApps];
+                $this->sdmCoreSdmReadArray($dev);
                 break;
 
-            /* Error, invalid value passed to $state */
-            default:
+            default: // Error, invalid $state
                 /* If $state not equal to 'on' or 'off' return false, and log an error. */
                 $msg = 'Invalid $state "' . $state . '" passed to sdmCmsSwitchAppState(), unable to switch state of app "' . $app . '"';
                 error_log($msg);
@@ -424,5 +355,62 @@ class SdmCms extends SdmCore
             $dependencies = explode(', ', $definedDependencies);
         }
         return (empty($dependencies) === true ? array() : $dependencies);
+    }
+
+
+    /**
+     * Enables an $app's dependencies for the sdmCmsSwitchAppState() method.
+     *
+     * This method will read an $app's .cm file to determine if it is dependent on any other apps.
+     * If the $app has any dependencies they will be enabled.
+     *
+     * Note: This method is for internal use by the SdmCms()->sdmCmsSwitchAppState() method only. It does not actually
+     * enable the dependencies in the DataObject, but rather adds them to the $enabledApps array built by the
+     * sdmCmsSwitchAppState() method. Calling this method outside the SdmCms->sdmCmsSwitchAppState() method
+     * will not do anything but return an array of dependencies for an $app. If an array of dependencies
+     * is desired as it was designed for this purpose.
+     *
+     * @param $app The name of the app whose dependencies need to be enabled.
+     *
+     * @param $enabledApps The enabledApps array being handled by sdmCmsSwitchAppState(). This parameter is passed to
+     *                     sdmCmsEnableAppDependencies() by reference so there is no need to assign the return value
+     *                     of this method to the $enabledApps array handled by sdmCmsSwitchAppState() as it will be
+     *                     updated by the sdmCmsEnableAppDependencies() internally.
+     * @param object $dataObject The DataObject loaded by sdmCmsSwitchAppState(). This parameter is handled by reference.
+     *                           WARNING: Do not pass the current DataObject (i.e., $this->DataObject) to this parameter
+     *                           or else data lass will occur!!! Only the DataObject loaded by sdmCmsSwitchAppState()
+     *                           should be passed to this parameter.
+     *
+     * @return array Array of the $apps dependencies that were enabled.
+     *
+     */
+    final private function sdmCmsEnableAppDependencies($app, &$enabledApps, &$dataObject) {
+        /* Determine if the $app has any dependencies. */
+        $dependencies = $this->sdmCmsDetermineAppDependencies($app);
+
+        /* If the $app has any dependencies make sure any apps the app is dependent on are enabled. */
+        if(!empty($dependencies)) {
+            foreach($dependencies as $dependency) {
+                /* Register $app under $dependency in DataObject->settings->requiredApps. */
+                if(!property_exists($dataObject->settings->requiredApps, $dependency)) {
+                    $dataObject->settings->requiredApps->$dependency = array();
+                }
+                array_push($dataObject->settings->requiredApps->$dependency, trim($app));
+                /* Temporarily disable the $app. Doing this will help insure all apps
+                   this app is dependent on are loaded before the $app during page assembly. */
+                unset($enabledApps->$app);
+
+                /* If the required app is not already enabled enable it. */
+                if (!property_exists($enabledApps, $dependency)) {
+                    $enabledApps->$dependency = trim($dependency);
+                }
+
+                /* Re-enable the $app. */
+                $enabledApps->$app = trim($app);
+            }
+        }
+        $dev = ['App' => $app, 'Dependencies' => $dependencies, 'Enabled Apps' => $enabledApps, 'DataObject->settings->requiredApps' => $dataObject->settings->requiredApps];
+        //$this->sdmCoreSdmReadArray($dev);
+        return $dependencies;
     }
 }
