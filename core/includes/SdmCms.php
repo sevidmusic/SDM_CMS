@@ -295,10 +295,6 @@ class SdmCms extends SdmCore
                 if (!property_exists($enabledApps, $app)) {
                     $enabledApps->$app = trim($app);
                 }
-
-                // dev
-                $dev = ['App' => $app, 'State' => $state, 'Dependencies' => (empty($dependencies) ? 'No dependencies.' : $dependencies),'Apps To Be Enabled' => $enabledApps];
-                $this->sdmCoreSdmReadArray($dev);
                 break;
 
             case 'off': // Disable App //
@@ -306,10 +302,6 @@ class SdmCms extends SdmCore
                 if (property_exists($enabledApps, $app) && !property_exists($data->settings->requiredApps, $app)) {
                     unset($enabledApps->$app);
                 }
-
-                // dev
-                $dev = ['App' => $app, 'State' => $state, 'Dependencies' => (empty($dependencies) ? 'No dependencies.' : $dependencies),'Apps To Be Enabled' => $enabledApps];
-                $this->sdmCoreSdmReadArray($dev);
                 break;
 
             default: // Error, invalid $state
@@ -409,8 +401,6 @@ class SdmCms extends SdmCore
                 $enabledApps->$app = trim($app);
             }
         }
-        $dev = ['App' => $app, 'Dependencies' => $dependencies, 'Enabled Apps' => $enabledApps, 'DataObject->settings->requiredApps' => $dataObject->settings->requiredApps];
-        //$this->sdmCoreSdmReadArray($dev);
         return $dependencies;
     }
 }
