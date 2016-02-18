@@ -1,4 +1,8 @@
+/**
+ * This stylesheet defines styles for the contentManager core app and it's components.
+ */
 
+/* Misc. styles. */
 .border-rounded {
     border: 2px solid #66CCCC;
     border-radius: 9px;
@@ -11,4 +15,48 @@
 
 .border-dotted {
     border-style: dotted;
+}
+
+/* Enabled app link styles. */
+.cm-app-enabled a:link {
+    color: #00FF7F;
+}
+
+.cm-app-enabled a:hover {
+    color: #0099FF;
+}
+
+.cm-app-enabled a:active {
+    color: inherit;
+}
+
+.cm-app-enabled a:visited {
+    color: #00FF7F;
+}
+
+/* Enabled dependency link styles. */
+.cm-dependency-enabled a:link {
+    color: #00FF7F;
+}
+
+.cm-dependency-enabled a:hover {
+    color: #0099FF;
+}
+
+.cm-dependency-enabled a:active {
+    color: inherit;
+}
+
+.cm-dependency-enabled a:visited {
+    color: #00FF7F;
+}
+
+/* Disabled app styles. */
+.cm-app-disabled {
+    color: #aea4a2;
+}
+
+/* */
+.requiredApp {
+    color: red;
 }
