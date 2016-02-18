@@ -18,12 +18,8 @@ class SdmCms extends SdmCore
      *
      * Warning: This method will overwrite content if it already exists.
      *
-     * @todo: It may be beneficial to split the update and add logic into 2 separate methods to
-     *        prevent accidental overwriting of pages that already exist. The other option
-     *        would be to create a parameter that dictates weather or not pages
-     *        that already exist should be overwritten. One final option would be to
-     *        create a method that called sdmCmsAddContent() that utilizes sdmCmsUpdateContent()
-     *        but performs a check to make sure existing pages are not overwritten.
+     * @todo: It may be beneficial to refactor the update logic to insure
+     *       pages that already exist do not get overwritten by mistake.
      *
      * @param string $page The name of the page this content belongs to.
      *
@@ -61,8 +57,8 @@ class SdmCms extends SdmCore
         /* Store the updates. */
         $update = file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $data, LOCK_EX);
 
-        /* Determine weather the update succeeded or failed.*/
-        $status = ($update < 0 || $update !== false ? true : false);
+        /* Determine weather the update succeeded or failed. */
+        $status = ($update < 0 && $update !== false ? true : false);
 
         /* Return true if update succeeded, or false if update failed. */
         return $status;
@@ -279,34 +275,48 @@ class SdmCms extends SdmCore
      *                      or disabled. (options: on, off)
      * @todo: change options for $state to 'enabled' and 'disabled' instead of 'on' and 'off'.
      *
-     * @return bool True on successful state change, false if unable to switch state.
+     * @return array|bool Returns an associative array of enabled apps (enalbedApps), enabled
+     *                    dependencies (enabledDependencies), and disabled apps (disabledApps), or false
+     *                    on failure.
      */
     public function sdmCmsSwitchAppState($app, $state)
     {
+        /** Load the entire DataObject. */
         $data = $this->sdmCoreLoadDataObject(false);
+
+        /* Load enabled apps object. */
         $enabledApps = $data->settings->enabledapps;
+
+        /* Initialize  $enabledDependencies array. Tracks which dependencies get enabled */
+        $enabledDependencies = array();
+
+        /* Initialize  $disabledApps array. Tracks which apps get disabled. */
+        $disabledApps = array();
+
+        /* Determine weather to turn app on or off based on $state. */
         switch ($state) {
-            /* Enable app */
-            case 'on':
-                /* As long as the app is not already enabled, enable it. No need to enable an already enabled app,
-                  and doing so could cause bugs as it might clutter the enabledApps array with duplicate values. */
+            case 'on': /* Enable App */
+                /* Enable any apps this $app is dependent on. */
+                $enabledDependencies = $this->sdmCmsEnableAppDependencies($app, $enabledApps, $data);
+
+                /* As long as the app is not already enabled, enable it. */
                 if (!property_exists($enabledApps, $app)) {
-                    $enabledApps->$app = $app;
+                    $enabledApps->$app = trim($app);
                 }
                 break;
 
-            /* Disable app */
-            case 'off':
-                /* We only need to remove the app from the enabled apps object if it already exists as a property.
-                 No need to tamper with our data if the app being disabled is already excluded from the enabled
-                 apps array. */
-                if (property_exists($enabledApps, $app)) {
+            case 'off': /* Disable App */
+
+                /* If app was enabled, disable it. */
+                if (property_exists($enabledApps, $app) && !property_exists($data->settings->requiredApps, $app)) {
                     unset($enabledApps->$app);
                 }
+
+                /* Add app to disabledApps array. */
+                $disabledApps[] = $app;
                 break;
 
-            /* Error, invalid value passed to $state */
-            default:
+            default: /* Error, invalid $state */
                 /* If $state not equal to 'on' or 'off' return false, and log an error. */
                 $msg = 'Invalid $state "' . $state . '" passed to sdmCmsSwitchAppState(), unable to switch state of app "' . $app . '"';
                 error_log($msg);
@@ -316,13 +326,102 @@ class SdmCms extends SdmCore
         /* Unset old enabledapps object. */
         unset($data->settings->enabledapps);
 
-        /* Create new enabledapps object. */
+        /* Update DataObject with a new enabledapps object that reflects any updates. */
         $data->settings->enabledapps = $enabledApps;
 
         /* Prepare updated DataObject for storage. */
         $jsonData = json_encode($data);
 
+        /* Attempt to update the stored DataObject with the updated DataObject. */
+        $status = file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $jsonData, LOCK_EX);
+
+        /* Create an array of the updates that were made in regards the $app's state. */
+        $updates = array('enabledApps' => $enabledApps, 'enabledDependencies' => $enabledDependencies, 'disabledApps' => $disabledApps);
+
         /* Return true if updated DataObject was stored successfully, or false on failure. */
-        return (file_put_contents($this->sdmCoreGetDataDirectoryPath() . '/data.json', $jsonData, LOCK_EX) > 0 ? true : false);
+        return ($status > 0 ? $updates : false);
+    }
+
+    /**
+     * Enables an $app's dependencies for the sdmCmsSwitchAppState() method.
+     *
+     * This method will read an $app's .cm file to determine if it is dependent on any other apps.
+     * If the $app has any dependencies they will be enabled.
+     *
+     * Note: This method is for internal use by the SdmCms()->sdmCmsSwitchAppState() method only. It does not actually
+     * enable the dependencies in the DataObject, but rather adds them to the $enabledApps array built by the
+     * sdmCmsSwitchAppState() method. Calling this method outside the SdmCms->sdmCmsSwitchAppState() method
+     * will not do anything but return an array of dependencies for an $app. If an array of dependencies
+     * is desired as it was designed for this purpose.
+     *
+     * @param $app The name of the app whose dependencies need to be enabled.
+     *
+     * @param $enabledApps The enabledApps array being handled by sdmCmsSwitchAppState(). This parameter is passed to
+     *                     sdmCmsEnableAppDependencies() by reference so there is no need to assign the return value
+     *                     of this method to the $enabledApps array handled by sdmCmsSwitchAppState() as it will be
+     *                     updated by the sdmCmsEnableAppDependencies() internally.
+     * @param object $dataObject The DataObject loaded by sdmCmsSwitchAppState(). This parameter is handled by reference.
+     *                           WARNING: Do not pass the current DataObject (i.e., $this->DataObject) to this parameter
+     *                           or else data lass will occur!!! Only the DataObject loaded by sdmCmsSwitchAppState()
+     *                           should be passed to this parameter.
+     *
+     * @return array Array of the $apps dependencies that were enabled.
+     *
+     */
+    final private function sdmCmsEnableAppDependencies($app, &$enabledApps, &$dataObject)
+    {
+        /* Determine if the $app has any dependencies. */
+        $dependencies = $this->sdmCmsDetermineAppDependencies($app);
+
+        /* If the $app has any dependencies make sure any apps the app is dependent on are enabled. */
+        if (!empty($dependencies)) {
+            foreach ($dependencies as $dependency) {
+                /* Register $app under $dependency in DataObject->settings->requiredApps. */
+                if (!property_exists($dataObject->settings->requiredApps, $dependency)) {
+                    $dataObject->settings->requiredApps->$dependency = array();
+                }
+
+                /* Push $app into $dependency */
+                array_push($dataObject->settings->requiredApps->$dependency, trim($app));
+
+                /* Temporarily disable the $app. Doing this will help insure all apps
+                   this app is dependent on are loaded before the $app during page assembly. */
+                unset($enabledApps->$app);
+
+                /* If the required app is not already enabled enable it. */
+                if (!property_exists($enabledApps, $dependency)) {
+                    $enabledApps->$dependency = trim($dependency);
+                }
+
+                /* Re-enable the $app. */
+                $enabledApps->$app = trim($app);
+            }
+        }
+        return $dependencies;
+    }
+
+    /**
+     * Returns the names of apps a specified $app is dependent on in an array.
+     *
+     * If the app has no dependencies then an empty array will be returned.
+     *
+     * @param $app The app to look for dependencies for.
+     *
+     * @return array Array of apps the $app is dependent on.
+     */
+    final public function sdmCmsDetermineAppDependencies($app)
+    {
+        /* Determine path to $app's directory. */
+        $appPath = (file_exists($this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app) ? $this->sdmCoreGetCoreAppDirectoryPath() . '/' . $app : $this->sdmCoreGetUserAppDirectoryPath() . '/' . $app);
+
+        /* Build path to .cm file */
+        $cmFilePath = $appPath . '/' . $app . '.cm';
+
+        /* If it exists, load the $app.cm file. */
+        if (file_exists($cmFilePath)) {
+            $definedDependencies = file_get_contents($cmFilePath);
+            $dependencies = explode(', ', $definedDependencies);
+        }
+        return (empty($dependencies) === true ? array() : $dependencies);
     }
 }
