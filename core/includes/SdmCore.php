@@ -1,17 +1,19 @@
 <?php
 
 /**
- * <p>The SDM_Core class provides mehtods for interacting with the SDM Core.</p>
- * <p>Additonally, the SDM_Core also is responsible for intializing, configuring, and
- * starting up the SDM CMS</p>
+ * The SDM_Core class provides mehtods for interacting with the SDM Core.
+ * Additonally, the SDM_Core also is responsible for intializing, configuring, and
+ * starting up the SDM CMS
  *
  * @author seviforeman
+ *
  * @todo create a method that formats strings into camel case that can be used by developers and the CMS internally.
  * @todo create methods for use with a DATABASE so Admin can choose between storing site data in a json file or a DATABASE
+ *
  */
+
 class SdmCore
 {
-
     protected $DataObject;
     private $RootDirectoryPath;
     private $RootDirectoryUrl;
