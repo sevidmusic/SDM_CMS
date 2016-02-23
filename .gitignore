@@ -19,3 +19,5 @@ nbproject
 *.json
 
 *.log
+
+ast.dump
