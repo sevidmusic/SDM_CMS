@@ -1,15 +1,59 @@
 <?php
 
 /**
- * The SDM_Core class provides mehtods for interacting with the SDM Core.
- * Additonally, the SDM_Core also is responsible for intializing, configuring, and
+ * The SdmCore class provides mehtods for interacting with the SDM Core.
+ * Additonally, the SdmCore is responsible for intializing, configuring, and
  * starting up the SDM CMS
  *
- * @author seviforeman
+ * @author Sevi Donnelly Foreman
  *
  * @todo create a method that formats strings into camel case that can be used by developers and the CMS internally.
  * @todo create methods for use with a DATABASE so Admin can choose between storing site data in a json file or a DATABASE
  *
+ * @property object $DataObject This object represents the data stored in the site's data.json file.
+ *                              Note: By default all pages but the current page are excluded from this object.
+ *
+ * @property string $RootDirectoryPath Path to the site's root directory.
+ *
+ * @property string $RootDirectoryUrl Site's root url.
+ *
+ * @property string $CoreDirectoryPath; Path to the site's core directory.
+ *
+ * @property string $CoreDirectoryUrl Url to site's core directory.
+ *
+ * @property string $ConfigurationDirectoryPath Path to the site's configuration directory.
+ *
+ * @property string $ConfigurationDirectoryUrl Url to site's configuration directory.
+ *
+ * @property string $IncludesDirectoryPath Path to the site's includes directory.
+ *
+ * @property string $ThemesDirectoryPath Path to the site's themes directory.
+ *
+ * @property string $ThemesDirectoryUrl Url to site's themes directory.
+ *
+ * @property string $CurrentTheme The name of the current theme.
+ *
+ * @property string $CurrentThemeDirectoryPath Path to the current theme's directory.
+ *
+ * @property string $CurrentThemeDirectoryUrl Url to current themes directory.
+ *
+ * @property string $UserAppDirectoryPath Path to the site's user app directory.
+ *
+ * @property string $UserAppDirectoryUrl Url to current user apps directory.
+ *
+ * @property string $CoreAppDirectoryPath Path to the site's core app directory.
+ *
+ * @property string $CoreAppDirectoryUrl Url to site's core app directory.
+ *
+ * @property string $DataDirectoryPath Path to the site's data directory path. This is where data.json is stored.
+ *
+ * @property string $DataDirectoryUrl Url to site's data directory. This directory is where data.json is stored.
+ *
+ * @property string $requestedPage The name of the requested page.
+ *
+ * @property array $availablePages Array of available pages.
+ *                                 Note: Only pages stored in data.json will be listed. Pages genereated by apps
+ *                                       will not be listed in this array.
  */
 
 class SdmCore
@@ -38,7 +82,7 @@ class SdmCore
 
     final public function __construct()
     {
-        // we need to do some special filetering to determine the Root Directory Path and Url
+        // we need to do some special filtering to determine the Root Directory Path and Url
         $this->RootDirectoryPath = str_replace('/core/includes', '', __DIR__);
         /* We need to exclude from RootDirectoryUrl the index.php and reset.php files
          * as well as the final preceeding slashes (i.e., remove '/index.php' from http://example.com/index.php
