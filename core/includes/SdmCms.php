@@ -386,8 +386,11 @@ class SdmCms extends SdmCore
                     $dataObject->settings->requiredApps->$dependency = array();
                 }
 
-                /* Register $app under $dependency in DataObject->settings->requiredApps->$dependency. */
-                array_push($dataObject->settings->requiredApps->$dependency, trim($app));
+                /* If not already registered, register $app under $dependency in
+                   DataObject->settings->requiredApps->$dependency. */
+                if(!in_array(trim($app), $dataObject->settings->requiredApps->$dependency, true)) {
+                    array_push($dataObject->settings->requiredApps->$dependency, trim($app));
+                }
 
                 /* Temporarily disable the $app. Doing this will help insure all apps
                    this app is dependent on are loaded before the $app during page assembly. */
