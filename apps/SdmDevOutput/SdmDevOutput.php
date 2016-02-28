@@ -11,3 +11,6 @@ $description = '<h1>Sdm Dev Output App</h1><p>This app is intended for use by de
                     SdmDevOutput.php file.</p>';
 $output = '<!-- Sdm Dev Output App Placeholder -->' . $description;
 $sdmassembler->sdmAssemblerIncorporateAppOutput($output, ['incpages' => ['SdmDevOutput']]);
+
+/* Uncomment to have app show an overview of the DataObject loaded for each page. */
+//$sdmassembler->sdmCoreSdmReadArray($sdmassembler->info());

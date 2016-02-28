@@ -82,7 +82,7 @@ $editMenuSelectMenuForm->formElements = array(
     array(
         'id' => 'displaypages',
         'type' => 'checkbox',
-        'element' => 'Pages to display menu on<i style="font-size:.7em;">(THIS NEEDS TO BE FIGURED OUT BETTER, POSSIBLY A CHECKLIST OF AVAILABLE PAGES...) FOR NOW all IS THE ONLY OPTION</i>',
+        'element' => '<span id="displaypages">Select which pages menu should be displayed on. (@todo: Need to add an ignore pages section.)</span>',
         'value' => $displayPages,
         'place' => '9',
     ),
