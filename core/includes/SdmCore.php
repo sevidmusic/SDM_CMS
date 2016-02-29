@@ -605,9 +605,15 @@ class SdmCore
     }
 
     /**
+     * Takes a value and filters it so it is machine safe, i.e., only letters and numbers.
+     * If an array is passed then each of it's values will be passed to SdmCoreGenerateMachineName()
+     * and an array with the filtered values will be returned.
      *
-     * @param mixed $value The value to convert into a machine safe string. If an array is passed each value in the array will be filtered
-     * @return mixed A machince safe string. If an array was passed then it's values will be filtered recursivley
+     * @param mixed $value The value to convert into a machine safe string. If an array is passed each value in the
+     *                     array will be filtered.
+     *
+     * @return mixed A machine safe string. If an array was passed then it's values will be filtered recursively and
+     *               the filtered array will be returned.
      */
     final public function SdmCoreGenerateMachineName($value)
     {
@@ -626,20 +632,26 @@ class SdmCore
                 $value = str_replace($targetChars, '_', $value);
                 break;
         }
-        // remove any dulicate underscores
+        // remove any duplicate underscores
         $machineValue = preg_replace('/[_]+/', '_', $value);
         return strtolower($machineValue);
     }
 
     /**
-     * <p>Returns a substring between two strings from a string.</p>
-     * <p>i.e.,</p>
-     * <p>sdmCoreStrSlice('Some string to slice.', 'to','.'); // returns 'slice'</p>
-     * <p>Note: <i>Niether the $start or $end strings will be included in the slice.</i></p>
-     * @param string $string <p>String to get slice from.</p>
-     * @param string $start <p>Starting string, i.e., the chars to start the slice after</p>
-     * @param string $end <p>The ending string, i.e., the chars to end the slice at</p>
-     * @return string <p>The slice of the string between $start and $end.</p>
+     * Returns a substring between two strings from a string.
+     *
+     * i.e.,
+     * sdmCoreStrSlice('Some string to slice.', 'to','.'); // returns 'slice'
+     *
+     * Note: Neither the $start or $end strings will be included in the slice.
+     *
+     * @param string $string String to get slice from.
+     *
+     * @param string $start Starting string, i.e., the chars to start the slice after.
+     *
+     * @param string $end The ending string, i.e., the chars to end the slice at.
+     *
+     * @return string The slice of the string between $start and $end.
      */
     final public function sdmCoreStrSlice($string, $start, $end)
     {
