@@ -460,8 +460,8 @@ class SdmCore
     }
 
     /**
-     * <p>Returns the path to the SDM CMS configuration directory</p>
-     * @return string <p>the path to the SDM CMS configuration directory as a string.</p>
+     * Returns the path to the site's configuration directory.
+     * @return string Returns the path to the site's configuration directory as a string.
      */
     final public function sdmCoreGetConfigurationDirectoryUrl()
     {
@@ -469,26 +469,41 @@ class SdmCore
     }
 
     /**
-     * <p>Reads an array and outputs its data as html via PHP's <b><i>echo</i></b></p>.
-     * @param array $array : <p>The array to read</p>
-     * @param bool $sub : <p>Set internally, determines if were handling a sub array of the
-     * parent array</p>
-     * @param string $parent The parent item. Only used if $sub is true.
-     * @return bool <p>Returns true regardless of success. This function is simply used to
-     * echo an array's data so if it cant read the array the array is corrupted and needs
-     * to be re-structured</p>
+     * Read the $variable and echo a formatted display of it to the current page.
+     *
+     * Basically, this method is the Sdm Cms's version of var_dump().
+     *
+     * Note: This method cannot directly handle doubles.
+     *
+     * i.e., The following will not work:
+     *
+     * $this->sdmCoreSdmReadArray(4.20420);
+     *
+     * Hint: This method is incredibly useful when developing themes and apps.
+     *
+     * Note: Passing null directly to sdmCoreSdmReadArray() will result in an empty display.
+     *
+     * @param mixed $variable : The variable to display.
+     *
+     * @param bool $sub : Set to true internally when handling nested arrays, this parameter determines if
+     *                    $variable is a child of $parent. Defaults to false.
+     *
+     * @param string $parent The name of the $parent of the $variable. This parameter is set internally and is
+     *                       only used if $sub is true. Defaults to an empty string.
+     *
+     * @return bool Returns true regardless of success.
      */
-    final public function sdmCoreSdmReadArray($array, $sub = false, $parent = '')
+    final public function sdmCoreSdmReadArray($variable, $sub = false, $parent = '')
     {
         $style = 'border:1px dashed limegreen;border-radius:3px;margin:25px;padding:12px;width:90%;overflow:auto;background:#000000;color:#ffffff;';
         echo '<div style="' . $style . '">';
-        echo($sub === false ? '' : "<i style='color:#00CCFF;'>{$parent} (<i style='color:aqua;'>" . gettype($array) . "</i>) <span style='color:#00BB00;font-size:.7em;'>Element Count: " . count($array) . "</span> => </i>");
-        if (is_bool($array) || is_string($array) || is_integer($array)) {
-            $v = $array;
-            unset($array);
-            $array = (is_bool($v) ? array(gettype($v) => ($v === true ? 'true' : 'false')) : array(gettype($v) => strval($v)));
+        echo($sub === false ? '' : "<i style='color:#00CCFF;'>{$parent} (<i style='color:aqua;'>" . gettype($variable) . "</i>) <span style='color:#00BB00;font-size:.7em;'>Element Count: " . count($variable) . "</span> => </i>");
+        if (is_bool($variable) || is_string($variable) || is_integer($variable)) {
+            $v = $variable;
+            unset($variable);
+            $variable = (is_bool($v) ? array(gettype($v) => ($v === true ? 'true' : 'false')) : array(gettype($v) => strval($v)));
         }
-        foreach ($array as $key => $value) {
+        foreach ($variable as $key => $value) {
             switch (is_array($value)) {
                 case true:
                     self::sdmCoreSdmReadArray($value, true, $key);
@@ -508,29 +523,39 @@ class SdmCore
     }
 
     /**
-     *  Attempts to return a directory listing for the specified directory (i.e., $directoryName)
-     * @param string $directoryName <p>The name of the directory to create a listing of.</p>
-     * @param string $directoryLocationReference <p>The name of a directory to be used as a starting reference point to search for the directory we want to create a listing for.
-     * <br><br>
-     * <i>$this->sdmCoreGetDirectoryListing('', 'core')</i>
-     * <br><br>
-     * would return a directory listing for '<b>SITESROOTURL</b>/core/'. (Note: passing an empty string will return the name of the directory being used as a locational reference.(i.e., $directoryLocationReference)
-     * <br><br><b>(Note: there is one special value you can pass to this parameter, the 'CURRENT_THEME' value will return a directory listing for the current theme)</b>
-     * </p>
-     * @return array A directory listing for $directoryName as an array.
+     * Attempts to return a directory listing for the specified directory as an array.
+     *
+     * The following would return a directory listing for site's core/config directory.
+     *
+     * $this->sdmCoreGetDirectoryListing('config', 'core'); // returns directory listing for 'core/config'
+     *
+     * Note: Passing an empty string to $directoryName will result in a directory listing of
+     *       the $directoryLocationReference.
+     *
+     * $this->sdmCoreGetDirectoryListing('', 'core'); // returns directory listing for 'core'
+     *
+     * @param string $directoryName The name of the directory to create a listing of.
+     *
+     * @param string $directoryLocationReference The name of a directory to be used as
+     *               a starting reference point to search for the directory we want to
+     *               create a listing for.
+     *
+     *               Note: There is one special value you can pass to the $directoryLocationReference
+     *                     parameter, the 'CURRENT_THEME' value sret the current themes root directory
+     *                     as the $directoryLocationReference.
+     *
+     * @return array An array representing the contents of the directory at
+     *               $directoryLocationReference/$directoryName, or false on failure.
      */
     final public function sdmCoreGetDirectoryListing($directoryName, $directoryLocationReference)
     {
         switch ($directoryLocationReference) {
-            // search for directory in site root
             case 'root':
                 return scandir($this->sdmCoreGetRootDirectoryPath() . '/' . $directoryName);
                 break;
-            // search for directory in site core
             case 'core':
                 return scandir($this->sdmCoreGetCoreDirectoryPath() . '/' . $directoryName);
                 break;
-            // search for directory in site themes
             case 'themes':
                 return scandir($this->sdmCoreGetRootDirectoryPath() . '/themes/' . $directoryName);
                 break;
@@ -547,14 +572,16 @@ class SdmCore
                 return scandir($this->sdmCoreGetUserAppDirectoryPath() . '/' . $directoryName);
                 break;
             default:
-                return array('error' => 'Unable to find requested directory');
+                error_log('SdmCore()->sdmCoreGetDirectoryListing() failed to create directory listing for
+                           directory at ' . $directoryLocationReference . '/' . $directoryName);
+                return false;
                 break;
         }
     }
 
     /**
-     * <p>Returns the path to the current chosen themes directory</p>
-     * @return string <p>The path to the directory for the sites current theme as a string.</p>
+     * Returns the path to the current chosen themes directory.
+     * @return string The path to the directory for the sites current theme as a string.
      */
     final public function sdmCoreGetCurrentThemeDirectoryPath()
     {
@@ -562,8 +589,8 @@ class SdmCore
     }
 
     /**
-     * <p>Returns the path to the user apps directory</p>
-     * @return string <p>The path to the user apps directory.</p>
+     * Returns the path to the user apps directory.
+     * @return string The path to the user apps directory.
      */
     final public function sdmCoreGetUserAppDirectoryPath()
     {
@@ -571,8 +598,8 @@ class SdmCore
     }
 
     /**
-     * <p>Returns the path to the core apps directory</p>
-     * @return string <p>The path to the core apps directory.</p>
+     * Returns the path to the core apps directory.
+     * @return string The path to the core apps directory.
      */
     final public function sdmCoreGetCoreAppDirectoryPath()
     {
@@ -581,9 +608,11 @@ class SdmCore
 
     /**
      * Determines what pages exist for the current site returning an indexed array of all the pages.
+     *
      * This method is used internally, and can also be used by developers to
      * do things like create a security checks, for instance insuring only pages
      * that actually exist and are part of the site are accessed.
+     *
      * @return array An associative array structured array('Page Name' => 'pageName');
      *
      */
@@ -593,8 +622,8 @@ class SdmCore
     }
 
     /**
-     * <p>Returns object stored in DataObject->settings->enabledapps.</p>
-     * @return object <p>$this->DataObject->settings->enabledapps.</p>
+     * Returns object stored in DataObject->settings->enabledapps.
+     * @return object Returns $this->DataObject->settings->enabledapps.
      */
     final public function sdmCoreDetermineEnabledApps()
     {
@@ -602,15 +631,16 @@ class SdmCore
     }
 
     /**
-     * Takes a value and filters it so it is machine safe, i.e., only letters and numbers.
+     * Takes a value and filters it so it is machine safe.
+     *
      * If an array is passed then each of it's values will be passed to SdmCoreGenerateMachineName()
      * and an array with the filtered values will be returned.
      *
      * @param mixed $value The value to convert into a machine safe string. If an array is passed each value in the
      *                     array will be filtered.
      *
-     * @return mixed A machine safe string. If an array was passed then it's values will be filtered recursively and
-     *               the filtered array will be returned.
+     * @return mixed Returns a machine safe string representation of the $value. If an array was passed then it's
+     *               values will be filtered recursively and the filtered array will be returned.
      */
     final public function SdmCoreGenerateMachineName($value)
     {
