@@ -70,7 +70,27 @@ $config = array(
             'SdmErrorLog' => 'SdmErrorLog',
         ),
         'requiredApps' => new stdClass(),
+        'iniSettings' => array(
+            /*'error_reporting' => array(
+                E_ALL,
+                E_STRICT,
+                E_NOTICE,
+            ),*/
+            'log_errors' => true,
+            'error_log' => $sdmGatekeeper->sdmCoreGetCoreDirectoryPath() . '/logs/sdm_core_errors.log',
+            'display_errors' => false,
+            'auto_detect_line_endings' => true,
+            'session.use_trans_sid' => false,
+            'session.use_only_cookies' => true,
+            'session.hash_function' => 'sha512',
+            'session.hash_bits_per_character' => 6,
+            'session.gc_maxlifetime' => array_product([20, 60]),
+            'session.gc_probability' => 2,
+            'session.gc_divisor' => 100,
+            'date.timezone' => 'America/New_York',
+        ),
     ),
+
     /* Menus | @see "core/config/defaultMenuConfig.php" for default menu configuration */
     'menus' => $menus,
 );

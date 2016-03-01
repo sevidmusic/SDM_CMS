@@ -416,41 +416,34 @@ class SdmCore
     }
 
     /**
-     * Configure PHP settings and Core settings.
-     * @todo: move ini_set() settings into the settings property of the DataObject so they are
-     *        stored instead of hardcoded.
+     * Configures PHP settings and Core settings.
+     *
+     * Specifically, this method configures the PHP ini settings as defined
+     * in the DataObject, sets the site's includes directory, and sets the
+     * timezone for the site as defined in the DataObject.
+     *
      * @return bool Returns true regardless of success.
      */
     final public function sdmCoreConfigureCore()
     {
-        /* Turn on error reporting | @todo make this reflect site settings so admin can turn on or off based on weather in dev or not. */
+        $settings = $this->DataObject->settings;
+        /* Turn on error reporting. @todo: trying to figure out how to read these constants
+        from the DataObject. Preferably from an array. */
         error_reporting(E_ALL | E_STRICT | E_NOTICE);
-        /** modify our ini settings to fit the needs of our CMS */
-        // ERRORS //
-        ini_set('log_errors', '1'); // will force php to log all errors to the Server's log files
-        ini_set('error_log', $this->sdmCoreGetCoreDirectoryPath() . '/logs/sdm_core_errors.log');
-        ini_set('display_errors', 0); // this line should be commented out once out of dev
-        // MISC //
-        ini_set('auto_detect_line_endings', true); // enables PHP to inter-operate with Macintosh systems @see "http://www.php.net/manual/en/filesystem.configuration.php#ini.auto-detect-line-endings" for more information | the slight performance penalty is worth insuring that PHP's file functions will be able to determine the end of lines on all OS's
-        // SESSIONS //
-        ini_set('session.use_trans_sid', 0);
-        ini_set('session.use_only_cookies', 1);
-        ini_set('session.hash_function', 'sha512');
-        ini_set('session.hash_bits_per_character', 6);
-        $minutes = array_product([20, 60]); // calculate minutes in seconds
-        ini_set('session.gc_maxlifetime', $minutes); // set in seconds | determines how a long a session file can exist before it becomes eligible for Garbage Collection
-        ini_set('session.gc_probability', 2); // chance that GC will occur
-        ini_set('session.gc_divisor', 100); // probability divisor, if gc_probability is 50 and gc_divisor is 100 then there is a 50% chance of GC (i.e. 50/100)
-        // set include path
+        foreach ($settings->iniSettings as $iniSettingName => $iniSettingValue) {
+            ini_set($iniSettingName, $iniSettingValue);
+        }
+        /* Set include path. */
         set_include_path($this->sdmCoreGetIncludesDirectoryPath());
-        // include timezone file
-        require($this->sdmCoreGetConfigurationDirectoryPath() . '/timezone.php');
+
+        /* Set timezone for scripts. */
+        date_default_timezone_set($settings->iniSettings->{"date.timezone"});
         return true;
     }
 
     /**
-     * <p>Returns the path to the SDM CMS includes directory</p>
-     * @return string <p>the path to the SDM CMS includes directory as a string.</p>
+     * Returns the path to the site's includes directory.
+     * @return string Returns the path to the site's includes directory as a string.
      */
     final public function sdmCoreGetIncludesDirectoryPath()
     {
@@ -458,8 +451,8 @@ class SdmCore
     }
 
     /**
-     * <p>Returns the path to the SDM CMS configuration directory</p>
-     * @return string <p>the path to the SDM CMS configuration directory as a string.</p>
+     * Returns the path to the site's configuration directory.
+     * @return string Returns the path to the site's configuration directory as a string.
      */
     final public function sdmCoreGetConfigurationDirectoryPath()
     {
@@ -505,7 +498,7 @@ class SdmCore
                         echo($sub === false ? '<p><b style="color:#00CCFF;"><i>' . (isset($key) ? strval($key) : 'unknown_object') . '</i></b> (<i style="color:aqua;">object</i>)</p>' : '<p><ul><li><b style="color:#00FF99;"><i>' . (isset($key) ? strval($key) : 'unknown_object') . '</i></b>(<i style="color:aqua;">object</i>)</li></ul></p>');
                         self::sdmCoreSdmReadArray(json_decode(json_encode($value), true));
                     } else {
-                        echo($sub === false ? "<p><xmp style='display:inline;color:#00CCFF'>{$key}</xmp> (<i style='color:aqua;'>" . gettype($value) . "</i>) " . (gettype($value) === 'string' ? '<span style="color:#00DDFF;font-size:.7em;font-style: italic;">String Length: ' . strlen($value) . '</span>' : '') . " => <xmp style='display:inline;color:#00CC99'>{$value}</xmp></p>" : "<p><ul><li><xmp style='display:inline;color:#00CC99'>{$key}</xmp> (<i style='color:aqua;'>" . gettype($value) . "</i>) " . (gettype($value) === 'string' ? '<span style="color:#00DDFF;font-size:.7em;font-style: italic;">String Length: ' . strlen($value) . '</span>' : '') . " => <xmp style='display:inline;color:#00CC99'>{$value}</xmp></li></ul></p>");
+                        echo($sub === false ? "<p><xmp style='display:inline;color:#00CCFF'>{$key}</xmp> (<i style='color:aqua;'>" . gettype($value) . "</i>) " . (gettype($value) === 'string' ? '<span style="color:#00DDFF;font-size:.7em;font-style: italic;">String Length: ' . strlen($value) . '</span>' : '') . " => <xmp style='display:inline;color:#00CC99'>" . (gettype($value) === 'boolean' ? ($value === false ? 'false' : 'true') : $value) . "</xmp></p>" : "<p><ul><li><xmp style='display:inline;color:#00CC99'>{$key}</xmp> (<i style='color:aqua;'>" . gettype($value) . "</i>) " . (gettype($value) === 'string' ? '<span style="color:#00DDFF;font-size:.7em;font-style: italic;">String Length: ' . strlen($value) . '</span>' : '') . " => <xmp style='display:inline;color:#00CC99'>" . (gettype($value) === 'boolean' ? ($value === false ? 'false' : 'true') : $value) . "</xmp></li></ul></p>");
                     }
                     break;
             }
