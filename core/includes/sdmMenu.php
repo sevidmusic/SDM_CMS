@@ -22,7 +22,7 @@
 class SdmMenu extends SdmMenuItem
 {
 
-// initialize properties needed for a menu
+    // initialize properties needed for a menu
     public $menuId;
     public $menuMachineName;
     public $menuDisplayName;

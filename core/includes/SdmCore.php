@@ -292,29 +292,29 @@ class SdmCore
             error_log('Bad type passed to SdmCore()->sdmCoreCurlGrabContent(). $url must be a string, $url passed in was type : ' . gettype($url) . '.');
         }
         /* Initialize curl session */
-        $ch = curl_init();
+        $curlSession = curl_init();
 
         /* Set user agent. */
         $userAgent = $_SERVER['HTTP_USER_AGENT'];
 
         /* Set curl options. */
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_COOKIESESSION, false);
-        curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curlSession, CURLOPT_URL, $url);
+        curl_setopt($curlSession, CURLOPT_COOKIESESSION, false);
+        curl_setopt($curlSession, CURLOPT_USERAGENT, $userAgent);
+        curl_setopt($curlSession, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curlSession, CURLOPT_FOLLOWLOCATION, true);
 
         /* If any post data exists use it. */
         if (isset($post) && !empty($post)) {
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
+            curl_setopt($curlSession, CURLOPT_POST, true);
+            curl_setopt($curlSession, CURLOPT_POSTFIELDS, http_build_query($post));
         }
 
         /* Perform curl request. */
-        $data = curl_exec($ch);
+        $data = curl_exec($curlSession);
 
         /* Close curl session. */
-        curl_close($ch);
+        curl_close($curlSession);
 
         /* Return the $data. Will either be a string, or the boolean false. */
         return $data;
@@ -499,9 +499,9 @@ class SdmCore
         echo '<div style="' . $style . '">';
         echo($sub === false ? '' : "<i style='color:#00CCFF;'>{$parent} (<i style='color:aqua;'>" . gettype($variable) . "</i>) <span style='color:#00BB00;font-size:.7em;'>Element Count: " . count($variable) . "</span> => </i>");
         if (is_bool($variable) || is_string($variable) || is_integer($variable)) {
-            $v = $variable;
+            $initialValue = $variable;
             unset($variable);
-            $variable = (is_bool($v) ? array(gettype($v) => ($v === true ? 'true' : 'false')) : array(gettype($v) => strval($v)));
+            $variable = (is_bool($initialValue) ? array(gettype($initialValue) => ($initialValue === true ? 'true' : 'false')) : array(gettype($initialValue) => strval($initialValue)));
         }
         foreach ($variable as $key => $value) {
             switch (is_array($value)) {
@@ -633,7 +633,7 @@ class SdmCore
     /**
      * Takes a value and filters it so it is machine safe.
      *
-     * If an array is passed then each of it's values will be passed to SdmCoreGenerateMachineName()
+     * If an array is passed then each of it's values will be passed to sdmCoreGenerateMachineName()
      * and an array with the filtered values will be returned.
      *
      * @param mixed $value The value to convert into a machine safe string. If an array is passed each value in the
@@ -642,16 +642,16 @@ class SdmCore
      * @return mixed Returns a machine safe string representation of the $value. If an array was passed then it's
      *               values will be filtered recursively and the filtered array will be returned.
      */
-    final public function SdmCoreGenerateMachineName($value)
+    final public function sdmCoreGenerateMachineName($value)
     {
         $targetChars = str_split('~!@#$%^&*()+|}{":;?> <`\'\\Ω≈ç√∫˜≤≥÷åß∂ƒ©˙∆˚¬…æœ∑´†¥¨ˆπ“‘«`™£¢∞§¶•ªº–≠¸˛Ç◊ı˜Â¯˘¿ÅÍÎÏ˝ÓÔÒÚÆŒ„´‰ˇÁ¨ˆØ∏”’»`⁄€‹›ﬁﬂ‡°·‚—±');
         switch (is_array($value)) {
             case true:
-                foreach ($value as $k => $v) {
-                    unset($value[$k]);
-                    $value[$k] = SdmCore::SdmCoreGenerateMachineName($v);
-                    unset($k);
-                    unset($v);
+                foreach ($value as $key => $val) {
+                    unset($value[$key]);
+                    $value[$key] = SdmCore::sdmCoreGenerateMachineName($val);
+                    unset($key);
+                    unset($val);
                 }
                 break;
 

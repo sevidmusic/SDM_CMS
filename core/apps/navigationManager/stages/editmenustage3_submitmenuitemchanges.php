@@ -11,7 +11,7 @@ $submittedMenuItem->menuItemDisplayName = SdmForm::sdmFormGetSubmittedFormValue(
 $submittedMenuItem->menuItemEnabled = SdmForm::sdmFormGetSubmittedFormValue('menuItemEnabled');
 $submittedMenuItem->menuItemId = SdmForm::sdmFormGetSubmittedFormValue('menuItemId');
 $submittedMenuItem->menuItemKeyholders = SdmForm::sdmFormGetSubmittedFormValue('menuItemKeyholders');
-$submittedMenuItem->menuItemMachineName = SdmCore::SdmCoreGenerateMachineName(SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName'));
+$submittedMenuItem->menuItemMachineName = SdmCore::sdmCoreGenerateMachineName(SdmForm::sdmFormGetSubmittedFormValue('menuItemDisplayName'));
 $submittedMenuItem->menuItemPosition = SdmForm::sdmFormGetSubmittedFormValue('menuItemPosition');
 $submittedMenuItem->menuItemWrappingTagType = SdmForm::sdmFormGetSubmittedFormValue('menuItemWrappingTagType');
 $sdmassembler->sdmNmsUpdateMenuItem(SdmForm::sdmFormGetSubmittedFormValue('menuId'), $submittedMenuItem->menuItemId, $submittedMenuItem);

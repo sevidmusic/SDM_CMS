@@ -117,8 +117,8 @@ class SdmForm
         $alphabet = 'aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ';
         $string = '';
         for ($inc = 0; $inc <= $numChars; $inc++) {
-            $i = rand(0, 51);
-            $string = $string . $alphabet[$i];
+            $index = rand(0, 51);
+            $string = $string . $alphabet[$index];
         }
         return $string;
     }

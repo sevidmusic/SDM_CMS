@@ -388,7 +388,7 @@ class SdmCms extends SdmCore
 
                 /* If not already registered, register $app under $dependency in
                    DataObject->settings->requiredApps->$dependency. */
-                if(!in_array(trim($app), $dataObject->settings->requiredApps->$dependency, true)) {
+                if (!in_array(trim($app), $dataObject->settings->requiredApps->$dependency, true)) {
                     array_push($dataObject->settings->requiredApps->$dependency, trim($app));
                 }
 

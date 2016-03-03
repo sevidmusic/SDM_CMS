@@ -46,8 +46,7 @@ if ($page !== 'contentManager') {
         $output .= '<p>Overview of content wrappers for this page:</p>';
         $output .= $wrapperStatusHtml;
         $output .= '</div><!-- close contentManager div -->';
-    }
-    else {
+    } else {
         /* App $output if form could not be submitted. */
         $output .= '<div id="contentManager"><p>And error occurred and the form could not be submitted</p></div>';
     }

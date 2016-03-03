@@ -5,19 +5,19 @@
  */
 
 /**
- * Returns an array of integers within the range $s to $e.
- * i.e., rangeArray(4,7) would return the array : array(4 => 4, 5 => 5, 6 => 6, 7 => 7)
- * @param type $s Starting integer
- * @param type $e Ending integer
- * @return array Array of integers within range of $s to $e
+ * Returns an array of integers within the range $start to $end.
+ * i.e, rangeArray(4,7) would return the array : array(4 => 4, 5 => 5, 6 => 6, 7 => 7)
+ * @param type $start Starting integer
+ * @param type $end Ending integer
+ * @return array Array of integers within range of $start to $end
  * @todo Incorporate into one of the core classes: SDM NMS, or SDM Core.
  */
-function rangeArray($s, $e)
+function rangeArray($start, $end)
 {
     $array = array();
-    while ($s <= $e) {
-        $array[$s] = $s;
-        $s++;
+    while ($start <= $end) {
+        $array[$start] = $start;
+        $start++;
     }
     return $array;
 }
