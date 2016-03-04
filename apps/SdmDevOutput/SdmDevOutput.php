@@ -13,4 +13,4 @@ $output = '<!-- Sdm Dev Output App Placeholder -->' . $description;
 $sdmassembler->sdmAssemblerIncorporateAppOutput($output, ['incpages' => ['SdmDevOutput']]);
 
 /* Uncomment to have app show an overview of the DataObject loaded for each page. */
-//$sdmassembler->sdmCoreSdmReadArray($sdmassembler->info());
+$sdmassembler->sdmCoreSdmReadArray($sdmassembler->info());
