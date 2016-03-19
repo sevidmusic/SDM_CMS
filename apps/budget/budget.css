@@ -1,0 +1,32 @@
+table {
+    border: 2px solid #ffffff;
+    margin: 20px auto;
+    width: 88%;
+}
+
+tr {
+    border: 2px solid #ffffff;
+}
+
+td {
+    border: 2px solid #ffffff;
+}
+
+
+.rounded table, tr, td {
+    border-radius: 9px;
+    padding: 15px;
+}
+
+.positive {
+    background: #4cae6a;
+}
+
+.negative {
+    background: #ff0021;
+}
+
+.center {
+    margin: 20px auto;
+    text-align: center;
+}
