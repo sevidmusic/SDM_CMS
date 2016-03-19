@@ -12,9 +12,9 @@
 class SdmAssembler extends SdmNms
 {
     /**
-     * Assembles the html header for a page and incorporates stylesheets, scripts, and meta tags
-     * defined in enabled user and core app .as files, and in the current theme's .as file, into the
-     * html header.
+     * Assembles the html header for a page and incorporates stylesheets, scripts, and meta header
+     * properties defined in enabled user and core app .as files, and in the current theme's .as file,
+     * into the html header.
      *
      * Header properties defined in app .as files will always be assembled before header properties
      * defined in current theme's .as file because app header properties must take precedence over the
@@ -56,7 +56,7 @@ class SdmAssembler extends SdmNms
      * for all enabled apps that provide a .as file.
      *
      * @return string Html formatted string of link, script, and meta tags for any stylesheets, scripts, and meta
-     * properties defined in any enabled apps .as file.
+     * header properties defined in any enabled apps .as file.
      *
      */
     final private function sdmAssemblerAssembleEnabledAppProps()
@@ -91,7 +91,7 @@ class SdmAssembler extends SdmNms
                 }
 
                 /* If properties were assembled from this $source for this app then move onto the next app.
-                 Otherwise continue the loop in order to try next $source. */
+                   Otherwise continue the loop in order to try next $source. */
                 if ($initAppScripts !== $appScriptProps) {
                     break 1;
                 }
@@ -101,13 +101,13 @@ class SdmAssembler extends SdmNms
     }
 
     /**
-     * Assembles link script and meta tags for header properties defined in a specific theme or app's .as file.
+     * Assembles link script and meta tags for header properties defined in a specified theme or app's .as file.
      *
      * By default this method assembles header properties for the current theme.
      *
      * This method will return false on failure.
      *
-     * i.e.,
+     * Examples:
      *
      *   // assembles 'stylesheets' header properties for current theme because $source and $sourceName are not set.
      *
