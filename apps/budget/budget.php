@@ -17,17 +17,8 @@ $options = array(
 
 /* Hardcoded values */
 $expenses = array(
-    'Car Insurance' => '170.23',
-    'Gas' => (80 - 16.25),
-    'Toll' => 7.5,
-    'Chili' => 4,
-    'Eggs' => 5,
-    'Cheese' => 5,
-    'Milk' => 4,
-    'Tortillas' => 4,
-    'Cat Food (wet)' => 14,
-    'Twisted Tea' => (2 * 3.02),
-    'Ciggs' => 10.25,
+    'Gas' => (25 - 20.05),
+    'Toll' => 1.5,
 );
 
 $totalExpenses = array_sum($expenses);
@@ -109,6 +100,8 @@ foreach ($expenses as $expense => $amount) {
     $color = ($color === true ? false : true);
 }
 $output .= '</table></div>';
+
+$output .= 'Total Bugdeted for groceries = $' . ($expenses['Cheese'] + $expenses['Cat Food (wet)'] + $expenses['Milk'] + $expenses['Tortillas']);
 
 /* Incorporate output. */
 $sdmassembler->sdmAssemblerIncorporateAppOutput($output, $options);
