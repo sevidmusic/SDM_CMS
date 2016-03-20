@@ -16,31 +16,33 @@ $options = array(
 );
 
 /* Hardcoded values */
-
-/* Expenses */
-$numExp = 12;
-$numExpForm = new SdmForm();
-$numExpForm->formHandler = 'budget';
-$numExpForm->formElements = array();
-$numExpForm->method = 'post';
-$numExpForm->submitLabel = 'Add another expense';
-$numExpForm->sdmFormBuildForm();
-
-$expenses = array();
+$expenses = array(
+    'Car Insurance' => '170.23',
+    'Gas' => (80 - 16.25),
+    'Toll' => 7.5,
+    'Chili' => 4,
+    'Eggs' => 5,
+    'Cheese' => 5,
+    'Milk' => 4,
+    'Tortillas' => 4,
+    'Cat Food (wet)' => 14,
+    'Twisted Tea' => (2 * 3.02),
+    'Ciggs' => 10.25,
+);
 
 $totalExpenses = array_sum($expenses);
 
-/* Form */
-$form = new SdmForm();
+/* Available Balance Form */
+$availableBalanceForm = new SdmForm();
 
 /* Submitted values */
-$availableCash = floatval($form->sdmFormGetSubmittedFormValue('availableCash'));
-$availableDebit = floatval($form->sdmFormGetSubmittedFormValue('availableDebit'));
-$availableCredit = floatval($form->sdmFormGetSubmittedFormValue('availableCredit'));
+$availableCash = floatval($availableBalanceForm->sdmFormGetSubmittedFormValue('availableCash'));
+$availableDebit = floatval($availableBalanceForm->sdmFormGetSubmittedFormValue('availableDebit'));
+$availableCredit = floatval($availableBalanceForm->sdmFormGetSubmittedFormValue('availableCredit'));
 
 /* Form elements */
-$form->formHandler = 'budget';
-$form->formElements = array(
+$availableBalanceForm->formHandler = 'budget';
+$availableBalanceForm->formElements = array(
     array(
         'id' => 'availableCash',
         'type' => 'text',
@@ -63,10 +65,10 @@ $form->formElements = array(
         'place' => '3',
     ),
 );
-$form->method = 'post';
-$form->submitLabel;
-$form->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
-$formHtml = $form->sdmFormGetForm();
+$availableBalanceForm->method = 'post';
+$availableBalanceForm->submitLabel;
+$availableBalanceForm->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
+$formHtml = $availableBalanceForm->sdmFormGetForm();
 
 
 /* Calculations */
@@ -107,7 +109,6 @@ foreach ($expenses as $expense => $amount) {
     $color = ($color === true ? false : true);
 }
 $output .= '</table></div>';
-$output .= $numExpForm->sdmFormGetForm();
 
 /* Incorporate output. */
 $sdmassembler->sdmAssemblerIncorporateAppOutput($output, $options);
