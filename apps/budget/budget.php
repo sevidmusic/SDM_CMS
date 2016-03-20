@@ -70,10 +70,7 @@ $availableBalance = $availableCash + $availableDebit + $availableCredit;
 $availableAfterExpenses = $availableBalance - $totalExpenses;
 
 /* Create some output. */
-$output = '<div id="helloWorld"><h4 class="center">Budget ' . date('F d, Y') . '</h4>';
-
-/* Budget Form */
-$output .= $formHtml;
+$output = '<div id="helloWorld"><h4 class="center">Budget on ' . date('F d, Y') . ' at ' . date('g:ia') . '</h4>';
 
 /* Funds Table */
 $output .= '<table class="rounded">
@@ -91,6 +88,9 @@ $output .= '<table class="rounded">
                 <td>$' . $availableAfterExpenses . '</td>
               </tr>
             </table>';
+
+/* Budget Form */
+$output .= $formHtml;
 
 /* Expenses Table */
 $output .= '<table class="rounded">';
