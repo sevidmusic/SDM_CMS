@@ -13,17 +13,31 @@ $options = array(
     'roles' => array('all'),
 );
 
-$availableBalance = 372.72;
+$availableCash = 0;
+$availableDebit = 234.86;
+$availableExpectedIncome = 33;
+$availableBalance = $availableCash + $availableDebit + $availableExpectedIncome;
 $expenses = array(
     'Car Insurance' => 170.23,
     'Php Storm' => 8.9,
-    'Gas' => 85,
+    'Gas' => (80 - 16.25),
     'Tolls' => 7.5,
-    'Cigarettes' => (10.25 * 4), // price of 1 pack times number of packs
-    'Weed' => 50,
-    'Laundry' => 7.5,
-
+    'Cigarettes' => (41 - 40.99), // price of 1 pack times number of packs
+    'Weed' => (50 - 50),
+    'Laundry' => (7.5 - 7.5),
+    'Twisted Tea' => (3.02 * 2),
 );
+/*
+$expenses = array(
+    'Car Insurance' => 170.23,
+    'Php Storm' => 8.9,
+    'Gas' => (80 - 16.25),
+    'Tolls' => 7.5,
+    'Cigarettes' => (41 - 40.99), // price of 1 pack times number of packs
+    'Weed' => (50 - 50),
+    'Laundry' => (7.5 - 7.5),
+
+);*/
 $totalExpenses = array_sum($expenses);
 $availableAfterExpenses = $availableBalance - $totalExpenses;
 
