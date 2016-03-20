@@ -1,7 +1,9 @@
 <?php
 
 /**
- * Hello World user app: This app demonstrates a simple Sdm Cms user app.
+ * The budget app provides a from for creating a simple budget
+ * based on a users available cash, available debit, available
+ * credit, and expected expenses.
  */
 
 /* Configure incorporation options. */
@@ -13,36 +15,65 @@ $options = array(
     'roles' => array('all'),
 );
 
-$availableCash = 0;
-$availableDebit = 234.86;
-$availableExpectedIncome = 33;
-$availableBalance = $availableCash + $availableDebit + $availableExpectedIncome;
-$expenses = array(
-    'Car Insurance' => 170.23,
-    'Php Storm' => 8.9,
-    'Gas' => (80 - 16.25),
-    'Tolls' => 7.5,
-    'Cigarettes' => (41 - 40.99), // price of 1 pack times number of packs
-    'Weed' => (50 - 50),
-    'Laundry' => (7.5 - 7.5),
-    'Twisted Tea' => (3.02 * 2),
-);
-/*
-$expenses = array(
-    'Car Insurance' => 170.23,
-    'Php Storm' => 8.9,
-    'Gas' => (80 - 16.25),
-    'Tolls' => 7.5,
-    'Cigarettes' => (41 - 40.99), // price of 1 pack times number of packs
-    'Weed' => (50 - 50),
-    'Laundry' => (7.5 - 7.5),
+/* Hardcoded values */
 
-);*/
+/* Expenses */
+$expenses = array(
+    'Expense 1' => 10,
+    'Expense 2' => 10,
+);
+
 $totalExpenses = array_sum($expenses);
+
+/* Form */
+$form = new SdmForm();
+
+/* Submitted values */
+$availableCash = floatval($form->sdmFormGetSubmittedFormValue('availableCash'));
+$availableDebit = floatval($form->sdmFormGetSubmittedFormValue('availableDebit'));
+$availableCredit = floatval($form->sdmFormGetSubmittedFormValue('availableCredit'));
+
+/* Form elements */
+$form->formHandler = 'budget';
+$form->formElements = array(
+    array(
+        'id' => 'availableCash',
+        'type' => 'text',
+        'element' => 'Available Cash <table class="rounded"><tr class="' . ($availableCash > 0 ? 'positive' : 'negative') . '"><td>$' . strval($availableCash) . '</td></tr></table>',
+        'value' => '',
+        'place' => '1',
+    ),
+    array(
+        'id' => 'availableDebit',
+        'type' => 'text',
+        'element' => 'Available Debit <table class="rounded"><tr class="' . ($availableDebit > 0 ? 'positive' : 'negative') . '"><td>$' . strval($availableDebit) . '</td></tr></table>',
+        'value' => '',
+        'place' => '2',
+    ),
+    array(
+        'id' => 'availableCredit',
+        'type' => 'text',
+        'element' => 'Available Credit <table class="rounded"><tr class="' . ($availableCredit > 0 ? 'positive' : 'negative') . '"><td>$' . strval($availableCredit) . '</td></tr></table>',
+        'value' => '',
+        'place' => '3',
+    ),
+);
+$form->method = 'post';
+$form->submitLabel;
+$form->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
+$formHtml = $form->sdmFormGetForm();
+
+
+/* Calculations */
+
+$availableBalance = $availableCash + $availableDebit + $availableCredit;
 $availableAfterExpenses = $availableBalance - $totalExpenses;
 
 /* Create some output. */
 $output = '<div id="helloWorld"><h4 class="center">Budget ' . date('F d, Y') . '</h4>';
+
+/* Budget Form */
+$output .= $formHtml;
 
 /* Funds Table */
 $output .= '<table class="rounded">
