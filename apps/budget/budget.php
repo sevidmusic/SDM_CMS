@@ -18,10 +18,15 @@ $options = array(
 /* Hardcoded values */
 
 /* Expenses */
-$expenses = array(
-    'Expense 1' => 10,
-    'Expense 2' => 10,
-);
+$numExp = 12;
+$numExpForm = new SdmForm();
+$numExpForm->formHandler = 'budget';
+$numExpForm->formElements = array();
+$numExpForm->method = 'post';
+$numExpForm->submitLabel = 'Add another expense';
+$numExpForm->sdmFormBuildForm();
+
+$expenses = array();
 
 $totalExpenses = array_sum($expenses);
 
@@ -40,21 +45,21 @@ $form->formElements = array(
         'id' => 'availableCash',
         'type' => 'text',
         'element' => 'Available Cash <table class="rounded"><tr class="' . ($availableCash > 0 ? 'positive' : 'negative') . '"><td>$' . strval($availableCash) . '</td></tr></table>',
-        'value' => '',
+        'value' => ($availableCash > 0 || $availableCash < 0 ? strval($availableCash) : '0.00'),
         'place' => '1',
     ),
     array(
         'id' => 'availableDebit',
         'type' => 'text',
         'element' => 'Available Debit <table class="rounded"><tr class="' . ($availableDebit > 0 ? 'positive' : 'negative') . '"><td>$' . strval($availableDebit) . '</td></tr></table>',
-        'value' => '',
+        'value' => ($availableDebit > 0 || $availableDebit < 0 ? strval($availableDebit) : '0.00'),
         'place' => '2',
     ),
     array(
         'id' => 'availableCredit',
         'type' => 'text',
         'element' => 'Available Credit <table class="rounded"><tr class="' . ($availableCredit > 0 ? 'positive' : 'negative') . '"><td>$' . strval($availableCredit) . '</td></tr></table>',
-        'value' => '',
+        'value' => ($availableCredit > 0 || $availableCredit < 0 ? strval($availableCredit) : '0.00'),
         'place' => '3',
     ),
 );
@@ -102,6 +107,7 @@ foreach ($expenses as $expense => $amount) {
     $color = ($color === true ? false : true);
 }
 $output .= '</table></div>';
+$output .= $numExpForm->sdmFormGetForm();
 
 /* Incorporate output. */
 $sdmassembler->sdmAssemblerIncorporateAppOutput($output, $options);
