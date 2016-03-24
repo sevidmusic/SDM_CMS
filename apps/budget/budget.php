@@ -144,7 +144,7 @@ $output .= '<thead>Categorized Expenses:</thead>';
 $color = true;
 foreach ($categorizedExpenses as $category => $categoryExpenses) {
     $output .= '<tr><th style="text-align: left;">' . $category . '</th></tr>';
-    foreach ($categoryExpenses as $expenses => $amount) {
+    foreach ($categoryExpenses as $expense => $amount) {
         $bgColor = ($color === true ? '#000000' : '#777777');
         $output .= '<tr style="background: ' . $bgColor . ';"><td>' . $expense . '</td><td>$' . $amount . '</td></tr>';
         $color = ($color === true ? false : true);
