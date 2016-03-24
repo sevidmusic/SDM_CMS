@@ -57,7 +57,7 @@ $categorizedExpenses = array(
 $expenses = array();
 
 /* Categorized Expenses Table */
-$categorizedExpensesTable .= '<table class="rounded">';
+$categorizedExpensesTable = '<table class="rounded">';
 $categorizedExpensesTable .= '<thead>Categorized Expenses:</thead>';
 $color = true;
 foreach ($categorizedExpenses as $category => $categoryExpenses) {
@@ -75,7 +75,7 @@ foreach ($categorizedExpenses as $category => $categoryExpenses) {
 $categorizedExpensesTable .= '</table>';
 
 /* Expenses Table */
-$expensesTable .= '<table class="rounded">';
+$expensesTable = '<table class="rounded">';
 $expensesTable .= '<thead>All Expenses:</thead>';
 $color = true;
 foreach ($expenses as $expense => $amount) {
@@ -132,12 +132,16 @@ $availableBalanceFormHtml = $availableBalanceForm->sdmFormGetForm();
 /* Budget Title. */
 $budgetTitle = '<h4 class="center">Budget on ' . date('F d, Y') . ' at ' . date('g:ia') . '</h4>';
 
-/* Calculations | Calculations must be performed before constructing Balance Overview Table */
+/**
+ * Calculations.
+ * Note: Calculations must be performed before constructing Balance Overview Table and after all other components
+ * have been constructed.
+ */
 $availableBalance = $availableCash + $availableDebit + $availableCredit;
 $availableAfterExpenses = $availableBalance - $totalExpenses;
 
 /* Balance Overview Table */
-$balanceOverviewTable .= '<table class="rounded">
+$balanceOverviewTable = '<table class="rounded">
             <thead>Summary of available balance and expenses:</thead>
               <tr class="positive">
                 <td>Available Balance:</td>
@@ -155,6 +159,7 @@ $balanceOverviewTable .= '<table class="rounded">
 
 /* App Output */
 $output = $budgetTitle;
+$output .= $availableBalanceFormHtml;
 $output .= $balanceOverviewTable;
 $output .= $categorizedExpensesTable;
 $output .= $expensesTable;
