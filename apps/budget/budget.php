@@ -20,6 +20,8 @@ $expenses = array(
     'Gas' => (25 - 20.05),
     'Toll' => 1.5,
 );
+$totalExpenses = array_sum($expenses);
+
 
 /* Categorized Expenses */
 $categorizedExpenses = array(
@@ -59,7 +61,6 @@ $categorizedExpenses = array(
     ),
 );
 
-$totalExpenses = array_sum($expenses);
 
 /* Available Balance Form */
 $availableBalanceForm = new SdmForm();
@@ -105,8 +106,8 @@ $availableBalanceFormHtml = $availableBalanceForm->sdmFormGetForm();
 $availableBalance = $availableCash + $availableDebit + $availableCredit;
 $availableAfterExpenses = $availableBalance - $totalExpenses;
 
-/* Create some output. */
-$output = '<div id="helloWorld"><h4 class="center">Budget on ' . date('F d, Y') . ' at ' . date('g:ia') . '</h4>';
+/* Budget Title. */
+$budgetTitle = '<h4 class="center">Budget on ' . date('F d, Y') . ' at ' . date('g:ia') . '</h4>';
 
 /* Balance Overview Table */
 $balanceOverviewTable .= '<table class="rounded">
@@ -134,7 +135,7 @@ foreach ($expenses as $expense => $amount) {
     $expensesTable .= '<tr style="background: ' . $bgColor . '"><td>' . $expense . '</td><td>$' . $amount . '</td></tr>';
     $color = ($color === true ? false : true);
 }
-$expensesTable .= '</table></div>';
+$expensesTable .= '</table>';
 
 /* Categorized Expenses Table */
 $categorizedExpensesTable .= '<table class="rounded">';
@@ -151,7 +152,7 @@ foreach ($categorizedExpenses as $category => $categoryExpenses) {
 
     $categorizedExpensesTable .= '<tr class="' . ($categoryExpenseTotal <= 0 ? 'positive' : 'negative') . '"><td style="text-align: left;">' . 'Total Category Expense: ' . $categoryExpenseTotal . '</td></tr>';
 }
-$categorizedExpensesTable .= '</table></div>';
+$categorizedExpensesTable .= '</table>';
 
 
 /* Incorporate output. */
