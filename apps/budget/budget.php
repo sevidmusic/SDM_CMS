@@ -15,14 +15,6 @@ $options = array(
     'roles' => array('all'),
 );
 
-/* Expenses */
-$expenses = array(
-    'Gas' => (25 - 20.05),
-    'Toll' => 1.5,
-);
-$totalExpenses = array_sum($expenses);
-
-
 /* Categorized Expenses */
 $categorizedExpenses = array(
     'Category One' => array(
@@ -61,16 +53,51 @@ $categorizedExpenses = array(
     ),
 );
 
+/* Expenses | Used to determine total expenses for all categories combined. */
+$expenses = array();
+
+/* Categorized Expenses Table */
+$categorizedExpensesTable .= '<table class="rounded">';
+$categorizedExpensesTable .= '<thead>Categorized Expenses:</thead>';
+$color = true;
+foreach ($categorizedExpenses as $category => $categoryExpenses) {
+    $categorizedExpensesTable .= '<tr><th style="text-align: left;">' . $category . '</th></tr>';
+    foreach ($categoryExpenses as $expense => $amount) {
+        $bgColor = ($color === true ? '#000000' : '#777777');
+        $categorizedExpensesTable .= '<tr style="background: ' . $bgColor . ';"><td>' . $expense . '</td><td>$' . $amount . '</td></tr>';
+        $color = ($color === true ? false : true);
+        // add expenses to the $expenses array so the total expenses for all categories combined can be calculated
+        $expenses[$category . ': ' . $expense] = $amount;
+    }
+    $categoryExpenseTotal = array_sum($categoryExpenses);
+    $categorizedExpensesTable .= '<tr class="' . ($categoryExpenseTotal <= 0 ? 'positive' : 'negative') . '"><td style="text-align: left;">' . 'Total Category Expense: ' . $categoryExpenseTotal . '</td></tr>';
+}
+$categorizedExpensesTable .= '</table>';
+
+/* Expenses Table */
+$expensesTable .= '<table class="rounded">';
+$expensesTable .= '<thead>All Expenses:</thead>';
+$color = true;
+foreach ($expenses as $expense => $amount) {
+    $bgColor = ($color === true ? '#000000' : '#777777');
+    $expensesTable .= '<tr style="background: ' . $bgColor . '"><td>' . $expense . '</td><td>$' . $amount . '</td></tr>';
+    $color = ($color === true ? false : true);
+}
+/* Total Expenses*/
+$totalExpenses = array_sum($expenses);
+$expensesTable .= '<tr class="' . ($categoryExpenseTotal <= 0 ? 'positive' : 'negative') . '"><td>Total Expenses: ' . $totalExpenses . '</td></tr>';
+$expensesTable .= '</table>';
+
 
 /* Available Balance Form */
 $availableBalanceForm = new SdmForm();
 
-/* Submitted values */
+/* Previously submitted values */
 $availableCash = floatval($availableBalanceForm->sdmFormGetSubmittedFormValue('availableCash'));
 $availableDebit = floatval($availableBalanceForm->sdmFormGetSubmittedFormValue('availableDebit'));
 $availableCredit = floatval($availableBalanceForm->sdmFormGetSubmittedFormValue('availableCredit'));
 
-/* Available Balance Form */
+/* Form Object */
 $availableBalanceForm->formHandler = 'budget';
 $availableBalanceForm->formElements = array(
     array(
@@ -98,16 +125,16 @@ $availableBalanceForm->formElements = array(
 $availableBalanceForm->method = 'post';
 $availableBalanceForm->submitLabel;
 $availableBalanceForm->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
+
+/* Form HTML */
 $availableBalanceFormHtml = $availableBalanceForm->sdmFormGetForm();
-
-
-/* Calculations */
-
-$availableBalance = $availableCash + $availableDebit + $availableCredit;
-$availableAfterExpenses = $availableBalance - $totalExpenses;
 
 /* Budget Title. */
 $budgetTitle = '<h4 class="center">Budget on ' . date('F d, Y') . ' at ' . date('g:ia') . '</h4>';
+
+/* Calculations | Calculations must be performed before constructing Balance Overview Table */
+$availableBalance = $availableCash + $availableDebit + $availableCredit;
+$availableAfterExpenses = $availableBalance - $totalExpenses;
 
 /* Balance Overview Table */
 $balanceOverviewTable .= '<table class="rounded">
@@ -126,34 +153,11 @@ $balanceOverviewTable .= '<table class="rounded">
               </tr>
             </table>';
 
-/* Expenses Table */
-$expensesTable .= '<table class="rounded">';
-$expensesTable .= '<thead>Expenses:</thead>';
-$color = true;
-foreach ($expenses as $expense => $amount) {
-    $bgColor = ($color === true ? '#000000' : '#777777');
-    $expensesTable .= '<tr style="background: ' . $bgColor . '"><td>' . $expense . '</td><td>$' . $amount . '</td></tr>';
-    $color = ($color === true ? false : true);
-}
-$expensesTable .= '</table>';
-
-/* Categorized Expenses Table */
-$categorizedExpensesTable .= '<table class="rounded">';
-$categorizedExpensesTable .= '<thead>Categorized Expenses:</thead>';
-$color = true;
-foreach ($categorizedExpenses as $category => $categoryExpenses) {
-    $categorizedExpensesTable .= '<tr><th style="text-align: left;">' . $category . '</th></tr>';
-    foreach ($categoryExpenses as $expense => $amount) {
-        $bgColor = ($color === true ? '#000000' : '#777777');
-        $categorizedExpensesTable .= '<tr style="background: ' . $bgColor . ';"><td>' . $expense . '</td><td>$' . $amount . '</td></tr>';
-        $color = ($color === true ? false : true);
-    }
-    $categoryExpenseTotal = array_sum($categoryExpenses);
-
-    $categorizedExpensesTable .= '<tr class="' . ($categoryExpenseTotal <= 0 ? 'positive' : 'negative') . '"><td style="text-align: left;">' . 'Total Category Expense: ' . $categoryExpenseTotal . '</td></tr>';
-}
-$categorizedExpensesTable .= '</table>';
-
+/* App Output */
+$output = $budgetTitle;
+$output .= $balanceOverviewTable;
+$output .= $categorizedExpensesTable;
+$output .= $expensesTable;
 
 /* Incorporate output. */
 $sdmassembler->sdmAssemblerIncorporateAppOutput($output, $options);
