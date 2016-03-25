@@ -15,167 +15,38 @@ $options = array(
     'roles' => array('all'),
 );
 
-/* Categorized Expenses */
-$categorizedExpenses = array(
-    'Vices' => array(
-        'Smokes' => (9 * 10.25),
-        'Booze' => 40,
-    ),
-    'Groceries' => array(
-        'Misc. Food' => (7.9),
-        'Dog Food' => 30,
-        'Cat Food (dry)' => 30,
-        'Cat Litter' => 10,
-    ),
-    'Laundry' => array(
-        'Four Loads' => 30,
-    ),
-    'Transportation' => array(
-        'Gas' => 80,
-        'Tolls' => 7.5,
-    ),
-);
+/* Include available balance form. */
+include_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/forms/availableBalanceForm.php');
 
-/* Expenses | Used to determine total expenses for all categories combined. */
+/* Include save budget form. */
+include_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/forms/saveBudgetForm.php');
+
+/* Expenses
+   Used to determine total expenses for all categories combined.
+   This var must be declared before the categorized expenses table
+   or the calculations will break. This array is populated during
+   the creation of the categorized expenses table, so declaring it
+   after the categorized expenses table would lead to an empty array
+   being passed to array_sum(), therefore calculating 0 expenses.
+   */
 $expenses = array();
 
-/* Categorized Expenses Table */
-$categorizedExpensesTable = '<table class="rounded">';
-$categorizedExpensesTable .= '<thead>Categorized Expenses:</thead>';
-$color = true;
-foreach ($categorizedExpenses as $category => $categoryExpenses) {
-    $categorizedExpensesTable .= '<tr><th style="text-align: left;">' . $category . '</th></tr>';
-    foreach ($categoryExpenses as $expense => $amount) {
-        $bgColor = ($color === true ? '#000000' : '#777777');
-        $categorizedExpensesTable .= '<tr style="background: ' . $bgColor . ';"><td>' . $expense . '</td><td>$' . $amount . '</td></tr>';
-        $color = ($color === true ? false : true);
-        // add expenses to the $expenses array so the total expenses for all categories combined can be calculated
-        $expenses[$category . ': ' . $expense] = $amount;
-    }
-    $categoryExpenseTotal = array_sum($categoryExpenses);
-    $categorizedExpensesTable .= '<tr class="' . ($categoryExpenseTotal <= 0 ? 'positive' : 'negative') . '"><td style="text-align: left;">' . 'Total Category Expense: ' . $categoryExpenseTotal . '</td></tr>';
-}
-$categorizedExpensesTable .= '</table>';
+/* Include categorizedExpensesTable | This must always be the first table loaded! */
+include_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/tables/categorizedExpensesTable.php');
 
-/* Expenses Table */
-$expensesTable = '<table class="rounded">';
-$expensesTable .= '<thead>All Expenses:</thead>';
-$color = true;
-foreach ($expenses as $expense => $amount) {
-    $bgColor = ($color === true ? '#000000' : '#777777');
-    $expensesTable .= '<tr style="background: ' . $bgColor . '"><td>' . $expense . '</td><td>$' . $amount . '</td></tr>';
-    $color = ($color === true ? false : true);
-}
-/* Total Expenses*/
-$totalExpenses = array_sum($expenses);
-$expensesTable .= '<tr class="' . ($categoryExpenseTotal <= 0 ? 'positive' : 'negative') . '"><td>Total Expenses: ' . $totalExpenses . '</td></tr>';
-$expensesTable .= '</table>';
+/* Include expensesTable. | This must always be included after the
+   categorizedExpensesTable. */
+include_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/tables/expensesTable.php');
 
+/* Include calculations. | This must always be included after both the
+   categorizedExpensesTable and the expensesTable. */
+include_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/handlers/calculations.php');
 
-/* Available Balance Form */
-$availableBalanceForm = new SdmForm();
-
-/* Previously submitted values */
-$availableCash = floatval($availableBalanceForm->sdmFormGetSubmittedFormValue('availableCash'));
-$availableDebit = floatval($availableBalanceForm->sdmFormGetSubmittedFormValue('availableDebit'));
-$availableCredit = floatval($availableBalanceForm->sdmFormGetSubmittedFormValue('availableCredit'));
-
-/* Form Object */
-$availableBalanceForm->formHandler = 'budget';
-$availableBalanceForm->formElements = array(
-    array(
-        'id' => 'availableCash',
-        'type' => 'text',
-        'element' => 'Available Cash <table class="rounded"><tr class="' . ($availableCash > 0 ? 'positive' : 'negative') . '"><td>$' . strval($availableCash) . '</td></tr></table>',
-        'value' => ($availableCash > 0 || $availableCash < 0 ? strval($availableCash) : '0.00'),
-        'place' => '1',
-    ),
-    array(
-        'id' => 'availableDebit',
-        'type' => 'text',
-        'element' => 'Available Debit <table class="rounded"><tr class="' . ($availableDebit > 0 ? 'positive' : 'negative') . '"><td>$' . strval($availableDebit) . '</td></tr></table>',
-        'value' => ($availableDebit > 0 || $availableDebit < 0 ? strval($availableDebit) : '0.00'),
-        'place' => '2',
-    ),
-    array(
-        'id' => 'availableCredit',
-        'type' => 'text',
-        'element' => 'Available Credit <table class="rounded"><tr class="' . ($availableCredit > 0 ? 'positive' : 'negative') . '"><td>$' . strval($availableCredit) . '</td></tr></table>',
-        'value' => ($availableCredit > 0 || $availableCredit < 0 ? strval($availableCredit) : '0.00'),
-        'place' => '3',
-    ),
-);
-$availableBalanceForm->method = 'post';
-$availableBalanceForm->submitLabel;
-$availableBalanceForm->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
-
-/* Form HTML */
-$availableBalanceFormHtml = $availableBalanceForm->sdmFormGetForm();
+/* Include calculations. | This must always be the last table included. */
+include_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/tables/balanceOverviewTable.php');
 
 /* Budget Title. */
 $budgetTitle = '<h4 class="center">Budget on ' . date('F d, Y') . ' at ' . date('g:ia') . '</h4>';
-
-/**
- * Calculations.
- * Note: Calculations must be performed before constructing Balance Overview Table and after all other components
- * have been constructed.
- */
-$availableBalance = $availableCash + $availableDebit + $availableCredit;
-$availableAfterExpenses = $availableBalance - $totalExpenses;
-
-/* Balance Overview Table */
-$balanceOverviewTable = '<table class="rounded">
-            <thead>Summary of available balance and expenses:</thead>
-              <tr class="positive">
-                <td>Available Balance:</td>
-                <td>$' . $availableBalance . '</td>
-              </tr>
-              <tr class="negative">
-                <td>Total Expenses</td>
-                <td>$' . $totalExpenses . '</td>
-              </tr>
-              <tr class="' . ($availableAfterExpenses > 0 ? 'positive' : 'negative') . '">
-                <td>Available Balance After Expenses</td>
-                <td>$' . $availableAfterExpenses . '</td>
-              </tr>
-            </table>';
-
-/* Save budget form. */
-$saveBudgetForm = new SdmForm();
-$saveBudgetForm->method = 'post';
-$saveBudgetForm->formHandler = 'budget';
-$saveBudgetForm->formElements = array(
-    array(
-        'id' => 'budgetCreationTime',
-        'type' => 'hidden',
-        'element' => 'Budget Creation Time',
-        'value' => time(),
-        'place' => '1',
-    ),
-    array(
-        'id' => 'availableCash',
-        'type' => 'hidden',
-        'element' => 'Available Cash',
-        'value' => strval($availableBalanceForm->sdmFormGetSubmittedFormValue('availableCash')),
-        'place' => '2',
-    ),
-    array(
-        'id' => 'availableDebit',
-        'type' => 'hidden',
-        'element' => 'Available Debit',
-        'value' => strval($availableBalanceForm->sdmFormGetSubmittedFormValue('availableDebit')),
-        'place' => '3',
-    ),
-    array(
-        'id' => 'availableCredit',
-        'type' => 'hidden',
-        'element' => 'Available Credit',
-        'value' => strval($availableBalanceForm->sdmFormGetSubmittedFormValue('availableCredit')),
-        'place' => '4',
-    ),
-);
-$saveBudgetForm->submitLabel = 'Save Budget';
-$saveBudgetForm->sdmFormBuildForm();
 
 /* App Output */
 $output = $budgetTitle;
@@ -183,7 +54,7 @@ $output .= $availableBalanceFormHtml;
 $output .= $balanceOverviewTable;
 $output .= $categorizedExpensesTable;
 $output .= $expensesTable;
-$output .= $saveBudgetForm->sdmFormGetForm();
+$output .= $saveBudgetFormHtml;
 
 /* Incorporate output. */
 $sdmassembler->sdmAssemblerIncorporateAppOutput($output, $options);
