@@ -17,39 +17,22 @@ $options = array(
 
 /* Categorized Expenses */
 $categorizedExpenses = array(
-    'Category One' => array(
-        'expense one' => 20.73,
-        'expense two' => 4.20,
-        'expense three' => 3.38,
+    'Vices' => array(
+        'Smokes' => (9 * 10.25),
+        'Booze' => 40,
     ),
-    'Category Two' => array(
-        'expense one' => 150.2,
-        'expense two' => 5.00,
-        'expense three' => 5.73,
-        'expense four' => 20.23,
-        'expense five' => .73,
+    'Groceries' => array(
+        'Misc. Food' => (7.9),
+        'Dog Food' => 30,
+        'Cat Food (dry)' => 30,
+        'Cat Litter' => 10,
     ),
-    'Category Three' => array(
-        'expense one' => .25,
-        'expense two' => 1.73,
-        'expense three' => 2.03,
-        'expense four' => 12.33,
-        'expense five' => 4.73,
+    'Laundry' => array(
+        'Four Loads' => 30,
     ),
-    'Category Four' => array(
-        'expense one' => 1.98,
-        'expense two' => 3.37,
-    ),
-    'Category Five' => array(
-        'expense one' => 120.08,
-        'expense two' => 230.23,
-        'expense three' => 23.04,
-    ),
-    'Category Six' => array(
-        'expense one' => 98.73,
-    ),
-    'Category Seven' => array(
-        'expense one' => 73.21,
+    'Transportation' => array(
+        'Gas' => 80,
+        'Tolls' => 7.5,
     ),
 );
 
