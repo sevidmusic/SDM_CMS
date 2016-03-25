@@ -17,7 +17,7 @@ $categorizedExpenses = array(
     ),
     'Transportation' => array(
         'Gas' => 80,
-        'Tolls' => 7.5,
+        'Tolls' => 9,
     ),
 );
 
