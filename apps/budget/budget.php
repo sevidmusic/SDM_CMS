@@ -1,6 +1,6 @@
 <?php
 
-if($sdmassembler->sdmCoreDetermineRequestedPage() === 'budget') {
+if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'budget') {
     /**
      * The budget app provides a from for creating a simple budget
      * based on a users available cash, available debit, available
@@ -48,18 +48,18 @@ if($sdmassembler->sdmCoreDetermineRequestedPage() === 'budget') {
     include_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/tables/balanceOverviewTable.php');
 
     /* Budget Title. */
-    $budgetTitle = '<h4 class="center">Budget on ' . date('F d, Y') . ' at ' . date('g:ia') . '</h4>';
-
+    $budgetTitle = 'Budget on ' . date('F d, Y') . ' at ' . date('g:ia');
+    $budgetTitleHtml = '<h4 class="center">' . $budgetTitle . '</h4>';
     /* App Output */
-    $output = $budgetTitle;
+    $output = $budgetTitleHtml;
     $output .= $availableBalanceFormHtml;
     $output .= $balanceOverviewTable;
     $output .= $categorizedExpensesTable;
     $output .= $expensesTable;
     $output .= $saveBudgetFormHtml;
 
-    /* Save form handler */
-
+    /* Include saveBudgetFrom handler*/
+    include_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/handlers/saveBudgetFormSubmissionHandler.php');
     /* Incorporate output. */
     $sdmassembler->sdmAssemblerIncorporateAppOutput($output, $options);
 }

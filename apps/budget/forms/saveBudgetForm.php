@@ -33,6 +33,13 @@ $saveBudgetForm->formElements = array(
         'value' => strval($availableBalanceForm->sdmFormGetSubmittedFormValue('availableCredit')),
         'place' => '4',
     ),
+    array(
+        'id' => 'budgetId',
+        'type' => 'hidden',
+        'element' => 'Budget Id',
+        'value' => strval(date('mdYHis')),
+        'place' => '4',
+    ),
 );
 $saveBudgetForm->submitLabel = 'Save Budget';
 $saveBudgetForm->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
