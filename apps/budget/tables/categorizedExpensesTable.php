@@ -2,22 +2,13 @@
 
 /* Categorized Expenses */
 $categorizedExpenses = array(
-    'Vices' => array(
-        'Smokes' => (9 * 10.25),
-        'Booze' => 40,
-    ),
-    'Groceries' => array(
-        'Misc. Food' => (7.9),
-        'Dog Food' => 30,
-        'Cat Food (dry)' => 30,
-        'Cat Litter' => 10,
-    ),
-    'Laundry' => array(
-        'Four Loads' => 30,
-    ),
     'Transportation' => array(
-        'Gas' => 80,
-        'Tolls' => 9,
+        'Gas' => 60,
+        'Toll' => 3,
+    ),
+    'Misc' => array(
+        'Ciggs' => 20.50,
+        'Laundry' => 30,
     ),
 );
 
