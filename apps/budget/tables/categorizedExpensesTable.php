@@ -12,7 +12,18 @@ switch ($budgetLoaded) {
         $categorizedExpenses = (
         $selectSavedBudgetForm->sdmFormGetSubmittedFormValue('categorizedExpenses') !== null
             ? json_decode($selectSavedBudgetForm->sdmFormGetSubmittedFormValue('categorizedExpenses'), true)
-            : array('category' => array('expense' => 0.00,))
+            : array(
+            'Misc' => array(
+                'Cigarettes' => 10.25,
+            ),
+            'Transportation' => array(
+                'Tolls' => 4.5,
+                'Gas' => 10,
+            ),
+            'Food' => array(
+                'Misc' => 23,
+            )
+        )
         );
         break;
 }
