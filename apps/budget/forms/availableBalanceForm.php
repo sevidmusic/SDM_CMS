@@ -2,11 +2,19 @@
 /* Available Balance Form */
 $availableBalanceForm = new SdmForm();
 
-/* Previously submitted values */
-$availableCash = floatval($availableBalanceForm->sdmFormGetSubmittedFormValue('availableCash'));
-$availableDebit = floatval($availableBalanceForm->sdmFormGetSubmittedFormValue('availableDebit'));
-$availableCredit = floatval($availableBalanceForm->sdmFormGetSubmittedFormValue('availableCredit'));
-
+/* Set $availableCash, $availableDebit, and $availableCredit vars */
+switch(isset($savedBudget)) {
+    case true:
+        $availableCash = floatval($savedBudget->availableCash);
+        $availableDebit = floatval($savedBudget->availableDebit);
+        $availableCredit = floatval($savedBudget->availableCredit);
+        break;
+    default:
+        $availableCash = floatval($availableBalanceForm->sdmFormGetSubmittedFormValue('availableCash'));
+        $availableDebit = floatval($availableBalanceForm->sdmFormGetSubmittedFormValue('availableDebit'));
+        $availableCredit = floatval($availableBalanceForm->sdmFormGetSubmittedFormValue('availableCredit'));
+        break;
+}
 /* Form Object */
 $availableBalanceForm->formHandler = 'budget';
 $availableBalanceForm->formElements = array(
@@ -30,6 +38,13 @@ $availableBalanceForm->formElements = array(
         'element' => 'Available Credit <table class="rounded"><tr class="' . ($availableCredit > 0 ? 'positive' : 'negative') . '"><td>$' . strval($availableCredit) . '</td></tr></table>',
         'value' => ($availableCredit > 0 || $availableCredit < 0 ? strval($availableCredit) : '0.00'),
         'place' => '3',
+    ),
+    array(
+        'id' => 'categorizedExpenses',
+        'type' => 'hidden',
+        'element' => 'Available Credit',
+        'value' => json_encode($categorizedExpenses),
+        'place' => '4',
     ),
 );
 $availableBalanceForm->method = 'post';

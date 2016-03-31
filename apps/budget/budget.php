@@ -8,6 +8,10 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'budget') {
      */
     $devForm = new SdmForm();
 
+    /* Budget Title. */
+    $budgetTitle = 'Budget on ' . date('F d, Y') . ' at ' . date('g:ia');
+    $budgetTitleHtml = '<h4 class="center">' . $budgetTitle . '</h4>';
+
     /* Configure incorporation options. */
     $options = array(
         'wrapper' => 'main_content',
@@ -17,20 +21,14 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'budget') {
         'roles' => array('all'),
     );
 
+    /* Initialize $output var | Provides a common var for app output. */
+    $output = '';
+
     /* Include select saved budget form. */
     include_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/forms/selectSavedBudgetForm.php');
 
-    /* Inclued select saved budget form handler. */
+    /* Include select saved budget form handler. */
     include_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/handlers/selectSavedBudgetFormSubmissionHandler.php');
-
-    /* Require available balance form. */
-    require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/forms/availableBalanceForm.php');
-
-    /* Include save budget form. */
-    include_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/forms/saveBudgetForm.php');
-
-    /* Include saveBudgetFrom handler*/
-    include_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/handlers/saveBudgetFormSubmissionHandler.php');
 
     /* Expenses
        Used to determine total expenses for all categories combined.
@@ -45,6 +43,9 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'budget') {
     /* Require categorizedExpensesTable | This must always be the first table loaded! */
     require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/tables/categorizedExpensesTable.php');
 
+    /* Require available balance form. */
+    require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/forms/availableBalanceForm.php');
+
     /* Require expensesTable. | This must always be included after the
        categorizedExpensesTable. */
     require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/tables/expensesTable.php');
@@ -53,15 +54,17 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'budget') {
        categorizedExpensesTable and the expensesTable. */
     require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/handlers/calculations.php');
 
-    /* Require calculations. | This must always be the last table included. */
+    /* Require balanceOverviewTable. | This must always be the last table included. */
     require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/tables/balanceOverviewTable.php');
 
-    /* Budget Title. */
-    $budgetTitle = 'Budget on ' . date('F d, Y') . ' at ' . date('g:ia');
-    $budgetTitleHtml = '<h4 class="center">' . $budgetTitle . '</h4>';
+    /* Include save budget form. */
+    include_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/forms/saveBudgetForm.php');
+
+    /* Include saveBudgetFrom handler*/
+    include_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/handlers/saveBudgetFormSubmissionHandler.php');
 
     /* App Output */
-    $output = $selectSaveBudgetFormHtml;
+    $output .= $selectSaveBudgetFormHtml;
     $output .= $budgetTitleHtml;
     $output .= $availableBalanceFormHtml;
     $output .= $balanceOverviewTable;

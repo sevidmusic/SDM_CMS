@@ -34,11 +34,18 @@ $saveBudgetForm->formElements = array(
         'place' => '4',
     ),
     array(
+        'id' => 'categorizedExpenses',
+        'type' => 'hidden',
+        'element' => 'Categorized Expenses',
+        'value' => json_encode($categorizedExpenses),
+        'place' => '5',
+    ),
+    array(
         'id' => 'budgetId',
         'type' => 'hidden',
         'element' => 'Budget Id',
         'value' => strval(date('mdYHis')),
-        'place' => '4',
+        'place' => '6',
     ),
 );
 $saveBudgetForm->submitLabel = 'Save Budget';

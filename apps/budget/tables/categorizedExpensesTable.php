@@ -1,16 +1,21 @@
 <?php
 
-/* Categorized Expenses */
-$categorizedExpenses = array(
-    'Transportation' => array(
-        'Gas' => 60,
-        'Toll' => 3,
-    ),
-    'Misc' => array(
-        'Ciggs' => 20.50,
-        'Laundry' => 30,
-    ),
-);
+$budgetLoaded = isset($savedBudget);
+
+switch ($budgetLoaded) {
+    case true:
+        /* Categorized Expenses | Must be converted to an array */
+        $categorizedExpenses = json_decode(json_encode($savedBudget->categorizedExpenses), true);
+        break;
+    default:
+        /* Categorized Expenses | Hardcoded | @todo make these settings into a form. */
+        $categorizedExpenses = (
+        $selectSavedBudgetForm->sdmFormGetSubmittedFormValue('categorizedExpenses') !== null
+            ? json_decode($selectSavedBudgetForm->sdmFormGetSubmittedFormValue('categorizedExpenses'), true)
+            : array('category' => array('expense' => 0.00,))
+        );
+        break;
+}
 
 /* Categorized Expenses Table */
 $categorizedExpensesTable = '<table class="rounded">';

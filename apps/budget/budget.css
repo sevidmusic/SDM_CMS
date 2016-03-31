@@ -30,3 +30,25 @@ td {
     margin: 20px auto;
     text-align: center;
 }
+
+.message {
+    border: 2px solid #eeeeee;
+    border-radius: 9px;
+    margin: 0 auto;
+    width: 98%;
+    padding: 20px;
+    font-family: Courier;
+    font-size: .7em;
+    word-wrap: break-word;
+    text-align: center;
+}
+
+.success {
+    color: #32fb43;
+    background: #3e6888;
+}
+
+.error {
+    color: #fb2725;
+    background: #050e1d;
+}
