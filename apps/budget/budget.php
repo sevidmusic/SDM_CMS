@@ -8,10 +8,6 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'budget') {
      */
     $devForm = new SdmForm();
 
-    /* Budget Title. */
-    $budgetTitle = 'Budget on ' . date('F d, Y') . ' at ' . date('g:ia');
-    $budgetTitleHtml = '<h4 class="center">' . $budgetTitle . '</h4>';
-
     /* Configure incorporation options. */
     $options = array(
         'wrapper' => 'main_content',
@@ -24,11 +20,13 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'budget') {
     /* Initialize $output var | Provides a common var for app output. */
     $output = '';
 
-    /* Include select saved budget form. */
-    include_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/forms/selectSavedBudgetForm.php');
+    /* Require select saved budget form. This should be included before anything else. */
+    require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/forms/selectSavedBudgetForm.php');
 
-    /* Include select saved budget form handler. */
-    include_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/handlers/selectSavedBudgetFormSubmissionHandler.php');
+    /* Require select saved budget form handler. This should be included after the select
+     * saved budget form, and before anything else.
+     */
+    require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/handlers/selectSavedBudgetFormSubmissionHandler.php');
 
     /* Expenses
        Used to determine total expenses for all categories combined.
@@ -57,11 +55,15 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'budget') {
     /* Require balanceOverviewTable. | This must always be the last table included. */
     require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/tables/balanceOverviewTable.php');
 
-    /* Include save budget form. */
-    include_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/forms/saveBudgetForm.php');
+    /* Budget Title. Must be declared before requiring saveBudgetForm and savedBudgetFormHandler */
+    $budgetTitle = (isset($savedBudget->budgetTitle) === true ? $savedBudget->budgetTitle : 'Budget on ' . date('F d, Y') . ' at ' . date('g:ia'));
+    $budgetTitleHtml = '<h4 class="center">' . $budgetTitle . '</h4>';
 
-    /* Include saveBudgetFrom handler*/
-    include_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/handlers/saveBudgetFormSubmissionHandler.php');
+    /* Require save budget form. */
+    require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/forms/saveBudgetForm.php');
+
+    /* Require saveBudgetFrom handler*/
+    require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/handlers/saveBudgetFormSubmissionHandler.php');
 
     /* App Output */
     $output .= $selectSaveBudgetFormHtml;
