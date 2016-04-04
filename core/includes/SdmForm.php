@@ -2,6 +2,7 @@
 
 /**
  * @todo POST works great, however the SdmForm class has a lot of trouble with GET, this needs to be remedied.
+ * @todo Make the following methods an option: POST, GET, SESSION. POST is the only one that works at the moment.
  * @todo Make the static methods in this class non-static so they can self reference SdmForm() objects
  * @todo Consider making this class a child of Sdm Core so it can directly utilize it's methods and properties.
  */
@@ -27,7 +28,7 @@ class SdmForm
      *
      * $formHandler : The form handler, either a path to a file that handles the form, or a the name of a function that handles the form
      *
-     * $formElements : (array) The elements that make up the form. i.e., <select>, <input>, <textarea>, etc...
+     * $formElements : (array) The elements that make up the form. i.e., select, input, textarea, etc...
      *
      * $method : The type of request, either 'get' or 'post', to issue.
      *
