@@ -65,14 +65,19 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'budget') {
     /* Require saveBudgetFrom handler*/
     require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/handlers/saveBudgetFormSubmissionHandler.php');
 
+    function useContainer($component)
+    {
+        return '<div class="container">' . $component . '</div>';
+    }
     /* App Output */
-    $output .= $selectSaveBudgetFormHtml;
+    $output .= useContainer($selectSaveBudgetFormHtml);
     $output .= $budgetTitleHtml;
-    $output .= $availableBalanceFormHtml;
     $output .= $balanceOverviewTable;
+    $output .= useContainer($availableBalanceFormHtml);
     $output .= $categorizedExpensesTable;
-    $output .= $expensesTable;
-    $output .= $saveBudgetFormHtml;
+    $output .= useContainer($addExpenseFormHtml);
+    $output .= useContainer($expensesTable);
+    $output .= useContainer($saveBudgetFormHtml);
 
     /* Incorporate output. */
     $sdmassembler->sdmAssemblerIncorporateAppOutput($output, $options);

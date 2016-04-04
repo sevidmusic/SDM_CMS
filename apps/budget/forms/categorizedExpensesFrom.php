@@ -1,8 +1,6 @@
 <?php
 
-$budgetLoaded = isset($savedBudget);
-
-switch ($budgetLoaded) {
+switch (isset($savedBudget)) {
     case true:
         /* Categorized Expenses | Must be converted to an array */
         $categorizedExpenses = json_decode(json_encode($savedBudget->categorizedExpenses), true);
@@ -18,17 +16,7 @@ switch ($budgetLoaded) {
                 'Golf' => 100,
                 'Drinks' => 25,
             ),
-            'Transportation' => array(
-                'Tolls' => 7.50,
-                'Gas' => 60,
-            ),
-            'Food' => array(
-                'Misc' => 60,
-                'Dog food' => 35,
-                'Cat food (dry)' => 25,
-            )
-        )
-        );
+        ));
         break;
 }
 

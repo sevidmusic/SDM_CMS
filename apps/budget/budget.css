@@ -52,3 +52,10 @@ td {
     color: #fb2725;
     background: #050e1d;
 }
+
+.container {
+    border: 3px solid #eeeeee;
+    border-radius: 9px;
+    background: #1c94c4;
+    padding: 20px;
+}
