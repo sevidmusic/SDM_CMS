@@ -10,7 +10,24 @@ $description = '<h1>Sdm Dev Output App</h1><p>This app is intended for use by de
                     With it php snippets can be tested. Just add the code to test to the
                     SdmDevOutput.php file.</p>';
 $output = '<!-- Sdm Dev Output App Placeholder -->' . $description;
-$sdmassembler->sdmAssemblerIncorporateAppOutput($output, ['incpages' => ['SdmDevOutput']]);
 
 /* Uncomment to have app show an overview of the DataObject loaded for each page. */
-$sdmassembler->sdmCoreSdmReadArray($sdmassembler->info());
+//$sdmassembler->sdmCoreSdmReadArray($sdmassembler->info());
+
+
+/* Build form*/
+$devForm = new SdmForm();
+$devForm->formHandler = 'SdmDevOutput';
+$devForm->method = 'post';
+$devForm->submitLabel = 'Submit';
+
+$devForm->sdmFormBuildForm();
+
+/* Display form */
+$output .= '<h1 style="text-align: center">--- Dev Form ---</h1>' . $devForm->sdmFormGetForm();
+
+if ($devForm->sdmFormGetSubmittedFormValue('text_form_element')) {
+    $output = '<h4 style="color:#00FF7F;">Form Submitted Successfully</h4>' . $output;
+}
+$sdmassembler->sdmCoreSdmReadArray($_POST);
+$sdmassembler->sdmAssemblerIncorporateAppOutput($output, ['incpages' => ['SdmDevOutput']]);
