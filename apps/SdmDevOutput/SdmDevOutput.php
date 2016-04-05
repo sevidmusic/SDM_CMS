@@ -19,6 +19,17 @@ $output = '<!-- Sdm Dev Output App Placeholder -->' . $description;
 $devForm = new SdmForm();
 $devForm->formHandler = 'SdmDevOutput';
 $devForm->method = 'post';
+/*
+$devForm->formElements = array(
+                            array(
+                                'id' => 'devFormElement',
+                                'type' => 'select',
+                                'element' => 'Dev Form Element',
+                                'value' => array(rand(0,100), rand(0,100)),
+                                'place' => '0',
+                            ),
+                         );
+*/
 $devForm->submitLabel = 'Submit';
 
 $devForm->sdmFormBuildForm();
