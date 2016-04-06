@@ -178,7 +178,7 @@ class SdmForm
      * @return string Random string of random letters $numChars in length.
      *
      */
-    public function sdmFormAlphaRand($numChars)
+    private function sdmFormAlphaRand($numChars)
     {
         /* Alphabet to draw characters from. */
         $alphabet = 'aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ';
@@ -201,6 +201,13 @@ class SdmForm
 
     /**
      * Gets a submitted form value.
+     *
+     * This method is static so it can be used without instantiating a new SdmForm() object. Keeping it static is
+     * useful for instance if the form handler is defined in a different file then the form, in which case a new
+     * SdmForm() object would have to be instantiated in order to call sdmFormGetSubmittedFormValue() if
+     * sdmFormGetSubmittedFormValue() was not static.
+     *
+     * Basically, this is method is static for accessibility.
      *
      * @param string $key The submitted values key. This method can retrieve any submitted form value that still exists
      *                    in either post, get, or (session).
@@ -238,6 +245,8 @@ class SdmForm
     /**
      *
      * Decodes a value encoded with sdmFormEncode().
+     *
+     * This method is static because it is called by the static method sdmFormGetSubmittedFormValue().
      *
      * @param string $value The value to decode.
      *
@@ -336,6 +345,9 @@ class SdmForm
      * This method is used by SdmForm::sdmFormDecode() to insure that decoded arrays also have their values
      * decoded.
      *
+     * This method is static because it is used by SdmForm::sdmFormDecode() which is called by the static
+     * function SdmForm::sdmFormGetSubmittedFormValue().
+     *
      * @param array $data The array to recurse through.
      *
      * @return array The array with all it's values decoded by SdmForm::sdmFormDecode().
@@ -363,6 +375,8 @@ class SdmForm
      *
      * This method was crated so complex form elements like the radio and select types
      * could define a default value.
+     *
+     * This method is static due to historical reasons. This may change in the future.
      *
      * @param array $values The array of values to check, any value that matches the
      *                      $testValue will be prepended with the string 'default_'
