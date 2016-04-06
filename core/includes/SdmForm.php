@@ -2,7 +2,7 @@
 
 /**
  * @todo POST works great, however the SdmForm class has a lot of trouble with GET, this needs to be remedied.
- * @todo Make the following methods an option: POST, GET, SESSION. POST is the only one that works at the moment.
+ * @todo Make the following methods an option if possible: POST, GET, SESSION. POST is the only one that works at the moment.
  * @todo Make the static methods in this class non-static so they can self reference SdmForm() objects
  * @todo Consider making this class a child of Sdm Core so it can directly utilize it's methods and properties.
  * @todo Test what happens when no $formHandler is specified. The default should be to use the current page since
@@ -13,8 +13,61 @@
  * @todo Make any properties that should not be publically accsessible private or protected. If needed, create
  *       getter and setter methods for any properties that should be private or protected but still somewhat
  *       accsessible.
+ * @todo Add missing form elemnts to available form element types. For instance, checkboxes aren't available.
+ *       Do some research to see a what elements are available for html5 that are not yet supported add them
+ *       if possible to the availalbe form element types.
  */
 
+/**
+ *
+ * The SdmForm() provides an object for creating and handling html forms in php.
+ *
+ * @property string $formHandler The name of the page or app that handles the form. If not set the current
+ *                            page will be assigned as the formHandler.
+ * @property array $formElements Array of form elements. The following form elements are available:
+ *                               - text
+ *                               - textarea
+ *                               - password
+ *                               - select
+ *                               - radio
+ *                               - hidden
+ *                               This property is optional. If not specified the default form elements
+ *                               defined in the __constructor will be used.
+ *                          Example of a form element definition:
+ *                          $form->formElements = array(
+ *                              array(
+ *                                'id' => 'text_form_element',
+ *                                'type' => 'text',
+ *                                'element' => 'Text Element',
+ *                                'value' => 'default value...',
+ *                                'place' => '0',
+ *                              ),
+ *                          );
+ *
+ * @property string $method The method the form should be submitted through. Either (session), get, or post.
+ *                          If not set the post method will be used. (session may not be possible, still in
+ *                          development)
+ * @property string $submitLabel The label for the form's submit button. If not set the word "Submit" will be used.
+ * @property string $formId The form's id. The id is generated internally by sdmFormGenerateFormId().
+ * @property string $formClass The css class to use for the form. (optional) (in dev)
+ * @property array $formElementClasses Associative array of classes to use for form elements. The array uses keys
+ *                                      to identify the form element type that should use the class, and the value
+ *                                      should specify the name of the class to use.
+ *                                      For example, the array should be structured as follows:
+ *                                      array(
+ *                                        'text' => 'classForTextElements',
+ *                                        'textArea' => 'classForTextAreaElements',
+ *                                        'password' => 'classForPasswordElements',
+ *                                        'select' => 'classForSelectElements',
+ *                                        'radio' => 'classForRadioElements',
+ *                                        'hidden' => 'classForHiddenElements'
+ *                                      );
+ *
+ * @property string $form The assembled form. Do not use this to get the form's html.
+ *                     Instead, use the sdmFormGetForm() method to get the forms html.
+ *                     The form html is generated on call to the sdmFormBuildForm()
+ *                     method.
+ */
 
 class SdmForm
 {
@@ -28,54 +81,9 @@ class SdmForm
     private $form;
 
     /**
-     *
-     * The SdmForm() provides an object for creating and handling html forms in php.
-     *
-     * @param string $formHandler The name of the page or app that handles the form. (optional)
-     * @param array $formElements Array of form elements. The following form elements are available:
-     *                               - text
-     *                               - textarea
-     *                               - password
-     *                               - select
-     *                               - radio
-     *                               - hidden
-     *                               This property is optional. If not specified the default form elements
-     *                               defined in the __constructor will be used.
-     *                          Example of a form element definition:
-     *                          $form->formElements = array(
-     *                              array(
-     *                                'id' => 'text_form_element',
-     *                                'type' => 'text',
-     *                                'element' => 'Default Text Element',
-     *                                'value' => '',
-     *                                'place' => '0',
-     *                              ),
-     *                          );
-     *
-     * @param string $method The method the form should be submitted through. Either session, get, or post.
-     *                          If not set the post method will be used.
-     * @param string $submitLabel The label for the form's submit button. If not set the word "Submit" will be used.
-     * @param string $formId The form's id. The id is generated internally by sdmFormGenerateFormId().
-     * @param string $formClass The css class to use for the form. (optional)
-     * @param array $formElementClasses Associative array of classes to use for form elements. The array uses keys
-     *                                      to identify the form element type that should use the class, and the value
-     *                                      should specify the name of the class to use.
-     *                                      For example, the array should be structured as follows:
-     *                                      array(
-     *                                        'text' => 'classForTextElements',
-     *                                        'textArea' => 'classForTextAreaElements',
-     *                                        'password' => 'classForPasswordElements',
-     *                                        'select' => 'classForSelectElements',
-     *                                        'radio' => 'classForRadioElements',
-     *                                        'hidden' => 'classForHiddenElements'
-     *                                      );
-     *
-     * @param string $form The assembled form. Do not use this to get the form's html.
-     *                     Instead, use the sdmFormGetForm() method to get the forms html.
-     *                     The form html is generated on call to the sdmFormBuildForm()
-     *                     method.
+     * SdmForm constructor. Defines $property values, and assigns default property values
+     * where necessary.
      */
-
     public function __construct()
     {
         /* If formId is set use it, otherwise call sdmFormGenerateFormId() to generate a new one. */
@@ -175,7 +183,7 @@ class SdmForm
         /* Alphabet to draw characters from. */
         $alphabet = 'aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ';
 
-        /* Initialize $string. This will variable will hold the random chars. */
+        /* Initialize $string. This variable will hold the random chars. */
         $string = '';
 
         /* For as long as $inc is less then $numChars add a random letter to the $string. */
@@ -194,11 +202,13 @@ class SdmForm
     /**
      * Gets a submitted form value.
      *
-     * @param string $key The key of the value we want to grab from the last submitted SdmForm(). All SdmForm() values are
-     * stored in POST or GET under the 'SdmForm' array and indexed by $key. For example, to grab the value stored in
-     * $_POST['SdmForm']['key'] you would call sdmFormGetSubmittedFormValue('key').
+     * @param string $key The submitted values key. This method can retrieve any submitted form value that still exists
+     *                    in either post, get, or (session).
      *
-     * Note: Only top level values can be retrieved from the 'SdmForm' array, so if you wish to grab $_POST['SdmForm']['key']['subKey']
+     * All SdmForm() values are stored in POST or GET under the 'SdmForm' array and indexed by $key. For example,
+     * to grab the value stored in $_POST['SdmForm']['key'] call sdmFormGetSubmittedFormValue('key').
+     *
+     * Note: Only top level values can be retrieved from the 'SdmForm' array, it is not possible to grab $_POST['SdmForm']['key']['subKey']
      * you will have to call sdmFormGetSubmittedFormValue('key') and recurse through the sub array values yourself.
      *
      * @return mixed The submitted form value.
@@ -231,111 +241,183 @@ class SdmForm
      *
      * @param string $value The value to decode.
      *
-     * Note: It is safe to pass in values that were not encoded, sdmFormDecode()
-     *       makes sure that values that cannot be decoded are returned unchanged.
+     * Note: It is safe to pass in values that were not encoded by sdmFormEncode().
+     *       sdmFormDecode() will return values that cannot be decoded unchanged.
      *
-     * @return mixed <p>The decoded value</p>
+     * @return mixed The decoded value.
      */
     public static function sdmFormDecode($value)
     {
-        if (is_string($value) === true) { // we only want to attempt to decode strings, other types should be handled seperatly
-            $sdmcore = new SdmCore();
-            // if the value's string length is a multiple of 4 then it may be base64 encoded, if it is it will have to be decoded
+        /* Only attempt to decode strings, other types should be handled separately. */
+        if (is_string($value) === true) {
+            /* If the $value's string length is a multiple of 4 then it may be base64 encoded so attempt
+               to decode it. */
             if (strlen($value) % 4 == 0) {
-                // check if base64  encoded
+                /* Perform a final check to see if $value is really base64 encoded, if it is decode it. */
                 switch (base64_decode($value, true)) {
-                    case false: // not base64
-                        // check if serialized | we need to surpress any errors resulting from the check, this is ok because if any errors occure we do not proceed through this part of the statement
-                        if (@unserialize($value) === false) { // if not serialized use as is
-                            $finaldata = SdmForm::sdmFormDecodeArrayValues($value);
-                        } else { // if it is serialized unserialize it
+                    /* If $value is not base64 encoded test if $value is serialized. */
+                    case false:
+                        /* Determine if serialized. If not serialized pass to sdmFormDecodeArrayValues() in case $value
+                           is an array. If $value is not an array it will not be modified. */
+                        if (@unserialize($value) === false) {
+                            /* Pass $value to sdmFormDecodeArrayValues(), if it is not an array it will
+                               not be modified. */
+                            $finalData = SdmForm::sdmFormDecodeArrayValues($value);
+                        } else {
+                            /* Un-serialize $value. */
                             $data = unserialize($value);
-                            $finaldata = SdmForm::sdmFormDecodeArrayValues($data);
-                        }
 
+                            /* Pass $value to sdmFormDecodeArrayValues(), if it is not an array it will
+                               not be modified. */
+                            $finalData = SdmForm::sdmFormDecodeArrayValues($data);
+                        }
                         break;
-                    case true: // is base 64
-                        // check if serialized | we need to surpress any errors resulting from the check, this is ok because if any errors occure we do not proceed through this part of the statement
-                        if (@unserialize(base64_decode($value, true)) !== false) { // serialized, decode and unserialize
+
+                    /* If $value is base46 decode it. */
+                    case true:
+                        /* Check if $value is serialized. */
+                        if (@unserialize(base64_decode($value, true)) !== false) {
+                            /* Un-serialize and decode $value. */
                             $data = unserialize(base64_decode($value, true));
-                            $finaldata = SdmForm::sdmFormDecodeArrayValues($data);
-                        } else if (strlen(base64_decode($value, true)) >= strlen($value)) { // not serialized, but we should double check that this is for sure base64 encoded, we can do this by checking if the length of the decoded string is less then the length of the original data. If it is then we can assume the string is NOT base64 because if the decoded string has fewer chars then the original value most likely the string should not be decoded... @todo do some more testing by chcking a few encoded strings against their original values , do this in the hello world app
+                            /* Pass $data to sdmFormDecodeArrayValues(), if it is not an array it will
+                               not be modified. */
+                            $finalData = SdmForm::sdmFormDecodeArrayValues($data);
+                        } else if (strlen(base64_decode($value, true)) >= strlen($value)) {
+                            /*
+                             * $value is not serialized. Double check that the $value is definitely base64 encoded.
+                             *
+                             * This is accomplished by checking if the length of the decoded string is less then the
+                             * length of the original $value.
+                             *
+                             * If it is then we can assume the string is not base64 because if the decoded string
+                             * has fewer chars then the original $value. The $value should not be decoded.
+                             */
                             $data = base64_decode($value, true);
-                            $finaldata = SdmForm::sdmFormDecodeArrayValues($data);
-                        } else { // not base64
-                            $finaldata = SdmForm::sdmFormDecodeArrayValues($value);
+
+                            /* Pass $data to sdmFormDecodeArrayValues(), if it is not an array it will
+                               not be modified. */
+                            $finalData = SdmForm::sdmFormDecodeArrayValues($data);
+                        } else {
+                            /* $value is not base64 encoded. Pass $data to sdmFormDecodeArrayValues(), if
+                               it is not an array it will not be modified. */
+                            $finalData = SdmForm::sdmFormDecodeArrayValues($value);
                         }
                         break;
                 }
-            } else { // string length is NOT a multiple of 4
-                // check if serialized
-                if (@unserialize($value) === false) { // if not serialized use as is | we need to surpress any errors resulting from the check, this is ok because if any errors occure we do not proceed through this part of the statement
-                    $finaldata = $value;
-                } else { // if it is serialized unserialize it
+            } else {
+                /* $value is not base64 encoded. Check if $value is serialized. */
+                if (@unserialize($value) === false) {
+                    /* $value is not serialized or base64 encoded, do not modify. */
+                    $finalData = $value;
+                } else {
+                    /* $value is serialized. Un-serialize it. */
                     $data = unserialize($value);
-                    $finaldata = SdmForm::sdmFormDecodeArrayValues($data);
+
+                    /* Pass $data to sdmFormDecodeArrayValues(), if it is not an array it will
+                       not be modified. */
+                    $finalData = SdmForm::sdmFormDecodeArrayValues($data);
                 }
             }
-        } else if (is_array($value) === true) { // if $value is an array we need to call SdmForm::sdmFormDecodeArrayValues() to recurse through the array makeing sure none of the values need to be decoded
-            $finaldata = SdmForm::sdmFormDecodeArrayValues($value);
-        } else { // if value is not a string or an array just return it | this will mostly apply to integers and objects
-            $finaldata = $value;
+        } else if (is_array($value) === true) {
+            /* If $value is an array call SdmForm::sdmFormDecodeArrayValues() in order to recursively
+               decode any encode array values. */
+            $finalData = SdmForm::sdmFormDecodeArrayValues($value);
+        } else {
+            /* If value is not a string or an array just return without modification. */
+            $finalData = $value;
         }
-        return $finaldata;
+        return $finalData;
     }
 
     /**
-     * <p>Recursively decodes the values of a multi-dimensional array. If $data is not an array it is returned unchanged.</p>
-     * <p>This method is used by SdmForm::sdmFormDecode() to insure that decoded
-     * arrays also have their values decoded.</p>
-     * @param type $data <p>The array to recurse through, usually an array decoded by SdmForm::sdmFormDecode()</p>
-     * @param bool $devmode If set to true then this method will display dev information related to the different stages of decodeing on the page via SdmCore::sdmCoreSdmReadArray().
-     * @return array <p>The array with all it's values decoded with SdmForm::sdmFormDecode()</p>
+     * Recursively decodes the values of a multi-dimensional array. If $data is not an array it is returned
+     * without modification.
+     *
+     * This method is used by SdmForm::sdmFormDecode() to insure that decoded arrays also have their values
+     * decoded.
+     *
+     * @param array $data The array to recurse through.
+     *
+     * @return array The array with all it's values decoded by SdmForm::sdmFormDecode().
      */
     public static function sdmFormDecodeArrayValues($data)
     {
-        // if $data is an array at this point we want to decode any array values that are encoded.
+        /* If $data is an array decode it's values. */
         if (is_array($data)) {
+            /* Pass each array value to sdmFormDecodeArrayValues(). */
             foreach ($data as $key => $value) {
+                /* Unset the encoded $value. */
                 unset($data[$key]);
+
+                /* Re-assign $value under original $key after passing it to SdmForm::sdmFormDecode(). */
                 $data[$key] = SdmForm::sdmFormDecode($value);
             }
         }
+
+        /* Return the decoded $data. */
         return $data;
     }
 
     /**
-     * <p>Takes an associative array and prepends any values with 'default_'
-     * so the SdmForm will know to treat these items as defaults for form elements
-     * such as radio buttoms, or select lists.</p>
-     * @param array $values <p>The array of values to check, any value that matches the
-     *                         $testvalue will be prepended with the string 'default_'<br>
-     * <i>Note: Type Enforced for this argument! must be an array.</i></p>
-     * @param mixed $testvalue <p>The value to test the array's values against. Any $values
-     *                           that match $testvalue will be prepended with the string 'default_'.
-     *                           <br>Note: If $testvalue is an array then $values will be checked
-     *                           against the values in $testvalue</p>
-     * @return array <p>The $values array with all values that matched $testvalue prepened with the string
-     *                  'default_'.</p>
+     * Takes an associative array and prepends any values with the string 'default_'.
+     *
+     * This method was crated so complex form elements like the radio and select types
+     * could define a default value.
+     *
+     * @param array $values The array of values to check, any value that matches the
+     *                      $testValue will be prepended with the string 'default_'
+     *
+     * Note: Type Enforced for this argument! must be an array.
+     *
+     * @param mixed $testValue The value to test the array's values against. Any $values
+     *                         that match $testValue will be prepended with the string 'default_'.
+     *                         Note: If $testValue is an array then $values will be checked
+     *                         against the values in $testValue.
+     *
+     * @return array The $values array with all values that matched $testValue prepended with the string
+     *               'default_'.
+     *
      */
-    public static function setDefaultValues(array $values, $testvalue)
+    public static function setDefaultValues(array $values, $testValue)
     {
-        switch (is_array($testvalue)) {
+        /* Determine if $testValue is an array. */
+        switch (is_array($testValue)) {
             case true:
+                /* If it is an array loop through the $values in the $values array checking
+                   each $value against the values in the $testValue array. */
                 foreach ($values as $key => $value) {
+                    /* Unset the original $value in the $values array */
                     unset($values[$key]);
-                    // using == instead of === to allow for type juggling | === was causing problems with non sting types, specifically the boolean false was not being set to default when it should have been
-                    $values[$key] = (in_array($value, $testvalue) == true ? 'default_' . $value : $value);
+
+                    /* Re-assign $value to $values array pre-pending the string 'default_' to any $value
+                       that matches a value in the $testValue array. */
+                    $values[$key] = (in_array($value, $testValue) == true ? 'default_' . $value : $value);
+                    /*
+                     * Dev Note: use == instead of === to allow for type juggling. === was causing problems
+                     * with non string types, specifically the boolean false was not being set to default
+                     * when it should have been
+                     */
                 }
                 break;
             default:
+                /* Loop through the $values in the $values array checking each $value against the $testValue. */
                 foreach ($values as $key => $value) {
+                    /* Unset the original $value in the $values array */
                     unset($values[$key]);
-                    // using == instead of === to allow for type juggling | === was causing problems with non sting types, specifically the boolean false was not being set to default when it should have been
-                    $values[$key] = ($value == $testvalue ? 'default_' . $value : $value);
+
+                    /* Re-assign $value to $values array pre-pending the string 'default_' to any $value
+                       that matches the $testValue. */
+                    $values[$key] = ($value == $testValue ? 'default_' . $value : $value);
+                    /*
+                     * Dev Note: use == instead of === to allow for type juggling. === was causing problems
+                     * with non string types, specifically the boolean false was not being set to default
+                     * when it should have been
+                     */
                 }
                 break;
         }
+
+        /* Return the $values array with the string 'default_' pre-pended to any values that matched the $testValue */
         return $values;
     }
 
@@ -355,11 +437,11 @@ class SdmForm
             $rootUrl = str_replace('/index.php', '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']);
         }
 
-        /* Create opening form html. This includes an html comment showing the formId, and the opeing form tags
+        /* Create opening form html. This includes an html comment showing the formId, and the opening form tags
            with the appropriate attributes defined. */
         $formHtml = '<!-- form "' . $this->sdmFormGetFormId() . '" --><form class="" method="' . $this->method . '" action="' . $rootUrl . '/index.php?page=' . $this->formHandler . '">';
 
-        /* Sort elements based on element's "place" */
+        /* Sort elements based on element's "place". */
         $elementOrder = array(); // used to sort items
         foreach ($this->formElements as $key => $value) {
             $elementOrder[$key] = $value['place'];
@@ -423,13 +505,14 @@ class SdmForm
     public function sdmFormGetFormId()
     {
         /* If form id is set use it. */
-        switch(isset($this->formId)) {
+        switch (isset($this->formId)) {
             case true:
                 $formId = $this->formId;
                 break;
             default:
                 /* Otherwise log an error. */
                 error_log('Form missing id. Which form cannot be determined since id does not exist.');
+
                 /* Assign false to $formId since $this->formId was not set. */
                 $formId = false;
                 break;
@@ -443,16 +526,15 @@ class SdmForm
      *
      * @see https://github.com/sevidmusic/SDM_CMS/issues/13 : See bug#13 on git for more information.
      *
-     * Note: Value is only encoded if value is not of type boolean. Booleans
-     * are not encoded because it was determined that encoding booleans, specifically
-     * the boolean false, led to bugs in sdmFormGetSubmittedFormValue() because
-     * it interfered with sdmFormGetSubmittedFormValue()'s ability to determine if
-     * a value was serialized or base64 encoded which led to the value not being decoded at all
-     * by sdmFormGetSubmittedFormValue().
+     * Note: Value is only encoded if value is not of type boolean. Booleans are not encoded because
+     * it was determined that encoding booleans, specifically the boolean false, led to bugs in
+     * sdmFormGetSubmittedFormValue() because it interfered with sdmFormGetSubmittedFormValue()'s
+     * ability to determine if a value was serialized or base64 encoded which led to the value not
+     * being decoded at all by sdmFormGetSubmittedFormValue().
      *
-     * This resulted in sdmFormGetSubmittedFormValue() returning a boolean false as
-     * the encoded string "YjowOw==" which of course would not equate to the boolean false which meant
-     * the data was returned corrupted in both type and value.
+     * This resulted in sdmFormGetSubmittedFormValue() returning a boolean false as the encoded string
+     * "YjowOw==" which of course would not equate to the boolean false which meant the data was
+     * returned corrupted in both type and value.
      *
      * @see https://github.com/sevidmusic/SDM_CMS/issues/13 : See bug#13 on git for more information.
      *
@@ -477,11 +559,27 @@ class SdmForm
 
     /**
      * Used to get the Form's HTML
-     * @return type The assembled Form.
+     * @return string The form's html.
      */
     public function sdmFormGetForm()
     {
-        return (isset($this->form) ? $this->form : 'Unable to load form!');
+        /* make sure the form's html has been built. */
+        switch (isset($this->form)) {
+            case true:
+                /* Get form's html. */
+                $formHtml = $this->form;
+                break;
+            default:
+                /* Indicate that an error occured while trying to load the form. */
+                $formHtml = '<p>Could not load form.</p>';
+
+                /* Issue an error to the error log. */
+                error_log('Missing form id in call to method sdmFormGetForm() in file ' . __FILE__ . ' near line' . __LINE__);
+                break;
+        }
+
+        /* Return form's html. */
+        return $formHtml;
     }
 
 }
