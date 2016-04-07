@@ -616,6 +616,19 @@ class SdmForm
     }
 
     /**
+     *
+     * Get's the html for a specified element from the $formElementHtml property.
+     *
+     * @param string $elementName The name of the form element to get html for.
+     *
+     * @return string The specified form element's html.
+     */
+    public function sdmFormGetFormElementHtml($elementName)
+    {
+        return $this->formElementHtml[$elementName];
+    }
+
+    /**
      * Used to get the Form's HTML
      * @return string The form's html.
      */

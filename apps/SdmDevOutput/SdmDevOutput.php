@@ -19,7 +19,7 @@ $output = '<!-- Sdm Dev Output App Placeholder -->' . $description;
 $devForm = new SdmForm();
 $devForm->formHandler = 'SdmDevOutput';
 $devForm->method = 'post';
-/*
+
 $devForm->formElements = array(
                             array(
                                 'id' => 'devFormElement',
@@ -29,13 +29,13 @@ $devForm->formElements = array(
                                 'place' => '0',
                             ),
                          );
-*/
+
 $devForm->submitLabel = 'Submit';
 
 $devForm->sdmFormBuildForm();
 
 /* Display form */
-$output .= '<h1 style="text-align: center">--- Dev Form ---</h1>' . $devForm->sdmFormGetForm();
+$output .= '<h1 style="text-align: center">--- Dev Form ---</h1>' . $devForm->sdmFormGetFormElementHtml('devFormElement');
 
 if ($devForm->sdmFormGetSubmittedFormValue('text_form_element')) {
     $output = '<h4 style="color:#00FF7F;">Form Submitted Successfully</h4>' . $output;
