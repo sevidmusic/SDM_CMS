@@ -11,34 +11,37 @@ $description = '<h1>Sdm Dev Output App</h1><p>This app is intended for use by de
                     SdmDevOutput.php file.</p>';
 $output = '<!-- Sdm Dev Output App Placeholder -->' . $description;
 
-/* Uncomment to have app show an overview of the DataObject loaded for each page. */
-//$sdmassembler->sdmCoreSdmReadArray($sdmassembler->info());
+/* Test SdmForm() changes. */
+
+/* Build form using default values */
+$defaultForm = new SdmForm();
+$defaultForm->formHandler = 'SdmDevOutput';
+$defaultForm->method = 'post';
+$defaultForm->sdmFormUseDefaultFormElements();
+$defaultForm->submitLabel = 'Submit';
+$defaultForm->sdmFormBuildForm();
+
+/* Build custom form  */
+$customForm = new SdmForm();
+$customForm->formHandler = 'SdmDevOutput';
+$customForm->method = 'post';
+$customForm->sdmFormCreateFormElement('customTextValue', 'text', 'Enter some text', '', 0);
+$customForm->sdmFormCreateFormElement('customSelect', 'select', 'Select A Value', array('Select Value 1' => true, 'Select Value 2' => 420), 0);
+$customForm->sdmFormCreateFormElement('customRadio', 'radio', 'Choose A Value', array('Radio Value 1' => true, 'Radio Value 2' => 420), 0);
+$customForm->submitLabel = 'Submit Custom Form';
+$customForm->sdmFormBuildForm();
+
+$output .= '<h3>Default Form</h3>' . $defaultForm->sdmFormGetForm();
+$output .= '<h3>Custom Form</h3>' . $customForm->sdmFormGetForm();
 
 
-/* Build form*/
-$devForm = new SdmForm();
-$devForm->formHandler = 'SdmDevOutput';
-$devForm->method = 'post';
-
-$devForm->formElements = array(
-                            array(
-                                'id' => 'devFormElement',
-                                'type' => 'select',
-                                'element' => 'Dev Form Element',
-                                'value' => array(rand(0,100), rand(0,100)),
-                                'place' => '0',
-                            ),
-                         );
-
-$devForm->submitLabel = 'Submit';
-
-$devForm->sdmFormBuildForm();
-
-/* Display form */
-$output .= '<h1 style="text-align: center">--- Dev Form ---</h1>' . $devForm->sdmFormGetFormElementHtml('devFormElement');
-
-if ($devForm->sdmFormGetSubmittedFormValue('text_form_element')) {
-    $output = '<h4 style="color:#00FF7F;">Form Submitted Successfully</h4>' . $output;
-}
-$sdmassembler->sdmCoreSdmReadArray($_POST);
+$output .= '<h3>Individual Form Elements</h3>';
+$output .= $customForm->sdmFormOpenForm();
+$output .= $customForm->sdmFormGetFormElementHtml('customSelect');
+$output .= $customForm->sdmFormCloseForm();
+/*
+$debug = debug_backtrace();
+$debug = array_reverse($debug);
+$sdmassembler->sdmCoreSdmReadArray($debug);
+*/
 $sdmassembler->sdmAssemblerIncorporateAppOutput($output, ['incpages' => ['SdmDevOutput']]);
