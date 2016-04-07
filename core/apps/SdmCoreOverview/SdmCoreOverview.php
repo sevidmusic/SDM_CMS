@@ -78,16 +78,8 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmCoreOverview') {
     /* Load the entire data object. */
     $dataObject = $sdmassembler->sdmCoreLoadDataObject(false);
 
-    /* Use output buffering to insure output of core via the DataObject is incorporated into the page correctly.
-       Since sdmCoreSdmReadArray() typically echos it's output internally, output buffering is required in order
-       to capture the output of sdmCoreSdmReadArray() and assign it to the $output string. */
-    ob_start();
-
-    /* Read data object with sdmCoreSdmReadArray(). */
-    $sdmassembler->sdmCoreSdmReadArray($dataObject);
-
-    /* Assign captured output from sdmCoreSdmReadArray() to $output string. */
-    $output .= ob_get_clean();
+    /* Read data object with sdmCoreSdmReadArrayBuffered(). */
+    $output .= $sdmassembler->sdmCoreSdmReadArrayBuffered($dataObject);
 
     /* Incorporate core overview into page. */
     $sdmassembler->sdmAssemblerIncorporateAppOutput($output, $options);
