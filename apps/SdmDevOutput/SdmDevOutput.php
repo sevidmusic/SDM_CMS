@@ -39,9 +39,44 @@ $output .= '<h3>Individual Form Elements</h3>';
 $output .= $customForm->sdmFormOpenForm();
 $output .= $customForm->sdmFormGetFormElementHtml('customSelect');
 $output .= $customForm->sdmFormCloseForm();
-/*
+
 $debug = debug_backtrace();
 $debug = array_reverse($debug);
-$sdmassembler->sdmCoreSdmReadArray($debug);
-*/
+$devArr = array(
+    'Default Form' => $defaultForm,
+    'Int' => 420,
+    'Float' => 3240923.2348,
+    'Bool True' => true,
+    'Bool False' => false,
+    'Null' => null,
+    'Zero' => 0,
+    'Sub Array' => array(
+        'sub bool' => true,
+        'sub bool 2' => false,
+        'sub int' => 420,
+        'sub float' => 23482.234,
+        'sub zero' => 0,
+        'sub null' => null,
+        'sub sub array' => array(
+            'Custom Form' => $customForm,
+            'adf did s9d dke' => 'sfdjdw a dd kdisd diohjejkndsiohas sdid88j3 sd.',
+            'sub sub sub array' => array(
+                'sub default form object' => $defaultForm,
+                'asd',
+                'd9ek3',
+                'as0dk-s9dks9dk',
+                3934.34,
+                null,
+                true,
+                false,
+            )
+        ),
+    ),
+    'debug_backtrace() output' => $debug,
+);
+
+$devData = $sdmassembler->sdmCoreSdmReadArrayBuffered($devArr);
+
+$output .= $devData;
+
 $sdmassembler->sdmAssemblerIncorporateAppOutput($output, ['incpages' => ['SdmDevOutput']]);

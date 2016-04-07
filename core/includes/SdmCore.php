@@ -469,6 +469,29 @@ class SdmCore
     }
 
     /**
+     * Wraps call to sdmCoreReadArray() in an output buffer so it's output
+     * can be obtained as a string instead of just being echoed to the
+     * page.
+     *
+     * @param mixed $value The value to read.
+     * @return string string The output from sdmCoreSdmReadArray() as a string.
+     */
+    final public function sdmCoreSdmReadArrayBuffered($value)
+    {
+        /* Start the output buffer. */
+        ob_start();
+
+        /* Pass $value to sdmCoreSdmReadArray() */
+        $this->sdmCoreSdmReadArray($value);
+
+        /* Get the output form the output buffer, cleanup, and turn output buffering off. */
+        $output = ob_get_clean();
+
+        /* Return the output from the output buffer. */
+        return $output;
+    }
+
+    /**
      * Read the $variable and echo a formatted display of it to the current page.
      *
      * Basically, this method is the Sdm Cms's version of var_dump().
