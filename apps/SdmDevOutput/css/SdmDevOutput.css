@@ -1,0 +1,112 @@
+.sdm-dev-output-border {
+    border: 3px solid #77ddff;
+}
+
+.sdm-dev-output-rounded-border {
+    border-radius: 9px;
+}
+
+.sdm-dev-output-quarter-wide {
+    width: 20%;
+}
+
+.sdm-dev-output-half-wide {
+    width: 49%;
+}
+
+.sdm-dev-output-three-quarter-wide {
+    width: 70%;
+}
+
+.sdm-dev-output-full-width {
+    width: 95%;
+}
+
+.sdm-dev-output-background {
+    background: #508882;
+}
+
+.sdm-dev-output-padding-all {
+    padding: 20px;
+}
+
+.sdm-dev-output-padding-top {
+    padding-top: 20px;
+}
+
+.sdm-dev-output-padding-right {
+    padding-right: 20px;
+}
+
+.sdm-dev-output-padding-bottom {
+    padding-bottom: 20px;
+}
+
+.sdm-dev-output-padding-left {
+    padding-left: 20px;
+}
+
+.sdm-dev-output-float-left {
+    float: left;
+}
+
+.sdm-dev-output-float-right {
+    float: right;
+}
+
+.sdm-dev-output-clear-both {
+    clear: both;
+}
+
+.sdm-dev-output-clear-left {
+    clear: left;
+}
+
+.sdm-dev-output-clear-right {
+    clear: right;
+}
+
+.sdm-dev-output-position-absolute {
+    position: absolute;
+}
+
+.sdm-dev-output-position-relative {
+    position: relative;
+}
+
+.sdm-dev-output-position-fixed {
+    position: fixed;
+}
+
+.sdm-dev-output-position-static {
+    position: static;
+}
+
+.sdm-dev-output-height {
+    height: 744px;
+}
+
+.sdm-dev-output-margin-all {
+    margin: 20px;
+}
+
+.sdm-dev-output-margin-top {
+    margin-top: 20px;
+}
+
+.sdm-dev-output-margin-right {
+    margin-right: 20px;
+}
+
+.sdm-dev-output-margin-bottom {
+    margin-bottom: 20px;
+}
+
+.sdm-dev-output-margin-left {
+    margin-left: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
