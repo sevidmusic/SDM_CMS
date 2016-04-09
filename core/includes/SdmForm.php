@@ -10,12 +10,6 @@
  * @todo Make sure post is used when method not specified.
  * @todo Make it possible to asign classes to the form and the form elements via the
  *       new $formClass and $formElementClasses properties respectively.
- * @todo Make any properties that should not be publically accsessible private or protected. If needed, create
- *       getter and setter methods for any properties that should be private or protected but still somewhat
- *       accsessible.
- * @todo Add missing form elemnts to available form element types. For instance, checkboxes aren't available.
- *       Do some research to see a what elements are available for html5 that are not yet supported add them
- *       if possible to the availalbe form element types.
  */
 
 /**

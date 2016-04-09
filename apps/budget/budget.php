@@ -72,9 +72,9 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'budget') {
     /* App Output */
     $output .= useContainer($selectSaveBudgetFormHtml);
     $output .= $budgetTitleHtml;
-    $output .= $balanceOverviewTable;
+    $output .= useContainer($balanceOverviewTable);
     $output .= useContainer($availableBalanceFormHtml);
-    $output .= $categorizedExpensesTable;
+    $output .= useContainer($categorizedExpensesTable);
     $output .= useContainer($addExpenseFormHtml);
     $output .= useContainer($expensesTable);
     $output .= useContainer($saveBudgetFormHtml);
