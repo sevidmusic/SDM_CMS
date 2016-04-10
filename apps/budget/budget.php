@@ -69,20 +69,26 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'budget') {
     /* Require saveBudgetFrom handler*/
     require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/handlers/saveBudgetFormSubmissionHandler.php');
 
-    function useContainer($component)
-    {
-        return '<div class="budget budget-container">' . $component . '</div>';
-    }
+    $budgetContainerAttributes = array(
+        'classes' => array(
+            'budget',
+            'budget-container',
+        ),
+        'styles' => array(
+            'text-shadow: none',
+        ),
+
+    );
     /* App Output */
-    $output .= useContainer($selectSaveBudgetFormHtml);
+    $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($selectSaveBudgetFormHtml, $budgetContainerAttributes);
     $output .= $budgetTitleHtml;
-    $output .= useContainer($balanceOverviewTable);
-    $output .= useContainer($availableBalanceFormHtml);
-    $output .= useContainer($categorizedExpensesTable);
+    $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($balanceOverviewTable, $budgetContainerAttributes);
+    $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($availableBalanceFormHtml, $budgetContainerAttributes);
+    $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($categorizedExpensesTable, $budgetContainerAttributes);
     //$output .= useContainer($addExpenseFormHtml);
-    $output .= useContainer($expensesTable);
-    $output .= useContainer($saveBudgetFormHtml);
+    $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($expensesTable, $budgetContainerAttributes);
+    $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($saveBudgetFormHtml, $budgetContainerAttributes);
 
     /* Incorporate output. */
-    $sdmassembler->sdmAssemblerIncorporateAppOutput($output, $options);
+    $sdmassembler->sdmAssemblerIncorporateAppOutput($output, $options, $budgetContainerAttributes);
 }

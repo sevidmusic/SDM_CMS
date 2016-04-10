@@ -874,5 +874,54 @@ class SdmAssembler extends SdmNms
         return $content;
     }
 
+    /**
+     * Creates an html element.
+     * @param $content string The elements content. Can be a regular string, or a string of html.
+     * @param $attributes array Associative array of attributes to define for the element defined
+     *                          as follows:
+     *
+     *                          ['elementType']  string  The type of html element to create. Can be any valid html
+     *                                                   element type.
+     *
+     *                          ['id']           string  The id to assign to the element.
+     *
+     *                          ['classes']      array   An array of classes to assign to the element.
+     *
+     *                          ['styles']       array   An array of inline styles to assign to the element.
+     *                                                   Styles should be defined as follows: 'parameter: value'
+     * @return string The html element.
+     *
+     * @todo : Move into sdmAssembler so this method can be used throughout the Sdm Cms.
+     */
+    public function sdmAssemblerAssembleHtmlElement($content, $attributes)
+    {
+        /* Element Type. */
+        $elementType = (isset($attributes['elementType']) && $attributes['elementType'] !== '' ? $attributes['elementType'] : 'div');
+
+        /* Element Id. */
+        $id = (isset($attributes['id']) && $attributes['id'] !== '' ? $attributes['id'] : '');
+
+        /* Element classes. */
+        $classes = (isset($attributes['classes']) && is_array($attributes['classes']) === true ? $attributes['classes'] : '');
+
+        /* Element inline styles. */
+        $styles = (isset($attributes['styles']) && is_array($attributes['styles']) === true ? $attributes['styles'] : '');
+
+        /* Assemble id attribute string. */
+        $idString = (isset($id) && $id !== '' ? ' id="' . $id . '"' : '');
+
+        /* Assemble class attribute string. */
+        $classesString = (!empty($classes) === true ? ' class="' . implode(' ', $classes) . '"' : '');
+
+        /* Assemble style attribute string. */
+        $stylesString = (!empty($styles) === true ? ' style="' . implode('; ', $styles) . '"' : '');
+
+        /* Assemble element. */
+        $element = '<' . $elementType . $idString . $classesString . $stylesString . '>' . $content . '</' . $elementType . '>';
+
+        /* Return the element. | Wrap in PHP_EOL so each element has it's own line in html source code. */
+        return PHP_EOL . $element . PHP_EOL;
+    }
+
 }
 
