@@ -12,35 +12,28 @@ $availableBudgets = array();
 $selectSavedBudgetForm = new SdmForm();
 
 
-/*
- * For now use an iterator to distinguish budgets. Really, the budget title should be used...
- * @todo : Use budget title instead of iterator to differentiate budgets in select form.
- */
-$selectBudgetElementIterator = 1;
 
 /* Build $availableBudgets array from $savedBudgetDirectoryListing. */
 foreach ($savedBudgetsDirectoryListing as $savedBudgetId) {
     /* Exclude $excludedListings from $availableBudgets array. */
     if (!in_array($savedBudgetId, $excludedListings)) {
-        $budgetId = str_replace('.json', '', $savedBudgetId);
+        /* Format budgetId for use as a title. */
+        $budgetId = formatBudgetTitle($savedBudgetId);
         switch ($selectSavedBudgetForm->sdmFormGetSubmittedFormValue('selectedBudget')) {
             case $budgetId:
                 /* Add budget to $availableBudgets array. */
-                $availableBudgets['Budget ' . $selectBudgetElementIterator] = 'default_' . $budgetId;
+                $availableBudgets[$budgetId] = 'default_' . $savedBudgetId;
                 $defaultSet = true;
                 break;
             default:
                 /* Add budget to $availableBudgets array. */
-                $availableBudgets['Budget ' . $selectBudgetElementIterator] = $budgetId;
+                $availableBudgets[$budgetId] = $savedBudgetId;
                 break;
         }
-
-        /* Increase iterator. */
-        $selectBudgetElementIterator++;
     }
 }
 
-/* If no budget was selected create default a element. */
+/* If no budget was selected create default a element. If this element is selected on form submission then a new budget will be generated. */
 if (!isset($defaultSet) || $defaultSet !== true) {
     /* Create default select element in case no budget has been selected. | Can be used to get an empty budget. */
     $availableBudgets['-- Create New Budget --'] = 'default_';

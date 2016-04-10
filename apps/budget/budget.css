@@ -1,47 +1,58 @@
-table {
+/* Styles for budget app's container div. */
+
+
+/* Table styles */
+
+.budget table {
     margin: 20px auto;
     width: 88%;
 }
 
-tr {
+.budget tr {
     border: 2px solid #ffffff;
 }
 
-td {
-    border: 2px solid #ffffff;
+.budget td {
+    border: 2px solid #77ddff;
+}
+
+.budget th {
+    font-weight: bold;
+    color: rgba(5, 47, 72, 0.53);
+    text-align: left;
 }
 
 
-.rounded table, tr, td {
+.budget-rounded table, tr, td {
     border-radius: 9px;
     padding: 15px;
     color: #ffffff;
 }
 
-#rounded-left {
+#budget-rounded-left {
     border-radius: 9px 0px 0px 29px;
     padding: 35px;
 }
 
-#rounded-right {
+#budget-rounded-right {
     border-radius: 0px 29px 9px 0px;
     padding: 35px;
     /* border-left: 4px solid #000000; */
 }
-.positive {
+.budget-positive {
     background: #4cae6a;
 }
 
-.negative {
+.budget-negative {
     background: #ff0021;
 }
 
-.center {
+.budget-center {
     margin: 20px auto;
     text-align: center;
 }
 
-.message {
+.budget-message {
     border: 2px solid #eeeeee;
     border-radius: 9px;
     margin: 0 auto;
@@ -53,17 +64,17 @@ td {
     text-align: center;
 }
 
-.success {
+.budget-success {
     color: #32fb43;
     background: #3e6888;
 }
 
-.error {
+.budget-error {
     color: #fb2725;
     background: #050e1d;
 }
 
-.container {
+.budget-container {
     border: 3px solid #eeeeee;
     border-radius: 9px;
     /*    background-color: #517192; */
@@ -79,4 +90,20 @@ td {
 
 .budget-text-center {
     text-align: center;
+}
+
+.budget-text-left {
+    text-align: left;
+}
+
+.budget-expense-cell {
+    font-family: Papyrus;
+}
+
+.budget-expense-cell-bg-1 {
+    background-color: #004C9F;
+}
+
+.budget-expense-cell-bg-2 {
+    background-color: #007999;
 }

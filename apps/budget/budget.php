@@ -1,6 +1,10 @@
 <?php
 
 if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'budget') {
+
+    /* Require budgetFunctions.php */
+    require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/includes/budgetFunctions.php');
+
     /**
      * The budget app provides a from for creating a simple budget
      * based on a users available cash, available debit, available
@@ -57,7 +61,7 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'budget') {
 
     /* Budget Title. Must be declared before requiring saveBudgetForm and savedBudgetFormHandler */
     $budgetTitle = (isset($savedBudget->budgetTitle) === true ? $savedBudget->budgetTitle : 'Budget on ' . date('F d, Y') . ' at ' . date('g:ia'));
-    $budgetTitleHtml = '<h4 class="center">' . $budgetTitle . '</h4>';
+    $budgetTitleHtml = '<h4 class="budget-center">' . $budgetTitle . '</h4>';
 
     /* Require save budget form. */
     require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/forms/saveBudgetForm.php');
@@ -67,7 +71,7 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'budget') {
 
     function useContainer($component)
     {
-        return '<div class="container">' . $component . '</div>';
+        return '<div class="budget budget-container">' . $component . '</div>';
     }
     /* App Output */
     $output .= useContainer($selectSaveBudgetFormHtml);
@@ -75,7 +79,7 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'budget') {
     $output .= useContainer($balanceOverviewTable);
     $output .= useContainer($availableBalanceFormHtml);
     $output .= useContainer($categorizedExpensesTable);
-    $output .= useContainer($addExpenseFormHtml);
+    //$output .= useContainer($addExpenseFormHtml);
     $output .= useContainer($expensesTable);
     $output .= useContainer($saveBudgetFormHtml);
 

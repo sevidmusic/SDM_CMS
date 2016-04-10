@@ -9,7 +9,7 @@ $sdmassembler->sdmAssemblerIncorporateAppOutput('<h2>Site Errors</h2><p>The SDM 
 // get the error log with file() so we have each line as an array item. gives us some formating flexablitly later on
 $loaded_error_log = file($sdmassembler->sdmCoreGetCoreDirectoryUrl() . '/logs/sdm_core_errors.log', FILE_IGNORE_NEW_LINES || FILE_SKIP_EMPTY_LINES);
 // reverse the order of the elements because we want the newest errors to be at the top of the list
-$error_log = array_reverse($loaded_error_log);
+$error_log = $loaded_error_log;//array_reverse($loaded_error_log); | disabled because this was breaking the stacktrace order which makes debugging confusing.
 // display number of errors
 $sdmassembler->sdmAssemblerIncorporateAppOutput('<p>Number of logged errors : ' . count($error_log) . '</p>', array('incpages' => array('SdmErrorLog')));
 $output = '';

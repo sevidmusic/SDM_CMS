@@ -12,9 +12,9 @@ if ($saveBudgetForm->sdmFormGetSubmittedFormValue('budgetId') !== null) {
     )));
 
     if (file_put_contents($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/budgets/' . $saveBudgetForm->sdmFormGetSubmittedFormValue('budgetId') . '.json', $budgetJson) > 0) {
-        $output .= '<div class="message success">"' . $budgetTitle . '" was saved to ' . $sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/budgets/' . $saveBudgetForm->sdmFormGetSubmittedFormValue('budgetId') . '.json</div>';
+        $output .= '<div class="budget-message budget-success">"' . $budgetTitle . '" was saved to ' . $sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/budgets/' . $saveBudgetForm->sdmFormGetSubmittedFormValue('budgetId') . '.json</div>';
     } else {
         error_log('User App "Budget": Attempt to save budget ' . $saveBudgetForm->sdmFormGetSubmittedFormValue('budgetId') . ' to ' . $sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/budgets/' . $saveBudgetForm->sdmFormGetSubmittedFormValue('budgetId') . '.json  failed.');
-        $output .= '<div class="message error">Attempt to save budget with id "' . $saveBudgetForm->sdmFormGetSubmittedFormValue('budgetId') . '" to following location failed: ' . $sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/budgets/' . $saveBudgetForm->sdmFormGetSubmittedFormValue('budgetId') . '.json</div>';
+        $output .= '<div class="budget-message budget-error">Attempt to save budget with id "' . $saveBudgetForm->sdmFormGetSubmittedFormValue('budgetId') . '" to following location failed: ' . $sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/budgets/' . $saveBudgetForm->sdmFormGetSubmittedFormValue('budgetId') . '.json</div>';
     }
 }
