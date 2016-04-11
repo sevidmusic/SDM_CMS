@@ -3,15 +3,13 @@
 $savedBudgetsDirectoryListing = $sdmassembler->sdmCoreGetDirectoryListing('budget/budgets', 'apps');
 
 /* File names to exclude. */
-$excludedListings = array('.', '..', '.DS_STORE');
+$excludedListings = array('.', '..', '.DS_Store');
 
 /* Initialize $availableBudgets array | The selectSaveBudgetForm's select form element is built from this array. */
 $availableBudgets = array();
 
 
 $selectSavedBudgetForm = new SdmForm();
-
-
 
 /* Build $availableBudgets array from $savedBudgetDirectoryListing. */
 foreach ($savedBudgetsDirectoryListing as $savedBudgetId) {
@@ -20,7 +18,7 @@ foreach ($savedBudgetsDirectoryListing as $savedBudgetId) {
         /* Format budgetId for use as a title. */
         $budgetId = formatBudgetTitle($savedBudgetId);
         switch ($selectSavedBudgetForm->sdmFormGetSubmittedFormValue('selectedBudget')) {
-            case $budgetId:
+            case $savedBudgetId:
                 /* Add budget to $availableBudgets array. */
                 $availableBudgets[$budgetId] = 'default_' . $savedBudgetId;
                 $defaultSet = true;

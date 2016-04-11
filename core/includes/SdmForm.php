@@ -164,7 +164,7 @@ class SdmForm
      * Note: Only top level values can be retrieved from the 'SdmForm' array, it is not possible to grab $_POST['SdmForm']['key']['subKey']
      * you will have to call sdmFormGetSubmittedFormValue('key') and recurse through the sub array values yourself.
      *
-     * @return mixed The submitted form value.
+     * @return mixed The submitted form value or null on failure.
      */
     public static function sdmFormGetSubmittedFormValue($key)
     {

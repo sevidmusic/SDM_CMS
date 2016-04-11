@@ -1,6 +1,10 @@
 <?php
 
 if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'budget') {
+    /* Make sure budgets directory exists. */
+    if (is_dir($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/budgets/') === false) {
+        mkdir($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/budgets');
+    }
 
     /* Require budgetFunctions.php */
     require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/includes/budgetFunctions.php');
@@ -60,8 +64,16 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'budget') {
     require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/tables/balanceOverviewTable.php');
 
     /* Budget Title. Must be declared before requiring saveBudgetForm and savedBudgetFormHandler */
-    $budgetTitle = (isset($savedBudget->budgetTitle) === true ? $savedBudget->budgetTitle : 'Budget on ' . date('F d, Y') . ' at ' . date('g:ia'));
-    $budgetTitleHtml = '<h4 class="budget-center">' . $budgetTitle . '</h4>';
+    if (isset($savedBudget->budgetTitle) === true) {
+        $budgetTitle = $savedBudget->budgetTitle;
+    } elseif ($availableBalanceForm->sdmFormGetSubmittedFormValue('budgetTitle') !== null) {
+        $budgetTitle = str_replace('Created New Budget on', '', $availableBalanceForm->sdmFormGetSubmittedFormValue('budgetTitle'));
+    } else {
+        $budgetTitle = 'Created New Budget on ' . date('F d, Y') . ' at ' . date('g:ia');
+    }
+
+    /* Assemble budgetTitleHtml */
+    $budgetTitleHtml = $sdmassembler->sdmAssemblerAssembleHtmlElement($budgetTitle, array('elementType' => 'h2', 'classes' => array((isset($savedBudget->budgetTitle) === true || $availableBalanceForm->sdmFormGetSubmittedFormValue('budgetTitle') !== null ? 'budget-center' : 'budget-message budget-success'))));
 
     /* Require save budget form. */
     require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/budget/forms/saveBudgetForm.php');
@@ -80,8 +92,8 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'budget') {
 
     );
     /* App Output */
-    $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($selectSaveBudgetFormHtml, $budgetContainerAttributes);
     $output .= $budgetTitleHtml;
+    $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($selectSaveBudgetFormHtml, $budgetContainerAttributes);
     $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($balanceOverviewTable, $budgetContainerAttributes);
     $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($availableBalanceFormHtml, $budgetContainerAttributes);
     $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($categorizedExpensesTable, $budgetContainerAttributes);

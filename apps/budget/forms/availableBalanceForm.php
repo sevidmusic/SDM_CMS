@@ -48,7 +48,7 @@ $availableBalanceForm->formElements = array(
     ),
 );
 $availableBalanceForm->method = 'post';
-$availableBalanceForm->submitLabel;
+$availableBalanceForm->submitLabel = "Submit available balances";
 $availableBalanceForm->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
 
 /* Form HTML */

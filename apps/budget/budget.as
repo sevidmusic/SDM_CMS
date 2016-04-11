@@ -1,1 +1,1 @@
-stylesheets=budget;
+stylesheets=css/budgetScreen;

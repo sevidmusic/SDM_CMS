@@ -8,7 +8,7 @@ if ($selectSavedBudgetForm->sdmFormGetSubmittedFormValue('selectedBudget') !== n
         $output .= '<div class="budget-message budget-success">Budget "' . $selectSavedBudgetForm->sdmFormGetSubmittedFormValue('selectedBudget') . '" loaded successfully</div>';
     } else {
         error_log('User App "Budget": Attempt to load budget "' . $selectSavedBudgetForm->sdmFormGetSubmittedFormValue('selectedBudget') . '" failed.');
-        $output .= '<div class="budget-message budget-error">An error occured and the budget could not be loaded.</div>';
+        $output .= '<div class="budget-message budget-error">An error occurred and the budget could not be loaded.</div>';
     }
 
     /* Decrypt saved budget data. */

@@ -14,6 +14,7 @@
 
 .budget td {
     border: 2px solid #77ddff;
+    font-family: Papyrus;
 }
 
 .budget th {
@@ -60,7 +61,7 @@
 .budget-message {
     border: 2px solid #eeeeee;
     border-radius: 9px;
-    margin: 0 auto;
+    margin: 20px auto;
     width: 98%;
     padding: 20px;
     font-family: Courier;
@@ -103,6 +104,7 @@
 
 .budget-expense-cell {
     font-family: Papyrus;
+    word-spacing: 18px;
 }
 
 .budget-expense-cell-bg-1 {
