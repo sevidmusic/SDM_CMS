@@ -664,6 +664,28 @@ class SdmForm
         /* Add hidden element to store form id */
         $closingFormHtml = '<!-- built-in form element "form_id" --><input type="hidden" name="SdmForm[form_id]" value="' . $this->sdmFormGetFormId() . '"><!-- close built-in form element "form_id" -->';
 
+        /*
+         * Get parameters attached to the action attribute are not used if form method is set to get.
+         *
+         * @see http://stackoverflow.com/questions/10524659/how-to-preserve-get-parameters-when-posting-form-to-self
+         *
+         * So, to preserve the form handler when the get method is specified we need to add it as a hidden form element
+         * that stores the form handler as a submitted form value. This only applies to get requests.
+         *
+         * This element is only used if the form's method is set to "get".It preserves the form handler which
+         * would otherwise be lost since it is passed as a get parameter via the form's action attribute.
+         * Get parameters associated with the action attribute are ignored if the forms submission method is get,
+         * to get around this the form handler is assigned to a hidden element for forms that use the get method
+         * to insure it is preserved on form submission.
+         *
+         */
+        if ($this->method === 'get') {
+            $actionParams = '<!-- built-in form element "page" -->';
+            $actionParams .= '<input type="hidden" name="SdmForm[page]" value="' . $this->formHandler . '">';
+            $actionParams .= '<!-- close built-in form element "page" -->';
+            $closingFormHtml .= $actionParams;
+        }
+
         /* Add submit button. */
         $closingFormHtml .= '<input value="' . $this->submitLabel . '" type="submit"></form><!-- close form ' . $this->sdmFormGetFormId() . ' -->';
 

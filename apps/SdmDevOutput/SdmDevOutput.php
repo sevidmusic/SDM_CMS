@@ -20,12 +20,6 @@ $defaultForm->method = 'get';
 $defaultForm->sdmFormUseDefaultFormElements();
 $defaultForm->submitLabel = 'Submit';
 $defaultForm->sdmFormBuildForm();
-$sdmassembler->sdmCoreSdmReadArray(['post' => $_POST, 'get' => $_GET, 'session' => $_SESSION, 'SdmForm' => $defaultForm->sdmFormGetSubmittedFormValue()]);
-
-$submittedDefaultFormValues = $defaultForm->sdmFormGetSubmittedFormValue();
-foreach ($submittedDefaultFormValues as $valKey => $valValue) {
-    $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($valKey . ': ' . $valValue, array('elementType' => 'p', 'styles' => array('color: red')));
-}
 
 $attributes = array(
     'classes' => explode(' ', 'sdm-dev-output-background sdm-dev-output-border sdm-dev-output-rounded-border sdm-dev-output-float-left sdm-dev-output-height sdm-dev-output-half-wide sdm-dev-output-padding-all sdm-dev-output-margin-bottom'),
@@ -34,5 +28,18 @@ $attributes = array(
 //$output .= $sdmassembler->sdmCoreSdmReadArrayBuffered($attributes);
 $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement('<h3>Default Form</h3>' . $defaultForm->sdmFormGetForm(), $attributes);
 
+$output .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['post' => $_POST, 'get' => $_GET, 'session' => $_SESSION, 'SdmForm' => $defaultForm->sdmFormGetSubmittedFormValue(), 'Default Form Object' => $defaultForm]);
 
 $sdmassembler->sdmAssemblerIncorporateAppOutput($output, ['incpages' => ['SdmDevOutput']]);
+
+
+
+
+
+
+/*
+ $submittedDefaultFormValues = $defaultForm->sdmFormGetSubmittedFormValue();
+foreach ($submittedDefaultFormValues as $valKey => $valValue) {
+    $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($valKey . ': ' . $valValue, array('elementType' => 'p', 'styles' => array('color: red')));
+}
+ */
