@@ -16,29 +16,23 @@ $output = '<!-- Sdm Dev Output App Placeholder -->' . $description;
 /* Build form using default values */
 $defaultForm = new SdmForm();
 $defaultForm->formHandler = 'SdmDevOutput';
-$defaultForm->method = 'post';
+$defaultForm->method = 'get';
 $defaultForm->sdmFormUseDefaultFormElements();
 $defaultForm->submitLabel = 'Submit';
 $defaultForm->sdmFormBuildForm();
+$sdmassembler->sdmCoreSdmReadArray(['post' => $_POST, 'get' => $_GET, 'session' => $_SESSION, 'SdmForm' => $defaultForm->sdmFormGetSubmittedFormValue()]);
 
-/* Build custom form  */
-$customForm = new SdmForm();
-$customForm->formHandler = 'SdmDevOutput';
-$customForm->method = 'post';
-$customForm->sdmFormCreateFormElement('customTextValue', 'text', 'Enter some text', '', 0);
-$customForm->sdmFormCreateFormElement('customSelect', 'select', 'Select A Value', array('Select Value 1' => true, 'Select Value 2' => 420), 0);
-$customForm->sdmFormCreateFormElement('customRadio', 'radio', 'Choose A Value', array('Radio Value 1' => true, 'Radio Value 2' => 420), 0);
-$customForm->submitLabel = 'Submit Custom Form';
-$customForm->sdmFormBuildForm();
+$submittedDefaultFormValues = $defaultForm->sdmFormGetSubmittedFormValue();
+foreach ($submittedDefaultFormValues as $valKey => $valValue) {
+    $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($valKey . ': ' . $valValue, array('elementType' => 'p', 'styles' => array('color: red')));
+}
 
-$output .= '<h1>Demo Forms</h1>';
-$output .= '<div class="sdm-dev-output-background sdm-dev-output-border sdm-dev-output-rounded-border sdm-dev-output-float-left sdm-dev-output-height sdm-dev-output-half-wide sdm-dev-output-padding-all sdm-dev-output-margin-bottom"><h3>Default Form</h3>' . $defaultForm->sdmFormGetForm() . '</div>';
-$output .= '<div class="sdm-dev-output-background sdm-dev-output-border sdm-dev-output-rounded-border sdm-dev-output-float-right sdm-dev-output-height sdm-dev-output-half-wide sdm-dev-output-padding-all sdm-dev-output-margin-bottom"><h3>Custom Form</h3>' . $customForm->sdmFormGetForm() . '</div>';
+$attributes = array(
+    'classes' => explode(' ', 'sdm-dev-output-background sdm-dev-output-border sdm-dev-output-rounded-border sdm-dev-output-float-left sdm-dev-output-height sdm-dev-output-half-wide sdm-dev-output-padding-all sdm-dev-output-margin-bottom'),
+    'elementType' => 'div',
+);
+//$output .= $sdmassembler->sdmCoreSdmReadArrayBuffered($attributes);
+$output .= $sdmassembler->sdmAssemblerAssembleHtmlElement('<h3>Default Form</h3>' . $defaultForm->sdmFormGetForm(), $attributes);
 
-$output .= '<div class="clear-both"></div>';
-$output .= '<h3>Individual Form Elements</h3>';
-$output .= $customForm->sdmFormOpenForm();
-$output .= $customForm->sdmFormGetFormElementHtml('customSelect');
-$output .= $customForm->sdmFormCloseForm();
 
 $sdmassembler->sdmAssemblerIncorporateAppOutput($output, ['incpages' => ['SdmDevOutput']]);
