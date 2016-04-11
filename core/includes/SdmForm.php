@@ -10,6 +10,7 @@
  * @todo Make sure post is used when method not specified.
  * @todo Make it possible to asign classes to the form and the form elements via the
  *       new $formClass and $formElementClasses properties respectively.
+ * @todo Some values are not being encoded, fix this as this could lead to security issues.
  */
 
 /**
@@ -155,8 +156,9 @@ class SdmForm
      *
      * Basically, this is method is static for accessibility.
      *
-     * @param string $key The submitted values key. This method can retrieve any submitted form value that still exists
+     * @param $key string The submitted values key. This method can retrieve any submitted form value that still exists
      *                    in either post, get, or (session).
+     *
      *
      * All SdmForm() values are stored in POST or GET under the 'SdmForm' array and indexed by $key. For example,
      * to grab the value stored in $_POST['SdmForm']['key'] call sdmFormGetSubmittedFormValue('key').
@@ -166,25 +168,31 @@ class SdmForm
      *
      * @return mixed The submitted form value or null on failure.
      */
-    public static function sdmFormGetSubmittedFormValue($key)
+    public static function sdmFormGetSubmittedFormValue($key = 'all')
     {
-        /* If $key is not a string then just use the $key as the data. This allows arrays to be retrieved. */
-        if (!is_string($key) === true) {
-            /* Use $key as data. */
-            $data = $key;
-        } else {
-            if (isset($_POST['SdmForm'][$key]) === true) {
-                /* Get value from post. */
-                $value = $_POST['SdmForm'][$key];
+        switch ($key === 'all') {
+            case true:
+                $data = $_POST['SdmForm'];
+                break;
+            default:
+                /* If $key is not a string then just use the $key as the data. This allows arrays to be retrieved. */
+                if (!is_string($key) === true) {
+                    /* Use $key as data. */
+                    $data = $key;
+                } else {
+                    if (isset($_POST['SdmForm'][$key]) === true) {
+                        /* Get value from post. */
+                        $value = $_POST['SdmForm'][$key];
 
-                /* Decode the value. */
-                $data = SdmForm::sdmFormDecode($value);
-            } else {
-                /* No value was found in the SdmForm array so set $data to null. */
-                $data = null;
-            }
+                        /* Decode the value. */
+                        $data = SdmForm::sdmFormDecode($value);
+                    } else {
+                        /* No value was found in the SdmForm array so set $data to null. */
+                        $data = null;
+                    }
+                }
+            /* Return the $data. */
         }
-        /* Return the $data. */
         return $data;
     }
 
