@@ -6,26 +6,6 @@
     border-radius: 9px;
 }
 
-.sdm-dev-output-quarter-wide {
-    width: 20%;
-}
-
-.sdm-dev-output-half-wide {
-    width: 49%;
-}
-
-.sdm-dev-output-three-quarter-wide {
-    width: 70%;
-}
-
-.sdm-dev-output-full-width {
-    width: 95%;
-}
-
-.sdm-dev-output-background {
-    background: #508882;
-}
-
 .sdm-dev-output-padding-all {
     padding: 20px;
 }
@@ -80,10 +60,6 @@
 
 .sdm-dev-output-position-static {
     position: static;
-}
-
-.sdm-dev-output-height {
-    height: 944px;
 }
 
 .sdm-dev-output-margin-all {
