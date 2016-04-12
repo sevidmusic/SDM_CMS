@@ -177,36 +177,48 @@ class SdmForm
      * Note: Only top level values can be retrieved from the 'SdmForm' array, it is not possible to grab $_POST['SdmForm']['key']['subKey']
      * you will have to call sdmFormGetSubmittedFormValue('key') and recurse through the sub array values yourself.
      *
-     * @return mixed The submitted form value or null on failure.
+     * @return mixed The submitted form value or null on failure..
      */
-    public static function sdmFormGetSubmittedFormValue($key = 'all')
+    public static function sdmFormGetSubmittedFormValue($key = 'all', $method = 'post')
     {
-        switch ($key === 'all') {
-            case true:
-                if (isset($_POST['SdmForm']) === true) {
-                    $data = $_POST['SdmForm'];
-                } else {
-                    $data = null;
-                }
-                break;
-            default:
-                /* If $key is not a string then just use the $key as the data. This allows arrays to be retrieved. */
-                if (!is_string($key) === true) {
-                    /* Use $key as data. */
-                    $data = $key;
-                } else {
-                    if (isset($_POST['SdmForm'][$key]) === true) {
-                        /* Get value from post. */
-                        $value = $_POST['SdmForm'][$key];
-
-                        /* Decode the value. */
-                        $data = SdmForm::sdmFormDecode($value);
+        /* While this method remians static there is no accsess to $this so the form method must be specified. */
+        if ($method !== null) {
+            // variable variables
+            $post = $_POST;
+            $get = $_GET;
+            $session = $_SESSION;
+            $method = $method;//$this->method;
+            $submittedData = $$method;
+            switch ($key === 'all') {
+                case true:
+                    if (isset($submittedData['SdmForm']) === true) {
+                        $data = $submittedData['SdmForm'];
                     } else {
-                        /* No value was found in the SdmForm array so set $data to null. */
                         $data = null;
                     }
-                }
-            /* Return the $data. */
+                    break;
+                default:
+                    /* If $key is not a string then just use the $key as the data. This allows arrays to be retrieved. */
+                    if (!is_string($key) === true) {
+                        /* Use $key as data. */
+                        $data = $key;
+                    } else {
+                        if (isset($submittedData['SdmForm'][$key]) === true) {
+                            /* Get value from post. */
+                            $value = $submittedData['SdmForm'][$key];
+
+                            /* Decode the value. */
+                            $data = SdmForm::sdmFormDecode($value);
+                        } else {
+                            /* No value was found in the SdmForm array so set $data to null. */
+                            $data = null;
+                        }
+                    }
+                /* Return the $data. */
+            }
+        } else {
+            error_log('Call to method SdmForm::sdmFormGetSubmittedFormValue(). Missing second parameter $method.');
+            $data = null;
         }
         return $data;
     }

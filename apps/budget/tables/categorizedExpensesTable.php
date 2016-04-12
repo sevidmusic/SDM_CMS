@@ -14,25 +14,16 @@ switch ($budgetLoaded) {
             ? json_decode($selectSavedBudgetForm->sdmFormGetSubmittedFormValue('categorizedExpenses'), true)
             : array(
             'Misc' => array(
-                'Cigarettes' => 10.25 * 7,
-                'Golf' => 80,
-                'Drinks' => 0,
+                'Cigarettes' => 10.25 * 4,
             ),
             'Transportation' => array(
-                'Tolls' => 13.50,
-                'Gas' => 73,
-            ),
-            'Food' => array(
-                'For us' => 56.50,
+                'Tolls' => 1.5 * 3,
+                'Gas' => 20,
             ),
             'Bills' => array(
                 'Geico' => 50.60,
                 'PhpStorm' => 8.90,
             ),
-            /*'Paycheck' => array(
-              'If check' => 4 * (7 * (15 - (15 * .25))),
-              'If cash' => 4 * (7 * 15),
-            ),*/
         )
         );
         break;

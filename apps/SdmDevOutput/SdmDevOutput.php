@@ -16,7 +16,7 @@ $output = '<!-- Sdm Dev Output App Placeholder -->' . $description;
 /* Build form using default values */
 $defaultForm = new SdmForm();
 $defaultForm->formHandler = 'SdmDevOutput';
-$defaultForm->method = 'get';
+$defaultForm->method = 'post';
 $defaultForm->sdmFormUseDefaultFormElements();
 $defaultForm->submitLabel = 'Submit';
 $defaultForm->sdmFormBuildForm();
@@ -27,17 +27,22 @@ $attributes = array(
 );
 //$output .= $sdmassembler->sdmCoreSdmReadArrayBuffered($attributes);
 $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement('<h3>Default Form</h3>' . $defaultForm->sdmFormGetForm(), $attributes);
+$output .= '<div class="sdm-dev-output-clear-both"></div>';
 
-$sdmassembler->sdmCoreSdmReadArray(
-    [
-        '$_POST' => $_POST,
-        '$_GET' => $_GET['SdmForm'],
-        '$_SESSION' => $_SESSION,
-        '$_SERVER' => $_SERVER,
-        'SdmForm' => ($defaultForm->sdmFormGetSubmittedFormValue() !== null ? $defaultForm->sdmFormGetSubmittedFormValue() : 'No Submitted Form Data'),
-        //'$defaultForm' => $defaultForm,
-    ]
-);
+$output .= '<ul>';
+foreach($defaultForm->sdmFormGetSubmittedFormValue() as $submittedKey => $submittedValue) {
+    $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($submittedKey . ' => ' . $submittedValue, array('elementType' => 'li', 'styles' => array('color: palegreen', 'font-size: .7em')));
+}
+$output .= '</ul>';
+
+/* variable variables
+$post = $_POST;
+$get = $_GET;
+$session = $_SESSION;
+$method = 'session';
+$data = $$method;
+*/
+$output .= $sdmassembler->sdmCoreSdmReadArrayBuffered($data);
 
 $sdmassembler->sdmAssemblerIncorporateAppOutput($output, ['incpages' => ['SdmDevOutput']]);
 
