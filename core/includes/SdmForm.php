@@ -170,6 +170,9 @@ class SdmForm
      * @param $key string The submitted values key. This method can retrieve any submitted form value that still exists
      *                    in either post, get, or (session).
      *
+     * @param $method string The method the form value was submitted through. Determines whether to look for value
+     *                       in $_POST, $_GET, or $_SESSION. (options: 'post', 'get', 'session', defaults to 'post')
+     *
      *
      * All SdmForm() values are stored in POST or GET under the 'SdmForm' array and indexed by $key. For example,
      * to grab the value stored in $_POST['SdmForm']['key'] call sdmFormGetSubmittedFormValue('key').
@@ -181,44 +184,52 @@ class SdmForm
      */
     public static function sdmFormGetSubmittedFormValue($key = 'all', $method = 'post')
     {
-        /* While this method remians static there is no accsess to $this so the form method must be specified. */
-        if ($method !== null) {
-            // variable variables
-            $post = $_POST;
-            $get = $_GET;
-            $session = $_SESSION;
-            $method = $method;//$this->method;
-            $submittedData = $$method;
-            switch ($key === 'all') {
-                case true:
-                    if (isset($submittedData['SdmForm']) === true) {
-                        $data = $submittedData['SdmForm'];
-                    } else {
-                        $data = null;
-                    }
-                    break;
-                default:
-                    /* If $key is not a string then just use the $key as the data. This allows arrays to be retrieved. */
-                    if (!is_string($key) === true) {
-                        /* Use $key as data. */
-                        $data = $key;
-                    } else {
-                        if (isset($submittedData['SdmForm'][$key]) === true) {
-                            /* Get value from post. */
-                            $value = $submittedData['SdmForm'][$key];
+        $supportedMethods = array('post', 'get',); // @todo : add support for 'session'
+        switch (in_array($method, $supportedMethods, true)) {
+            case true:
+                /* While this method remians static there is no accsess to $this so the form method must be specified. */
+                if ($method !== null) {
+                    // variable variables
+                    $post = $_POST;
+                    $get = $_GET;
+                    $session = $_SESSION;
+                    $method = $method;//$this->method;
+                    $submittedData = $$method;
+                    switch ($key === 'all') {
+                        case true:
+                            if (isset($submittedData['SdmForm']) === true) {
+                                $data = $submittedData['SdmForm'];
+                            } else {
+                                $data = null;
+                            }
+                            break;
+                        default:
+                            /* If $key is not a string then just use the $key as the data. This allows arrays to be retrieved. */
+                            if (!is_string($key) === true) {
+                                /* Use $key as data. */
+                                $data = $key;
+                            } else {
+                                if (isset($submittedData['SdmForm'][$key]) === true) {
+                                    /* Get value from post. */
+                                    $value = $submittedData['SdmForm'][$key];
 
-                            /* Decode the value. */
-                            $data = SdmForm::sdmFormDecode($value);
-                        } else {
-                            /* No value was found in the SdmForm array so set $data to null. */
-                            $data = null;
-                        }
+                                    /* Decode the value. */
+                                    $data = SdmForm::sdmFormDecode($value);
+                                } else {
+                                    /* No value was found in the SdmForm array so set $data to null. */
+                                    $data = null;
+                                }
+                            }
+                        /* Return the $data. */
                     }
-                /* Return the $data. */
-            }
-        } else {
-            error_log('Call to method SdmForm::sdmFormGetSubmittedFormValue(). Missing second parameter $method.');
-            $data = null;
+                } else {
+                    error_log('Call to method SdmForm::sdmFormGetSubmittedFormValue(). Missing second parameter $method.');
+                    $data = null;
+                }
+                break;
+            default:
+                error_log('Unsupported method "' . strval($method) . '" passed to $method in call to sdmFormGetSubmittedFormValue().');
+                $data = null;
         }
         return $data;
     }
@@ -424,7 +435,7 @@ class SdmForm
                 'id' => 'text_form_element',
                 'type' => 'text',
                 'element' => 'Default Text Element',
-                'value' => '',
+                'value' => 'Enter some text',
                 'place' => '0',
             ),
             /* default textarea form element */
@@ -432,7 +443,7 @@ class SdmForm
                 'id' => 'textarea_form_element',
                 'type' => 'textarea',
                 'element' => 'Default Text Area Element',
-                'value' => '',
+                'value' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam convallis nec felis at lobortis. Sed eleifend molestie nunc, id tristique dui eleifend vitae. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nullam ligula ipsum, vestibulum et malesuada eget, commodo sed arcu. Phasellus non luctus libero. Suspendisse consectetur mollis eros, non ultrices ex malesuada nec. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Pellentesque hendrerit lorem et ipsum sodales egestas sed a felis. Quisque efficitur suscipit congue. Mauris in dolor tincidunt, venenatis metus at, elementum tortor. Morbi lacinia velit est, eu elementum ante dictum vitae. Mauris congue ligula tincidunt neque aliquet luctus. Aliquam id dui finibus, semper ex id, vulputate magna. Sed dignissim justo sapien, ac viverra enim iaculis iaculis. Curabitur vestibulum, ex eget vestibulum feugiat, est ante volutpat urna, semper venenatis orci quam ut risus.',
                 'place' => '3',
             ),
             /* default password form element */
@@ -440,7 +451,7 @@ class SdmForm
                 'id' => 'password_form_element',
                 'type' => 'password',
                 'element' => 'Default Password Element',
-                'value' => 'password',
+                'value' => '',
                 'place' => '3',
             ),
             /* default select form element */
