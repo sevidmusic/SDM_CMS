@@ -190,9 +190,9 @@ class SdmForm
                 /* While this method remians static there is no accsess to $this so the form method must be specified. */
                 if ($method !== null) {
                     // variable variables
-                    $post = $_POST;
-                    $get = $_GET;
-                    $session = $_SESSION;
+                    $post = filter_input_array(INPUT_POST, FILTER_UNSAFE_RAW);
+                    $get = filter_input_array(INPUT_GET, FILTER_UNSAFE_RAW);
+                    // $session = $_SESSION; // not yet supported
                     $method = $method;//$this->method;
                     $submittedData = $$method;
                     switch ($key === 'all') {

@@ -15,7 +15,7 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmDevOutput') {
     /* DEV FORM */
     $defaultForm = new SdmForm();
     $defaultForm->formHandler = 'SdmDevOutput';
-    $defaultForm->method = 'get';
+    $defaultForm->method = 'post';
     $defaultForm->sdmFormUseDefaultFormElements();
     $defaultForm->submitLabel = 'Submit';
     $defaultForm->sdmFormBuildForm();
@@ -25,7 +25,7 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmDevOutput') {
     $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($defaultFormHtml, array('styles' => array('background: #33CC66', 'border: 3px solid #33CCFF', 'border-radius: 5px', 'padding: 20px')));
     /* DISPLAY SUBMITTED FORM VALUES */
     $output .= '<ul>';
-    $submittedValues = $defaultForm->sdmFormGetSubmittedFormValue('all', 'get');
+    $submittedValues = $defaultForm->sdmFormGetSubmittedFormValue('all', $defaultForm->method);
     if (!empty($submittedValues) && $submittedValues !== null) {
         $output .= '<h3>Form values submitted via ' . ($defaultForm->method === 'get' ? '$_GET' : '$_POST') . '</h3>';
         foreach ($submittedValues as $submittedKey => $submittedValue) {
