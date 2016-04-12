@@ -11,6 +11,17 @@
  * @todo Make it possible to asign classes to the form and the form elements via the
  *       new $formClass and $formElementClasses properties respectively.
  * @todo Some values are not being encoded, fix this as this could lead to security issues.
+ * @todo Thinks about adding a feature to have form object automatically preserve submitted form values.
+ *          i.e.,
+ *              new property $preserveSubmittedValues = true || false;
+ *              if $preserveSubmittedValues === true
+ *                  during call to sdmFormBuildFormElements() check if element already has a submitted
+ *                  value and use it if it does.
+ *                  if submittedValue === true
+ *                      elementValue = submittedVlaue
+ *                  else
+ *                      build element normally
+ *
  */
 
 /**
@@ -172,7 +183,11 @@ class SdmForm
     {
         switch ($key === 'all') {
             case true:
-                $data = $_POST['SdmForm'];
+                if (isset($_POST['SdmForm']) === true) {
+                    $data = $_POST['SdmForm'];
+                } else {
+                    $data = null;
+                }
                 break;
             default:
                 /* If $key is not a string then just use the $key as the data. This allows arrays to be retrieved. */
@@ -545,7 +560,7 @@ class SdmForm
            html as items in an array. */
         $this->formElementHtml = array();
 
-        /* Build form elements. */ // @todo : appending to $formElementsHtml causes element html to get appened to other element's html in te formElementHtml() property. To solve this create a new var $elementsHtml which will replace $formElementsHtml. $formElementsHtml will remain but will now be used to add to the $formElementsHtml
+        /* Build form elements. */
         foreach ($this->formElements as $key => $value) {
             switch ($value['type']) {
                 case 'text':
@@ -557,7 +572,7 @@ class SdmForm
                     break;
                 case 'password':
                     /* Build element html and add $formElementsHtml to $this->formElementHtml array. */
-                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><input name="SdmForm[' . $value['id'] . ']" type="password" ' . (isset($value['value']) ? 'value="' . $value['value'] . '"' : '') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><input name="SdmForm[' . $value['id'] . ']" type="password" ' . (isset($value['value']) ? 'value="' . $this->sdmFormEncode($value['value']) . '"' : '') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
 
                     /*  Add form element html to $this->form  */
                     $formElementsHtml .= $this->formElementHtml[$value['id']];
@@ -681,7 +696,7 @@ class SdmForm
          */
         if ($this->method === 'get') {
             $actionParams = '<!-- built-in form element "page" -->';
-            $actionParams .= '<input type="hidden" name="SdmForm[page]" value="' . $this->formHandler . '">';
+            $actionParams .= '<input type="hidden" name="page" value="' . $this->formHandler . '">';
             $actionParams .= '<!-- close built-in form element "page" -->';
             $closingFormHtml .= $actionParams;
         }

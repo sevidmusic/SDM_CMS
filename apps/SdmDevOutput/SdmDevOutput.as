@@ -1,1 +1,1 @@
-stylesheets = css / SdmDevOutput;
+stylesheets=css/SdmDevOutput;

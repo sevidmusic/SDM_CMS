@@ -28,7 +28,16 @@ $attributes = array(
 //$output .= $sdmassembler->sdmCoreSdmReadArrayBuffered($attributes);
 $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement('<h3>Default Form</h3>' . $defaultForm->sdmFormGetForm(), $attributes);
 
-$output .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['post' => $_POST, 'get' => $_GET, 'session' => $_SESSION, 'SdmForm' => $defaultForm->sdmFormGetSubmittedFormValue(), 'Default Form Object' => $defaultForm]);
+$sdmassembler->sdmCoreSdmReadArray(
+    [
+        '$_POST' => $_POST,
+        '$_GET' => $_GET['SdmForm'],
+        '$_SESSION' => $_SESSION,
+        '$_SERVER' => $_SERVER,
+        'SdmForm' => ($defaultForm->sdmFormGetSubmittedFormValue() !== null ? $defaultForm->sdmFormGetSubmittedFormValue() : 'No Submitted Form Data'),
+        //'$defaultForm' => $defaultForm,
+    ]
+);
 
 $sdmassembler->sdmAssemblerIncorporateAppOutput($output, ['incpages' => ['SdmDevOutput']]);
 
