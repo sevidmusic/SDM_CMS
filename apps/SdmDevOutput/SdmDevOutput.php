@@ -71,6 +71,14 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmDevOutput') {
 
     $output .= '</ul>';
 
+    $available_filters = filter_list();
+    foreach ($available_filters as $filter) {
+        $filters[$filter] = strtoupper($filter);
+    }
+
+    /*  */
+    $output .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['filters' => $filters]);
+
     /* Display app $output */
     $sdmassembler->sdmAssemblerIncorporateAppOutput($output, ['incpages' => ['SdmDevOutput']]);
 
