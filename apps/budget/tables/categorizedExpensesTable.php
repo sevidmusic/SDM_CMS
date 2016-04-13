@@ -18,7 +18,7 @@ switch ($budgetLoaded) {
             ),
             'Transportation' => array(
                 'Tolls' => 1.5 * 3,
-                'Gas' => 20,
+                'Gas' => 12,
             ),
             'Bills' => array(
                 'Geico' => 50.60,
