@@ -73,7 +73,7 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmDevOutput') {
 
     $available_filters = filter_list();
     foreach ($available_filters as $filter) {
-        $filters[$filter] = strtoupper($filter);
+        $filters[$filter] = filter_id($filter);
     }
 
     /*  */
