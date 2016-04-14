@@ -6,7 +6,7 @@
 
 <!-- row 1 -->
 <div class="row row-min-wid-fix">
-    <div id="top-menu" class="col-12 col-m-12 border-bottom">
+    <div id="locked_top-menu" class="col-12 col-m-12 border-bottom">
         <?php
         echo $sdmassembler->sdmAssemblerGetContentHtml('top-menu');
         ?>
@@ -20,7 +20,7 @@
     $sideBarExists = (in_array($sidebar, $sidebarInvalidValues) === true ? false : true);
     if ($sideBarExists === true) {
         ?>
-        <div id="side-menu" class="col-3 col-m-3 rounded">
+        <div id="locked_side-menu" class="col-3 col-m-3 rounded">
             <?php
             echo $sdmassembler->sdmAssemblerGetContentHtml('side-menu');
             ?>    </div>

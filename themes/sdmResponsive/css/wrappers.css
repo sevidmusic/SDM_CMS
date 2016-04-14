@@ -7,7 +7,7 @@
 */
 
 /* Wrappers */
-#side-menu, #main_content {
+#locked_side-menu, #main_content {
     background: #0C1923;
     opacity: 0.69;
 }
