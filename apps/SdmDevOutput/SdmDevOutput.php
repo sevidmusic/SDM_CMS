@@ -42,7 +42,7 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmDevOutput') {
 
     /* Get submitted values */
     $submittedValues = $defaultForm->sdmFormGetSubmittedFormValue('all', $defaultForm->method);
-
+    $devOutput = $sdmassembler->sdmCoreSdmReadArrayBuffered(['$submittedValues' => $submittedValues]);
     /* If there are submitted values display them. */
     if (!empty($submittedValues) && $submittedValues !== null) {
         /* Initialize submittedValuesDisplay string. */
@@ -111,6 +111,10 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmDevOutput') {
         /* Output $submittedValuesList */
         $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($submittedValuesList, array('elementType' => 'div'));
     }
+
+    /* DEV OUTPUT */
+    $output .= $devOutput;
+
     /* Output $defaultFormHtml */
     $output .= $defaultFormHtml;
 

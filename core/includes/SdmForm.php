@@ -207,6 +207,9 @@ class SdmForm
      *                                  'variable3' => 516,
      *                               );
      *
+     *                              Note: The $parameters parameter also accepts a string specifying the method the
+     *                                    form values were submitted through. i.e., post, get, or session
+     *
      *
      *
      * All SdmForm() values are stored in POST or GET under the 'SdmForm' array and indexed by $key. For example,
@@ -219,12 +222,30 @@ class SdmForm
      *          This mean values will be returned UNFILTERED!!! Be sure to specify an appropriate
      *          $parameters['filterOptions'] to make submitted input a little safer to use.
      *
+     * WARNING: Session is not yet supported as a method. It will be, but at the moment any attempt to use it will fail.
      * @return mixed The submitted form value or null on failure.
      */
-    public static function sdmFormGetSubmittedFormValue($key = all, $parameters = array())
+    public static function sdmFormGetSubmittedFormValue($key = 'all', $parameters = array())
     {
         /* Configure supported methods. */
         $supportedMethods = array('post', 'get',); // @todo : add support for 'session'
+
+        /* If parameters is a string rrebuild it to fit the $parameter['method'] array structure. */
+        if (is_string($parameters) === true) {
+            switch (in_array($parameters, $supportedMethods, true)) {
+                case true:
+                    $string = strval($parameters);
+                    unset($parameters);
+                    $parameters = array('method' => $string);
+                    break;
+                default:
+                    $message = 'Bad call to sdmFormGetSubmittedFormValue(<span style="color: green;">$key</span>, <span style="color: red">$parameters</span>): ';
+                    $message .= "sdmFormGetSubmittedFormValue(<span id='parameterOk' style='color:green;'>'$key'</span>, <span id='badParameter' style='color:red;'>'$parameters'</span>). ";
+                    $message .= 'If $parameters is a string it must be one of the following: ' . implode(', ', $supportedMethods);
+                    error_log($message);
+                    return null;
+            }
+        }
 
         /**
          * @var $method string This variable will serve as a "variable" variable whose value
