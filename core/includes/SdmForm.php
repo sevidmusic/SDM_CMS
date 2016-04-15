@@ -167,11 +167,46 @@ class SdmForm
      *
      * Basically, this is method is static for accessibility.
      *
-     * @param $key string The submitted values key. This method can retrieve any submitted form value that still exists
+     * @param $key string The submitted value's key. This method can retrieve any submitted form value that still exists
      *                    in either post, get, or (session).
      *
-     * @param $method string The method the form value was submitted through. Determines whether to look for value
-     *                       in $_POST, $_GET, or $_SESSION. (options: 'post', 'get', 'session', defaults to 'post')
+     * @param $parameters array Associative array of parameters that determine how the value is retrieved. The following
+     *                          parameters are supported, and are indexed by key: 'method', 'filterOptions'.
+     *                          Below are more detailed descriptions of each key's function, and how to define it.
+     *
+     *
+     *                          [method] string The method the form value was submitted through. Determines whether to
+     *                                          look for value in $_POST, $_GET, or $_SESSION.
+     *                                          (options: 'post', 'get', 'session' | Defaults to 'post')
+     *
+     *                          [filterOptions] mixed $filterOptions A php filter constant or an array of filters flags
+     *                                                               and options. Same as $definition* parameter for
+     *                                                               PHP's filter_input_array() function.
+     *                                                               (Defaults to FILTER_UNSAFE_RAW)
+     *
+     *                           * From the PHP man pages:
+     *
+     *                              "$definition (mixed):
+     *                               An array defining the "filter" arguments. A valid key is a string containing a
+     *                               variable name and a valid value is either a filter type, or an array optionally
+     *                               specifying the filter, flags and options. If the value is an array, valid keys
+     *                               are filter which specifies the filter type, flags which specifies any flags that
+     *                               apply to the filter, and options which specifies any options that apply to the
+     *                               filter. This parameter can be also an integer holding a filter constant. Then
+     *                               all values in the input array are filtered by this filter."
+     *
+     *                               Example of using array to specify filters flags and options:
+     *
+     *                               array (
+     *                                  'variable1' => FILTER_UNSAFE_RAW,
+     *                                  'variable2' => array(
+     *                                      'filter' => FILTER_UNSAFE_RAW,
+     *                                      'flags' => array(),
+     *                                      'options' => array(),
+     *                                  ),
+     *                                  'variable3' => 516,
+     *                               );
+     *
      *
      *
      * All SdmForm() values are stored in POST or GET under the 'SdmForm' array and indexed by $key. For example,
@@ -180,23 +215,41 @@ class SdmForm
      * Note: Only top level values can be retrieved from the 'SdmForm' array, it is not possible to grab $_POST['SdmForm']['key']['subKey']
      * you will have to call sdmFormGetSubmittedFormValue('key') and recurse through the sub array values yourself.
      *
-     * @return mixed The submitted form value or null on failure..
+     * WARNING: If no filters are passed to $parameters['filterOptions'] then the FILTER_UNSAFE_RAW filter will be used.
+     *          This mean values will be returned UNFILTERED!!! Be sure to specify an appropriate
+     *          $parameters['filterOptions'] to make submitted input a little safer to use.
+     *
+     * @return mixed The submitted form value or null on failure.
      */
-    public static function sdmFormGetSubmittedFormValue($key = 'all', $method = 'post')
+    public static function sdmFormGetSubmittedFormValue($key = all, $parameters = array())
     {
+        /* Configure supported methods. */
         $supportedMethods = array('post', 'get',); // @todo : add support for 'session'
+
+        /**
+         * @var $method string This variable will serve as a "variable" variable whose value
+         * will be used to determine whether to pass the filtered $get, $post, or, when supported,
+         * $session array to the $submittedData variable.
+         */
+        $method = (isset($parameters['method']) === true ? $parameters['method'] : 'post');
+
+        /* Build filterOptions array. This array defines the filters and flags to use, the default is
+           to use the FILTER_UNSAFE_RAW filter constant. */
+        $filterOptions = (isset($parameters['filterOptions']) === true ? $parameters['filterOptions'] : FILTER_UNSAFE_RAW);
+
+        /* If specified method is supported, get submitted values, otherwise log an error and
+           set $data to null. */
         switch (in_array($method, $supportedMethods, true)) {
             case true:
-                /* While this method remians static there is no accsess to $this so the form method must be specified. */
+                /* Since this method is static there is no internal way to determine
+                   the submitted forms method, so it must be specified. */
                 if ($method !== null) {
-                    // variable variables
-                    $post = filter_input_array(INPUT_POST, FILTER_UNSAFE_RAW);
-                    $get = filter_input_array(INPUT_GET, FILTER_UNSAFE_RAW);
-                    // $session = $_SESSION; // not yet supported
-                    $method = $method;//$this->method;
-                    $submittedData = $$method;
+                    /* Get filtered submitted form data. */
+                    $submittedData = SdmForm::sdmFormGetFilteredValues($method, $filterOptions);
+                    /* If the special 'all' value is passed the key then return all values. */
                     switch ($key === 'all') {
                         case true:
+                            /* Make sure SdmForm exists, if it doesn't set $data to null. */
                             if (isset($submittedData['SdmForm']) === true) {
                                 $data = $submittedData['SdmForm'];
                             } else {
@@ -204,11 +257,13 @@ class SdmForm
                             }
                             break;
                         default:
-                            /* If $key is not a string then just use the $key as the data. This allows arrays to be retrieved. */
+                            /* If $key is not a string then just use the $key as the data.
+                               This allows arrays to be retrieved. */
                             if (!is_string($key) === true) {
                                 /* Use $key as data. */
                                 $data = $key;
                             } else {
+                                /* Make sure $key exists in the SdmForm array. */
                                 if (isset($submittedData['SdmForm'][$key]) === true) {
                                     /* Get value from post. */
                                     $value = $submittedData['SdmForm'][$key];
@@ -220,8 +275,7 @@ class SdmForm
                                     $data = null;
                                 }
                             }
-                        /* Return the $data. */
-                    }
+                    } // end switch ($key === 'all') //
                 } else {
                     error_log('Call to method SdmForm::sdmFormGetSubmittedFormValue(). Missing second parameter $method.');
                     $data = null;
@@ -232,6 +286,60 @@ class SdmForm
                 $data = null;
         }
         return $data;
+    }
+
+    /**
+     * Utilizes PHP's filter_input_array() to retrieve and filter the values submitted via
+     * the specified $method. Filters are applied based on the $filterOptions array.
+     *
+     * For example:
+     *   SdmForm::sdmFormGetFilteredValues('post', FILTER_UNSAFE_RAW);
+     *
+     * Note: This method is meant to be used internally by the SdmForm::sdmFormGetSubmittedFormValue() method.
+     *
+     * @param $method string The method the values were submitted through. (options: post, get, session)
+     *
+     * @param $filterOptions mixed A php filter constant or an array of filters, flags, and
+     *                             options. Same as $definition* parameter for PHP's
+     *                             filter_input_array() function.
+     *                             (Defaults to FILTER_UNSAFE_RAW)
+     *
+     *                           * From the PHP man pages:
+     *
+     *                              "$definition (mixed):
+     *                               An array defining filter the arguments. A valid key is a string containing a
+     *                               variable name and a valid value is either a filter type, or an array optionally
+     *                               specifying the filter, flags and options. If the value is an array, valid keys
+     *                               are filter which specifies the filter type, flags which specifies any flags that
+     *                               apply to the filter, and options which specifies any options that apply to the
+     *                               filter. This parameter can be also an integer holding a filter constant. Then
+     *                               all values in the input array are filtered by this filter."
+     *
+     *                               Example of using array to specify filters flags and options:
+     *
+     *                               $filterOptions = array (
+     *                                                  'variable1' => FILTER_UNSAFE_RAW,
+     *                                                  'variable2' => array(
+     *                                                      'filter' => FILTER_UNSAFE_RAW,
+     *                                                      'flags' => array(),
+     *                                                      'options' => array(),
+     *                                                  ),
+     *                                                  'variable3' => 516,
+     *                                                );
+     *
+     * @return array Array of the filtered values.
+     */
+    private static function sdmFormGetFilteredValues($method, $filterOptions)
+    {
+        /* Array of supported variables. */
+        $supportedVariables = array('post' => INPUT_POST, 'get' => INPUT_GET); // @todo add session
+
+        /* Filter the appropriate array. */
+        $filteredValues = filter_input_array($supportedVariables[$method], $filterOptions, true);
+
+        /* Return the post, get, or session array to the $submittedData array
+           based on $method. */
+        return $filteredValues;
     }
 
     /**
