@@ -7,77 +7,112 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmDevOutput') {
      * the output via sdmAssemblerIncorporateAppOutput().
      */
 
-    $description = '<h1>Sdm Dev Output App</h1><p>This app is intended for use by developers.
-                    With it php snippets can be tested. Just add the code to test to the
-                    SdmDevOutput.php file.</p>';
-    $output = '<!-- Sdm Dev Output App Placeholder -->' . $description;
+    /* Identifying html comment. */
+    $identifierComment = '<!-- Sdm Dev Output App -->';
 
-    /* DEV FORM */
+    /* App description header. */
+    $descriptionHeader = 'Sdm Dev Output App.';
+
+    /* App description. */
+    $description = 'This app is intended for use by developers. With it php snippets can be tested.';
+
+    /* App description continued... */
+    $description .= 'Just add the code to test to the SdmDevOutput.php file.';
+
+    /* Dev Form */
     $defaultForm = new SdmForm();
     $defaultForm->formHandler = 'SdmDevOutput';
     $defaultForm->method = 'post';
     $defaultForm->sdmFormUseDefaultFormElements();
     $defaultForm->submitLabel = 'Submit';
     $defaultForm->sdmFormBuildForm();
-    $defaultFormHtml = $defaultForm->sdmFormGetForm();
 
-    /* DISPLAY FORM */
-    $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($defaultFormHtml, array('styles' => array('background: #33CC66', 'border: 3px solid #33CCFF', 'border-radius: 5px', 'padding: 20px')));
-    /* DISPLAY SUBMITTED FORM VALUES */
-    $output .= '<ul>';
+    /* Element attributes for the $defaultForm's container element. */
+    $defaultFormElementAttributes = array(
+        'styles' => array(
+            'background: #33CC66',
+            'border: 3px solid #33CCFF',
+            'border-radius: 5px',
+            'padding: 20px'
+        )
+    );
+
+    /* Form html. */
+    $defaultFormHtml = $sdmassembler->sdmAssemblerAssembleHtmlElement($defaultForm->sdmFormGetForm(), $defaultFormElementAttributes);
+
+    /* Get submitted values */
     $submittedValues = $defaultForm->sdmFormGetSubmittedFormValue('all', $defaultForm->method);
+
+    /* If there are submitted values display them. */
     if (!empty($submittedValues) && $submittedValues !== null) {
-        $output .= '<h3>Form values submitted via ' . ($defaultForm->method === 'get' ? '$_GET' : '$_POST') . '</h3>';
+        /* Initialize submittedValuesDisplay string. */
+        $submittedValuesListItem = 'Form values submitted via ' . ($defaultForm->method === 'get' ? '$_GET' : '$_POST');
+
+        /* Element attributes for submitted form display elements */
+        $submittedKeyAttributes = array(
+            'styles' => array(
+                'background: #333333'
+            ),
+            'classes' => array(
+                'sdm-dev-output-padding-all',
+                'sdm-dev-output-rounded-border',
+            ),
+        );
+
+        $submittedValueAttributes = array(
+            'styles' => array(
+                'background: #000000'
+            ),
+            'classes' => array(
+                'sdm-dev-output-padding-all',
+                'sdm-dev-output-rounded-border',
+            ),
+        );
+
+        $submittedDisplayElementAttributes = array(
+            'elementType' => 'li',
+            'styles' => array(
+                'color: palegreen',
+                'font-size: .7em',
+                'background: #33CCFF',
+                'border: 3px solid #33CC66',
+                'border-radius: 5px',
+                'padding: 20px'
+            )
+        );
+
+        /* Loop through $submittedValues adding key value pair to the $submittedValuesDisplay. */
         foreach ($submittedValues as $submittedKey => $submittedValue) {
-            $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement(
-                $sdmassembler->sdmAssemblerAssembleHtmlElement(
-                    $submittedKey,
-                    array(
-                        'styles' => array(
-                            'background: #333333'
-                        ),
-                        'classes' => array(
-                            'sdm-dev-output-padding-all',
-                            'sdm-dev-output-rounded-border',
-                        ),
-                    )
-                ) .
-                $sdmassembler->sdmAssemblerAssembleHtmlElement(
-                    $submittedValue,
-                    array(
-                        'styles' => array(
-                            'background: #000000'
-                        ),
-                        'classes' => array(
-                            'sdm-dev-output-padding-all',
-                            'sdm-dev-output-rounded-border',
-                        ),
-                    )
-                ),
-                array(
-                    'elementType' => 'li',
-                    'styles' => array(
-                        'color: palegreen',
-                        'font-size: .7em',
-                        'background: #33CCFF',
-                        'border: 3px solid #33CC66',
-                        'border-radius: 5px',
-                        'padding: 20px'
-                    )
-                )
-            );
+            /* Display for $submittedKey */
+            $submittedKeyDisplay = $sdmassembler->sdmAssemblerAssembleHtmlElement($submittedKey, $submittedKeyAttributes);
+
+            /* Display $submittedValue */
+            $submittedValueDisplay = $sdmassembler->sdmAssemblerAssembleHtmlElement($submittedValue, $submittedValueAttributes);
+
+            /* Display the key and value as items in a list. */
+            $submittedValuesListItem .= $sdmassembler->sdmAssemblerAssembleHtmlElement($submittedKeyDisplay . $submittedValueDisplay, $submittedDisplayElementAttributes);
+
         }
+
+        /* Create an unordered list of submitted elements. */
+        $submittedValuesList = $sdmassembler->sdmAssemblerAssembleHtmlElement($submittedValuesListItem, array('elementType' => 'ul'));
     }
 
-    $output .= '</ul>';
+    /* Output $identifierComment */
+    $output = $identifierComment;
 
-    $available_filters = filter_list();
-    foreach ($available_filters as $filter) {
-        $filters[$filter] = filter_id($filter);
+    /* Output $descriptionHeader */
+    $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($descriptionHeader, array('elementType' => 'h2'));
+
+    /* Output $description */
+    $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($description, array('elementType' => 'p'));
+
+    if (isset($submittedValuesList) === true) {
+        /* Output $submittedValuesList */
+        $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($submittedValuesList, array('elementType' => 'div'));
     }
-
-    /*  */
-    $output .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['filters' => $filters]);
+    /* Output $defaultFormHtml */
+    $output .= $defaultFormHtml;
 
     /* Display app $output */
     $sdmassembler->sdmAssemblerIncorporateAppOutput($output, ['incpages' => ['SdmDevOutput']]);

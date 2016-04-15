@@ -891,7 +891,6 @@ class SdmAssembler extends SdmNms
      *                                                   Styles should be defined as follows: 'parameter: value'
      * @return string The html element.
      *
-     * @todo : Move into sdmAssembler so this method can be used throughout the Sdm Cms.
      */
     public function sdmAssemblerAssembleHtmlElement($content, $attributes)
     {
