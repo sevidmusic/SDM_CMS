@@ -7,6 +7,8 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmDevOutput') {
      * the output via sdmAssemblerIncorporateAppOutput().
      */
 
+    /*** App generated content ***/
+
     /* Identifying html comment. */
     $identifierComment = '<!-- Sdm Dev Output App -->';
 
@@ -19,84 +21,105 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmDevOutput') {
     /* App description continued... */
     $description .= 'Just add the code to test to the SdmDevOutput.php file.';
 
-    /* Dev Form */
-    $defaultForm = new SdmForm();
-    $defaultForm->formHandler = 'SdmDevOutput';
-    $defaultForm->method = 'post';
-    $defaultForm->sdmFormUseDefaultFormElements();
-    $defaultForm->submitLabel = 'Submit';
-    $defaultForm->sdmFormBuildForm();
+    /*** Custom form for testing SdmForm() class. ***/
 
-    /* Element attributes for the $defaultForm's container element. */
-    $defaultFormElementAttributes = array(
-        'styles' => array(
-            'background: #33CC66',
-            'border: 3px solid #33CCFF',
-            'border-radius: 5px',
-            'padding: 20px'
+    /* Instantiate new form object. */
+    $customForm = new SdmForm();
+
+    /* Form handler */
+    $customForm->formHandler = 'SdmDevOutput';
+
+    /* Form method */
+    $customForm->method = 'post';
+
+    /** Form Elements **/
+
+    /* Text element. */
+    $customForm->sdmFormCreateFormElement('devText', 'text', 'Dev Text', 'Enter an email address', 0);
+
+    /* Text area element. */
+    $customForm->sdmFormCreateFormElement('devTextarea', 'textarea', 'Dev Textarea', 'Enter some text', 1);
+
+    /* Password element. */
+    $customForm->sdmFormCreateFormElement('devPassword', 'password', 'Dev Password', '', 2);
+
+    /* Select element items */
+    $customFormSelectItems = array('Item 1' => 'item1', 'Item 2' => 'item2', 'Item 3' => 'item3', 'Initially Selected Item' => 'item4');
+
+    /* Select element */
+    $customForm->sdmFormCreateFormElement('devSelect', 'select', 'Dev Select', $customForm->setDefaultValues($customFormSelectItems, 'item4'), 3);
+
+    /* Radio element items  */
+    $customFormRadioItems = array('Item 1' => 'item1', 'Item 2' => 'item2', 'Initially Selected Radio Item' => 'item3', 'item4' => 'item4');
+
+    /* Radio element. */
+    $customForm->sdmFormCreateFormElement('devRadio', 'radio', 'Dev Radio', $customForm->setDefaultValues($customFormRadioItems, 'item3'), 4);
+
+    /* Checkbox element items. */
+    $customFormCheckboxItems = array('Initially Selected Checkbox Item' => 'item1', 'Item 2' => 'item2', 'Item 3' => 'item3', 'item4' => 'item4');
+
+    /* Checkbox element .*/
+    $customForm->sdmFormCreateFormElement('devCheckbox', 'checkbox', 'Dev Checkbox', $customForm->setDefaultValues($customFormCheckboxItems, 'item1'), 4);
+
+    /* Hidden element form. */
+    $customForm->sdmFormCreateFormElement('devHidden', 'hidden', 'Dev Hidden', 'hidden value', 5);
+
+    /* Submit label. */
+    $customForm->submitLabel = 'Submit Custom Form';
+
+    /* Build form. */
+    $customForm->sdmFormBuildForm();
+
+    /* Build custom form element attributes. */
+    $tableAttributes = array(
+        'elementType' => 'div',
+        'classes' => array(
+            'custom-form-table',
         )
     );
+    $trAttributes = array(
+        'elementType' => 'div',
+        'classes' => array(
+            'custom-form-tr',
+        ),
+    );
+    $tdAttributes = array(
+        'elementType' => 'div',
+        'classes' => array(
+            'custom-form-td',
+        ),
+    );
 
-    /* Form html. */
-    $defaultFormHtml = $sdmassembler->sdmAssemblerAssembleHtmlElement($defaultForm->sdmFormGetForm(), $defaultFormElementAttributes);
+    /* Initialize $customFormTableRow1Elements html string. */
+    $customFormTableRow1Elements = '';
 
-    /* Get submitted values */
-    $submittedValues = $defaultForm->sdmFormGetSubmittedFormValue('all', $defaultForm->method);
-    $devOutput = $sdmassembler->sdmCoreSdmReadArrayBuffered(['$submittedValues' => $submittedValues]);
+    /* Build custom form table elements from individual custom form elements. */
+    $customFormTableRow1Elements .= $sdmassembler->sdmAssemblerAssembleHtmlElement($customForm->sdmFormGetFormElementHtml('devText'), $tdAttributes);
+    $customFormTableRow1Elements .= $sdmassembler->sdmAssemblerAssembleHtmlElement($customForm->sdmFormGetFormElementHtml('devTextarea'), $tdAttributes);
+    $customFormTableRow1Elements .= $sdmassembler->sdmAssemblerAssembleHtmlElement($customForm->sdmFormGetFormElementHtml('devPassword'), $tdAttributes);
+    $customFormTableRow1Elements .= $sdmassembler->sdmAssemblerAssembleHtmlElement($customForm->sdmFormGetFormElementHtml('devSelect'), $tdAttributes);
+    $customFormTableRow1Elements .= $sdmassembler->sdmAssemblerAssembleHtmlElement($customForm->sdmFormGetFormElementHtml('devRadio'), $tdAttributes);
+    $customFormTableRow1Elements .= $sdmassembler->sdmAssemblerAssembleHtmlElement($customForm->sdmFormGetFormElementHtml('devCheckbox'), $tdAttributes);
+
+    /* Build custom form table row 1 */
+    $customFormTableRow1 = $sdmassembler->sdmAssemblerAssembleHtmlElement($customFormTableRow1Elements, $trAttributes);
+
+    /* Build custom form table */
+    $customFormTable = $sdmassembler->sdmAssemblerAssembleHtmlElement($customFormTableRow1, $tableAttributes);
+
+    /* Add $customForm's hidden element below the table. */
+    $customFormTable .= $customForm->sdmFormGetFormElementHtml('devHidden');
+
+    /* Gey any submitted form values. */
+    $submittedValues = $customForm->sdmFormGetSubmittedFormValue('all', $customForm->method);
+
     /* If there are submitted values display them. */
     if (!empty($submittedValues) && $submittedValues !== null) {
-        /* Initialize submittedValuesDisplay string. */
-        $submittedValuesListItem = 'Form values submitted via ' . ($defaultForm->method === 'get' ? '$_GET' : '$_POST');
-
-        /* Element attributes for submitted form display elements */
-        $submittedKeyAttributes = array(
-            'styles' => array(
-                'background: #333333'
-            ),
-            'classes' => array(
-                'sdm-dev-output-padding-all',
-                'sdm-dev-output-rounded-border',
-            ),
-        );
-
-        $submittedValueAttributes = array(
-            'styles' => array(
-                'background: #000000'
-            ),
-            'classes' => array(
-                'sdm-dev-output-padding-all',
-                'sdm-dev-output-rounded-border',
-            ),
-        );
-
-        $submittedDisplayElementAttributes = array(
-            'elementType' => 'li',
-            'styles' => array(
-                'color: palegreen',
-                'font-size: .7em',
-                'background: #33CCFF',
-                'border: 3px solid #33CC66',
-                'border-radius: 5px',
-                'padding: 20px'
-            )
-        );
-
-        /* Loop through $submittedValues adding key value pair to the $submittedValuesDisplay. */
-        foreach ($submittedValues as $submittedKey => $submittedValue) {
-            /* Display for $submittedKey */
-            $submittedKeyDisplay = $sdmassembler->sdmAssemblerAssembleHtmlElement($submittedKey, $submittedKeyAttributes);
-
-            /* Display $submittedValue */
-            $submittedValueDisplay = $sdmassembler->sdmAssemblerAssembleHtmlElement($submittedValue, $submittedValueAttributes);
-
-            /* Display the key and value as items in a list. */
-            $submittedValuesListItem .= $sdmassembler->sdmAssemblerAssembleHtmlElement($submittedKeyDisplay . $submittedValueDisplay, $submittedDisplayElementAttributes);
-
-        }
-
-        /* Create an unordered list of submitted elements. */
-        $submittedValuesList = $sdmassembler->sdmAssemblerAssembleHtmlElement($submittedValuesListItem, array('elementType' => 'ul'));
+        /* Get submitted values */
+        $devOutput = $sdmassembler->sdmCoreSdmReadArrayBuffered(['$submittedValues' => $submittedValues]);
     }
+
+    /** App $output **/
 
     /* Output $identifierComment */
     $output = $identifierComment;
@@ -113,10 +136,12 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmDevOutput') {
     }
 
     /* DEV OUTPUT */
-    $output .= $devOutput;
+    if (isset($devOutput) === true) {
+        $output .= $devOutput;
+    }
 
-    /* Output $defaultFormHtml */
-    $output .= $defaultFormHtml;
+    /* Output $customFormHtml */
+    $output .= $customForm->sdmFormOpenForm() . $customFormTable . $customForm->sdmFormCloseForm();
 
     /* Display app $output */
     $sdmassembler->sdmAssemblerIncorporateAppOutput($output, ['incpages' => ['SdmDevOutput']]);

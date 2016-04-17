@@ -86,3 +86,35 @@ h1 {
     text-align: center;
 }
 
+.custom-form-table {
+    /*
+     * overflow set so this element will respect floating child element heights.
+     * @see http://stackoverflow.com/questions/7817269/css-container-div-not-getting-height
+     */
+    overflow: hidden;
+    background-color: #000000;
+    border-radius: 9px;
+    width: 95%;
+    margin: 0 auto;
+}
+
+.custom-form-tr {
+    /*
+    * overflow set so this element will respect floating child element heights.
+    * @see http://stackoverflow.com/questions/7817269/css-container-div-not-getting-height
+    */
+    overflow: hidden;
+    border: 3px solid #00CC99;
+    border-radius: 9px;
+}
+
+.custom-form-td {
+    min-width: 175px;
+    height: 420px;
+    float: left;
+    border: 3px solid #00CC99;
+    border-radius: 9px;
+    font-family: cursive;
+    font-size: 0.7em;
+    padding: 19px;
+}
