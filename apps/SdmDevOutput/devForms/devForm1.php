@@ -56,33 +56,36 @@ $customForm->submitLabel = 'Submit Custom Form';
 $customForm->sdmFormBuildForm();
 
 /* Build custom form element attributes. */
-$containerAttributes = array(
+$customFormContainerAttributes = array(
     'elementType' => 'div',
     'classes' => array(
-        'custom-form-tr',
+        'custom-form-container',
     ),
 );
-$elementContainerAttributes = array(
+$customFormElementAttributes = array(
     'elementType' => 'div',
     'classes' => array(
-        'custom-form-td',
+        'custom-form-elements-container',
     ),
+);
+$customFormHiddenElementAttributes = array(
+    'elementType' => 'span'
 );
 
-/* Initialize $customFormTableRow1Elements html string. */
-$customFormTableRow1Elements = '';
+/* Initialize $customFormElementsContainer html string. */
+$customFormElementsContainer = '';
 
 /* Build custom form table elements from individual custom form elements. */
-$customFormTableRow1Elements .= $sdmassembler->sdmAssemblerAssembleHtmlElement($customForm->sdmFormGetFormElementHtml('devText'), $elementContainerAttributes);
-$customFormTableRow1Elements .= $sdmassembler->sdmAssemblerAssembleHtmlElement($customForm->sdmFormGetFormElementHtml('devTextarea'), $elementContainerAttributes);
-$customFormTableRow1Elements .= $sdmassembler->sdmAssemblerAssembleHtmlElement($customForm->sdmFormGetFormElementHtml('devPassword'), $elementContainerAttributes);
-$customFormTableRow1Elements .= $sdmassembler->sdmAssemblerAssembleHtmlElement($customForm->sdmFormGetFormElementHtml('devSelect'), $elementContainerAttributes);
-$customFormTableRow1Elements .= $sdmassembler->sdmAssemblerAssembleHtmlElement($customForm->sdmFormGetFormElementHtml('devRadio'), $elementContainerAttributes);
-$customFormTableRow1Elements .= $sdmassembler->sdmAssemblerAssembleHtmlElement($customForm->sdmFormGetFormElementHtml('devCheckbox'), $elementContainerAttributes);
-$customFormTableRow1Elements .= $sdmassembler->sdmAssemblerAssembleHtmlElement($customForm->sdmFormGetFormElementHtml('devHidden'), array('elementType' => 'span'));
+$customFormElementsContainer .= $sdmassembler->sdmAssemblerAssembleHtmlElement($customForm->sdmFormGetFormElementHtml('devText'), $customFormElementAttributes);
+$customFormElementsContainer .= $sdmassembler->sdmAssemblerAssembleHtmlElement($customForm->sdmFormGetFormElementHtml('devTextarea'), $customFormElementAttributes);
+$customFormElementsContainer .= $sdmassembler->sdmAssemblerAssembleHtmlElement($customForm->sdmFormGetFormElementHtml('devPassword'), $customFormElementAttributes);
+$customFormElementsContainer .= $sdmassembler->sdmAssemblerAssembleHtmlElement($customForm->sdmFormGetFormElementHtml('devSelect'), $customFormElementAttributes);
+$customFormElementsContainer .= $sdmassembler->sdmAssemblerAssembleHtmlElement($customForm->sdmFormGetFormElementHtml('devRadio'), $customFormElementAttributes);
+$customFormElementsContainer .= $sdmassembler->sdmAssemblerAssembleHtmlElement($customForm->sdmFormGetFormElementHtml('devCheckbox'), $customFormElementAttributes);
+$customFormElementsContainer .= $sdmassembler->sdmAssemblerAssembleHtmlElement($customForm->sdmFormGetFormElementHtml('devHidden'), $customFormHiddenElementAttributes);
 
-/* Build custom form table row 1 */
-$customFormDisplayContainer = $sdmassembler->sdmAssemblerAssembleHtmlElement($customFormTableRow1Elements, $containerAttributes);
+/* Build custom form container */
+$customFormContainer = $sdmassembler->sdmAssemblerAssembleHtmlElement($customFormElementsContainer, $customFormContainerAttributes);
 
 /* Gey any submitted form values. */
 $submittedValues = $customForm->sdmFormGetSubmittedFormValue('all', $customForm->method);

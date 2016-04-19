@@ -30,14 +30,17 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmDevOutput') {
     $output = $identifierComment;
 
     /* Output $descriptionHeader */
-    $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($descriptionHeader, array('elementType' => 'h2'));
+    $descriptionHeaderContainerAttributes = array('elementType' => 'h2');
+    $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($descriptionHeader, $descriptionHeaderContainerAttributes);
 
     /* Output $description */
-    $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($description, array('elementType' => 'p'));
+    $descriptionContainerAttributes = array('elementType' => 'p');
+    $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($description, $descriptionContainerAttributes);
 
     if (isset($submittedValuesList) === true) {
         /* Output $submittedValuesList */
-        $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($submittedValuesList, array('elementType' => 'div'));
+        $submittedValueDisplayContianerAttributes = array('elementType' => 'div');
+        $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($submittedValuesList, $submittedValueDisplayContianerAttributes);
     }
 
     /* DEV OUTPUT */
@@ -46,7 +49,7 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmDevOutput') {
     }
 
     /* Output $customFormHtml */
-    $output .= $customForm->sdmFormOpenForm() . $customFormDisplayContainer . $customForm->sdmFormCloseForm();
+    $output .= $customForm->sdmFormOpenForm() . $customFormContainer . $customForm->sdmFormCloseForm();
 
     /* Display app $output */
     $sdmassembler->sdmAssemblerIncorporateAppOutput($output, ['incpages' => ['SdmDevOutput']]);
