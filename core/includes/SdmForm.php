@@ -1,16 +1,19 @@
 <?php
 
 /**
- * @todo POST works great, however the SdmForm class has a lot of trouble with GET, this needs to be remedied.
- * @todo Make the following methods an option if possible: POST, GET, SESSION. POST is the only one that works at the moment.
- * @todo Make the static methods in this class non-static so they can self reference SdmForm() objects
+ * @todo Make the following methods an option if possible: POST, GET, SESSION. POST and GET are the only ones that works at the moment.
+ *
+ * @todo Look into making the all static methods in this class non-static so they can self reference. This may
+ *       not be possible for some methods like sdmFormGetSubmittedFormValue() as it needs to be static to maintian
+ *       the functiionality that allows SdmForm() object's to retrieve submitted values form other SdmForm objects.
+ *
  * @todo Consider making this class a child of Sdm Core so it can directly utilize it's methods and properties.
- * @todo Test what happens when no $formHandler is specified. The default should be to use the current page since
- *       the form is most likely on the current page.
- * @todo Make sure post is used when method not specified.
+ *
  * @todo Make it possible to asign classes to the form and the form elements via the
  *       new $formClass and $formElementClasses properties respectively.
+ *
  * @todo Some values are not being encoded, fix this as this could lead to security issues.
+ *
  * @todo Thinks about adding a feature to have form object automatically preserve submitted form values.
  *          i.e.,
  *              new property $preserveSubmittedValues = true || false;
@@ -80,8 +83,7 @@ class SdmForm
     public $formElements;
     public $method;
     public $submitLabel;
-    public $formClass;
-    public $formElementClasses;
+    public $formClasses;
     private $formId;
     private $form;
     private $formElementHtml;
@@ -103,7 +105,7 @@ class SdmForm
         $this->method = (isset($this->method) ? $this->method : 'post');
 
         /* If formHandler is set use it, otherwise default to current page. @todo determine current page by default */
-        $this->formHandler = (isset($this->formHandler) ? $this->formHandler : '');
+        $this->formHandler = (isset($this->formHandler) ? $this->formHandler : filter_input(INPUT_GET, 'page', FILTER_SANITIZE_ENCODED));
 
         /* If form is set use it, otherwise set an empty string as a placeholder. */
         $this->form = (isset($this->form) === true ? $this->form : '');
