@@ -1,0 +1,52 @@
+.customFormBorder {
+    border: 42px groove #A4E5F6;
+    border-radius: 88px;
+    width: 88%;
+    margin: 0 auto;
+    overflow: auto;
+}
+
+.customFormPadding {
+    padding: 17px 69px;
+}
+
+.customFormBackgroundColor1 {
+    background-color: #8bb8e5;
+    color: #3375A3;
+}
+
+.custom-form-container {
+    font-family: fantasy;
+    font-size: 0.7em;
+    border-spacing: 42px;
+    display: table;
+}
+
+.custom-form-elements-container {
+    border: 3px solid #9DDEF3;
+    border-radius: 142px;
+    background-color: #ffffff;
+    opacity: .88;
+    display: table-cell;
+    vertical-align: middle;
+    min-width: 279px;
+    max-width: 279px;
+    width: 279px;
+}
+
+.custom-form-submit {
+    padding: 10px 20px 11px !important;
+    font-size: 21px !important;
+    background-color: #F36C8C;
+    font-weight: bold;
+    text-shadow: 1px 1px #F36C8C;
+    color: #ffffff;
+    border-radius: 100px;
+    -moz-border-radius: 100px;
+    -webkit-border-radius: 100px;
+    border: 1px solid #F36C8C;
+    cursor: pointer;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+    -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+    -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+}

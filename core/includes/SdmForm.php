@@ -9,7 +9,7 @@
  *
  * @todo Consider making this class a child of Sdm Core so it can directly utilize it's methods and properties.
  *
- * @todo Make it possible to asign classes to the form and the form elements via the
+ * @todo Make it possible to assign classes to the form and the form elements via the
  *       new $formClass and $formElementClasses properties respectively.
  *
  * @todo Some values are not being encoded, fix this as this could lead to security issues.
@@ -673,7 +673,7 @@ class SdmForm
             $rootUrl = $this->sdmFormDetermineRootUrl();
         }
 
-        return '<!-- form "' . $this->sdmFormGetFormId() . '" --><form class="" method="' . $this->method . '" action="' . $rootUrl . '/index.php?page=' . $this->formHandler . '">';
+        return '<!-- form "' . $this->sdmFormGetFormId() . '" --><form ' . (isset($this->formClasses) ? 'class="' . $this->sdmFormExtractFormClasses() . '"' : '') . ' method="' . $this->method . '" action="' . $rootUrl . '/index.php?page=' . $this->formHandler . '">';
     }
 
     /**
@@ -698,6 +698,29 @@ class SdmForm
         return $formId;
     }
 
+    final private function sdmFormExtractFormClasses()
+    {
+        if (isset($this->formClasses)) {
+            switch (gettype($this->formClasses)) {
+                case 'string':
+                    return strval(trim($this->formClasses));
+                    break;
+                case 'array':
+                    return strval(trim(implode(' ', $this->formClasses)));
+                    break;
+                default:
+                    error_log('Invalid type passed to sdmFormExtractFormClasses() via SdmForm()->formClasses parameter. SdmForm()->formClasses must be of type array or string.');
+                    return null;
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Builds the html for the form elements.
+     *
+     * @return string Html for all defined form elements.
+     */
     public function sdmFormBuildFormElements()
     {
         /* Sort elements based on element's "place". */
@@ -754,7 +777,7 @@ class SdmForm
                     /* Build element html and add $formElementsHtml to $this->formElementHtml array. */
                     $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><p id="label-for-SdmForm[' . $value['id'] . ']">' . $value['element'] . '</p>';
                     foreach ($value['value'] as $radio => $radioValue) {
-                        $this->formElementHtml[$value['id']] .= '<label  for="SdmForm[' . $value['id'] . ']">' . $radio . '</label><input type="radio" name="SdmForm[' . $value['id'] . ']" value="' . (substr($radioValue, 0, 8) === 'default_' ? $this->sdmFormEncode(str_replace('default_', '', $radioValue)) . '" checked="checked"' : $this->sdmFormEncode($radioValue) . '"') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+                        $this->formElementHtml[$value['id']] .= '<label  for="SdmForm[' . $value['id'] . ']">' . $radio . '</label><input type="radio" name="SdmForm[' . $value['id'] . ']" value="' . (substr($radioValue, 0, 8) === 'default_' ? $this->sdmFormEncode(str_replace('default_', '', $radioValue)) . '" checked="checked"' : $this->sdmFormEncode($radioValue) . '"') . '><br><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
                     }
                     $this->formElementHtml[$value['id']] .= '<br>';
 

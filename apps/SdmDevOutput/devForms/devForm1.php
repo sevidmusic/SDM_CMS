@@ -17,6 +17,10 @@ $customForm->formHandler = 'SdmDevOutput';
 /* Form method */
 $customForm->method = 'post';
 
+/* Form classes */
+$customForm->formClasses = 'customFormBorder customFormPadding customFormBackgroundColor1'; // string definition
+//$customForm->formClasses = explode(' ', 'classString class2 class3'); // array definition using explode()
+
 /** Form Elements **/
 
 /* Text element. */
@@ -66,6 +70,8 @@ $customFormElementAttributes = array(
     'elementType' => 'div',
     'classes' => array(
         'custom-form-elements-container',
+        'customFormPadding',
+        'highlight',
     ),
 );
 $customFormHiddenElementAttributes = array(
