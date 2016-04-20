@@ -84,6 +84,7 @@ class SdmForm
     public $method;
     public $submitLabel;
     public $formClasses;
+    public $formSubmitButtonClasses;
     private $formId;
     private $form;
     private $formElementHtml;
@@ -673,7 +674,7 @@ class SdmForm
             $rootUrl = $this->sdmFormDetermineRootUrl();
         }
 
-        return '<!-- form "' . $this->sdmFormGetFormId() . '" --><form ' . (isset($this->formClasses) ? 'class="' . $this->sdmFormExtractFormClasses() . '"' : '') . ' method="' . $this->method . '" action="' . $rootUrl . '/index.php?page=' . $this->formHandler . '">';
+        return '<!-- form "' . $this->sdmFormGetFormId() . '" --><form ' . (isset($this->formClasses) ? 'class="' . $this->sdmFormExtractClasses('form') . '"' : '') . ' method="' . $this->method . '" action="' . $rootUrl . '/index.php?page=' . $this->formHandler . '">';
     }
 
     /**
@@ -698,18 +699,33 @@ class SdmForm
         return $formId;
     }
 
-    final private function sdmFormExtractFormClasses()
+    final private function sdmFormExtractClasses($component = 'form')
     {
-        if (isset($this->formClasses)) {
-            switch (gettype($this->formClasses)) {
+        switch ($component) {
+            case 'form':
+                $componentValue = $this->formClasses;
+                $componentName = 'SdmForm()->formClasses';
+                break;
+            case 'submitButton':
+                $componentValue = $this->formSubmitButtonClasses;
+                $componentName = 'SdmForm()->formSubmitButtonClasses';
+                break;
+            default:
+                error_log('Unsupported form $component, "' . strval($component) . '", passed to sdmFormExtractClasses.');
+                $componentValue = null;
+                $componentName = 'Error: Unsupported component!';
+                break;
+        }
+        if (isset($componentValue)) {
+            switch (gettype($componentValue)) {
                 case 'string':
-                    return strval(trim($this->formClasses));
+                    return strval(trim($componentValue));
                     break;
                 case 'array':
-                    return strval(trim(implode(' ', $this->formClasses)));
+                    return strval(trim(implode(' ', $componentValue)));
                     break;
                 default:
-                    error_log('Invalid type passed to sdmFormExtractFormClasses() via SdmForm()->formClasses parameter. SdmForm()->formClasses must be of type array or string.');
+                    error_log('Invalid type passed to sdmFormExtractFormClasses() via ' . $componentName . ' parameter. ' . $componentValue . ' must be of type array or string.');
                     return null;
                     break;
             }
@@ -879,7 +895,7 @@ class SdmForm
         }
 
         /* Add submit button. */
-        $closingFormHtml .= '<input value="' . $this->submitLabel . '" type="submit"></form><!-- close form ' . $this->sdmFormGetFormId() . ' -->';
+        $closingFormHtml .= '<input class="' . $this->sdmFormExtractClasses('submitButton') . '" value="' . $this->submitLabel . '" type="submit"></form><!-- close form ' . $this->sdmFormGetFormId() . ' -->';
 
         return $closingFormHtml;
     }

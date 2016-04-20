@@ -21,6 +21,9 @@ $customForm->method = 'post';
 $customForm->formClasses = 'customFormBorder customFormPadding customFormBackgroundColor1'; // string definition
 //$customForm->formClasses = explode(' ', 'classString class2 class3'); // array definition using explode()
 
+/* Form submit button classes. */
+$customForm->formSubmitButtonClasses = explode(' ', 'custom-form-submit'); // array definition using explode()
+
 /** Form Elements **/
 
 /* Text element. */
