@@ -9,8 +9,8 @@
  *
  * @todo Consider making this class a child of Sdm Core so it can directly utilize it's methods and properties.
  *
- * @todo Make it possible to assign classes to the form and the form elements via the
- *       new $formClass and $formElementClasses properties respectively.
+ * @todo Make it possible to assign classes to the form elements via the
+ *       new $formElements['classes'].
  *
  * @todo Some values are not being encoded, fix this as this could lead to security issues.
  *
@@ -85,6 +85,7 @@ class SdmForm
     public $submitLabel;
     public $formClasses;
     public $formSubmitButtonClasses;
+    public $preserveSubmittedValues;
     private $formId;
     private $form;
     private $formElementHtml;
@@ -113,6 +114,9 @@ class SdmForm
 
         /* If submitLabel set use it, otherwise default to the string 'Submit'. */
         $this->submitLabel = (isset($this->submitLabel) ? $this->submitLabel : 'Submit');
+
+        /* If preserveSubmittedValues is set use it, otherwise default to the boolean false. */
+        $this->preserveSubmittedValues = (isset($this->preserveSubmittedValues) ? $this->preserveSubmittedValues : false);
     }
 
     /**
@@ -758,7 +762,7 @@ class SdmForm
             switch ($value['type']) {
                 case 'text':
                     /* Build element html and add $formElementsHtml to $this->formElementHtml array. */
-                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><input name="SdmForm[' . $value['id'] . ']" type="text" ' . (isset($value['value']) ? 'value="' . $value['value'] . '"' : '') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><input name="SdmForm[' . $value['id'] . ']" type="text" value="' . $this->sdmFormSetFormValue($value) . '"><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
 
                     /*  Add form element html to $this->form  */
                     $formElementsHtml .= $this->formElementHtml[$value['id']];
@@ -823,6 +827,65 @@ class SdmForm
         }
         /* Return a string of form element html. */
         return $formElementsHtml;
+    }
+
+    /**
+     * Sets the value of a form element. This method is meant to be called internally by sdmFormBuildFormHtml().
+     *
+     * @param $element The element to set a form value for.
+     *
+     * @return mixed The value for the element or null on failure.
+     */
+    private function sdmFormSetFormValue($element)
+    {
+        if (isset($element['value']) === false) {
+
+            /* If $element's value is not set set a safe empty value so to insure form elements don't break. */
+            switch ($element['type']) {
+                case 'text':
+                    $element['value'] = '';
+                    break;
+                case 'password':
+                    $element['value'] = '';
+                    break;
+                case 'textarea':
+                    $element['value'] = '';
+                    break;
+                case 'select':
+                    $element['value'] = array('-- No Items --' => 'undefined');
+                    break;
+                case 'radio':
+                    $element['value'] = array('-- No Items --' => 'undefined');
+                    break;
+                case 'checkbox':
+                    $element['value'] = array('-- No Items --' => 'undefined');
+                    break;
+                case 'hidden':
+                    $element['value'] = '';
+                    break;
+            }
+        }
+
+        switch ($this->preserveSubmittedValues) {
+            case true:
+                switch($this->sdmFormGetSubmittedFormValue($element['id']) !== null) {
+                    case true:
+                        $value = $this->sdmFormGetSubmittedFormValue($element['id']);
+                        break;
+                    default:
+                        $value = $element['value'];
+                        break;
+                }
+                break;
+            case false:
+                $value = $element['value'];
+                break;
+            default:
+                error_log('Sdm Form property $preserveSubmittedValues must be assigned a boolean value of true or false.');
+                break;
+        }
+        return $value;
+
     }
 
     /**

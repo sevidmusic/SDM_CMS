@@ -17,6 +17,9 @@ $customForm->formHandler = 'SdmDevOutput';
 /* Form method */
 $customForm->method = 'post';
 
+/* Determine whether form should preserve submitted values. */
+$customForm->preserveSubmittedValues = true;
+
 /* Form classes */
 $customForm->formClasses = 'customFormBorder customFormPadding customFormBackgroundColor1'; // string definition
 //$customForm->formClasses = explode(' ', 'classString class2 class3'); // array definition using explode()
