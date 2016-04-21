@@ -758,7 +758,7 @@ class SdmForm
                     break;
                 case 'password':
                     /* Build element html and add $formElementsHtml to $this->formElementHtml array. */
-                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><input name="SdmForm[' . $value['id'] . ']" type="password" ' . $this->sdmFormSetFormValue($value) . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><input name="SdmForm[' . $value['id'] . ']" type="password" value="' . $this->sdmFormSetFormValue($value) . '"><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
 
                     /*  Add form element html to $this->form  */
                     $formElementsHtml .= $this->formElementHtml[$value['id']];
@@ -787,7 +787,8 @@ class SdmForm
                 case 'radio':
                     /* Build element html and add $formElementsHtml to $this->formElementHtml array. */
                     $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><p id="label-for-SdmForm[' . $value['id'] . ']">' . $value['element'] . '</p>';
-                    foreach ($value['value'] as $radio => $radioValue) {
+                    $radioItems = $this->sdmFormSetFormValue($value);
+                    foreach ($radioItems as $radio => $radioValue) {
                         $this->formElementHtml[$value['id']] .= '<label  for="SdmForm[' . $value['id'] . ']">' . $radio . '</label><input type="radio" name="SdmForm[' . $value['id'] . ']" value="' . (substr($radioValue, 0, 8) === 'default_' ? $this->sdmFormEncode(str_replace('default_', '', $radioValue)) . '" checked="checked"' : $this->sdmFormEncode($radioValue) . '"') . '><br><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
                     }
                     $this->formElementHtml[$value['id']] .= '<br>';
@@ -798,7 +799,8 @@ class SdmForm
                 case 'checkbox':
                     /* Build element html and add $formElementsHtml to $this->formElementHtml array. */
                     $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><p id="label-for-SdmForm[' . $value['id'] . ']">' . $value['element'] . '</p>';
-                    foreach ($value['value'] as $checkbox => $checkboxValue) {
+                    $checkboxItems = $this->sdmFormSetFormValue($value);
+                    foreach ($checkboxItems as $checkbox => $checkboxValue) {
                         $this->formElementHtml[$value['id']] .= '<label  for="SdmForm[' . $value['id'] . ']">' . $checkbox . '</label><input type="checkbox" name="SdmForm[' . $value['id'] . '][]" value="' . (substr($checkboxValue, 0, 8) === 'default_' ? $this->sdmFormEncode(str_replace('default_', '', $checkboxValue)) . '" checked="checked"' : $this->sdmFormEncode($checkboxValue) . '"') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
                     }
 
@@ -806,7 +808,7 @@ class SdmForm
                     break;
                 case 'hidden':
                     /* Build element html and add $formElementsHtml to $this->formElementHtml array. */
-                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><input name="SdmForm[' . $value['id'] . ']" type="hidden" value="' . $this->sdmFormEncode($value['value']) . '"><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><input name="SdmForm[' . $value['id'] . ']" type="hidden" value="' . $this->sdmFormEncode($this->sdmFormSetFormValue($value)) . '"><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
 
                     /* Add $formElementsHtml to $this->formElementHtml array. */
                     $formElementsHtml .= $this->formElementHtml[$value['id']];
@@ -862,32 +864,21 @@ class SdmForm
                 switch($this->sdmFormGetSubmittedFormValue($element['id']) !== null) {
                     case true:
                         switch($element['type']) {
-                            //                         $value = $this->sdmFormGetSubmittedFormValue($element['id']);
-                            case 'text':
-                                $value = $this->sdmFormGetSubmittedFormValue($element['id']);
-                                break;
+                            /* Chained cases are a workaround for switch case comparrison with "||". | @see http://php.net/manual/en/control-structures.switch.php#28637 for more info. */                            case 'text':
                             case 'password':
-                                $value = $this->sdmFormGetSubmittedFormValue($element['id']);
-                                break;
                             case 'textarea':
+                            case 'hidden':
                                 $value = $this->sdmFormGetSubmittedFormValue($element['id']);
                                 break;
                             case 'select':
+                            case 'radio':
+                            case 'checkbox':
                                 $items = array();
                                 foreach ($element['value'] as $option => $optionValue) {
                                     $items[$option] = str_replace('default_','', $optionValue);
                                 }
                                 /* Set last submitted value to be the default item. */
                                 $value = $this->sdmFormSetDefaultInputValues($items, $this->sdmFormGetSubmittedFormValue($element['id']));
-                                break;
-                            case 'radio':
-                                $value = $element['value'];
-                                break;
-                            case 'checkbox':
-                                $value = $element['value'];
-                                break;
-                            case 'hidden':
-                                $value = $this->sdmFormGetSubmittedFormValue($element['id']);
                                 break;
                         }
                         break;
