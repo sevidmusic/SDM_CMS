@@ -42,19 +42,19 @@ $customForm->sdmFormCreateFormElement('devPassword', 'password', 'Dev Password',
 $customFormSelectItems = array('Item 1' => 'item1', 'Item 2' => 'item2', 'Item 3' => 'item3', 'Initially Selected Item' => 'item4');
 
 /* Select element */
-$customForm->sdmFormCreateFormElement('devSelect', 'select', 'Dev Select', $customForm->setDefaultValues($customFormSelectItems, 'item4'), 3);
+$customForm->sdmFormCreateFormElement('devSelect', 'select', 'Dev Select', $customForm->sdmFormSetDefaultInputValues($customFormSelectItems, 'item4'), 3);
 
 /* Radio element items  */
 $customFormRadioItems = array('Item 1' => 'item1', 'Item 2' => 'item2', 'Initially Selected Radio Item' => 'item3', 'item4' => 'item4');
 
 /* Radio element. */
-$customForm->sdmFormCreateFormElement('devRadio', 'radio', 'Dev Radio', $customForm->setDefaultValues($customFormRadioItems, 'item3'), 4);
+$customForm->sdmFormCreateFormElement('devRadio', 'radio', 'Dev Radio', $customForm->sdmFormSetDefaultInputValues($customFormRadioItems, 'item3'), 4);
 
 /* Checkbox element items. */
 $customFormCheckboxItems = array('Initially Selected Checkbox Item' => 'item1', 'Item 2' => 'item2', 'Item 3' => 'item3', 'item4' => 'item4');
 
 /* Checkbox element .*/
-$customForm->sdmFormCreateFormElement('devCheckbox', 'checkbox', 'Dev Checkbox', $customForm->setDefaultValues($customFormCheckboxItems, 'item1'), 4);
+$customForm->sdmFormCreateFormElement('devCheckbox', 'checkbox', 'Dev Checkbox', $customForm->sdmFormSetDefaultInputValues($customFormCheckboxItems, 'item1'), 4);
 
 /* Hidden element form. */
 $customForm->sdmFormCreateFormElement('devHidden', 'hidden', 'Dev Hidden', 'hidden value', 5);

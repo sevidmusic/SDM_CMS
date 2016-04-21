@@ -509,7 +509,7 @@ class SdmForm
      *               'default_'.
      *
      */
-    public static function setDefaultValues(array $values, $testValue)
+    public static function sdmFormSetDefaultInputValues(array $values, $testValue)
     {
         /* Determine if $testValue is an array. */
         switch (is_array($testValue)) {
@@ -878,7 +878,7 @@ class SdmForm
                                     $items[$option] = str_replace('default_','', $optionValue);
                                 }
                                 /* Set last submitted value to be the default item. */
-                                $value = $this->setDefaultValues($items, $this->sdmFormGetSubmittedFormValue($element['id']));
+                                $value = $this->sdmFormSetDefaultInputValues($items, $this->sdmFormGetSubmittedFormValue($element['id']));
                                 break;
                             case 'radio':
                                 $value = $element['value'];
