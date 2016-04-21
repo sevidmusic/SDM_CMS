@@ -14,17 +14,6 @@
  *
  * @todo Some values are not being encoded, fix this as this could lead to security issues.
  *
- * @todo Thinks about adding a feature to have form object automatically preserve submitted form values.
- *          i.e.,
- *              new property $preserveSubmittedValues = true || false;
- *              if $preserveSubmittedValues === true
- *                  during call to sdmFormBuildFormElements() check if element already has a submitted
- *                  value and use it if it does.
- *                  if submittedValue === true
- *                      elementValue = submittedVlaue
- *                  else
- *                      build element normally
- *
  */
 
 /**
@@ -106,7 +95,7 @@ class SdmForm
         /* If method is set use it, otherwise default to post. */
         $this->method = (isset($this->method) ? $this->method : 'post');
 
-        /* If formHandler is set use it, otherwise default to current page. @todo determine current page by default */
+        /* If formHandler is set use it, otherwise default to current page. */
         $this->formHandler = (isset($this->formHandler) ? $this->formHandler : filter_input(INPUT_GET, 'page', FILTER_SANITIZE_ENCODED));
 
         /* If form is set use it, otherwise set an empty string as a placeholder. */
@@ -769,23 +758,25 @@ class SdmForm
                     break;
                 case 'password':
                     /* Build element html and add $formElementsHtml to $this->formElementHtml array. */
-                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><input name="SdmForm[' . $value['id'] . ']" type="password" ' . (isset($value['value']) ? 'value="' . $this->sdmFormEncode($value['value']) . '"' : '') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><input name="SdmForm[' . $value['id'] . ']" type="password" ' . $this->sdmFormSetFormValue($value) . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
 
                     /*  Add form element html to $this->form  */
                     $formElementsHtml .= $this->formElementHtml[$value['id']];
                     break;
                 case 'textarea':
                     /* Build element html and add $formElementsHtml to $this->formElementHtml array. */
-                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><textarea name="SdmForm[' . $value['id'] . ']">' . (isset($value['value']) ? $value['value'] : '') . '</textarea><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><textarea name="SdmForm[' . $value['id'] . ']">' . $this->sdmFormSetFormValue($value) . '</textarea><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
 
                     /* Add $formElementsHtml to $this->formElementHtml array. */
                     $formElementsHtml .= $this->formElementHtml[$value['id']];
 
                     break;
+
                 case 'select':
                     /* Build element html and add $formElementsHtml to $this->formElementHtml array. */
                     $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><select name="SdmForm[' . $value['id'] . ']">';
-                    foreach ($value['value'] as $option => $optionValue) {
+                    $selectItems = $this->sdmFormSetFormValue($value);
+                    foreach ($selectItems as $option => $optionValue) {
                         $this->formElementHtml[$value['id']] .= '<option value="' . (substr($optionValue, 0, 8) === 'default_' ? $this->sdmFormEncode(str_replace('default_', '', $optionValue)) . '" selected="selected"' : $this->sdmFormEncode($optionValue) . '"') . '>' . $option . '</option>';
                     }
                     $this->formElementHtml[$value['id']] .= '</select><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
@@ -870,9 +861,38 @@ class SdmForm
             case true:
                 switch($this->sdmFormGetSubmittedFormValue($element['id']) !== null) {
                     case true:
-                        $value = $this->sdmFormGetSubmittedFormValue($element['id']);
+                        switch($element['type']) {
+                            //                         $value = $this->sdmFormGetSubmittedFormValue($element['id']);
+                            case 'text':
+                                $value = $this->sdmFormGetSubmittedFormValue($element['id']);
+                                break;
+                            case 'password':
+                                $value = $this->sdmFormGetSubmittedFormValue($element['id']);
+                                break;
+                            case 'textarea':
+                                $value = $this->sdmFormGetSubmittedFormValue($element['id']);
+                                break;
+                            case 'select':
+                                $items = array();
+                                foreach ($element['value'] as $option => $optionValue) {
+                                    $items[$option] = str_replace('default_','', $optionValue);
+                                }
+                                /* Set last submitted value to be the default item. */
+                                $value = $this->setDefaultValues($items, $this->sdmFormGetSubmittedFormValue($element['id']));
+                                break;
+                            case 'radio':
+                                $value = $element['value'];
+                                break;
+                            case 'checkbox':
+                                $value = $element['value'];
+                                break;
+                            case 'hidden':
+                                $value = $this->sdmFormGetSubmittedFormValue($element['id']);
+                                break;
+                        }
                         break;
                     default:
+                        /* Assign without modification. */
                         $value = $element['value'];
                         break;
                 }
