@@ -19,17 +19,17 @@
 
     .msmd-horizontal-menu ul {
         list-style: none; /* get rid of bullets for list elemetns */
-        padding-left: 0; /* remove indentation of list elements */
+        padding-left: 21px; /* remove indentation of list elements */
+        padding-top: 40px;
     }
 
     .msmd-horizontal-menu li {
         display: inline-block; /* Use inline-block so we can apply padding and margins */
-        font-size: 1.5em;
-        margin-right: 31px;
+        font-size: 1.38em;
+        margin-right: 28px;
     }
 
     .msmd-horizontal-menu a {
         text-decoration: none;
     }
-
 }

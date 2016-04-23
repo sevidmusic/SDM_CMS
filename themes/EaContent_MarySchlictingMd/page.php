@@ -18,7 +18,7 @@ switch ($sdmassembler->sdmCoreDetermineRequestedPage()) {
         <div class="dev msmd-row msmd-row-width msmd-header-row">
 
             <!-- #locked_msmd-logo -->
-            <div id="locked_msmd-logo" class="dev msmd-col-6 msmd-header-wrapper-top-padding msmd-myriad-pro">
+            <div id="locked_msmd-logo" class="dev msmd-col-6 msmd-header-wrapper-top-padding msmd-century-gothic">
 
                 <h1 class="msmd-all-caps msmd-scaled-text">Mary Schlicting</h1>
 
@@ -49,7 +49,7 @@ switch ($sdmassembler->sdmCoreDetermineRequestedPage()) {
         <div class="dev msmd-row msmd-row-width">
 
             <!-- #msmd-homepage-welcome-text -->
-            <div id="msmd-homepage-welcome-text" class="dev msmd-col-4 msmd-wrapper-padding">
+            <div id="msmd-homepage-welcome-text" class="dev msmd-col-4 msmd-wrapper-padding msmd-myriad-pro-condensed msmd-all-caps">
                 <h1>Welcome</h1>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non feugiat nisl, a ultricies risus.
                     Nam nec

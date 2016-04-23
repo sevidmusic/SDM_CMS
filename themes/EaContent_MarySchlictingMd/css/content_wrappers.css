@@ -15,8 +15,8 @@
 
 }
 
-#msmd-homepage-welcome-text {
-
+#msmd-homepage-welcome-text h1 {
+    font-size: 2.5em;
 }
 
 #EaContentShortcutBoxes {
@@ -36,12 +36,13 @@
 }
 
 #msmd-dvm-box {
-    margin: -12px 0px;
-    padding: 8px 0px 0px 0px;
+    margin: -13px 0px;
+    opacity: .7;
+    padding: 3px 0px 0px 3px;
     background: red;
-    max-height: 33px;
-    width: 82px;
-    height: 35px;
+    width: 72px;
+    color: #ffffff;
+    font-size: 1.29em;
 }
 
 /* Tablet Styles */
@@ -54,48 +55,8 @@
 
     }
 
-    #msmd-homepage-welcome-text {
-
-    }
-
-    #EaContentShortcutBoxes {
-
-    }
-
-    #msmd-homepage-emergencies-text {
-
-    }
-
-    #msmd-homepage-hours-location-text {
-
-    }
-
-    #locked_msmd-footer {
-
-    }
-
-    #msmd-dvm-box {
-        margin: -12px 0px;
-        padding: 8px 0px 0px 0px;
-        background: red;
-        max-height: 33px;
-        width: 78px;
-        height: 35px;
-    }
-}
-
-/* Desktop Styles */
-@media only screen and (min-width: 768px) {
-    #locked_msmd-logo {
-
-    }
-
-    #locked_msmd-main-menu {
-
-    }
-
-    #msmd-homepage-welcome-text {
-
+    #msmd-homepage-welcome-text h1 {
+        font-size: 2.5em;
     }
 
     #EaContentShortcutBoxes {
@@ -122,7 +83,47 @@
         width: 72px;
         color: #ffffff;
         font-size: 1.29em;
-        font-family: "Century Gothic";
-        text-transform: uppercase;
+    }
+}
+
+/* Desktop Styles */
+@media only screen and (min-width: 768px) {
+    #locked_msmd-logo {
+
+    }
+
+    #locked_msmd-main-menu {border-bottom: 2px solid #DF3437;width: 416px;float: right;overflow: visible;}
+
+    #msmd-homepage-welcome-text h1 {
+        font-size: 2.5em;
+        margin-bottom: -15px;
+    }
+
+    #EaContentShortcutBoxes {
+
+    }
+
+    #msmd-homepage-emergencies-text {
+
+    }
+
+    #msmd-homepage-hours-location-text {
+
+    }
+
+    #locked_msmd-footer {
+
+    }
+
+    #msmd-dvm-box {
+        margin: -24px 0px;
+        opacity: .7;
+        padding: 3px 0px 0px 3px;
+        background: red;
+        width: 83px;
+        color: #ffffff;
+        font-size: 1.7em;
+        font-weight: 100;
+        letter-spacing: -2px;
     }
 }
