@@ -15,10 +15,10 @@ switch ($sdmassembler->sdmCoreDetermineRequestedPage()) {
         ?>
 
         <!-- row 1 | Holds Content Wrappers: #msmd-logo, #msmd-main-menu -->
-        <div class="dev msmd-row msmd-row-width msmd-header-row">
+        <div class="msmd-row msmd-row-width msmd-header-row">
 
             <!-- #locked_msmd-logo -->
-            <div id="locked_msmd-logo" class="dev msmd-col-6 msmd-header-wrapper-top-padding msmd-century-gothic">
+            <div id="locked_msmd-logo" class=" msmd-col-6 msmd-header-wrapper-top-padding msmd-century-gothic">
 
                 <h1 class="msmd-all-caps msmd-scaled-text">Mary Schlicting</h1>
 
@@ -28,7 +28,7 @@ switch ($sdmassembler->sdmCoreDetermineRequestedPage()) {
             <!-- End #locked_msmd-logo -->
 
             <!-- #locked_msmd-main-menu -->
-            <div id="locked_msmd-main-menu" class="dev msmd-col-6 msmd-horizontal-menu msmd-myriad-pro-condensed">
+            <div id="locked_msmd-main-menu" class="msmd-col-6 msmd-horizontal-menu msmd-myriad-pro-condensed">
 
                 <!-- Main menu ul -->
                 <ul>
@@ -46,10 +46,10 @@ switch ($sdmassembler->sdmCoreDetermineRequestedPage()) {
         </div>
 
         <!-- row 2 | Holds Content Wrappers: #msmd-homepage-welcome-text -->
-        <div class="dev msmd-row msmd-row-width">
+        <div class="msmd-row msmd-row-width">
 
             <!-- #msmd-homepage-welcome-text -->
-            <div id="msmd-homepage-welcome-text" class="dev msmd-col-4 msmd-wrapper-padding msmd-myriad-pro-condensed msmd-all-caps">
+            <div id="msmd-homepage-welcome-text" class="msmd-col-4 msmd-wrapper-padding msmd-myriad-pro-condensed msmd-all-caps">
                 <h1>Welcome</h1>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non feugiat nisl, a ultricies risus.
                     Nam nec
@@ -58,7 +58,7 @@ switch ($sdmassembler->sdmCoreDetermineRequestedPage()) {
             <!-- End #msmd-homepage-welcome-text -->
 
             <!-- Generic wrapper, no id. -->
-            <div class="dev msmd-col-8 msmd-wrapper-padding">
+            <div class="msmd-col-8 msmd-wrapper-padding">
                 <img id="msmd-homepage-kitty-img"
                      src="<?php echo $sdmassembler->sdmCoreGetCurrentThemeDirectoryUrl() . '/designImages/kitten.jpg'; ?>">
             </div>
