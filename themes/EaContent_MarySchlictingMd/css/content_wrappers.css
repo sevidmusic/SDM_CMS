@@ -35,6 +35,15 @@
 
 }
 
+#msmd-dvm-box {
+    margin: -12px 0px;
+    padding: 8px 0px 0px 0px;
+    background: red;
+    max-height: 33px;
+    width: 82px;
+    height: 35px;
+}
+
 /* Tablet Styles */
 @media only screen and (min-width: 600px) {
     #locked_msmd-logo {
@@ -63,6 +72,15 @@
 
     #locked_msmd-footer {
 
+    }
+
+    #msmd-dvm-box {
+        margin: -12px 0px;
+        padding: 8px 0px 0px 0px;
+        background: red;
+        max-height: 33px;
+        width: 78px;
+        height: 35px;
     }
 }
 
@@ -94,5 +112,17 @@
 
     #locked_msmd-footer {
 
+    }
+
+    #msmd-dvm-box {
+        margin: -13px 0px;
+        opacity: .7;
+        padding: 3px 0px 0px 3px;
+        background: red;
+        width: 72px;
+        color: #ffffff;
+        font-size: 1.29em;
+        font-family: "Century Gothic";
+        text-transform: uppercase;
     }
 }

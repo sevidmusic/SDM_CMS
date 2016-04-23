@@ -7,6 +7,31 @@
     padding: 0px 0px 0px 0px;
 }
 
+.msmd-century-gothic {
+    font-family: "Century Gothic", sans-serif;
+}
+
+.msmd-myriad-pro {
+    font-family: "Myriad Pro";
+}
+
+.msmd-myriad-pro-condensed {
+    font-family: "Myriad Pro Condensed";
+}
+
+.msmd-all-caps {
+    text-transform: uppercase;
+}
+
+.msmd-scaled-text {
+    letter-spacing: 7.5px;
+    transform: scale(1, 1.5);
+    -webkit-transform: scale(1, 1.5); /* Safari and Chrome */
+    -moz-transform: scale(1, 1.5); /* Firefox */
+    -ms-transform: scale(1, 1.5); /* IE 9+ */
+    -o-transform: scale(1, 1.5); /* Opera */
+}
+
 /* Tablet Styles */
 @media only screen and (min-width: 600px) {
     .msmd-wrapper-padding {
@@ -21,6 +46,7 @@
     }
 
     .msmd-header-wrapper-top-padding h1 {
-        padding: 34px 0px 0px 0px;
+        padding: 33px 0px 0px 0px;
     }
+
 }

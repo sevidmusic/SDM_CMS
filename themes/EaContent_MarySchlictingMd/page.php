@@ -18,17 +18,17 @@ switch ($sdmassembler->sdmCoreDetermineRequestedPage()) {
         <div class="dev msmd-row msmd-row-width msmd-header-row">
 
             <!-- #locked_msmd-logo -->
-            <div id="locked_msmd-logo" class="dev msmd-col-6 msmd-header-wrapper-top-padding">
+            <div id="locked_msmd-logo" class="dev msmd-col-6 msmd-header-wrapper-top-padding msmd-myriad-pro">
 
-                <h1>Mary Schlicting</h1>
+                <h1 class="msmd-all-caps msmd-scaled-text">Mary Schlicting</h1>
 
-                <p>D.V.M. (placeholder)</p>
+                <p id="msmd-dvm-box" class="msmd-all-caps">D.V.M.</p>
 
             </div>
             <!-- End #locked_msmd-logo -->
 
             <!-- #locked_msmd-main-menu -->
-            <div id="locked_msmd-main-menu" class="dev msmd-col-6 msmd-horizontal-menu">
+            <div id="locked_msmd-main-menu" class="dev msmd-col-6 msmd-horizontal-menu msmd-myriad-pro-condensed">
 
                 <!-- Main menu ul -->
                 <ul>

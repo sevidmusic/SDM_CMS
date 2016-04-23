@@ -24,6 +24,8 @@
 
     .msmd-horizontal-menu li {
         display: inline-block; /* Use inline-block so we can apply padding and margins */
+        font-size: 1.5em;
+        margin-right: 31px;
     }
 
     .msmd-horizontal-menu a {

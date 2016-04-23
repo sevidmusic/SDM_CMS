@@ -1,0 +1,38 @@
+/**
+    This file defines the fonts used by the EaContent_MarySchlictingMd theme.
+ */
+
+/** Myriad Pro **/
+
+/* Myriad Regular */
+@font-face {
+    font-family: "Myriad Pro";
+    src: url('../fonts/Myriad%20Pro/Myriad%20Pro%20Regular.ttf');
+}
+
+/* Myriad Bold */
+@font-face {
+    font-family: "Myriad Pro Bold";
+    src: url('../fonts/Myriad%20Pro/myriad-pro-bold_31631.ttf');
+}
+
+/* Myriad Condensed */
+@font-face {
+    font-family: "Myriad Pro Condensed";
+    src: url('../fonts/Myriad%20Pro/myriadpro-cond.otf');
+}
+
+/* Myriad Condensed Bold */
+@font-face {
+    font-family: "Myriad Pro Condensed Bold";
+    src: url('../fonts/Myriad%20Pro/myriad-pro-bold-condensed_31625.ttf');
+}
+
+
+/* Century Gothic*/
+
+/* Regular */
+@font-face {
+    font-family: "Century Gothic";
+    src: url('../fonts/Century%20Gothic/century-gothic_9791.ttf');
+}
