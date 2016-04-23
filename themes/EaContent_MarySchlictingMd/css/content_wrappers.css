@@ -1,0 +1,98 @@
+/**
+    Document   : layout
+    Created on : Oct 27, 2015, 4:31:01 PM
+    Author     : seviforeman
+    Description: This file defined the style definitions for the content-wrappers for the
+                 EaContent_MarySchlictingMd theme.
+ */
+
+/* Mobile Styles */
+#locked_msmd-logo {
+
+}
+
+#locked_msmd-main-menu {
+
+}
+
+#msmd-homepage-welcome-text {
+
+}
+
+#EaContentShortcutBoxes {
+
+}
+
+#msmd-homepage-emergencies-text {
+
+}
+
+#msmd-homepage-hours-location-text {
+
+}
+
+#locked_msmd-footer {
+
+}
+
+/* Tablet Styles */
+@media only screen and (min-width: 600px) {
+    #locked_msmd-logo {
+
+    }
+
+    #locked_msmd-main-menu {
+
+    }
+
+    #msmd-homepage-welcome-text {
+
+    }
+
+    #EaContentShortcutBoxes {
+
+    }
+
+    #msmd-homepage-emergencies-text {
+
+    }
+
+    #msmd-homepage-hours-location-text {
+
+    }
+
+    #locked_msmd-footer {
+
+    }
+}
+
+/* Desktop Styles */
+@media only screen and (min-width: 768px) {
+    #locked_msmd-logo {
+
+    }
+
+    #locked_msmd-main-menu {
+
+    }
+
+    #msmd-homepage-welcome-text {
+
+    }
+
+    #EaContentShortcutBoxes {
+
+    }
+
+    #msmd-homepage-emergencies-text {
+
+    }
+
+    #msmd-homepage-hours-location-text {
+
+    }
+
+    #locked_msmd-footer {
+
+    }
+}

@@ -1,0 +1,24 @@
+/**
+    This file defines image styles for the EaContentMarySchlictingMd theme.
+ */
+
+/* Mobile styles */
+#msmd-homepage-kitty-img {
+
+}
+
+/* Tablet Styles */
+@media only screen and (min-width: 600px) {
+    #msmd-homepage-kitty-img {
+
+    }
+}
+
+/* Desktop Styles */
+@media only screen and (min-width: 768px) {
+    #msmd-homepage-kitty-img {
+        max-width: 420px;
+        float: right;
+        margin-top: -44px;
+    }
+}

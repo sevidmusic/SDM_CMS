@@ -1,0 +1,22 @@
+/**
+    This file defines classes that define general formatting properties such as color, padding, margin, border, etc.
+*/
+
+/* Mobile styles */
+.msmd-wrapper-padding {
+    padding: 0px 0px 0px 0px;
+}
+
+/* Tablet Styles */
+@media only screen and (min-width: 600px) {
+    .msmd-wrapper-padding {
+        padding: 0px 0px 0px 0px;
+    }
+}
+
+/* Desktop Styles */
+@media only screen and (min-width: 768px) {
+    .msmd-wrapper-padding {
+        padding: 0px 0px 0px 0px;
+    }
+}
