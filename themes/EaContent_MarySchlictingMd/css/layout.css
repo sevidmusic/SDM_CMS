@@ -29,10 +29,12 @@ html {
 body {
     width: 100%;
     height: 100%;
-    /* background-image: url("../designImages/mary_mockup.jpg"); */
+    background-image: url("../designImages/mary_mockup.jpg");
     background-repeat: no-repeat;
     background-position: top center;
     background-attachment: fixed;
+    background-color: #000000;
+    margin: 0px;
 }
 
 *, *:before, *:after {
@@ -51,6 +53,30 @@ body {
 [class*="msmd-col-"] {
     width: 100%;
     float: left;
+}
+
+.msmd-row {
+    margin-left: 20px;
+}
+
+.msmd-row-1-height {
+    height: 200px;
+}
+
+.msmd-row-2-height {
+
+}
+
+.msmd-row-3-height {
+
+}
+
+.msmd-row-4-height {
+
+}
+
+.msmd-row-5-height {
+
 }
 
 /**
@@ -123,6 +149,11 @@ body {
         width: 100%;
     }
 
+
+    .msmd-row {
+        margin-left: 20px;
+    }
+
     /* Prevent elements from collapsing on window resize on desktops by setting min-width for desktops.
        Also, center elements on page by setting left and right margins to auto. */
     .msmd-row-width {
@@ -181,11 +212,16 @@ body {
         width: 100%;
     }
 
+
+    .msmd-row {
+    }
+
     /* Prevent elements from collapsing on window resize on desktops by setting min-width for desktops.
        Also, center elements on page by setting left and right margins to auto. */
     .msmd-row-width {
-        width: 873px;
+        width: 1122px;
         margin: 0 auto;
+        padding: 0px 0px 0px 128px;
     }
 
     .msmd-header-row {
