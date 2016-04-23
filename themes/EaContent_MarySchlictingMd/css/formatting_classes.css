@@ -19,4 +19,8 @@
     .msmd-wrapper-padding {
         padding: 0px 0px 0px 0px;
     }
+
+    .msmd-header-wrapper-top-padding h1 {
+        padding: 34px 0px 0px 0px;
+    }
 }

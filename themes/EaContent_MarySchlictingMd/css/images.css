@@ -17,8 +17,8 @@
 /* Desktop Styles */
 @media only screen and (min-width: 768px) {
     #msmd-homepage-kitty-img {
-        max-width: 420px;
+        max-width: 623px;
         float: right;
-        margin-top: -44px;
+        margin: -34px -88px 0px 0px;
     }
 }

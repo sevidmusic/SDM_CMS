@@ -29,6 +29,10 @@ html {
 body {
     width: 100%;
     height: 100%;
+    background-image: url("../designImages/mary_mockup.jpg");
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-attachment: fixed;
 }
 
 *, *:before, *:after {
@@ -180,11 +184,11 @@ body {
     /* Prevent elements from collapsing on window resize on desktops by setting min-width for desktops.
        Also, center elements on page by setting left and right margins to auto. */
     .msmd-row-width {
-        width: 1122px;
+        width: 873px;
         margin: 0 auto;
     }
 
     .msmd-header-row {
-        height: 114px;
+        height: 166px;
     }
 }
