@@ -33,16 +33,37 @@ $(document).ready(function () {
         $("#showAdminBar").hide();
     });
 
+    function adminButtonRollover(element, newCssPropertyValues) {
+        $(element).css("background-color", newCssPropertyValues.backgroundColor);
+        $(element).css("color", newCssPropertyValues.color);
+        $(element).css("opacity", newCssPropertyValues.opacity);
+        $(element).css("border-color", newCssPropertyValues.borderColor);
+    }
+
+    // enforce initial styles
+    //$(".adminShowHideButton").css("background-color", "#000000;");
+    //$(".adminShowHideButton").css("color", "#ffffff;");
+    //$(".adminShowHideButton").css("opacity", ".5");
+    //$(".adminShowHideButton").css("border-color", "#CCCCCC");
+
+    // Unpack original values of css properties that will be modified on rollover
+    var initialCssPropertyValues = {
+        backgroundColor: $(".adminShowHideButton").css('background-color'),
+        color: $(".adminShowHideButton").css('color'),
+        opacity: $(".adminShowHideButton").css('opacity'),
+        borderColor: $(".adminShowHideButton").css('border-color'),
+    };
     // Defined jquery rollovers for buttons with class .adminShowHideButton
     $(".adminShowHideButton").hover(function () {
-        $(this).css("background-color", "#ffffff;");
-        $(this).css("color", "#000000;");
-        $(this).css("opacity", "1");
-        $(this).css("border-color", "#888888");
+        var newCssPropertyValues = {
+            backgroundColor: "#ffffff;",
+            color: "#000000;",
+            opacity: "1",
+            borderColor: "#888888",
+        };
+        adminButtonRollover(this, newCssPropertyValues);
     }, function () {
-        $(this).css("background-color", "#000000;");
-        $(this).css("color", "#ffffff;");
-        $(this).css("opacity", ".5");
+        adminButtonRollover(this, initialCssPropertyValues);
     });
 
 });
