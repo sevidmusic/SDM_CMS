@@ -9,6 +9,7 @@
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+    font-family: "Century Gothic";
 }
 
 /* Remove browser default blue border on selected button */
@@ -20,6 +21,11 @@ button:focus {
     position: fixed;
     top: 10px;
     left: 0;
+    width: 88px;
+    padding: 0px;
+    height: 15px;
+    font-size: .5em;
+    background: none;
 }
 
 #adminBarDisplay {
@@ -32,4 +38,5 @@ button:focus {
     color: #ffffff;
     width: 100%;
     padding: 10px;
+    font-family: "Century Gothic";
 }
