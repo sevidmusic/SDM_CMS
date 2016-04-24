@@ -26,6 +26,7 @@ button:focus {
     height: 27px;
     font-size: .5em;
     background: none;
+    overflow: hidden;
 }
 
 #adminBarDisplay {
