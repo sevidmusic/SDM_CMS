@@ -12,6 +12,13 @@ switch ($sdmassembler->sdmCoreDetermineRequestedPage()) {
         require_once($sdmassembler->sdmCoreGetCurrentThemeDirectoryPath() . '/404.html');
         break;
     default:
+        // DEV CT
+        $adminPages = array('contentManager', 'contentManagerAddContentForm', 'contentManagerUpdateContentFormSubmission', 'SdmAuth', 'navigationManager', 'SdmCoreOverview', 'SdmErrorLog');
+        if (in_array($sdmassembler->sdmCoreDetermineRequestedPage(), $adminPages)) {
+            echo $sdmassembler->sdmAssemblerAssembleHtmlElement($sdmassembler->sdmAssemblerGetContentHtml('main_content'), array('elementType' => 'div', 'styles' => array('position: absolute; border:3px solid #CCCCCC;width: 80%;left: 20%; background: #000000; color: #ffffff;font-size:19px')));
+        }
+        // END DEV CT
+
         ?>
 
         <!-- row 1 | Holds Content Wrappers: #locked_msmd-logo, #msmd-dvm-box, #locked_msmd-main-menu -->
@@ -53,9 +60,7 @@ switch ($sdmassembler->sdmCoreDetermineRequestedPage()) {
             <div id="msmd-homepage-welcome-text"
                  class="dev msmd-col-4 msmd-wrapper-padding msmd-myriad-pro-condensed msmd-all-caps">
                 <h1>Welcome</h1>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi non feugiat nisl, a ultricies risus.
-                    Nam nec
-                    porttitor velit, congue faucibus tortor.</p>
+                <p><?php echo $sdmassembler->sdmAssemblerGetContentHtml('msmd-homepage-welcome-text'); ?></p>
             </div>
             <!-- End #msmd-homepage-welcome-text -->
 

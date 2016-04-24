@@ -20,7 +20,12 @@
     font-size: 2.5em;
 }
 
-#msmd-homepage-welcome-text {padding: 0px 0px 0px 5px;color: red;line-height: 1.3;letter-spacing: 1px;font-size: 1.1em;}
+#msmd-homepage-welcome-text {
+    padding: 0px 0px 0px 5px;
+    line-height: 1.3;
+    letter-spacing: 1px;
+    font-size: 1.1em;
+}
 
 #EaContentShortcutBoxes {
 
