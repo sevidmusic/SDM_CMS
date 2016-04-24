@@ -75,7 +75,6 @@ switch ($javascriptEnabled === true) {
 
         $output .= $sdmassembler->sdmAssemblerGetContentHtml('top-menu');
         $output .= $sdmassembler->sdmAssemblerGetContentHtml('main_content');
-        $output .= $sdmassembler->sdmAssemblerGetContentHtml('side-bar');
 
         $output .= '</div><!-- End #adminPanelDisplay --></div><!-- End #adminBarDisplay. -->';
 
