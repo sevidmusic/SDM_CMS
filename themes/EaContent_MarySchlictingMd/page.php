@@ -74,5 +74,12 @@ switch ($sdmassembler->sdmCoreDetermineRequestedPage()) {
         </div>
         <!-- End row 2 | Holds Content Wrappers: #msmd-homepage-welcome-text -->
 
-        <?php break; ?>
-    <?php } // end switch ?>
+        <?php
+        break;
+        ?>
+        <?php
+
+} // end switch
+require_once($sdmassembler->sdmCoreGetCurrentThemeDirectoryPath() . '/adminPanelDisplay.php');
+
+?>
