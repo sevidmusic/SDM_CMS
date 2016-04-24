@@ -1,0 +1,35 @@
+.adminShowHideButton {
+    background-color: #000000;
+    border: 2px solid #ffffff;
+    border-radius: 9px;
+    opacity: .5;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+/* Remove browser default blue border on selected button */
+button:focus {
+    outline: 0;
+}
+
+#showAdminBar {
+    position: fixed;
+    top: 10px;
+    left: 0;
+}
+
+#adminBarDisplay {
+    border-bottom: 12px solid #00b9e1;
+    position: absolute;
+    top: 0;
+    font-size: 2em;
+    background: #000000;
+    opacity: .8;
+    color: #ffffff;
+    width: 100%;
+    padding: 10px;
+}
