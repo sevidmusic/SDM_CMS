@@ -25,7 +25,7 @@ if ($page !== 'contentManager') {
         /* Initialize $wrapperStatusHtml. */
         $wrapperStatusHtml = '';
         /* Update each wrapper. */
-        foreach ($sdmcms->sdmCmsDetermineAvailableWrappers() as $displayValue => $machineValue) {
+        foreach ($sdmcms->sdmCmsDetermineAvailableWrappers($page) as $displayValue => $machineValue) {
             /* Update the wrapper in the DataObject. */
             $sdmcms->sdmCmsUpdateContent($page, $machineValue, nl2br($sdmForm->sdmFormGetSubmittedFormValue($machineValue)));
 

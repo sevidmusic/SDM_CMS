@@ -9,7 +9,7 @@ require_once($sdmassembler->sdmCoreGetCoreAppDirectoryPath() . '/contentManager/
 
 // CREATE EDIT FORM OBJECT
 $editcontentform = new SdmForm();
-$pagetoedit = $editcontentform->sdmFormGetSubmittedFormValue('page_to_edit');
+$pageToEdit = $editcontentform->sdmFormGetSubmittedFormValue('page_to_edit');
 $editcontentform->formHandler = 'contentManagerUpdateContentFormSubmission';
 $editcontentform->method = 'post';
 $editcontentform->formElements = array(
@@ -17,7 +17,7 @@ $editcontentform->formElements = array(
         'id' => 'page',
         'type' => 'hidden',
         'element' => 'page',
-        'value' => $pagetoedit,
+        'value' => $pageToEdit,
         'place' => '0',
     ),
     array(
@@ -33,9 +33,9 @@ $i = 2;
 // array of available pages
 $available_pages = $sdmassembler->sdmCoreDetermineAvailablePages();
 // load in existing content to populate form fields
-$existing_content = $sdmassembler->sdmCoreLoadDataObject(false)->content->$pagetoedit;
-// create form elements for appropriate wrappers | i.e., page specific wrappers will only be shown if $pagetoedit matches exists in the wrappers name
-foreach ($sdmcms->sdmCmsDetermineAvailableWrappers() as $displayValue => $machineValue) {
+$existing_content = $sdmassembler->sdmCoreLoadDataObject(false)->content->$pageToEdit;
+// create form elements for appropriate wrappers | i.e., page specific wrappers will only be shown if $pageToEdit matches exists in the wrappers name
+foreach ($sdmcms->sdmCmsDetermineAvailableWrappers($pageToEdit) as $displayValue => $machineValue) {
     // create place holder string if any wrappers that do not exist in core
     if (!isset($existing_content->$machineValue) === true) {
         $existing_content->$machineValue = '';
@@ -50,8 +50,8 @@ foreach ($sdmcms->sdmCmsDetermineAvailableWrappers() as $displayValue => $machin
         ));
         $i++;
     }
-    // if the $pagetoedit is found in the wrapper ($machineValue) string, then create a form element b/c the page were editng is relavent to the page specific content.
-    if (strlen(stristr($machineValue, $pagetoedit)) > 0) {
+    // if the $pageToEdit is found in the wrapper ($machineValue) string, then create a form element b/c the page were editng is relavent to the page specific content.
+    if (strlen(stristr($machineValue, $pageToEdit)) > 0) {
         array_push($editcontentform->formElements, array(
             'id' => $machineValue,
             'type' => 'textarea',
@@ -65,4 +65,4 @@ foreach ($sdmcms->sdmCmsDetermineAvailableWrappers() as $displayValue => $machin
 
 $editcontentform->sdmFormBuildForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
 // add form to content
-$sdmassembler->sdmAssemblerIncorporateAppOutput('<!-- contentManager Edit Content Form --><p><i>You are currently editing the <b>' . ucwords($pagetoedit) . '</b></i></p>' . $editcontentform->sdmFormGetForm() . '<!-- End contentManager Edit Content Form -->', $options);
+$sdmassembler->sdmAssemblerIncorporateAppOutput('<!-- contentManager Edit Content Form --><p><i>You are currently editing the <b>' . ucwords($pageToEdit) . '</b></i></p>' . $editcontentform->sdmFormGetForm() . '<!-- End contentManager Edit Content Form -->', $options);

@@ -23,9 +23,9 @@
 </div>
 <!-- row 3 -->
 <div class="row row-min-wid-fix">
-    <div id="footer" class="col-12 col-m-12">
+    <div id="custom_footer" class="col-12 col-m-12">
         <?php
-        echo $sdmassembler->sdmAssemblerGetContentHtml('footer');
+        echo $sdmassembler->sdmAssemblerGetContentHtml('custom_footer');
         ?>
     </div>
 </div>
