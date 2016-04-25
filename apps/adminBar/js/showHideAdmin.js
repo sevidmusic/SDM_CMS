@@ -68,7 +68,7 @@ $(document).ready(function () {
 
     // Hide admin panel when hideAdminPanel button is clicked and decrease height of adminBar
     $("#hideAdminPanel").click(function () {
-        $("#adminBarDisplay").css("height", "");
+        $("#adminBarDisplay").css("min-height", "");
         $("#adminPanelDisplay").hide();
     });
 

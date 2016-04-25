@@ -2,6 +2,29 @@
  *
  */
 
+/* Generic link styles */
+/* Styles for unvisited links*/
+a:link {
+    text-decoration: none;
+    color: #00b9e1;
+}
+
+/* Styles for visited links*/
+a:visited {
+    color: #00b9e1;
+}
+
+/* Styles for when mouse is over link */
+a:hover, a:visited:hover {
+    color: #41b55b;
+}
+
+/* Styles for the active link */
+a:active, a:visited:active {
+    color: #ffffff;
+}
+
+/*  link styles */
 /* Styles for unvisited links*/
 a:link {
     text-decoration: none;

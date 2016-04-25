@@ -60,7 +60,6 @@
     }
 
     #locked_msmd-main-menu {
-        border-bottom: 2px solid #DF3437;
         width: 540px;
         overflow: visible;
     }
@@ -103,7 +102,6 @@
     #locked_msmd-logo {margin: 26px 0px 0px 0px;}
 
     #locked_msmd-main-menu {
-        border-bottom: 2px solid #DF3437;
         width: 416px;
         float: right;
         overflow: visible;
@@ -133,11 +131,11 @@
     }
 
     #msmd-dvm-box {
-        margin: -30px 0px 0px 0px;
+        margin: -30px 0px 0px 2px;
         opacity: .7;
         padding: 3px 0px 0px 3px;
         background: red;
-        width: 86px;
+        width: 85px;
         color: #ffffff;
         font-size: 1.7em;
         font-weight: 100;

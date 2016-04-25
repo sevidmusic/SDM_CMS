@@ -10,9 +10,13 @@
         <!-- #locked_msmd-logo -->
         <div id="locked_msmd-logo" class="dev  msmd-col-5 msmd-header-wrapper-top-padding msmd-century-gothic">
 
-            <h1 class="dev msmd-all-caps msmd-scaled-text"><a href="<?php echo $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?page=homepage'; ?>">Mary Schlicting</a></h1>
+            <h1 class="dev msmd-all-caps msmd-scaled-text"><a
+                    href="<?php echo $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?page=homepage'; ?>">Mary
+                    Schlicting</a></h1>
 
-            <p id="msmd-dvm-box" class="dev msmd-all-caps"><a href="<?php echo $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?page=homepage'; ?>">D.V.M.</a></p>
+            <p id="msmd-dvm-box" class="dev msmd-all-caps"><a
+                    href="<?php echo $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?page=homepage'; ?>">D.V.M.</a>
+            </p>
 
         </div>
         <!-- End #locked_msmd-logo -->
@@ -36,14 +40,26 @@
     </div>
     <!-- End row 1 | Holds Content Wrappers: #msmd-logo, #msmd-main-menu -->
 
-    <!-- row 2 | Holds Content Wrappers: #main_content -->
+    <!-- row 2 | Holds Content Wrappers: #msmd-homepage-welcome-text -->
     <div class="dev msmd-row msmd-row-width">
 
-        <!-- #main_content -->
-        <div id="main_content" class="dev msmd-col-9 msmd-wrapper-padding msmd-myriad-pro-condensed">
-            <p><?php echo $sdmassembler->sdmAssemblerGetContentHtml('main_content'); ?></p>
+        <!-- #msmd-homepage-welcome-text -->
+        <div id="msmd-homepage-welcome-text"
+             class="dev msmd-col-4 msmd-wrapper-padding msmd-myriad-pro-condensed">
+            <h1 class="msmd-all-caps">Welcome</h1>
+            <p><?php echo $sdmassembler->sdmAssemblerGetContentHtml('msmd-homepage-welcome-text'); ?></p>
+            <p><a class="msmd-all-caps"
+                  href="<?php echo $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?page=welcome'; ?>"><span
+                        class="msmd-square-bullet"></span>Read More</a></p>
         </div>
-        <!-- End #main_content -->
+        <!-- End #msmd-homepage-welcome-text -->
+
+        <!-- Generic wrapper, no id. -->
+        <div class="dev msmd-col-8 msmd-wrapper-padding">
+            <img id="msmd-homepage-kitty-img"
+                 src="<?php echo $sdmassembler->sdmCoreGetCurrentThemeDirectoryUrl() . '/designImages/kitten.jpg'; ?>">
+        </div>
+        <!-- End Generic wrapper, no id. -->
 
     </div>
     <!-- End row 2 | Holds Content Wrappers: #msmd-homepage-welcome-text -->
@@ -58,3 +74,7 @@
         echo $sdmassembler->sdmAssemblerGetContentHtml('Sdm_Cms_Core_Output');
         ?>
     </div>
+
+<?php
+//require_once($sdmassembler->sdmCoreGetCurrentThemeDirectoryPath() . '/adminPanelDisplay.php');
+?>

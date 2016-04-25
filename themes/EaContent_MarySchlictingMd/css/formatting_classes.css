@@ -25,10 +25,10 @@
 
 .msmd-scaled-text {
     letter-spacing: -1.9px;
-     /* Safari and Chrome */
-     /* Firefox */
-     /* IE 9+ */
-     /* Opera */
+    /* Safari and Chrome */
+    /* Firefox */
+    /* IE 9+ */
+    /* Opera */
 }
 
 /* Tablet Styles */
@@ -49,4 +49,12 @@
         font-weight: 100;
     }
 
+}
+
+.msmd-square-bullet {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    background: #df3435;
+    margin-right: 12px;
 }

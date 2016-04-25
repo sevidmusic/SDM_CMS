@@ -220,8 +220,8 @@ body {
        Also, center elements on page by setting left and right margins to auto. */
     .msmd-row-width {
         width: 1122px;
-        margin: 0 auto;
-        padding: 0px 0px 0px 128px;
+        margin: 1px auto;
+        padding: 0px 0px 0px 130px;
     }
 
     .msmd-header-row {
