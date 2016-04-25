@@ -24,31 +24,16 @@
 }
 
 .msmd-scaled-text {
-    letter-spacing: -1.9px;
-    /* Safari and Chrome */
-    /* Firefox */
-    /* IE 9+ */
-    /* Opera */
+    letter-spacing: -1.7px;
 }
 
-/* Tablet Styles */
-@media only screen and (min-width: 600px) {
-    .msmd-wrapper-padding {
-        padding: 0px 0px 0px 0px;
-    }
+.msmd-wrapper-padding {
+    padding: 0px 0px 0px 0px;
 }
 
-/* Desktop Styles */
-@media only screen and (min-width: 768px) {
-    .msmd-wrapper-padding {
-        padding: 0px 0px 0px 0px;
-    }
-
-    .msmd-header-wrapper-top-padding h1 {
-        font-size: 2.7em;
-        font-weight: 100;
-    }
-
+.msmd-header-wrapper-top-padding h1 {
+    font-size: 2.7em;
+    font-weight: 100;
 }
 
 .msmd-square-bullet {
@@ -56,5 +41,11 @@
     width: 15px;
     height: 15px;
     background: #df3435;
-    margin-right: 12px;
+    margin-right: 10px;
+    margin-left: 2px;
+}
+
+.msmd-read-more-link {
+    letter-spacing: 3px;
+    font-weight: bold;
 }

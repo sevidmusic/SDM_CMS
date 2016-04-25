@@ -3,15 +3,9 @@
  */
 
 /* Mobile styles */
-#msmd-homepage-kitty-img {
-
-}
 
 /* Tablet Styles */
 @media only screen and (min-width: 600px) {
-    #msmd-homepage-kitty-img {
-
-    }
 }
 
 /* Desktop Styles */

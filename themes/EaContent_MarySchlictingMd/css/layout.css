@@ -30,6 +30,7 @@ body {
     width: 100%;
     height: 100%;
     /* background-image: url("../designImages/mary_mockup.jpg"); */
+    /* background-image: url("../designImages/mary_interior.jpg"); */
     background-repeat: no-repeat;
     background-position: top center;
     background-attachment: fixed;
@@ -56,27 +57,6 @@ body {
 }
 
 .msmd-row {
-    margin-left: 20px;
-}
-
-.msmd-row-1-height {
-    height: 200px;
-}
-
-.msmd-row-2-height {
-
-}
-
-.msmd-row-3-height {
-
-}
-
-.msmd-row-4-height {
-
-}
-
-.msmd-row-5-height {
-
 }
 
 /**
@@ -91,11 +71,6 @@ body {
 .msmd-row:after {
     clear: both;
     display: block;
-}
-
-/* Set to 0 to negate desktop min-width. */
-.msmd-row-width {
-    min-width: 0px;
 }
 
 /* Tablet Styles | WARNING: Be very careful editing theses widths! */
@@ -147,17 +122,6 @@ body {
 
     .msmd-col-m-12 {
         width: 100%;
-    }
-
-
-    .msmd-row {
-        margin-left: 20px;
-    }
-
-    /* Prevent elements from collapsing on window resize on desktops by setting min-width for desktops.
-       Also, center elements on page by setting left and right margins to auto. */
-    .msmd-row-width {
-        min-width: 0px;
     }
 }
 
@@ -212,19 +176,19 @@ body {
         width: 100%;
     }
 
-
-    .msmd-row {
-    }
-
     /* Prevent elements from collapsing on window resize on desktops by setting min-width for desktops.
        Also, center elements on page by setting left and right margins to auto. */
     .msmd-row-width {
         width: 1122px;
-        margin: 1px auto;
-        padding: 0px 0px 0px 130px;
+        margin: 0px auto;
+        padding: 0px 0px 0px 133px;
     }
 
     .msmd-header-row {
         height: 167px;
+    }
+
+    .msmd-row-1-height {
+        height: 200px;
     }
 }

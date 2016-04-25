@@ -48,8 +48,8 @@
              class="dev msmd-col-4 msmd-wrapper-padding msmd-myriad-pro-condensed">
             <h1 class="msmd-all-caps">Welcome</h1>
             <p><?php echo $sdmassembler->sdmAssemblerGetContentHtml('msmd-homepage-welcome-text'); ?></p>
-            <p><a class="msmd-all-caps"
-                  href="<?php echo $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?page=welcome'; ?>"><span
+            <p class="msmd-read-more-link"><a class="msmd-all-caps"
+                                              href="<?php echo $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?page=welcome'; ?>"><span
                         class="msmd-square-bullet"></span>Read More</a></p>
         </div>
         <!-- End #msmd-homepage-welcome-text -->

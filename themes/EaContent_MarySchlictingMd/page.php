@@ -40,7 +40,7 @@
     <div class="dev msmd-row msmd-row-width">
 
         <!-- #main_content -->
-        <div id="main_content" class="dev msmd-col-9 msmd-wrapper-padding msmd-myriad-pro-condensed">
+        <div id="main_content" class="dev msmd-col-8 msmd-wrapper-padding msmd-myriad-pro-condensed">
             <p><?php echo $sdmassembler->sdmAssemblerGetContentHtml('main_content'); ?></p>
         </div>
         <!-- End #main_content -->
