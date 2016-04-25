@@ -1,44 +1,58 @@
 <?php
 
-/**
- * Sdm Dev Output user app: This app is intended for use by developers. With it php
- * snippets can be tested. Just add the code to test to this file, and incorporate
- * the output via sdmAssemblerIncorporateAppOutput().
- */
+if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmDevOutput') {
+    /**
+     * Sdm Dev Output user app: This app is intended for use by developers. With it php
+     * snippets can be tested. Just add the code to test to this file, and incorporate
+     * the output via sdmAssemblerIncorporateAppOutput().
+     */
 
-$description = '<h1>Sdm Dev Output App</h1><p>This app is intended for use by developers.
-                    With it php snippets can be tested. Just add the code to test to the
-                    SdmDevOutput.php file.</p>';
-$output = '<!-- Sdm Dev Output App Placeholder -->' . $description;
+    /*** App generated content ***/
 
-/* Test SdmForm() changes. */
+    /* Identifying html comment. */
+    $identifierComment = '<!-- Sdm Dev Output App -->';
 
-/* Build form using default values */
-$defaultForm = new SdmForm();
-$defaultForm->formHandler = 'SdmDevOutput';
-$defaultForm->method = 'post';
-$defaultForm->sdmFormUseDefaultFormElements();
-$defaultForm->submitLabel = 'Submit';
-$defaultForm->sdmFormBuildForm();
+    /* App description header. */
+    $descriptionHeader = 'Sdm Dev Output App.';
 
-/* Build custom form  */
-$customForm = new SdmForm();
-$customForm->formHandler = 'SdmDevOutput';
-$customForm->method = 'post';
-$customForm->sdmFormCreateFormElement('customTextValue', 'text', 'Enter some text', '', 0);
-$customForm->sdmFormCreateFormElement('customSelect', 'select', 'Select A Value', array('Select Value 1' => true, 'Select Value 2' => 420), 0);
-$customForm->sdmFormCreateFormElement('customRadio', 'radio', 'Choose A Value', array('Radio Value 1' => true, 'Radio Value 2' => 420), 0);
-$customForm->submitLabel = 'Submit Custom Form';
-$customForm->sdmFormBuildForm();
+    /* App description. */
+    $description = 'This app is intended for use by developers. With it php snippets can be tested.';
 
-$output .= '<h1>Demo Forms</h1>';
-$output .= '<div class="sdm-dev-output-background sdm-dev-output-border sdm-dev-output-rounded-border sdm-dev-output-float-left sdm-dev-output-height sdm-dev-output-half-wide sdm-dev-output-padding-all sdm-dev-output-margin-bottom"><h3>Default Form</h3>' . $defaultForm->sdmFormGetForm() . '</div>';
-$output .= '<div class="sdm-dev-output-background sdm-dev-output-border sdm-dev-output-rounded-border sdm-dev-output-float-right sdm-dev-output-height sdm-dev-output-half-wide sdm-dev-output-padding-all sdm-dev-output-margin-bottom"><h3>Custom Form</h3>' . $customForm->sdmFormGetForm() . '</div>';
+    /* App description continued... */
+    $description .= 'Just add the code to test to the SdmDevOutput.php file.';
 
-$output .= '<div class="clear-both"></div>';
-$output .= '<h3>Individual Form Elements</h3>';
-$output .= $customForm->sdmFormOpenForm();
-$output .= $customForm->sdmFormGetFormElementHtml('customSelect');
-$output .= $customForm->sdmFormCloseForm();
+    /** App $output **/
 
-$sdmassembler->sdmAssemblerIncorporateAppOutput($output, ['incpages' => ['SdmDevOutput']]);
+    /* include test forms */
+    include_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmDevOutput/devForms/devForm1.php');
+
+    /* Output $identifierComment */
+    $output = $identifierComment;
+
+    /* Output $descriptionHeader */
+    $descriptionHeaderContainerAttributes = array('elementType' => 'h2');
+    $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($descriptionHeader, $descriptionHeaderContainerAttributes);
+
+    /* Output $description */
+    $descriptionContainerAttributes = array('elementType' => 'p');
+    $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($description, $descriptionContainerAttributes);
+
+    if (isset($submittedValuesList) === true) {
+        /* Output $submittedValuesList */
+        $submittedValueDisplayContianerAttributes = array('elementType' => 'div');
+        $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($submittedValuesList, $submittedValueDisplayContianerAttributes);
+    }
+
+    /* DEV OUTPUT */
+    if (isset($submittedValuesDisplay) === true) {
+        $output .= $submittedValuesDisplay;
+    }
+
+    /* Output $customFormHtml */
+    $output .= $customForm->sdmFormOpenForm() . $customFormContainer . $customForm->sdmFormCloseForm();
+
+    /* Display app $output */
+    $sdmassembler->sdmAssemblerIncorporateAppOutput($output, ['incpages' => ['SdmDevOutput']]);
+
+
+}

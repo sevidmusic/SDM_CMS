@@ -95,7 +95,7 @@ $addMenuItemForm->formElements = array(
         'id' => 'menuItemWrappingTagType',
         'type' => 'select',
         'element' => 'Wrapping Tag Type <i style="font-size:.7em;">(The html tag to wrap this menu item with. NOTE:if any menu items use li, all menu items must use li so a list can be created. The form will enforce this.)</i>',
-        'value' => ($firstMenuItemWrappingTagType === 'li' ? array('li' => 'li') : SdmForm::setDefaultValues(array('div' => 'div', 'p' => 'p', 'h1' => 'h1', 'h2' => 'h2', 'h3' => 'h3', 'h4' => 'h4', 'h5' => 'h5', 'h6' => 'h6'), $menuItem->menuItemWrappingTagType)),
+        'value' => ($firstMenuItemWrappingTagType === 'li' ? array('li' => 'li') : SdmForm::sdmFormSetDefaultInputValues(array('div' => 'div', 'p' => 'p', 'h1' => 'h1', 'h2' => 'h2', 'h3' => 'h3', 'h4' => 'h4', 'h5' => 'h5', 'h6' => 'h6'), $menuItem->menuItemWrappingTagType)),
         'place' => '12',
     ),
     array(

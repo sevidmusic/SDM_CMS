@@ -1,0 +1,151 @@
+/**
+    Document   : layout
+    Created on : Oct 27, 2015, 4:31:01 PM
+    Author     : seviforeman
+    Description: This file defined the style definitions for the content-wrappers for the
+                 EaContent_MarySchlictingMd theme.
+ */
+
+/* Mobile Styles */
+#locked_msmd-logo {
+
+}
+
+#locked_msmd-main-menu {
+
+}
+
+#msmd-homepage-welcome-text h1 {
+    margin-bottom: -10px;
+    font-size: 2.5em;
+}
+
+#msmd-homepage-welcome-text {
+    padding: 0px 0px 0px 5px;
+    line-height: 1.3;
+    letter-spacing: 1px;
+    font-size: 1.1em;
+}
+
+#EaContentShortcutBoxes {
+
+}
+
+#msmd-homepage-emergencies-text {
+
+}
+
+#msmd-homepage-hours-location-text {
+
+}
+
+#locked_msmd-footer {
+
+}
+
+#msmd-dvm-box {
+    margin: -13px 0px;
+    opacity: .7;
+    padding: 3px 0px 0px 3px;
+    background: red;
+    width: 72px;
+    color: #ffffff;
+    font-size: 1.29em;
+}
+
+/* Tablet Styles */
+@media only screen and (min-width: 600px) {
+    #locked_msmd-logo {
+
+    }
+
+    #locked_msmd-main-menu {
+        border-bottom: 2px solid #DF3437;
+        width: 540px;
+        overflow: visible;
+    }
+
+    #msmd-homepage-welcome-text h1 {
+        font-size: 2.5em;
+    }
+
+    #EaContentShortcutBoxes {
+
+    }
+
+    #msmd-homepage-emergencies-text {
+
+    }
+
+    #msmd-homepage-hours-location-text {
+
+    }
+
+    #locked_msmd-footer {
+
+    }
+
+    #msmd-dvm-box {
+        margin: -18px 0px;
+        opacity: .7;
+        padding: 3px 0px 0px 3px;
+        background: red;
+        width: 83px;
+        color: #ffffff;
+        font-size: 1.7em;
+        font-weight: 100;
+        letter-spacing: -2px;
+    }
+}
+
+/* Desktop Styles */
+@media only screen and (min-width: 768px) {
+    #locked_msmd-logo {margin: 26px 0px 0px 0px;}
+
+    #locked_msmd-main-menu {
+        border-bottom: 2px solid #DF3437;
+        width: 416px;
+        float: right;
+        overflow: visible;
+        margin: 0px 96px 0px 0px;
+    }
+
+    #msmd-homepage-welcome-text h1 {
+        font-size: 2.8em;
+        margin: 26px 0px -19px 0px;
+        letter-spacing: 12px;
+    }
+
+    #EaContentShortcutBoxes {
+
+    }
+
+    #msmd-homepage-emergencies-text {
+
+    }
+
+    #msmd-homepage-hours-location-text {
+
+    }
+
+    #locked_msmd-footer {
+
+    }
+
+    #msmd-dvm-box {
+        margin: -30px 0px 0px 0px;
+        opacity: .7;
+        padding: 3px 0px 0px 3px;
+        background: red;
+        width: 86px;
+        color: #ffffff;
+        font-size: 1.7em;
+        font-weight: 100;
+        letter-spacing: -2px;
+        height: 37px;
+    }
+
+    #msmd-main-menu-first-element {
+        padding-left: 0px;
+    }
+}

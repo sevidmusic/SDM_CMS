@@ -1,0 +1,55 @@
+/**
+    This file defines the menu styles for the EaContent_MarySchlictingMd theme.
+ */
+
+/* Mobile Styles */
+
+/* Tablet Styles */
+@media only screen and (min-width: 600px) {
+    /** menu styles **/
+    .msmd-horizontal-menu {
+        padding: 0;
+        margin: 0;
+    }
+
+    .msmd-horizontal-menu ul {
+        margin-left: -39px;
+        list-style: none; /* get rid of bullets for list elemetns */
+         /* remove indentation of list elements */
+        padding-top: 15px;
+    }
+
+    .msmd-horizontal-menu li {
+        display: inline-block; /* Use inline-block so we can apply padding and margins */
+        font-size: 1.38em;
+    }
+
+    .msmd-horizontal-menu a {
+        text-decoration: none;
+    }
+}
+
+/* Desktop Styles */
+@media only screen and (min-width: 768px) {
+    /** menu styles **/
+    .msmd-horizontal-menu {
+        padding: 0;
+        margin: 0;
+    }
+
+    .msmd-horizontal-menu ul {
+        list-style: none; /* get rid of bullets for list elemetns */
+        /* remove indentation of list elements */
+        margin-top: 52px;
+    }
+
+    .msmd-horizontal-menu li {
+        display: inline-block; /* Use inline-block so we can apply padding and margins */
+        font-size: 1.39em;
+        margin: 0px 31px 0px 0px;
+    }
+
+    .msmd-horizontal-menu a {
+        text-decoration: none;
+    }
+}

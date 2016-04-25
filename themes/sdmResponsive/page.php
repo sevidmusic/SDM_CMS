@@ -6,7 +6,7 @@
 
 <!-- row 1 -->
 <div class="row row-min-wid-fix">
-    <div id="top-menu" class="col-12 col-m-12 border-bottom">
+    <div id="locked_top-menu" class="col-12 col-m-12 border-bottom">
         <?php
         echo $sdmassembler->sdmAssemblerGetContentHtml('top-menu');
         ?>
@@ -20,7 +20,7 @@
     $sideBarExists = (in_array($sidebar, $sidebarInvalidValues) === true ? false : true);
     if ($sideBarExists === true) {
         ?>
-        <div id="side-menu" class="col-3 col-m-3 rounded">
+        <div id="locked_side-menu" class="col-3 col-m-3 rounded">
             <?php
             echo $sdmassembler->sdmAssemblerGetContentHtml('side-menu');
             ?>    </div>
@@ -40,4 +40,16 @@
         echo $sdmassembler->sdmAssemblerGetContentHtml('footer');
         ?>
     </div>
+</div>
+
+<!--
+  Special wrapper provided by Sdm Cms Core to hold Sdm Cms Core Output
+  This wrapper is meant to hold core and user app output
+  that is not part of the page. For instance, if an app needs to generate
+  a message to the user this core wrapper is a good place to output the message.
+-->
+<div id="Sdm_Cms_Core_Output">
+    <?php
+    echo $sdmassembler->sdmAssemblerGetContentHtml('Sdm_Cms_Core_Output');
+    ?>
 </div>

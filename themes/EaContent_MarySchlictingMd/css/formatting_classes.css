@@ -1,0 +1,52 @@
+/**
+    This file defines classes that define general formatting properties such as color, padding, margin, border, etc.
+*/
+
+/* Mobile styles */
+.msmd-wrapper-padding {
+    padding: 0px 0px 0px 0px;
+}
+
+.msmd-century-gothic {
+    font-family: "Century Gothic", sans-serif;
+}
+
+.msmd-myriad-pro {
+    font-family: "Myriad Pro";
+}
+
+.msmd-myriad-pro-condensed {
+    font-family: "Myriad Pro Condensed";
+}
+
+.msmd-all-caps {
+    text-transform: uppercase;
+}
+
+.msmd-scaled-text {
+    letter-spacing: -1.9px;
+     /* Safari and Chrome */
+     /* Firefox */
+     /* IE 9+ */
+     /* Opera */
+}
+
+/* Tablet Styles */
+@media only screen and (min-width: 600px) {
+    .msmd-wrapper-padding {
+        padding: 0px 0px 0px 0px;
+    }
+}
+
+/* Desktop Styles */
+@media only screen and (min-width: 768px) {
+    .msmd-wrapper-padding {
+        padding: 0px 0px 0px 0px;
+    }
+
+    .msmd-header-wrapper-top-padding h1 {
+        font-size: 2.7em;
+        font-weight: 100;
+    }
+
+}

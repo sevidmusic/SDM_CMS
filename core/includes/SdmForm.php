@@ -1,15 +1,19 @@
 <?php
 
 /**
- * @todo POST works great, however the SdmForm class has a lot of trouble with GET, this needs to be remedied.
- * @todo Make the following methods an option if possible: POST, GET, SESSION. POST is the only one that works at the moment.
- * @todo Make the static methods in this class non-static so they can self reference SdmForm() objects
+ * @todo Make the following methods an option if possible: POST, GET, SESSION. POST and GET are the only ones that works at the moment.
+ *
+ * @todo Look into making the all static methods in this class non-static so they can self reference. This may
+ *       not be possible for some methods like sdmFormGetSubmittedFormValue() as it needs to be static to maintian
+ *       the functiionality that allows SdmForm() object's to retrieve submitted values form other SdmForm objects.
+ *
  * @todo Consider making this class a child of Sdm Core so it can directly utilize it's methods and properties.
- * @todo Test what happens when no $formHandler is specified. The default should be to use the current page since
- *       the form is most likely on the current page.
- * @todo Make sure post is used when method not specified.
- * @todo Make it possible to asign classes to the form and the form elements via the
- *       new $formClass and $formElementClasses properties respectively.
+ *
+ * @todo Make it possible to assign classes to the form elements via the
+ *       new $formElements['classes'].
+ *
+ * @todo Some values are not being encoded, fix this as this could lead to security issues.
+ *
  */
 
 /**
@@ -68,8 +72,9 @@ class SdmForm
     public $formElements;
     public $method;
     public $submitLabel;
-    public $formClass;
-    public $formElementClasses;
+    public $formClasses;
+    public $formSubmitButtonClasses;
+    public $preserveSubmittedValues;
     private $formId;
     private $form;
     private $formElementHtml;
@@ -90,14 +95,17 @@ class SdmForm
         /* If method is set use it, otherwise default to post. */
         $this->method = (isset($this->method) ? $this->method : 'post');
 
-        /* If formHandler is set use it, otherwise default to current page. @todo determine current page by default */
-        $this->formHandler = (isset($this->formHandler) ? $this->formHandler : '');
+        /* If formHandler is set use it, otherwise default to current page. */
+        $this->formHandler = (isset($this->formHandler) ? $this->formHandler : filter_input(INPUT_GET, 'page', FILTER_SANITIZE_ENCODED));
 
         /* If form is set use it, otherwise set an empty string as a placeholder. */
         $this->form = (isset($this->form) === true ? $this->form : '');
 
         /* If submitLabel set use it, otherwise default to the string 'Submit'. */
         $this->submitLabel = (isset($this->submitLabel) ? $this->submitLabel : 'Submit');
+
+        /* If preserveSubmittedValues is set use it, otherwise default to the boolean false. */
+        $this->preserveSubmittedValues = (isset($this->preserveSubmittedValues) ? $this->preserveSubmittedValues : false);
     }
 
     /**
@@ -145,6 +153,375 @@ class SdmForm
         return $string;
     }
 
+    public function sdmFormUseDefaultFormElements()
+    {
+        $this->formElements = array(
+            /* default text form element */
+            array(
+                'id' => 'text_form_element',
+                'type' => 'text',
+                'element' => 'Default Text Element',
+                'value' => 'Enter some text',
+                'place' => '0',
+            ),
+            /* default textarea form element */
+            array(
+                'id' => 'textarea_form_element',
+                'type' => 'textarea',
+                'element' => 'Default Text Area Element',
+                'value' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam convallis nec felis at lobortis. Sed eleifend molestie nunc, id tristique dui eleifend vitae. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nullam ligula ipsum, vestibulum et malesuada eget, commodo sed arcu. Phasellus non luctus libero. Suspendisse consectetur mollis eros, non ultrices ex malesuada nec. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Pellentesque hendrerit lorem et ipsum sodales egestas sed a felis. Quisque efficitur suscipit congue. Mauris in dolor tincidunt, venenatis metus at, elementum tortor. Morbi lacinia velit est, eu elementum ante dictum vitae. Mauris congue ligula tincidunt neque aliquet luctus. Aliquam id dui finibus, semper ex id, vulputate magna. Sed dignissim justo sapien, ac viverra enim iaculis iaculis. Curabitur vestibulum, ex eget vestibulum feugiat, est ante volutpat urna, semper venenatis orci quam ut risus.',
+                'place' => '3',
+            ),
+            /* default password form element */
+            array(
+                'id' => 'password_form_element',
+                'type' => 'password',
+                'element' => 'Default Password Element',
+                'value' => '',
+                'place' => '3',
+            ),
+            /* default select form element */
+            array(
+                'id' => 'select_form_element',
+                'type' => 'select',
+                'element' => 'Default Select Form Element',
+                'value' => array('Default Select Value 1' => 'default_select_value_1', 'Default Select Value 2' => 'select_value_2', 'Default Select Value 3' => 'select_value_3'),
+                'place' => '1',
+            ),
+            /* default radio form element */
+            array(
+                'id' => 'radio_form_element',
+                'type' => 'radio',
+                'element' => 'Default Radio From Element',
+                'value' => array('Default Radio Value 1' => 'default_radio_value_1', 'Default Radio Value 2' => 'radio_value_2', 'Default Radio Value 3' => 'radio_value_3'),
+                'place' => '2',
+            ),
+            /* default hidden form element */
+            array(
+                'id' => 'hidden_form_element',
+                'type' => 'hidden',
+                'element' => 'Default Hidden From Element',
+                'value' => 'Default Hidden From Element',
+                'place' => '4',
+            ),
+        );
+        return (empty($this->formElements) === true ? false : true);
+    }
+
+    /**
+     * Builds the form's html.
+     *
+     * @param string $rootUrl The sites root url. Insures requests are made from site of origin.
+     *
+     * @return string The form's html.
+     */
+    public function sdmFormBuildForm($rootUrl = null)
+    {
+        /* If the $rootUrl was not specified attempt to set it to the site's root url for security.
+           It is best to specify the $rootUrl. */
+        if (!isset($rootUrl)) {
+            /* Try to determine root url using $_SERVER variables. */
+            $rootUrl = $this->sdmFormDetermineRootUrl();
+        }
+
+        /* Create opening form html. This includes an html comment showing the formId, and the opening form tags
+           with the appropriate attributes defined. */
+        $formHtml = $this->sdmFormOpenForm($rootUrl);
+
+        /* Build html for form elements. */
+        $formHtml .= $this->sdmFormBuildFormElements();
+
+        /* Create closing form html. */
+        $formHtml .= $this->sdmFormCloseForm();
+
+        /* Assign the constructed form html to the 'form' property. */
+        $this->form = $formHtml;
+
+        /* Return the assembled html. */
+        return $this->form;
+    }
+
+    /**
+     * Attempts to determine the site's root url.
+     *
+     * @return string The sites root url.
+     */
+    public function sdmFormDetermineRootUrl()
+    {
+        /* Try to determine root url using $_SERVER variables. */
+        return str_replace('/index.php', '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']);
+    }
+
+    /**
+     * Constructs the opening html for the form.
+     *
+     * @param string $rootUrl The sites root url. Insures requests are made from site of origin.
+     *
+     * @return string The forms opening html.
+     */
+    public function sdmFormOpenForm($rootUrl = null)
+    {
+        /* If the $rootUrl was not specified attempt to set it to the site's root url for security.
+           It is best to specify the $rootUrl. */
+        if (!isset($rootUrl)) {
+            /* Try to determine root url using $_SERVER variables. */
+            $rootUrl = $this->sdmFormDetermineRootUrl();
+        }
+
+        return '<!-- form "' . $this->sdmFormGetFormId() . '" --><form ' . (isset($this->formClasses) ? 'class="' . $this->sdmFormExtractClasses('form') . '"' : '') . ' method="' . $this->method . '" action="' . $rootUrl . '/index.php?page=' . $this->formHandler . '">';
+    }
+
+    /**
+     * Retrieves the form's id.
+     * @return string The formId property as a string or false on failure
+     */
+    public function sdmFormGetFormId()
+    {
+        /* If form id is set use it. */
+        switch (isset($this->formId)) {
+            case true:
+                $formId = $this->formId;
+                break;
+            default:
+                /* Otherwise log an error. */
+                error_log('Form missing id. Which form cannot be determined since id does not exist.');
+
+                /* Assign false to $formId since $this->formId was not set. */
+                $formId = false;
+                break;
+        }
+        return $formId;
+    }
+
+    final private function sdmFormExtractClasses($component = 'form')
+    {
+        switch ($component) {
+            case 'form':
+                $componentValue = $this->formClasses;
+                $componentName = 'SdmForm()->formClasses';
+                break;
+            case 'submitButton':
+                $componentValue = $this->formSubmitButtonClasses;
+                $componentName = 'SdmForm()->formSubmitButtonClasses';
+                break;
+            default:
+                error_log('Unsupported form $component, "' . strval($component) . '", passed to sdmFormExtractClasses.');
+                $componentValue = null;
+                $componentName = 'Error: Unsupported component!';
+                break;
+        }
+        if (isset($componentValue)) {
+            switch (gettype($componentValue)) {
+                case 'string':
+                    return strval(trim($componentValue));
+                    break;
+                case 'array':
+                    return strval(trim(implode(' ', $componentValue)));
+                    break;
+                default:
+                    error_log('Invalid type passed to sdmFormExtractFormClasses() via ' . $componentName . ' parameter. ' . $componentValue . ' must be of type array or string.');
+                    return null;
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Builds the html for the form elements.
+     *
+     * @return string Html for all defined form elements.
+     */
+    public function sdmFormBuildFormElements()
+    {
+        /* Sort elements based on element's "place". */
+        $elementOrder = array(); // used to sort items
+        foreach ($this->formElements as $key => $value) {
+            $elementOrder[$key] = $value['place'];
+        }
+        array_multisort($elementOrder, SORT_ASC, $this->formElements);
+
+        /* Initialize the string that will hold form element's html. */
+        $formElementsHtml = '';
+
+        /* Build formElement property. This property stores form element
+           html as items in an array. */
+        $this->formElementHtml = array();
+
+        /* Build form elements. */
+        foreach ($this->formElements as $key => $value) {
+            switch ($value['type']) {
+                case 'text':
+                    /* Build element html and add $formElementsHtml to $this->formElementHtml array. */
+                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><input name="SdmForm[' . $value['id'] . ']" type="text" value="' . $this->sdmFormSetFormValue($value) . '"><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+
+                    /*  Add form element html to $this->form  */
+                    $formElementsHtml .= $this->formElementHtml[$value['id']];
+                    break;
+                case 'password':
+                    /* Build element html and add $formElementsHtml to $this->formElementHtml array. */
+                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><input name="SdmForm[' . $value['id'] . ']" type="password" value="' . $this->sdmFormSetFormValue($value) . '"><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+
+                    /*  Add form element html to $this->form  */
+                    $formElementsHtml .= $this->formElementHtml[$value['id']];
+                    break;
+                case 'textarea':
+                    /* Build element html and add $formElementsHtml to $this->formElementHtml array. */
+                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><textarea name="SdmForm[' . $value['id'] . ']">' . $this->sdmFormSetFormValue($value) . '</textarea><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+
+                    /* Add $formElementsHtml to $this->formElementHtml array. */
+                    $formElementsHtml .= $this->formElementHtml[$value['id']];
+
+                    break;
+
+                case 'select':
+                    /* Build element html and add $formElementsHtml to $this->formElementHtml array. */
+                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><select name="SdmForm[' . $value['id'] . ']">';
+                    $selectItems = $this->sdmFormSetFormValue($value);
+                    foreach ($selectItems as $option => $optionValue) {
+                        $this->formElementHtml[$value['id']] .= '<option value="' . (substr($optionValue, 0, 8) === 'default_' ? $this->sdmFormEncode(str_replace('default_', '', $optionValue)) . '" selected="selected"' : $this->sdmFormEncode($optionValue) . '"') . '>' . $option . '</option>';
+                    }
+                    $this->formElementHtml[$value['id']] .= '</select><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+
+                    /* Add $formElementsHtml to $this->formElementHtml array. */
+                    $formElementsHtml .= $this->formElementHtml[$value['id']];
+                    break;
+                case 'radio':
+                    /* Build element html and add $formElementsHtml to $this->formElementHtml array. */
+                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><p id="label-for-SdmForm[' . $value['id'] . ']">' . $value['element'] . '</p>';
+                    $radioItems = $this->sdmFormSetFormValue($value);
+                    foreach ($radioItems as $radio => $radioValue) {
+                        $this->formElementHtml[$value['id']] .= '<label  for="SdmForm[' . $value['id'] . ']">' . $radio . '</label><input type="radio" name="SdmForm[' . $value['id'] . ']" value="' . (substr($radioValue, 0, 8) === 'default_' ? $this->sdmFormEncode(str_replace('default_', '', $radioValue)) . '" checked="checked"' : $this->sdmFormEncode($radioValue) . '"') . '><br><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+                    }
+                    $this->formElementHtml[$value['id']] .= '<br>';
+
+                    /* Add $formElementsHtml to $this->formElementHtml array. */
+                    $formElementsHtml .= $this->formElementHtml[$value['id']];
+                    break;
+                case 'checkbox':
+                    /* Build element html and add $formElementsHtml to $this->formElementHtml array. */
+                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><p id="label-for-SdmForm[' . $value['id'] . ']">' . $value['element'] . '</p>';
+                    $checkboxItems = $this->sdmFormSetFormValue($value);
+                    foreach ($checkboxItems as $checkbox => $checkboxValue) {
+                        $this->formElementHtml[$value['id']] .= '<label  for="SdmForm[' . $value['id'] . ']">' . $checkbox . '</label><input type="checkbox" name="SdmForm[' . $value['id'] . '][]" value="' . (substr($checkboxValue, 0, 8) === 'default_' ? $this->sdmFormEncode(str_replace('default_', '', $checkboxValue)) . '" checked="checked"' : $this->sdmFormEncode($checkboxValue) . '"') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+                    }
+
+                    $formElementsHtml .= $this->formElementHtml[$value['id']];
+                    break;
+                case 'hidden':
+                    /* Build element html and add $formElementsHtml to $this->formElementHtml array. */
+                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><input name="SdmForm[' . $value['id'] . ']" type="hidden" value="' . $this->sdmFormEncode($this->sdmFormSetFormValue($value)) . '"><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+
+                    /* Add $formElementsHtml to $this->formElementHtml array. */
+                    $formElementsHtml .= $this->formElementHtml[$value['id']];
+                    break;
+                default:
+                    /* Do nothing. */
+                    break;
+            }
+        }
+        /* Return a string of form element html. */
+        return $formElementsHtml;
+    }
+
+    /**
+     * Sets the value of a form element. This method is meant to be called internally by sdmFormBuildFormHtml().
+     *
+     * @param $element The element to set a form value for.
+     *
+     * @return mixed The value for the element or null on failure.
+     */
+    private function sdmFormSetFormValue($element)
+    {
+        /* If element has no value, assign it a safe empty value. */
+        if (isset($element['value']) === false) {
+
+            /* If $element's value is not set set a safe empty value so to insure form elements don't break. */
+            switch ($element['type']) {
+                case 'text':
+                    $element['value'] = '';
+                    break;
+                case 'password':
+                    $element['value'] = '';
+                    break;
+                case 'textarea':
+                    $element['value'] = '';
+                    break;
+                case 'select':
+                    $element['value'] = array('-- No Items --' => 'undefined');
+                    break;
+                case 'radio':
+                    $element['value'] = array('-- No Items --' => 'undefined');
+                    break;
+                case 'checkbox':
+                    $element['value'] = array('-- No Items --' => 'undefined');
+                    break;
+                case 'hidden':
+                    $element['value'] = '';
+                    break;
+            }
+        }
+
+        /* Check the value of the $preserveSubmittedValues property*/
+        switch ($this->preserveSubmittedValues) {
+            /* If $preserveSubmittedValues is set to true, see if a value has already been submitted for the element. */
+            case true:
+                /* See if a submitted value exists. */
+                switch ($this->sdmFormGetSubmittedFormValue($element['id']) !== null) {
+                    /* If a submitted value exists for the element, use it.*/
+                    case true:
+                        /* Assign Submitted Values. Handle each assignment of submitted values based on element type. */
+                        switch ($element['type']) {
+                            /* Handle submitted value assignment for text, password, textarea, and hidden
+                               element types. */
+                            case 'text':
+                            case 'password':
+                            case 'textarea':
+                            case 'hidden':
+                                $value = $this->sdmFormGetSubmittedFormValue($element['id']);
+                                break;
+
+                            /* Handle submitted value assignment for select, radio, and checkbox element types. */
+                            case 'select':
+                            case 'radio':
+                            case 'checkbox':
+                                /*
+                                 * Initialize empty array of $items to hold filtered values. | Values are will be
+                                 * stripped of the string 'default_' to prep for assignment of the submitted
+                                 * values as the default selected or checked element value via the
+                                 * sdmFormSetDefaultInputValues().
+                                 */
+                                $items = array();
+
+                                /* For each element value remove the special 'default_' string. */
+                                foreach ($element['value'] as $option => $optionValue) {
+                                    $items[$option] = str_replace('default_', '', $optionValue);
+                                }
+                                /* Set last submitted value to be the default item. */
+                                $value = $this->sdmFormSetDefaultInputValues($items, $this->sdmFormGetSubmittedFormValue($element['id']));
+                                break;
+                        }
+                        break;
+                    /* No submitted value for the element. Use assigned value. */
+                    default:
+                        /* Assign without modification. */
+                        $value = $element['value'];
+                        break;
+                }
+                break;
+            /* $preserveSubmittedValues property is set to false, use assigned value. */
+            case false:
+                $value = $element['value'];
+                break;
+            /* $preserveSubmittedValues property was assigned a value that was not a boolean. */
+            default:
+                error_log('Sdm Form property $preserveSubmittedValues must be assigned a boolean value of true or false.');
+                break;
+        }
+        /* Return the $value. Will either be unmodified, set to submitted value, or set to a safe empty value. */
+        return $value;
+
+    }
+
     /**
      * Gets a submitted form value.
      *
@@ -155,8 +532,50 @@ class SdmForm
      *
      * Basically, this is method is static for accessibility.
      *
-     * @param string $key The submitted values key. This method can retrieve any submitted form value that still exists
+     * @param $key string The submitted value's key. This method can retrieve any submitted form value that still exists
      *                    in either post, get, or (session).
+     *
+     * @param $parameters array Associative array of parameters that determine how the value is retrieved. The following
+     *                          parameters are supported, and are indexed by key: 'method', 'filterOptions'.
+     *                          Below are more detailed descriptions of each key's function, and how to define it.
+     *
+     *
+     *                          [method] string The method the form value was submitted through. Determines whether to
+     *                                          look for value in $_POST, $_GET, or $_SESSION.
+     *                                          (options: 'post', 'get', 'session' | Defaults to 'post')
+     *
+     *                          [filterOptions] mixed $filterOptions A php filter constant or an array of filters flags
+     *                                                               and options. Same as $definition* parameter for
+     *                                                               PHP's filter_input_array() function.
+     *                                                               (Defaults to FILTER_UNSAFE_RAW)
+     *
+     *                           * From the PHP man pages:
+     *
+     *                              "$definition (mixed):
+     *                               An array defining the "filter" arguments. A valid key is a string containing a
+     *                               variable name and a valid value is either a filter type, or an array optionally
+     *                               specifying the filter, flags and options. If the value is an array, valid keys
+     *                               are filter which specifies the filter type, flags which specifies any flags that
+     *                               apply to the filter, and options which specifies any options that apply to the
+     *                               filter. This parameter can be also an integer holding a filter constant. Then
+     *                               all values in the input array are filtered by this filter."
+     *
+     *                               Example of using array to specify filters flags and options:
+     *
+     *                               array (
+     *                                  'variable1' => FILTER_UNSAFE_RAW,
+     *                                  'variable2' => array(
+     *                                      'filter' => FILTER_UNSAFE_RAW,
+     *                                      'flags' => array(),
+     *                                      'options' => array(),
+     *                                  ),
+     *                                  'variable3' => 516,
+     *                               );
+     *
+     *                              Note: The $parameters parameter also accepts a string specifying the method the
+     *                                    form values were submitted through. i.e., post, get, or session
+     *
+     *
      *
      * All SdmForm() values are stored in POST or GET under the 'SdmForm' array and indexed by $key. For example,
      * to grab the value stored in $_POST['SdmForm']['key'] call sdmFormGetSubmittedFormValue('key').
@@ -164,28 +583,149 @@ class SdmForm
      * Note: Only top level values can be retrieved from the 'SdmForm' array, it is not possible to grab $_POST['SdmForm']['key']['subKey']
      * you will have to call sdmFormGetSubmittedFormValue('key') and recurse through the sub array values yourself.
      *
+     * WARNING: If no filters are passed to $parameters['filterOptions'] then the FILTER_UNSAFE_RAW filter will be used.
+     *          This mean values will be returned UNFILTERED!!! Be sure to specify an appropriate
+     *          $parameters['filterOptions'] to make submitted input a little safer to use.
+     *
+     * WARNING: Session is not yet supported as a method. It will be, but at the moment any attempt to use it will fail.
      * @return mixed The submitted form value or null on failure.
      */
-    public static function sdmFormGetSubmittedFormValue($key)
+    public static function sdmFormGetSubmittedFormValue($key = 'all', $parameters = array())
     {
-        /* If $key is not a string then just use the $key as the data. This allows arrays to be retrieved. */
-        if (!is_string($key) === true) {
-            /* Use $key as data. */
-            $data = $key;
-        } else {
-            if (isset($_POST['SdmForm'][$key]) === true) {
-                /* Get value from post. */
-                $value = $_POST['SdmForm'][$key];
+        /* Configure supported methods. */
+        $supportedMethods = array('post', 'get',); // @todo : add support for 'session'
 
-                /* Decode the value. */
-                $data = SdmForm::sdmFormDecode($value);
-            } else {
-                /* No value was found in the SdmForm array so set $data to null. */
-                $data = null;
+        /* If parameters is a string rrebuild it to fit the $parameter['method'] array structure. */
+        if (is_string($parameters) === true) {
+            switch (in_array($parameters, $supportedMethods, true)) {
+                case true:
+                    $string = strval($parameters);
+                    unset($parameters);
+                    $parameters = array('method' => $string);
+                    break;
+                default:
+                    $message = 'Bad call to sdmFormGetSubmittedFormValue(<span style="color: green;">$key</span>, <span style="color: red">$parameters</span>): ';
+                    $message .= "sdmFormGetSubmittedFormValue(<span id='parameterOk' style='color:green;'>'$key'</span>, <span id='badParameter' style='color:red;'>'$parameters'</span>). ";
+                    $message .= 'If $parameters is a string it must be one of the following: ' . implode(', ', $supportedMethods);
+                    error_log($message);
+                    return null;
             }
         }
-        /* Return the $data. */
+
+        /**
+         * @var $method string This variable will serve as a "variable" variable whose value
+         * will be used to determine whether to pass the filtered $get, $post, or, when supported,
+         * $session array to the $submittedData variable.
+         */
+        $method = (isset($parameters['method']) === true ? $parameters['method'] : 'post');
+
+        /* Build filterOptions array. This array defines the filters and flags to use, the default is
+           to use the FILTER_UNSAFE_RAW filter constant. */
+        $filterOptions = (isset($parameters['filterOptions']) === true ? $parameters['filterOptions'] : FILTER_UNSAFE_RAW);
+
+        /* If specified method is supported, get submitted values, otherwise log an error and
+           set $data to null. */
+        switch (in_array($method, $supportedMethods, true)) {
+            case true:
+                /* Since this method is static there is no internal way to determine
+                   the submitted forms method, so it must be specified. */
+                if ($method !== null) {
+                    /* Get filtered submitted form data. */
+                    $submittedData = SdmForm::sdmFormGetFilteredValues($method, $filterOptions);
+                    /* If the special 'all' value is passed the key then return all values. */
+                    switch ($key === 'all') {
+                        case true:
+                            /* Make sure SdmForm exists, if it doesn't set $data to null. */
+                            if (isset($submittedData['SdmForm']) === true) {
+                                $data = $submittedData['SdmForm'];
+                            } else {
+                                $data = null;
+                            }
+                            break;
+                        default:
+                            /* If $key is not a string then just use the $key as the data.
+                               This allows arrays to be retrieved. */
+                            if (!is_string($key) === true) {
+                                /* Use $key as data. */
+                                $data = $key;
+                            } else {
+                                /* Make sure $key exists in the SdmForm array. */
+                                if (isset($submittedData['SdmForm'][$key]) === true) {
+                                    /* Get value from post. */
+                                    $value = $submittedData['SdmForm'][$key];
+
+                                    /* Decode the value. */
+                                    $data = SdmForm::sdmFormDecode($value);
+                                } else {
+                                    /* No value was found in the SdmForm array so set $data to null. */
+                                    $data = null;
+                                }
+                            }
+                    } // end switch ($key === 'all') //
+                } else {
+                    error_log('Call to method SdmForm::sdmFormGetSubmittedFormValue(). Missing second parameter $method.');
+                    $data = null;
+                }
+                break;
+            default:
+                error_log('Unsupported method "' . strval($method) . '" passed to $method in call to sdmFormGetSubmittedFormValue().');
+                $data = null;
+        }
         return $data;
+    }
+
+    /**
+     * Utilizes PHP's filter_input_array() to retrieve and filter the values submitted via
+     * the specified $method. Filters are applied based on the $filterOptions array.
+     *
+     * For example:
+     *   SdmForm::sdmFormGetFilteredValues('post', FILTER_UNSAFE_RAW);
+     *
+     * Note: This method is meant to be used internally by the SdmForm::sdmFormGetSubmittedFormValue() method.
+     *
+     * @param $method string The method the values were submitted through. (options: post, get, session)
+     *
+     * @param $filterOptions mixed A php filter constant or an array of filters, flags, and
+     *                             options. Same as $definition* parameter for PHP's
+     *                             filter_input_array() function.
+     *                             (Defaults to FILTER_UNSAFE_RAW)
+     *
+     *                           * From the PHP man pages:
+     *
+     *                              "$definition (mixed):
+     *                               An array defining filter the arguments. A valid key is a string containing a
+     *                               variable name and a valid value is either a filter type, or an array optionally
+     *                               specifying the filter, flags and options. If the value is an array, valid keys
+     *                               are filter which specifies the filter type, flags which specifies any flags that
+     *                               apply to the filter, and options which specifies any options that apply to the
+     *                               filter. This parameter can be also an integer holding a filter constant. Then
+     *                               all values in the input array are filtered by this filter."
+     *
+     *                               Example of using array to specify filters flags and options:
+     *
+     *                               $filterOptions = array (
+     *                                                  'variable1' => FILTER_UNSAFE_RAW,
+     *                                                  'variable2' => array(
+     *                                                      'filter' => FILTER_UNSAFE_RAW,
+     *                                                      'flags' => array(),
+     *                                                      'options' => array(),
+     *                                                  ),
+     *                                                  'variable3' => 516,
+     *                                                );
+     *
+     * @return array Array of the filtered values.
+     */
+    private static function sdmFormGetFilteredValues($method, $filterOptions)
+    {
+        /* Array of supported variables. */
+        $supportedVariables = array('post' => INPUT_POST, 'get' => INPUT_GET); // @todo add session
+
+        /* Filter the appropriate array. */
+        $filteredValues = filter_input_array($supportedVariables[$method], $filterOptions, true);
+
+        /* Return the post, get, or session array to the $submittedData array
+           based on $method. */
+        return $filteredValues;
     }
 
     /**
@@ -338,7 +878,7 @@ class SdmForm
      *               'default_'.
      *
      */
-    public static function setDefaultValues(array $values, $testValue)
+    public static function sdmFormSetDefaultInputValues(array $values, $testValue)
     {
         /* Determine if $testValue is an array. */
         switch (is_array($testValue)) {
@@ -379,234 +919,6 @@ class SdmForm
 
         /* Return the $values array with the string 'default_' pre-pended to any values that matched the $testValue */
         return $values;
-    }
-
-    public function sdmFormUseDefaultFormElements()
-    {
-        $this->formElements = array(
-            /* default text form element */
-            array(
-                'id' => 'text_form_element',
-                'type' => 'text',
-                'element' => 'Default Text Element',
-                'value' => '',
-                'place' => '0',
-            ),
-            /* default textarea form element */
-            array(
-                'id' => 'textarea_form_element',
-                'type' => 'textarea',
-                'element' => 'Default Text Area Element',
-                'value' => '',
-                'place' => '3',
-            ),
-            /* default password form element */
-            array(
-                'id' => 'password_form_element',
-                'type' => 'password',
-                'element' => 'Default Password Element',
-                'value' => 'password',
-                'place' => '3',
-            ),
-            /* default select form element */
-            array(
-                'id' => 'select_form_element',
-                'type' => 'select',
-                'element' => 'Default Select Form Element',
-                'value' => array('Default Select Value 1' => 'default_select_value_1', 'Default Select Value 2' => 'select_value_2', 'Default Select Value 3' => 'select_value_3'),
-                'place' => '1',
-            ),
-            /* default radio form element */
-            array(
-                'id' => 'radio_form_element',
-                'type' => 'radio',
-                'element' => 'Default Radio From Element',
-                'value' => array('Default Radio Value 1' => 'default_radio_value_1', 'Default Radio Value 2' => 'radio_value_2', 'Default Radio Value 3' => 'radio_value_3'),
-                'place' => '2',
-            ),
-            /* default hidden form element */
-            array(
-                'id' => 'hidden_form_element',
-                'type' => 'hidden',
-                'element' => 'Default Hidden From Element',
-                'value' => 'Default Hidden From Element',
-                'place' => '4',
-            ),
-        );
-        return (empty($this->formElements) === true ? false : true);
-    }
-
-    /**
-     * Builds the form's html.
-     *
-     * @param string $rootUrl The sites root url. Insures requests are made from site of origin.
-     *
-     * @return string The form's html.
-     */
-    public function sdmFormBuildForm($rootUrl = null)
-    {
-        /* If the $rootUrl was not specified attempt to set it to the site's root url for security.
-           It is best to specify the $rootUrl. */
-        if (!isset($rootUrl)) {
-            /* Try to determine root url using $_SERVER variables. */
-            $rootUrl = $this->sdmFormDetermineRootUrl();
-        }
-
-        /* Create opening form html. This includes an html comment showing the formId, and the opening form tags
-           with the appropriate attributes defined. */
-        $formHtml = $this->sdmFormOpenForm($rootUrl);
-
-        /* Build html for form elements. */
-        $formHtml .= $this->sdmFormBuildFormElements();
-
-        /* Create closing form html. */
-        $formHtml .= $this->sdmFormCloseForm();
-
-        /* Assign the constructed form html to the 'form' property. */
-        $this->form = $formHtml;
-
-        /* Return the assembled html. */
-        return $this->form;
-    }
-
-    /**
-     * Attempts to determine the site's root url.
-     *
-     * @return string The sites root url.
-     */
-    public function sdmFormDetermineRootUrl()
-    {
-        /* Try to determine root url using $_SERVER variables. */
-        return str_replace('/index.php', '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']);
-    }
-
-    /**
-     * Constructs the opening html for the form.
-     *
-     * @param string $rootUrl The sites root url. Insures requests are made from site of origin.
-     *
-     * @return string The forms opening html.
-     */
-    public function sdmFormOpenForm($rootUrl = null)
-    {
-        /* If the $rootUrl was not specified attempt to set it to the site's root url for security.
-           It is best to specify the $rootUrl. */
-        if (!isset($rootUrl)) {
-            /* Try to determine root url using $_SERVER variables. */
-            $rootUrl = $this->sdmFormDetermineRootUrl();
-        }
-
-        return '<!-- form "' . $this->sdmFormGetFormId() . '" --><form class="" method="' . $this->method . '" action="' . $rootUrl . '/index.php?page=' . $this->formHandler . '">';
-    }
-
-    /**
-     * Retrieves the form's id.
-     * @return string The formId property as a string or false on failure
-     */
-    public function sdmFormGetFormId()
-    {
-        /* If form id is set use it. */
-        switch (isset($this->formId)) {
-            case true:
-                $formId = $this->formId;
-                break;
-            default:
-                /* Otherwise log an error. */
-                error_log('Form missing id. Which form cannot be determined since id does not exist.');
-
-                /* Assign false to $formId since $this->formId was not set. */
-                $formId = false;
-                break;
-        }
-        return $formId;
-    }
-
-    public function sdmFormBuildFormElements()
-    {
-        /* Sort elements based on element's "place". */
-        $elementOrder = array(); // used to sort items
-        foreach ($this->formElements as $key => $value) {
-            $elementOrder[$key] = $value['place'];
-        }
-        array_multisort($elementOrder, SORT_ASC, $this->formElements);
-
-        /* Initialize the string that will hold form element's html. */
-        $formElementsHtml = '';
-
-        /* Build formElement property. This property stores form element
-           html as items in an array. */
-        $this->formElementHtml = array();
-
-        /* Build form elements. */ // @todo : appending to $formElementsHtml causes element html to get appened to other element's html in te formElementHtml() property. To solve this create a new var $elementsHtml which will replace $formElementsHtml. $formElementsHtml will remain but will now be used to add to the $formElementsHtml
-        foreach ($this->formElements as $key => $value) {
-            switch ($value['type']) {
-                case 'text':
-                    /* Build element html and add $formElementsHtml to $this->formElementHtml array. */
-                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><input name="SdmForm[' . $value['id'] . ']" type="text" ' . (isset($value['value']) ? 'value="' . $value['value'] . '"' : '') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
-
-                    /*  Add form element html to $this->form  */
-                    $formElementsHtml .= $this->formElementHtml[$value['id']];
-                    break;
-                case 'password':
-                    /* Build element html and add $formElementsHtml to $this->formElementHtml array. */
-                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><input name="SdmForm[' . $value['id'] . ']" type="password" ' . (isset($value['value']) ? 'value="' . $value['value'] . '"' : '') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
-
-                    /*  Add form element html to $this->form  */
-                    $formElementsHtml .= $this->formElementHtml[$value['id']];
-                    break;
-                case 'textarea':
-                    /* Build element html and add $formElementsHtml to $this->formElementHtml array. */
-                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><textarea name="SdmForm[' . $value['id'] . ']">' . (isset($value['value']) ? $value['value'] : '') . '</textarea><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
-
-                    /* Add $formElementsHtml to $this->formElementHtml array. */
-                    $formElementsHtml .= $this->formElementHtml[$value['id']];
-
-                    break;
-                case 'select':
-                    /* Build element html and add $formElementsHtml to $this->formElementHtml array. */
-                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><select name="SdmForm[' . $value['id'] . ']">';
-                    foreach ($value['value'] as $option => $optionValue) {
-                        $this->formElementHtml[$value['id']] .= '<option value="' . (substr($optionValue, 0, 8) === 'default_' ? $this->sdmFormEncode(str_replace('default_', '', $optionValue)) . '" selected="selected"' : $this->sdmFormEncode($optionValue) . '"') . '>' . $option . '</option>';
-                    }
-                    $this->formElementHtml[$value['id']] .= '</select><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
-
-                    /* Add $formElementsHtml to $this->formElementHtml array. */
-                    $formElementsHtml .= $this->formElementHtml[$value['id']];
-                    break;
-                case 'radio':
-                    /* Build element html and add $formElementsHtml to $this->formElementHtml array. */
-                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><p id="label-for-SdmForm[' . $value['id'] . ']">' . $value['element'] . '</p>';
-                    foreach ($value['value'] as $radio => $radioValue) {
-                        $this->formElementHtml[$value['id']] .= '<label  for="SdmForm[' . $value['id'] . ']">' . $radio . '</label><input type="radio" name="SdmForm[' . $value['id'] . ']" value="' . (substr($radioValue, 0, 8) === 'default_' ? $this->sdmFormEncode(str_replace('default_', '', $radioValue)) . '" checked="checked"' : $this->sdmFormEncode($radioValue) . '"') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
-                    }
-                    $this->formElementHtml[$value['id']] .= '<br>';
-
-                    /* Add $formElementsHtml to $this->formElementHtml array. */
-                    $formElementsHtml .= $this->formElementHtml[$value['id']];
-                    break;
-                case 'checkbox':
-                    /* Build element html and add $formElementsHtml to $this->formElementHtml array. */
-                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><p id="label-for-SdmForm[' . $value['id'] . ']">' . $value['element'] . '</p>';
-                    foreach ($value['value'] as $checkbox => $checkboxValue) {
-                        $this->formElementHtml[$value['id']] .= '<label  for="SdmForm[' . $value['id'] . ']">' . $checkbox . '</label><input type="checkbox" name="SdmForm[' . $value['id'] . '][]" value="' . (substr($checkboxValue, 0, 8) === 'default_' ? $this->sdmFormEncode(str_replace('default_', '', $checkboxValue)) . '" checked="checked"' : $this->sdmFormEncode($checkboxValue) . '"') . '><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
-                    }
-
-                    $formElementsHtml .= $this->formElementHtml[$value['id']];
-                    break;
-                case 'hidden':
-                    /* Build element html and add $formElementsHtml to $this->formElementHtml array. */
-                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><input name="SdmForm[' . $value['id'] . ']" type="hidden" value="' . $this->sdmFormEncode($value['value']) . '"><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
-
-                    /* Add $formElementsHtml to $this->formElementHtml array. */
-                    $formElementsHtml .= $this->formElementHtml[$value['id']];
-                    break;
-                default:
-                    /* Do nothing. */
-                    break;
-            }
-        }
-        /* Return a string of form element html. */
-        return $formElementsHtml;
     }
 
     /**
@@ -656,8 +968,30 @@ class SdmForm
         /* Add hidden element to store form id */
         $closingFormHtml = '<!-- built-in form element "form_id" --><input type="hidden" name="SdmForm[form_id]" value="' . $this->sdmFormGetFormId() . '"><!-- close built-in form element "form_id" -->';
 
+        /*
+         * Get parameters attached to the action attribute are not used if form method is set to get.
+         *
+         * @see http://stackoverflow.com/questions/10524659/how-to-preserve-get-parameters-when-posting-form-to-self
+         *
+         * So, to preserve the form handler when the get method is specified we need to add it as a hidden form element
+         * that stores the form handler as a submitted form value. This only applies to get requests.
+         *
+         * This element is only used if the form's method is set to "get".It preserves the form handler which
+         * would otherwise be lost since it is passed as a get parameter via the form's action attribute.
+         * Get parameters associated with the action attribute are ignored if the forms submission method is get,
+         * to get around this the form handler is assigned to a hidden element for forms that use the get method
+         * to insure it is preserved on form submission.
+         *
+         */
+        if ($this->method === 'get') {
+            $actionParams = '<!-- built-in form element "page" -->';
+            $actionParams .= '<input type="hidden" name="page" value="' . $this->formHandler . '">';
+            $actionParams .= '<!-- close built-in form element "page" -->';
+            $closingFormHtml .= $actionParams;
+        }
+
         /* Add submit button. */
-        $closingFormHtml .= '<input value="' . $this->submitLabel . '" type="submit"></form><!-- close form ' . $this->sdmFormGetFormId() . ' -->';
+        $closingFormHtml .= '<input class="' . $this->sdmFormExtractClasses('submitButton') . '" value="' . $this->submitLabel . '" type="submit"></form><!-- close form ' . $this->sdmFormGetFormId() . ' -->';
 
         return $closingFormHtml;
     }
