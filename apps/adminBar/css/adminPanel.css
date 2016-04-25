@@ -21,10 +21,10 @@ button:focus {
     position: fixed;
     top: 10px;
     left: 0;
-    width: 88px;
+    width: 95px;
     padding: 0px;
-    height: 27px;
-    font-size: .5em;
+    height: 21px;
+    font-size: .3em;
     background: none;
     overflow: hidden;
 }
