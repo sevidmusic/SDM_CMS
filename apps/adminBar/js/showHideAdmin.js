@@ -58,21 +58,23 @@ $(document).ready(function () {
         'Sdm Cms Documentation'
     ];
 
-    console.log(jQuery.inArray(requestedPage, displayPages));
-
-
     // Hide admin Bar initially if requestedPage does not match one of the displayPages.
     if (jQuery.inArray(requestedPage, displayPages) === -1) {
         $("#adminBarDisplay").hide();
+    } else {
+        // otherwise increase #adminBarDisplay height to 100%
+        $("#adminBarDisplay").css("min-height", "100%");
     }
 
-    // Hide admin panel when hideAdminPanel button is clicked
+    // Hide admin panel when hideAdminPanel button is clicked and decrease height of adminBar
     $("#hideAdminPanel").click(function () {
+        $("#adminBarDisplay").css("height", "");
         $("#adminPanelDisplay").hide();
     });
 
-    // Show admin panel when showAdminPanel button is clicked
+    // Show admin panel when showAdminPanel button is clicked and increase #adminBarDisplay height to 100%
     $("#showAdminPanel").click(function () {
+        $("#adminBarDisplay").css("min-height", "100%");
         $("#adminPanelDisplay").show();
     });
 

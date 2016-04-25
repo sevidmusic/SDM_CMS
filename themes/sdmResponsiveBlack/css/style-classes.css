@@ -13,6 +13,7 @@ body {
     height: 100%;
     background-repeat: no-repeat;
     background-attachment: fixed;
+    padding-top: 20px;
 }
 
 .sdmResponsiveBlack {

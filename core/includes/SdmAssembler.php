@@ -865,7 +865,7 @@ class SdmAssembler extends SdmNms
         return '
     <!-- This site was built using the SDM CMS content management system which was
          designed and developed by Sevi Donnelly Foreman in the year 2014. -->
-    <!-- To contact the developer of the SDM CMS write to sdmwebsdm@gmail.com. -->
+    <!-- To contact the developer of the SDM CMS write to sdmcmsinfo@gmail.com. -->
     <!-- Note: Sevi is not necessarily the author of this site, he is just the
          developer of the Content Management System that is used to build and maintain this site. -->
     </body>

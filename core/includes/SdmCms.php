@@ -6,7 +6,6 @@
  *
  * @author Sevi Donnelly Foreman
  */
-
 class SdmCms extends SdmCore
 {
 
@@ -84,11 +83,18 @@ class SdmCms extends SdmCore
      *
      * @return array An array of content wrapper names for the current theme.
      */
-    public function sdmCmsDetermineAvailableWrappers()
+    public function sdmCmsDetermineAvailableWrappers($page = null)
     {
-        /* Load html from current themes page.php. */
-        $html = file_get_contents($this->sdmCoreGetCurrentThemeDirectoryPath() . '/page.php');
-
+        /* If $page parameter was not passed in set $page to the currently requested page. */
+        if ($page === null) {
+            $page = trim($this->sdmCoreDetermineRequestedPage());
+        }
+        /* Load html from current themes page.php or CUSTOMPAGE.php file. */
+        if (file_exists($this->sdmCoreGetCurrentThemeDirectoryPath() . '/' . $page . '.php') === true) {
+            $html = file_get_contents($this->sdmCoreGetCurrentThemeDirectoryPath() . '/' . $page . '.php');
+        } else {
+            $html = file_get_contents($this->sdmCoreGetCurrentThemeDirectoryPath() . '/page.php');
+        }
         /* Instantiate a new DOMDocument() object. */
         $dom = new DOMDocument();
 
