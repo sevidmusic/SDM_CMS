@@ -12,14 +12,14 @@ if (!file_exists(__DIR__ . '/core/sdm/data.json')) {
     die();
 }
 
-/* Require our startup file. */
+/* Require startup file. */
 require_once(__DIR__ . '/core/config/startup.php');
 
 /* Assemble the HTML header. */
 echo $sdmassembler->sdmAssemblerAssembleHtmlHeader();
 
-/* Require our current theme's page.php. */
-require_once($sdmassembler->sdmCoreGetCurrentThemeDirectoryPath() . '/page.php');
+/* Load theme. */
+$sdmassembler->sdmAssemblerLoadTheme();
 
 /* Assemble the required closing html tags. */
 echo $sdmassembler->sdmAssemblerAssembleHtmlRequiredClosingTags();

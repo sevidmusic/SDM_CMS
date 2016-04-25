@@ -8,7 +8,6 @@
  * @author Sevi Donnelly Foreman
  *
  */
-
 class SdmAssembler extends SdmNms
 {
     /**
@@ -425,6 +424,29 @@ class SdmAssembler extends SdmNms
 
         /* Return the assembled properties or false on failure. */
         return ($themeProps === false ? false : $themeProps);
+    }
+
+    /**
+     * @return bool
+     */
+    public function sdmAssemblerLoadTheme()
+    {
+        /* Store current assembler in variable so themes can access it. */
+        $sdmassembler = $this;
+
+        /* Require theme file defining page's html structure. */
+        $themeDirectoryListing = $this->sdmCoreGetDirectoryListing('', 'CURRENT_THEME');
+        switch (in_array(trim($this->sdmCoreDetermineRequestedPage()) . '.php', $themeDirectoryListing, true) === true) {
+            case true:
+                /* Require our current theme's page.php. */
+                require_once($this->sdmCoreGetCurrentThemeDirectoryPath() . '/' . trim($this->sdmCoreDetermineRequestedPage()) . '.php');
+                break;
+            default:
+                /* Require our current theme's page.php. */
+                require_once($this->sdmCoreGetCurrentThemeDirectoryPath() . '/page.php');
+                break;
+        }
+        return true;
     }
 
     /**

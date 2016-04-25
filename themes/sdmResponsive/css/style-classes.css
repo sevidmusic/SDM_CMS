@@ -78,6 +78,7 @@ body {
         height: 100%;
         background-repeat: no-repeat;
         background-attachment: fixed;
+        padding-top: 20px;
     }
 
     /* Prevent elements from collapsing on window resize on desktops by setting min-width for desktops */
