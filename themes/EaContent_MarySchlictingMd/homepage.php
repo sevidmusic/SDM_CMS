@@ -5,7 +5,7 @@
 ?>
 
     <!-- row 1 | Holds Content Wrappers: #locked_msmd-logo, #msmd-dvm-box, #locked_msmd-main-menu -->
-    <div id="msmd-page-row-1" class="dev msmd-row msmd-row-width">
+    <div id="locked_msmd-page-row-1" class="dev msmd-row msmd-row-width">
 
         <!-- #locked_msmd-logo -->
         <div id="locked_msmd-logo" class="dev  msmd-col-5 msmd-header-wrapper-top-padding msmd-century-gothic">
@@ -41,7 +41,7 @@
     <!-- End row 1 | Holds Content Wrappers: #msmd-logo, #msmd-main-menu -->
 
     <!-- row 2 | Holds Content Wrappers: #msmd-homepage-welcome-text -->
-    <div id="msmd-page-row-2" class="dev msmd-row msmd-row-width">
+    <div id="locked_msmd-page-row-2" class="dev msmd-row msmd-row-width">
 
         <!-- #msmd-homepage-welcome-text -->
         <div id="msmd-homepage-welcome-text"
@@ -67,18 +67,17 @@
     <!-- End row 2 | Holds Content Wrappers: #msmd-homepage-welcome-text -->
 
     <!-- Row 3 | Holds Content Wrappers: #msmd-shortcut-box-display -->
-    <div id="msmd-page-row-3" class="dev msmd-row msmd-row-width">
-        <div id="msmd-shortcut-box-display">
+    <div id="locked_msmd-page-row-3" class="dev msmd-row msmd-row-width">
+        <div id="locked_msmd-shortcut-box-display">
             <div class="msmd-shortcut-box-row">
-                <div style="height: 278px;width: 421px;background-color: #41b55b;" class="msmd-shortcut-box-col-">box
-                    col 1
+                <div id="locked_msmd-shortcut-box-1" class="msmd-shortcut-box-col- msmd-shortcut-box-1">
+                    <div id="msmd-shortcut-box-1-content" class="msmd-shortcut-box-content-container">
+                        <h2>Services</h2>
+                        <p><?php echo $sdmassembler->sdmAssemblerGetContentHtml('msmd-shortcut-box-1'); ?></p>
+                    </div>
                 </div>
-                <div class="msmd-shortcut-box-col-">box col 2</div>
-                <div class="msmd-shortcut-box-col-">box col 3</div>
             </div>
             <div class="msmd-shortcut-box-row">
-                <div class="msmd-shortcut-box-col-">box col 4</div>
-                <div class="msmd-shortcut-box-col-">box col 5</div>
             </div>
         </div>
     </div>

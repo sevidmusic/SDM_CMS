@@ -53,20 +53,32 @@
     }
 
     #msmd-homepage-welcome-text p {
-    font-size: 1.1em;
-    padding-top: 7px;
-    line-height: 24px;
+        font-size: 1.1em;
+        padding-top: 7px;
+        line-height: 24px;
     }
 
-    #msmd-page-row-1 {
+    #locked_msmd-page-row-1 {
         height: 167px;
     }
 
-    #msmd-page-row-2 {
+    #locked_msmd-page-row-2 {
         height: 354px;
     }
 
-    #msmd-page-row-3 {
+    #locked_msmd-page-row-3 {
         height: 500px;
+    }
+
+    #locked_msmd-shortcut-box-1 {
+        padding: 1px 0px 0px 217px;
+        height: 278px;
+        width: 421px;
+    }
+
+    #msmd-shortcut-box-1-content {
+        height: 90%;
+        width: 180px;
+        overflow: hidden;
     }
 }

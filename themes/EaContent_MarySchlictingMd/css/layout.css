@@ -29,7 +29,7 @@ html {
 body {
     width: 100%;
     height: 100%;
-    background-image: url("../designImages/mary_mockup.jpg");
+    /* background-image: url("../designImages/mary_mockup.jpg"); */
     /* background-image: url("../designImages/mary_interior.jpg"); */
     background-repeat: no-repeat;
     background-position: top center;

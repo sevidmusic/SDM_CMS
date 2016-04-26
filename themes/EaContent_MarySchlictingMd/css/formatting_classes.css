@@ -49,3 +49,36 @@
     letter-spacing: 3px;
     font-weight: bold;
 }
+
+/* Since background images can't actually overflow an element, use ::before to fake it
+       @see https://www.exratione.com/2011/09/how-to-overflow-a-background-image-using-css3/
+       for more info, this article was very helpful in solving this design issue.
+     */
+.msmd-shortcut-box-1 {
+    position: relative;
+    background-color: transparent;
+}
+
+.msmd-shortcut-box-1::before {
+    content: " ";
+    position: absolute;
+    width: 500px;
+    height: 383px;
+    left: -81px;
+    margin-top: -104px;
+    z-index: -1;
+    background-image: url('../designImages/dog_button.png');
+    background-position: right bottom; /*Positioning*/
+    top: -2px;
+    background-repeat: no-repeat;
+}
+
+.msmd-shortcut-box-content-container {
+    width: 200px;
+    font-family: "Myriad Pro";
+    color: #ffffff;
+}
+
+.msmd-shortcut-box-content-container h1, h2, h3, h4, h5, h6 {
+    font-family: "Myriad Pro Condensed";
+}
