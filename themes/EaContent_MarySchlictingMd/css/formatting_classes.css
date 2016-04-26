@@ -73,6 +73,25 @@
     background-repeat: no-repeat;
 }
 
+.msmd-small-animals-wrapper {
+    position: relative;
+    background-color: transparent;
+}
+
+.msmd-small-animals-wrapper::before {
+    content: " ";
+    position: absolute;
+    width: 500px;
+    height: 383px;
+    left: 138px;
+    margin-top: -94px;
+    z-index: -1;
+    background-image: url('../designImages/birds.png');
+    background-position: right bottom; /*Positioning*/
+    top: -43px;
+    background-repeat: no-repeat;
+}
+
 .msmd-shortcut-box-content-container {
     width: 200px;
     font-family: "Myriad Pro";

@@ -139,4 +139,13 @@
     }
 
     #locked_msmd-homepage-emergencies {width: 242px;}
+
+    #msmd-homepage-small-animals-text {
+        color: #ffffff;
+        width: 300px;
+        margin: 61px 0px 0px 0px;
+        background: #15a6b9;
+        height: 136px;
+        padding: 1px 18px;
+    }
 }

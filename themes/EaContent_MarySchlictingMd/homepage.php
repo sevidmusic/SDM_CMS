@@ -147,7 +147,7 @@
 </div>
 <!-- End row 3 (#locked_msmd-page-row-3) | Holds Content Wrappers: #locked_msmd-shortcut-box-display, #msmd-shortcut-box-row-1, #msmd-shortcut-box-row-2, #locked_msmd-shortcut-box-1, #locked_msmd-shortcut-box-2, #locked_msmd-shortcut-box-3, #locked_msmd-shortcut-box-4, #locked_msmd-shortcut-box-5, #msmd-shortcut-box-1-content, #msmd-shortcut-box-2-content, #msmd-shortcut-box-3-content, #msmd-shortcut-box-4-content, #msmd-shortcut-box-5-content,   -->
 
-<!-- Row 4 (#locked_msmd-page-row-4) | Holds Content Wrappers:  #locked_msmd-homepage-emergencies, #msmd-homepage-emergencies-text, -->
+<!-- Row 4 (#locked_msmd-page-row-4) | Holds Content Wrappers:  #locked_msmd-homepage-emergencies, #msmd-homepage-emergencies-text, #locked_msmd-homepage-small-animals, #msmd-homepage-small-animals-text -->
 <div id="locked_msmd-page-row-4" class="dev msmd-row msmd-row-width">
     <!-- #locked_msmd-homepage-emergencies -->
     <div id="locked_msmd-homepage-emergencies" class="dev  msmd-col-5">
@@ -165,8 +165,26 @@
 
     </div>
     <!-- End #locked_msmd-homepage-emergencies -->
+
+    <!-- #locked_msmd-homepage-small-animals -->
+    <div id="locked_msmd-homepage-small-animals" class="dev  msmd-col-7 msmd-small-animals-wrapper">
+
+        <h2 class="dev msmd-all-caps">Small Animals</h2>
+        <!-- #msmd-homepage-small-animals-text -->
+        <div id="msmd-homepage-small-animals-text">
+            <p>
+                <?php
+                echo substr($sdmassembler->sdmAssemblerGetContentHtml('msmd-homepage-small-animals-text'), 0, 128) . '...';
+                ?>
+            </p>
+        </div>
+        <!-- End #msmd-homepage-small-animals-text -->
+
+    </div>
+    <!-- End #locked_msmd-homepage-small-animals -->
+
 </div>
-<!-- End row 4 (#locked_msmd-page-row-4) | Holds Content Wrappers:  #locked_msmd-homepage-emergencies, #msmd-homepage-emergencies-text, -->
+<!-- End row 4 (#locked_msmd-page-row-4) | Holds Content Wrappers:  #locked_msmd-homepage-emergencies, #msmd-homepage-emergencies-text, #locked_msmd-homepage-small-animals, #msmd-homepage-small-animals-text -->
 
 
 <!--
