@@ -71,7 +71,7 @@
     <div id="locked_msmd-shortcut-box-display">
         <div class="msmd-shortcut-box-row">
             <!-- #locked_shortcut-box-1 -->
-            <div id="locked_msmd-shortcut-box-1" class="msmd-shortcut-box-col- msmd-shortcut-box-1">
+            <div id="locked_msmd-shortcut-box-1" class="msmd-shortcut-box msmd-shortcut-box-col- msmd-shortcut-box-1">
                 <!-- #msmd-shortcut-box-1-content -->
                 <div id="msmd-shortcut-box-1-content" class="msmd-shortcut-box-content-container">
                     <h2>Services</h2>
@@ -85,7 +85,7 @@
             <!-- End #locked_shortcut-box-1 -->
 
             <!-- #locked_shortcut-box-2 -->
-            <div id="locked_msmd-shortcut-box-2" class="msmd-shortcut-box-col- msmd-shortcut-box-2">
+            <div id="locked_msmd-shortcut-box-2" class="msmd-shortcut-box msmd-shortcut-box-col- msmd-shortcut-box-2">
                 <!-- #msmd-shortcut-box-2-content -->
                 <div id="msmd-shortcut-box-2-content" class="msmd-shortcut-box-content-container">
                     <h2>Staff</h2>
@@ -99,7 +99,7 @@
             <!-- End #locked_shortcut-box-2 -->
 
             <!-- #locked_shortcut-box-3 -->
-            <div id="locked_msmd-shortcut-box-3" class="msmd-shortcut-box-col- msmd-shortcut-box-3">
+            <div id="locked_msmd-shortcut-box-3" class="msmd-shortcut-box msmd-shortcut-box-col- msmd-shortcut-box-3">
                 <!-- #msmd-shortcut-box-3-content -->
                 <div id="msmd-shortcut-box-3-content" class="msmd-shortcut-box-content-container">
                     <h2>Services</h2>
@@ -116,7 +116,7 @@
         <div class="msmd-shortcut-box-row">
 
             <!-- #locked_shortcut-box-4 -->
-            <div id="locked_msmd-shortcut-box-4" class="msmd-shortcut-box-col- msmd-shortcut-box-4">
+            <div id="locked_msmd-shortcut-box-4" class="msmd-shortcut-box msmd-shortcut-box-col- msmd-shortcut-box-4">
                 <!-- #msmd-shortcut-box-4-content -->
                 <div id="msmd-shortcut-box-4-content" class="msmd-shortcut-box-content-container">
                     <h2>Services</h2>
@@ -130,7 +130,7 @@
             <!-- End #locked_shortcut-box-4 -->
 
             <!-- #locked_shortcut-box-5 -->
-            <div id="locked_msmd-shortcut-box-5" class="msmd-shortcut-box-col- msmd-shortcut-box-5">
+            <div id="locked_msmd-shortcut-box-5" class="msmd-shortcut-box msmd-shortcut-box-col- msmd-shortcut-box-5">
                 <!-- #msmd-shortcut-box-5-content -->
                 <div id="msmd-shortcut-box-5-content" class="msmd-shortcut-box-content-container">
                     <h2>Services</h2>

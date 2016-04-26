@@ -81,4 +81,59 @@
         width: 180px;
         overflow: hidden;
     }
+
+    #locked_msmd-shortcut-box-2 {
+        padding: 14px 0px 0px 37px;
+        height: 278px;
+        width: 206px;
+        background: #f6c045;
+        margin-left: 15px;
+        margin-top: -1px;
+        /* border: 1px solid; */
+    }
+
+    #msmd-shortcut-box-2-content {
+        height: 90%;
+        width: 180px;
+        overflow: hidden;
+    }
+
+    #locked_msmd-shortcut-box-3 {
+        padding: 1px 0px 0px 217px;
+        height: 278px;
+        width: 421px;
+        background: #000000;
+    }
+
+    #msmd-shortcut-box-3-content {
+        height: 90%;
+        width: 180px;
+        overflow: hidden;
+    }
+
+    #locked_msmd-shortcut-box-4 {
+        padding: 1px 0px 0px 217px;
+        height: 278px;
+        width: 421px;
+        background: #000000;
+    }
+
+    #msmd-shortcut-box-4-content {
+        height: 90%;
+        width: 180px;
+        overflow: hidden;
+    }
+
+    #locked_msmd-shortcut-box-5 {
+        padding: 1px 0px 0px 217px;
+        height: 278px;
+        width: 421px;
+        background: #000000;
+    }
+
+    #msmd-shortcut-box-5-content {
+        height: 90%;
+        width: 180px;
+        overflow: hidden;
+    }
 }
