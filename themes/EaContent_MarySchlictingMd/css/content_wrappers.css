@@ -34,9 +34,9 @@
 
     #msmd-dvm-box {
         margin: -30px 0px 0px -1px;
-        opacity: .7;
+        opacity: 1;
         padding: 3px 0px 0px 3px;
-        background: red;
+        background: #df3435;
         width: 85px;
         color: #ffffff;
         font-size: 1.7em;
@@ -49,9 +49,24 @@
         padding-left: 0px;
     }
 
+    #msmd-homepage-welcome-text {
+    }
+
     #msmd-homepage-welcome-text p {
     font-size: 1.1em;
     padding-top: 7px;
     line-height: 24px;
+    }
+
+    #msmd-page-row-1 {
+        height: 167px;
+    }
+
+    #msmd-page-row-2 {
+        height: 354px;
+    }
+
+    #msmd-page-row-3 {
+        height: 500px;
     }
 }
