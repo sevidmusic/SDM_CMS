@@ -94,28 +94,29 @@
 
     #msmd-shortcut-box-2-content {
         height: 90%;
-        width: 180px;
+        width: 160px;
         overflow: hidden;
     }
 
     #locked_msmd-shortcut-box-3 {
-        padding: 1px 0px 0px 217px;
+        padding: 1px 0px 0px 37px;
         height: 278px;
-        width: 421px;
-        background: #000000;
+        width: 206px;
+        background: #05a7b7;
+        margin-left: 15px;
     }
 
     #msmd-shortcut-box-3-content {
         height: 90%;
-        width: 180px;
+        width: 160px;
         overflow: hidden;
     }
 
     #locked_msmd-shortcut-box-4 {
         padding: 1px 0px 0px 217px;
-        height: 278px;
-        width: 421px;
-        background: #000000;
+        height: 195px;
+        width: 431.5px;
+        background: #aaa996;
     }
 
     #msmd-shortcut-box-4-content {
@@ -126,9 +127,9 @@
 
     #locked_msmd-shortcut-box-5 {
         padding: 1px 0px 0px 217px;
-        height: 278px;
-        width: 421px;
-        background: #000000;
+        height: 195px;
+        width: 431.5px;
+        background: #aaa996;
     }
 
     #msmd-shortcut-box-5-content {
@@ -136,4 +137,9 @@
         width: 180px;
         overflow: hidden;
     }
+
+    #msmd-shortcut-box-row-1 {
+
+    }
+    #msmd-shortcut-box-row-2 {}
 }

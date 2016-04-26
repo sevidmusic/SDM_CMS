@@ -69,7 +69,7 @@
 <!-- Row 3 | Holds Content Wrappers: #msmd-shortcut-box-display -->
 <div id="locked_msmd-page-row-3" class="dev msmd-row msmd-row-width">
     <div id="locked_msmd-shortcut-box-display">
-        <div class="msmd-shortcut-box-row">
+        <div id="msmd-shortcut-box-row-1" class="msmd-shortcut-box-row">
             <!-- #locked_shortcut-box-1 -->
             <div id="locked_msmd-shortcut-box-1" class="msmd-shortcut-box msmd-shortcut-box-col- msmd-shortcut-box-1">
                 <!-- #msmd-shortcut-box-1-content -->
@@ -113,7 +113,7 @@
             <!-- End #locked_shortcut-box-3 -->
 
         </div>
-        <div class="msmd-shortcut-box-row">
+        <div id="msmd-shortcut-box-row-2" class="msmd-shortcut-box-row">
 
             <!-- #locked_shortcut-box-4 -->
             <div id="locked_msmd-shortcut-box-4" class="msmd-shortcut-box msmd-shortcut-box-col- msmd-shortcut-box-4">
