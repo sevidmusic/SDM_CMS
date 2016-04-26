@@ -73,7 +73,9 @@
                 <div id="locked_msmd-shortcut-box-1" class="msmd-shortcut-box-col- msmd-shortcut-box-1">
                     <div id="msmd-shortcut-box-1-content" class="msmd-shortcut-box-content-container">
                         <h2>Services</h2>
-                        <p><?php echo $sdmassembler->sdmAssemblerGetContentHtml('msmd-shortcut-box-1-content'); ?></p>
+                        <p><?php /* limit to 88 chars */
+                            echo substr($sdmassembler->sdmAssemblerGetContentHtml('msmd-shortcut-box-1-content'), 0, 128) . '...'; ?>
+                        </p>
                     </div>
                 </div>
             </div>
