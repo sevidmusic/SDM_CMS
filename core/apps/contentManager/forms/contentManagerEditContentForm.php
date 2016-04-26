@@ -40,18 +40,9 @@ foreach ($sdmcms->sdmCmsDetermineAvailableWrappers($pageToEdit) as $displayValue
     if (!isset($existing_content->$machineValue) === true) {
         $existing_content->$machineValue = '';
     }
-    if (!in_array($machineValue, array_filter(arrstristrchars($available_pages, $machineValue)))) {
-        array_push($editcontentform->formElements, array(
-            'id' => $machineValue,
-            'type' => 'textarea',
-            'element' => "$displayValue (css id : <i>$machineValue</i>)",
-            'value' => str_replace('&lt;br &sol;&gt;', '', $existing_content->$machineValue),
-            'place' => $i,
-        ));
-        $i++;
-    }
-    // if the $pageToEdit is found in the wrapper ($machineValue) string, then create a form element b/c the page were editng is relavent to the page specific content.
-    if (strlen(stristr($machineValue, $pageToEdit)) > 0) {
+    /* If $machineValue (wrapper) is not page specific, and an element does not
+       already exist for this wrapper in the form. */
+    if (!in_array($machineValue, array_filter(arrstristrchars($available_pages, $machineValue))) || strlen(stristr($machineValue, $pageToEdit)) > 0) {
         array_push($editcontentform->formElements, array(
             'id' => $machineValue,
             'type' => 'textarea',

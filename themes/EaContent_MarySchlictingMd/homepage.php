@@ -73,7 +73,7 @@
                 <div id="locked_msmd-shortcut-box-1" class="msmd-shortcut-box-col- msmd-shortcut-box-1">
                     <div id="msmd-shortcut-box-1-content" class="msmd-shortcut-box-content-container">
                         <h2>Services</h2>
-                        <p><?php echo $sdmassembler->sdmAssemblerGetContentHtml('msmd-shortcut-box-1'); ?></p>
+                        <p><?php echo $sdmassembler->sdmAssemblerGetContentHtml('msmd-shortcut-box-1-content'); ?></p>
                     </div>
                 </div>
             </div>
@@ -94,7 +94,3 @@
         echo $sdmassembler->sdmAssemblerGetContentHtml('Sdm_Cms_Core_Output');
         ?>
     </div>
-
-<?php
-//require_once($sdmassembler->sdmCoreGetCurrentThemeDirectoryPath() . '/adminPanelDisplay.php');
-?>
