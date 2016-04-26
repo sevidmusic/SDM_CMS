@@ -115,8 +115,11 @@ class SdmCms extends SdmCore
 
         /* Extract the wrappers from each of the extracted $tags */
         foreach ($tags as $tag) {
-            /* As long as the wrapper does not start with the string "locked" add the wrapper to $data array. */
-            if (substr(trim($tag->getAttribute('id')), 0, 6) != 'locked') {
+            /* As long as the wrapper does not start with the string "locked",
+               and the wrapper is not the special Sdm_Cms_Core_Output wrapper,
+               add the wrapper to $data array.
+            */
+            if (substr(trim($tag->getAttribute('id')), 0, 6) != 'locked' && $tag->getAttribute('id') !== 'Sdm_Cms_Core_Output') {
                 /* Format array so keys are for display, and values for use in code. */
                 $data[ucwords(str_replace(array('-', '_'), ' ', trim($tag->getAttribute('id'))))] = trim($tag->getAttribute('id'));
             }
