@@ -4,7 +4,7 @@
  */
 ?>
 
-<!-- row 1 | Holds Content Wrappers: #locked_msmd-logo, #msmd-dvm-box, #locked_msmd-main-menu -->
+<!-- Row 1 (#locked_msmd-page-row-1)| Holds Content Wrappers: #locked_msmd-logo, #locked_msmd-main-menu  -->
 <div id="locked_msmd-page-row-1" class="dev msmd-row msmd-row-width">
 
     <!-- #locked_msmd-logo -->
@@ -38,9 +38,9 @@
     <!-- End #locked_msmd-main-menu -->
 
 </div>
-<!-- End row 1 | Holds Content Wrappers: #msmd-logo, #msmd-main-menu -->
+<!-- End row 1 (#locked_msmd-page-row-1)| Holds Content Wrappers: #locked_msmd-logo, #locked_msmd-main-menu  -->
 
-<!-- row 2 | Holds Content Wrappers: #msmd-homepage-welcome-text -->
+<!-- Row 2 (#locked_msmd-page-row-2) | Holds Content Wrappers: #msmd-homepage-welcome-text, 1 Generic Wrapper with no id. -->
 <div id="locked_msmd-page-row-2" class="dev msmd-row msmd-row-width">
 
     <!-- #msmd-homepage-welcome-text -->
@@ -64,9 +64,9 @@
     <!-- End Generic wrapper, no id. -->
 
 </div>
-<!-- End row 2 | Holds Content Wrappers: #msmd-homepage-welcome-text -->
+<!-- End row 2 (#locked_msmd-page-row-2) | Holds Content Wrappers: #msmd-homepage-welcome-text, 1 Generic Wrapper with no id. -->
 
-<!-- Row 3 | Holds Content Wrappers: #msmd-shortcut-box-display -->
+<!-- Row 3 (#locked_msmd-page-row-3) | Holds Content Wrappers: #locked_msmd-shortcut-box-display, #msmd-shortcut-box-row-1, #msmd-shortcut-box-row-2, #locked_msmd-shortcut-box-1, #locked_msmd-shortcut-box-2, #locked_msmd-shortcut-box-3, #locked_msmd-shortcut-box-4, #locked_msmd-shortcut-box-5, #msmd-shortcut-box-1-content, #msmd-shortcut-box-2-content, #msmd-shortcut-box-3-content, #msmd-shortcut-box-4-content, #msmd-shortcut-box-5-content,   -->
 <div id="locked_msmd-page-row-3" class="dev msmd-row msmd-row-width">
     <div id="locked_msmd-shortcut-box-display">
         <div id="msmd-shortcut-box-row-1" class="msmd-shortcut-box-row">
@@ -145,8 +145,30 @@
         </div>
     </div>
 </div>
+<!-- End row 3 (#locked_msmd-page-row-3) | Holds Content Wrappers: #locked_msmd-shortcut-box-display, #msmd-shortcut-box-row-1, #msmd-shortcut-box-row-2, #locked_msmd-shortcut-box-1, #locked_msmd-shortcut-box-2, #locked_msmd-shortcut-box-3, #locked_msmd-shortcut-box-4, #locked_msmd-shortcut-box-5, #msmd-shortcut-box-1-content, #msmd-shortcut-box-2-content, #msmd-shortcut-box-3-content, #msmd-shortcut-box-4-content, #msmd-shortcut-box-5-content,   -->
 
-<!-- End Row 3 | Holds Content Wrappers: #msmd-shortcut-box-display -->
+<!-- Row 4 (#locked_msmd-page-row-4) | Holds Content Wrappers:  #locked_msmd-homepage-emergencies, #msmd-homepage-emergencies-text, -->
+<div id="locked_msmd-page-row-4" class="dev msmd-row msmd-row-width">
+    <!-- #locked_msmd-homepage-emergencies -->
+    <div id="locked_msmd-homepage-emergencies" class="dev  msmd-col-5">
+
+        <h2 class="dev msmd-all-caps">Emergencies</h2>
+        <!-- #msmd-homepage-emergencies-text -->
+        <div id="msmd-homepage-emergencies-text">
+            <p>
+                <?php
+                echo $sdmassembler->sdmAssemblerGetContentHtml('msmd-homepage-emergencies-text');
+                ?>
+            </p>
+        </div>
+        <!-- End #msmd-homepage-emergencies-text -->
+
+    </div>
+    <!-- End #locked_msmd-homepage-emergencies -->
+</div>
+<!-- End row 4 (#locked_msmd-page-row-4) | Holds Content Wrappers:  #locked_msmd-homepage-emergencies, #msmd-homepage-emergencies-text, -->
+
+
 <!--
       Special wrapper provided by Sdm Cms Core to hold Sdm Cms Core Output
       This wrapper is meant to hold core and user app output
