@@ -16,6 +16,16 @@ nbproject
 
 *.pdf
 
+*.png
+
+*.jpg
+
+*.gif
+
+*.ttf
+
+*.otf
+
 *.json
 
 *.log

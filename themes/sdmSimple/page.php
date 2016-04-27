@@ -1,14 +1,16 @@
 <?php
 /**
- * This file defines the basic html structure for the sdmSimple theme.
+ * This file demonstrates a simple Sdm Cms theme file's structure.
  */
 ?>
-
+<!--  -->
 <div id="main_content">
     <?php
     echo $sdmassembler->sdmAssemblerGetContentHtml('main_content');
     ?>
 </div>
+<!--  -->
+
 <!--
   Special wrapper provided by Sdm Cms Core to hold Sdm Cms Core Output
   This wrapper is meant to hold core and user app output
