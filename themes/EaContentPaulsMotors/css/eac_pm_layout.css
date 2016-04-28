@@ -49,7 +49,7 @@ html {
 }
 
 .dev {
-    border: 1px solid #00b9e1;
+    /* border: 1px solid #00b9e1; */
 }
 
 /* Tablet Styles */
@@ -157,7 +157,6 @@ html {
 
     .eac_pm-row-dimensions {
         width: 779px;
-        height: 200px;
     }
 
     .eac_pm-row {

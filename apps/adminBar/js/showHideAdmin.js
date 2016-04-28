@@ -55,15 +55,24 @@ $(document).ready(function () {
         'SdmAuthLogin',
         'SdmCoreOverview',
         'SdmErrorLog',
-        'Sdm Cms Documentation'
     ];
+
+    // Determine initial body properties
+    var initialBodyProperties = {bodyPaddingTop: $("body").css("paddingTop")};
+
+    var newBodyProperties = {bodyPaddingTop: "100px"};
 
     // Hide admin Bar initially if requestedPage does not match one of the displayPages.
     if (jQuery.inArray(requestedPage, displayPages) === -1) {
         $("#adminBarDisplay").hide();
+        // Reset created space for admin bar at top of page
+        $("body").css({"paddingTop": initialBodyProperties.bodyPaddingTop});
+
     } else {
         // otherwise increase #adminBarDisplay height to 100%
         $("#adminBarDisplay").css("min-height", "100%");
+        // create space for admin bar at top of page
+        $("body").css({"paddingTop": newBodyProperties.bodyPaddingTop});
     }
 
     // Hide admin panel when hideAdminPanel button is clicked and decrease height of adminBar
@@ -81,6 +90,8 @@ $(document).ready(function () {
     // Hide admin bar when hideAdminBar button is clicked
     $("#hideAdminBar").click(function () {
         $("#adminBarDisplay").hide();
+        // Reset created space for admin bar at top of page
+        $("body").css({"paddingTop": initialBodyProperties.bodyPaddingTop});
         // show showAdminBar button so user can re-enable adminBarDisplay
         $("#showAdminBar").show();
     });
@@ -88,6 +99,8 @@ $(document).ready(function () {
     // Show admin bar when showAdminBar button is clicked
     $("#showAdminBar").click(function () {
         $("#adminBarDisplay").show();
+        // create space for admin bar at top of page
+        $("body").css({"paddingTop": newBodyProperties.bodyPaddingTop});
         // hide self when clicked
         $("#showAdminBar").hide();
     });

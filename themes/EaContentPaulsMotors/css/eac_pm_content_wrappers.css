@@ -2,7 +2,9 @@
 #locked_eac_pm-header-row {
     color: #ac3333;
     height: 60px;
-    border-bottom: 9px solid #0f4c8c;
+    border-bottom: 17px solid #0f4c8c;
+    margin-bottom: -10px;
+    padding-bottom: 50px;
 }
 
 #locked_eac_pm-header-row h1, h2, h3, h4, h5, h6 {
@@ -14,7 +16,7 @@
 }
 
 #locked_eac_pm-header-logo-text {
-    margin-left: -17px;
+    margin-left: -16px;
 }
 
 #locked_eac_pm-header-address {
@@ -33,16 +35,18 @@
     text-align: right;
     padding: 3px 0px;
     font-size: 1.6em;
-    margin-right: -17px;
+    margin-right: -16px;
 }
 
 #locked_eac_pm-homepage-row2 {
+    height: 40px;
 }
 
-#locked_eac_pm-hours {
-}
+#locked_eac_pm-hours {margin-left: -16px;}
 
 #locked_eac_pm-main-menu {
+    height: 48px;
+    overflow: hidden;
 }
 
 #locked_eac_pm-homepage-row3 {
@@ -50,7 +54,19 @@
     height: 297px;
 }
 
+.eac_pm-homepage-box {
+    color: #ffffff;
+    width: 365px;
+    height: 89px;
+    overflow: hidden;
+    text-align: center;
+    padding: 0px 0px 0px 23px;
+}
+
 #eac_pm-homepage-box1 {
+    /* padding-left: 22px; */
+    margin-top: 188px;
+    height: 70px;
 }
 
 #locked_eac_pm-homepage-row4 {
@@ -59,6 +75,7 @@
 }
 
 #eac_pm-homepage-box2 {
+    margin-top: 157px;
 }
 
 #locked_eac_pm-homepage-row5 {
@@ -67,12 +84,16 @@
 }
 
 #eac_pm-homepage-box3 {
+    margin-top: 208px;
+    height: 60px;
 }
 
-#locked_eac_pm-footer-row {
-}
+#locked_eac_pm-footer-row {}
 
 #locked_eac_pm-footer-text {
+    text-align: center;
+    border-top: 17px solid #0f4c8c;
+    margin-top: 15px;
 }
 
 #locked_eac_pm-row2 {

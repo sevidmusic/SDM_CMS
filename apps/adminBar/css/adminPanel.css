@@ -20,7 +20,7 @@ button:focus {
 #showAdminBar {
     position: fixed;
     top: 10px;
-    left: 0;
+    left: 12px;
     width: 95px;
     padding: 0px;
     height: 21px;
@@ -33,11 +33,12 @@ button:focus {
     border-bottom: 12px solid #00b9e1;
     position: absolute;
     top: 0;
-    font-size: 2em;
+    font-size: 30px;
     background: #000000;
     opacity: .85;
     color: #ffffff;
     width: 100%;
     padding: 10px;
     font-family: "Century Gothic";
+    left: 0;
 }

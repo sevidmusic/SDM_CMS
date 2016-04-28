@@ -1,0 +1,22 @@
+.eac_pm-horizontal-menu ul {
+    list-style: none; /* get rid of bullets for list elements */
+    padding-left: 0px; /* remove indentation of list elements */
+    margin-top: 12px;
+}
+
+/** menu styles **/
+.eac_pm-horizontal-menu {
+    font-size: 1.2em; /* slightly larger then base font-size */
+    list-style-type: none;
+    padding: 0;
+    text-align: right;
+}
+
+.eac_pm-horizontal-menu li {
+    display: inline-block; /* Use inline-block so we can apply margins */
+    margin-left: 42px;
+}
+
+.eac_pm-horizontal-menu a {
+    text-decoration: none;
+}

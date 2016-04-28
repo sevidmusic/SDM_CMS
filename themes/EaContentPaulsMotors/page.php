@@ -1,21 +1,21 @@
 <?php
 /**
- * This file defines the default structure of a page for the EaContent_PaulsMotors theme.
+ * This file defines the structure of a basic page for the EaContent_PaulsMotors theme.
  *
  * It was created for Ea Content by Sevi Donnelly Foreman.
  *
  * @author: Sevi Donnelly Foreman
  *
- * @created: April 27, 2016 at 3:53 p.m.
+ * @created: April 27, 2016 at 2:53 p.m.
  *
  */
 ?>
 
 <!-- #locked_eac_pm-header-row | .eac_pm-row -->
-<div id="locked_eac_pm-header-row" class="dev eac_pm-row">
+<div id="locked_eac_pm-header-row" class="dev eac_pm-row eac_pm-row-dimensions">
 
     <!-- #locked_eac_pm-header-logo | .eac_pm-col -->
-    <div id="locked_eac_pm-header-logo" class="dev eac_pm-col-">
+    <div id="locked_eac_pm-header-logo" class="dev eac_pm-col-4">
 
         <!-- #locked_eac_pm-header-logo-text -->
         <div id="locked_eac_pm-header-logo-text">
@@ -27,7 +27,7 @@
     <!-- End #locked_eac_pm-header-logo | .eac_pm-col -->
 
     <!-- #locked_eac_pm-header-address | .eac_pm-col -->
-    <div id="locked_eac_pm-header-address" class="dev eac_pm-col-">
+    <div id="locked_eac_pm-header-address" class="dev eac_pm-col-4">
 
         <!-- #locked_eac_pm-header-address-text -->
         <div id="locked_eac_pm-header-address-text">6 Fairview Ave Poughkeepsie Ny</div>
@@ -37,7 +37,7 @@
     <!-- End #locked_eac_pm-header-address | .eac_pm-col -->
 
     <!-- #locked_eac_pm-header-phone-number | .eac_pm-col -->
-    <div id="locked_eac_pm-header-phone-number" class="dev eac_pm-col-">
+    <div id="locked_eac_pm-header-phone-number" class="dev eac_pm-col-4">
 
         <!-- #locked_eac_pm-header-phone-number-text -->
         <div id="locked_eac_pm-header-phone-number-text">
@@ -52,14 +52,14 @@
 <!-- End #locked_eac_pm-header-row | .eac_pm-row -->
 
 <!-- #locked_eac_pm-row2 | .eac_pm-row -->
-<div id="locked_eac_pm-row2" class="dev eac_pm-row">
+<div id="locked_eac_pm-row2" class="dev eac_pm-row eac_pm-row-dimensions">
 
     <!-- #locked_eac_pm-hours -->
-    <div id="locked_eac_pm-hours">M-F: 8AM - 5:15PM SAT-SUN 8AM - NOON</div>
+    <div id="locked_eac_pm-hours" class="eac_pm-col-6">M-F: 8AM - 5:15PM SAT-SUN 8AM - NOON</div>
     <!-- End #locked_eac_pm-hours -->
 
     <!-- #locked_eac_pm-main-menu -->
-    <div id="locked_eac_pm-main-menu">
+    <div id="locked_eac_pm-main-menu" class="eac_pm-col-6 eac_pm-horizontal-menu">
         <ul>
             <li>Home</li>
             <li>Service</li>
@@ -74,24 +74,24 @@
 
 
 <!-- #locked_eac_pm-row3 | .eac_pm-row -->
-<div id="locked_eac_pm-row3" class="dev eac_pm-row">
+<div id="locked_eac_pm-row3" class="dev eac_pm-row eac_pm-row-dimensions">
 
-    <!-- #eac_pm-box1 -->
-    <div id="main_content">
-        <?php
-        echo $sdmassembler->sdmAssemblerGetContentHtml('main_content');
-        ?>
+    <!-- #main_content -->
+    <div id="main_content" class="eac_pm-col-12">
+        <?php echo $sdmassembler->sdmAssemblerGetContentHtml('main_content'); ?>
     </div>
-    <!-- End #eac_pm-box1 -->
+    <!-- End #main_content -->
 
 </div>
 <!-- End #locked_eac_pm-row3 | .eac_pm-row -->
 
 <!-- #locked_eac_pm-footer-row | .eac_pm-row -->
-<div id="locked_eac_pm-footer-row" class="dev eac_pm-row">
+<div id="locked_eac_pm-footer-row" class="dev eac_pm-row eac_pm-row-dimensions">
 
     <!-- #locked_eac_pm-footer-text -->
-    <div id="locked_eac_pm-footer-text"></div>
+    <div id="locked_eac_pm-footer-text" class="eac_pm-col-12">Copyright &copy; Paul's Motors 2016. All Rights Reserved.
+        Website Design by EA CONTENT
+    </div>
     <!-- End #locked_eac_pm-footer-text -->
 
 </div>

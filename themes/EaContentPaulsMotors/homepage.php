@@ -59,7 +59,7 @@
     <!-- End #locked_eac_pm-hours -->
 
     <!-- #locked_eac_pm-main-menu -->
-    <div id="locked_eac_pm-main-menu" class="eac_pm-col-6">
+    <div id="locked_eac_pm-main-menu" class="eac_pm-col-6 eac_pm-horizontal-menu">
         <ul>
             <li>Home</li>
             <li>Service</li>
@@ -80,8 +80,8 @@
     <!-- End spacer element -->
 
     <!-- #eac_pm-homepage-box1 -->
-    <div id="eac_pm-homepage-box1" class="eac_pm-col-6">
-        <?php echo $sdmassembler->sdmAssemblerGetContentHtml('eac_pm-homepage-box1'); ?>
+    <div id="eac_pm-homepage-box1" class="eac_pm-col-6 eac_pm-homepage-box">
+        <?php echo substr($sdmassembler->sdmAssemblerGetContentHtml('eac_pm-homepage-box1'), 0, 128); ?>
     </div>
     <!-- End #eac_pm-homepage-box1 -->
 
@@ -93,8 +93,8 @@
 <div id="locked_eac_pm-homepage-row4" class="dev eac_pm-row eac_pm-row-dimensions">
 
     <!-- #eac_pm-homepage-box2 -->
-    <div id="eac_pm-homepage-box2" class="eac_pm-col-6">
-        <?php echo $sdmassembler->sdmAssemblerGetContentHtml('eac_pm-homepage-box2'); ?>
+    <div id="eac_pm-homepage-box2" class="eac_pm-col-6 eac_pm-homepage-box">
+        <?php echo substr($sdmassembler->sdmAssemblerGetContentHtml('eac_pm-homepage-box2'), 0, 128); ?>
     </div>
     <!-- End #eac_pm-homepage-box2 -->
 
@@ -115,8 +115,8 @@
 
 
     <!-- #eac_pm-homepage-box3 -->
-    <div id="eac_pm-homepage-box3" class="eac_pm-col-6">
-        <?php echo $sdmassembler->sdmAssemblerGetContentHtml('eac_pm-homepage-box3'); ?>
+    <div id="eac_pm-homepage-box3" class="eac_pm-col-6 eac_pm-homepage-box">
+        <?php echo substr($sdmassembler->sdmAssemblerGetContentHtml('eac_pm-homepage-box3'), 0, 128); ?>
     </div>
     <!-- End #eac_pm-homepage-box3 -->
 
@@ -128,7 +128,9 @@
 <div id="locked_eac_pm-footer-row" class="dev eac_pm-row eac_pm-row-dimensions">
 
     <!-- #locked_eac_pm-footer-text -->
-    <div id="locked_eac_pm-footer-text">Copyright &copy; Paul's Motors 2016. All Rights Reserved. Website Design by EA CONTENT</div>
+    <div id="locked_eac_pm-footer-text" class="eac_pm-col-12">Copyright &copy; Paul's Motors 2016. All Rights Reserved.
+        Website Design by EA CONTENT
+    </div>
     <!-- End #locked_eac_pm-footer-text -->
 
 </div>
