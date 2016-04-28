@@ -81,7 +81,7 @@
 
     <!-- #eac_pm-homepage-box1 -->
     <div id="eac_pm-homepage-box1" class="eac_pm-col-6 eac_pm-homepage-box">
-        <?php echo substr($sdmassembler->sdmAssemblerGetContentHtml('eac_pm-homepage-box1'), 0, 128); ?>
+        <?php echo $sdmassembler->sdmAssemblerGetContentHtml('eac_pm-homepage-box1'); ?>
     </div>
     <!-- End #eac_pm-homepage-box1 -->
 
@@ -94,7 +94,7 @@
 
     <!-- #eac_pm-homepage-box2 -->
     <div id="eac_pm-homepage-box2" class="eac_pm-col-6 eac_pm-homepage-box">
-        <?php echo substr($sdmassembler->sdmAssemblerGetContentHtml('eac_pm-homepage-box2'), 0, 128); ?>
+        <?php echo $sdmassembler->sdmAssemblerGetContentHtml('eac_pm-homepage-box2'); ?>
     </div>
     <!-- End #eac_pm-homepage-box2 -->
 
@@ -116,7 +116,7 @@
 
     <!-- #eac_pm-homepage-box3 -->
     <div id="eac_pm-homepage-box3" class="eac_pm-col-6 eac_pm-homepage-box">
-        <?php echo substr($sdmassembler->sdmAssemblerGetContentHtml('eac_pm-homepage-box3'), 0, 128); ?>
+        <?php echo $sdmassembler->sdmAssemblerGetContentHtml('eac_pm-homepage-box3'); ?>
     </div>
     <!-- End #eac_pm-homepage-box3 -->
 
