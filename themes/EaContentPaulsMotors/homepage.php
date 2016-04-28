@@ -12,10 +12,10 @@
 ?>
 
 <!-- #locked_eac_pm-header-row | .eac_pm-row -->
-<div id="locked_eac_pm-header-row" class="dev eac_pm-row">
+<div id="locked_eac_pm-header-row" class="dev eac_pm-row eac_pm-row-dimensions">
 
     <!-- #locked_eac_pm-header-logo | .eac_pm-col -->
-    <div id="locked_eac_pm-header-logo" class="dev eac_pm-col-">
+    <div id="locked_eac_pm-header-logo" class="dev eac_pm-col-4">
 
         <!-- #locked_eac_pm-header-logo-text -->
         <div id="locked_eac_pm-header-logo-text">
@@ -27,7 +27,7 @@
     <!-- End #locked_eac_pm-header-logo | .eac_pm-col -->
 
     <!-- #locked_eac_pm-header-address | .eac_pm-col -->
-    <div id="locked_eac_pm-header-address" class="dev eac_pm-col-">
+    <div id="locked_eac_pm-header-address" class="dev eac_pm-col-4">
 
         <!-- #locked_eac_pm-header-address-text -->
         <div id="locked_eac_pm-header-address-text">6 Fairview Ave Poughkeepsie Ny</div>
@@ -37,7 +37,7 @@
     <!-- End #locked_eac_pm-header-address | .eac_pm-col -->
 
     <!-- #locked_eac_pm-header-phone-number | .eac_pm-col -->
-    <div id="locked_eac_pm-header-phone-number" class="dev eac_pm-col-">
+    <div id="locked_eac_pm-header-phone-number" class="dev eac_pm-col-4">
 
         <!-- #locked_eac_pm-header-phone-number-text -->
         <div id="locked_eac_pm-header-phone-number-text">
@@ -52,14 +52,14 @@
 <!-- End #locked_eac_pm-header-row | .eac_pm-row -->
 
 <!-- #locked_eac_pm-homepage-row2 | .eac_pm-row -->
-<div id="locked_eac_pm-homepage-row2" class="dev eac_pm-row">
+<div id="locked_eac_pm-homepage-row2" class="dev eac_pm-row eac_pm-row-dimensions">
 
     <!-- #locked_eac_pm-hours -->
-    <div id="locked_eac_pm-hours">M-F: 8AM - 5:15PM SAT-SUN 8AM - NOON</div>
+    <div id="locked_eac_pm-hours" class="eac_pm-col-6">M-F: 8AM - 5:15PM SAT-SUN 8AM - NOON</div>
     <!-- End #locked_eac_pm-hours -->
 
     <!-- #locked_eac_pm-main-menu -->
-    <div id="locked_eac_pm-main-menu">
+    <div id="locked_eac_pm-main-menu" class="eac_pm-col-6">
         <ul>
             <li>Home</li>
             <li>Service</li>
@@ -74,10 +74,15 @@
 
 
 <!-- #locked_eac_pm-homepage-row3 | .eac_pm-row -->
-<div id="locked_eac_pm-homepage-row3" class="dev eac_pm-row">
+<div id="locked_eac_pm-homepage-row3" class="dev eac_pm-row eac_pm-row-dimensions">
+    <!-- spacer element -->
+    <div class="eac_pm-col-6"></div>
+    <!-- End spacer element -->
 
     <!-- #eac_pm-homepage-box1 -->
-    <div id="eac_pm-homepage-box1"></div>
+    <div id="eac_pm-homepage-box1" class="eac_pm-col-6">
+        <?php echo $sdmassembler->sdmAssemblerGetContentHtml('eac_pm-homepage-box1'); ?>
+    </div>
     <!-- End #eac_pm-homepage-box1 -->
 
 </div>
@@ -85,21 +90,34 @@
 
 
 <!-- #locked_eac_pm-homepage-row4 | .eac_pm-row -->
-<div id="locked_eac_pm-homepage-row4" class="dev eac_pm-row">
+<div id="locked_eac_pm-homepage-row4" class="dev eac_pm-row eac_pm-row-dimensions">
 
     <!-- #eac_pm-homepage-box2 -->
-    <div id="eac_pm-homepage-box2"></div>
+    <div id="eac_pm-homepage-box2" class="eac_pm-col-6">
+        <?php echo $sdmassembler->sdmAssemblerGetContentHtml('eac_pm-homepage-box2'); ?>
+    </div>
     <!-- End #eac_pm-homepage-box2 -->
+
+    <!-- spacer element -->
+    <div class="eac_pm-col-6"></div>
+    <!-- End spacer element -->
 
 </div>
 <!-- End #locked_eac_pm-homepage-row4 | .eac_pm-row -->
 
 
 <!-- #locked_eac_pm-homepage-row5 | .eac_pm-row -->
-<div id="locked_eac_pm-homepage-row5" class="dev eac_pm-row">
+<div id="locked_eac_pm-homepage-row5" class="dev eac_pm-row eac_pm-row-dimensions">
+
+    <!-- spacer element -->
+    <div class="eac_pm-col-6"></div>
+    <!-- End spacer element -->
+
 
     <!-- #eac_pm-homepage-box3 -->
-    <div id="eac_pm-homepage-box3"></div>
+    <div id="eac_pm-homepage-box3" class="eac_pm-col-6">
+        <?php echo $sdmassembler->sdmAssemblerGetContentHtml('eac_pm-homepage-box3'); ?>
+    </div>
     <!-- End #eac_pm-homepage-box3 -->
 
 </div>
@@ -107,10 +125,10 @@
 
 
 <!-- #locked_eac_pm-footer-row | .eac_pm-row -->
-<div id="locked_eac_pm-footer-row" class="dev eac_pm-row">
+<div id="locked_eac_pm-footer-row" class="dev eac_pm-row eac_pm-row-dimensions">
 
     <!-- #locked_eac_pm-footer-text -->
-    <div id="locked_eac_pm-footer-text"></div>
+    <div id="locked_eac_pm-footer-text">Copyright &copy; Paul's Motors 2016. All Rights Reserved. Website Design by EA CONTENT</div>
     <!-- End #locked_eac_pm-footer-text -->
 
 </div>

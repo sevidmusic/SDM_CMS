@@ -1,0 +1,82 @@
+
+#locked_eac_pm-header-row {
+    color: #ac3333;
+    height: 60px;
+    border-bottom: 9px solid #0f4c8c;
+}
+
+#locked_eac_pm-header-row h1, h2, h3, h4, h5, h6 {
+    display: inline;
+}
+
+#locked_eac_pm-header-logo {
+    height: 50px;
+}
+
+#locked_eac_pm-header-logo-text {
+    margin-left: -17px;
+}
+
+#locked_eac_pm-header-address {
+    height: 50px;
+}
+
+#locked_eac_pm-header-address-text {
+    padding: 15px 0px;
+}
+
+#locked_eac_pm-header-phone-number {
+    height: 50px;
+}
+
+#locked_eac_pm-header-phone-number-text {
+    text-align: right;
+    padding: 3px 0px;
+    font-size: 1.6em;
+    margin-right: -17px;
+}
+
+#locked_eac_pm-homepage-row2 {
+}
+
+#locked_eac_pm-hours {
+}
+
+#locked_eac_pm-main-menu {
+}
+
+#locked_eac_pm-homepage-row3 {
+    background: url("../designImages/pm_top_rectangle.jpg") no-repeat center;
+    height: 297px;
+}
+
+#eac_pm-homepage-box1 {
+}
+
+#locked_eac_pm-homepage-row4 {
+    background: url("../designImages/pm_middle_rectangle.jpg") no-repeat center;
+    height: 297px;
+}
+
+#eac_pm-homepage-box2 {
+}
+
+#locked_eac_pm-homepage-row5 {
+    background: url("../designImages/pm_bottom_rectangle.jpg") no-repeat center;
+    height: 297px;
+}
+
+#eac_pm-homepage-box3 {
+}
+
+#locked_eac_pm-footer-row {
+}
+
+#locked_eac_pm-footer-text {
+}
+
+#locked_eac_pm-row2 {
+}
+
+#locked_eac_pm-row3 {
+}
