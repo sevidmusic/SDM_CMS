@@ -44,7 +44,7 @@
 
 #locked_eac_pm-hours {margin-left: -16px;}
 
-#locked_eac_pm-main-menu {
+#eac_pm-main-menu {
     height: 48px;
     overflow: hidden;
 }
@@ -56,16 +56,15 @@
 
 .eac_pm-homepage-box {
     color: #ffffff;
-    width: 365px;
+    width: 42%;
     height: 89px;
     overflow: hidden;
     text-align: center;
-    padding: 0px 0px 0px 23px;
+    padding: 0px 0px 0px 55px;
 }
 
 #eac_pm-homepage-box1 {
-    /* padding-left: 22px; */
-    margin-top: 188px;
+    margin-top: 180px;
     height: 70px;
 }
 

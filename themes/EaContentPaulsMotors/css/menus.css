@@ -20,3 +20,8 @@
 .eac_pm-horizontal-menu a {
     text-decoration: none;
 }
+
+#locked_eac_pm-header-logo-text a {
+    text-decoration: none;
+    color: #ac3333;
+}

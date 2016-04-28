@@ -105,7 +105,7 @@ html {
 }
 
 /* Desktop Styles */
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: 779px) {
     /* Col styles For desktop: */
     .eac_pm-col-1 {
         width: 8.33%;

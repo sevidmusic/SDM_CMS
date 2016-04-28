@@ -19,7 +19,9 @@
 
         <!-- #locked_eac_pm-header-logo-text -->
         <div id="locked_eac_pm-header-logo-text">
-            <h1>Paul's Motors</h1>
+            <h1>
+                <a href="<?php echo $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?page=homepage&linkedBy=locked_eac_pm-header-logo-text'; ?>">Paul's
+                    Motors</a></h1>
         </div>
         <!-- End #locked_eac_pm-header-logo-text -->
 
@@ -59,13 +61,8 @@
     <!-- End #locked_eac_pm-hours -->
 
     <!-- #locked_eac_pm-main-menu -->
-    <div id="locked_eac_pm-main-menu" class="eac_pm-col-6 eac_pm-horizontal-menu">
-        <ul>
-            <li>Home</li>
-            <li>Service</li>
-            <li>Cars</li>
-            <li>Contact</li>
-        </ul>
+    <div id="eac_pm-main-menu" class="eac_pm-col-6 eac_pm-horizontal-menu">
+        <?php echo $sdmassembler->sdmAssemblerGetContentHtml('eac_pm-main-menu'); ?>
     </div>
     <!-- End #locked_eac_pm-main-menu -->
 
