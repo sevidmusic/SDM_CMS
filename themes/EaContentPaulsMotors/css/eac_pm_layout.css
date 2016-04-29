@@ -13,6 +13,7 @@ html {
     -moz-box-sizing: border-box;
     /* moder browsers */
     box-sizing: border-box;
+    font-size: 18px; /* Used to calculate em for layout styles. */
 }
 
 *, *:before, *:after {
@@ -31,7 +32,7 @@ html {
 [class*="eac_pm-col-"] {
     width: 100%;
     float: left;
-    padding: 15px;
+    padding: 0.833em;
 }
 
 /**
@@ -53,7 +54,7 @@ html {
 }
 
 /* Tablet Styles */
-@media only screen and (min-width: 600px) {
+@media only screen and (min-width: 33.333em) {
     /* For tablets: */
     .eac_pm-col-m-1 {
         width: 8.33%;
@@ -156,7 +157,7 @@ html {
     }
 
     .eac_pm-row-dimensions {
-        width: 779px;
+        width: 43.277em;
     }
 
     .eac_pm-row {

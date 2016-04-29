@@ -24,6 +24,7 @@
 }
 
 #locked_eac_pm-header-address-text {
+    font-size: .9em;
     padding: 15px 0px;
 }
 
@@ -55,9 +56,9 @@
 }
 
 .eac_pm-homepage-box {
-    /* background: brown; */
+    /* background: seagreen; */
     color: #ffffff;
-    width: 19.6875em;
+    width: 24em;
     overflow: hidden;
     text-align: center;
     font-size: 0.75em;
@@ -65,10 +66,10 @@
 }
 
 #eac_pm-homepage-box1 {
-    margin-top: 172px;
+    margin-top: 142px;
     float: right;
     height: 70px;
-    margin-right: 45px;
+    margin-right: 42px;
 }
 
 #locked_eac_pm-homepage-row4 {
@@ -77,8 +78,8 @@
 }
 
 #eac_pm-homepage-box2 {
-    margin-top: 137px;
-    margin-left: 42px;
+    margin-top: 142px;
+    margin-left: 35px;
 }
 
 #locked_eac_pm-homepage-row5 {
@@ -90,7 +91,7 @@
     margin-top: 194px;
     height: 82px;
     float: right;
-    margin-right: 42px;
+    margin-right: 34px;
 }
 
 #locked_eac_pm-footer-row {}
