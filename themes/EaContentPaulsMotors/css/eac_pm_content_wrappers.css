@@ -43,7 +43,9 @@
     height: 40px;
 }
 
-#locked_eac_pm-hours {margin-left: -16px;}
+#locked_eac_pm-hours {
+    margin-left: -16px;
+}
 
 #eac_pm-main-menu {
     height: 48px;
@@ -94,7 +96,8 @@
     margin-right: 34px;
 }
 
-#locked_eac_pm-footer-row {}
+#locked_eac_pm-footer-row {
+}
 
 #locked_eac_pm-footer-text {
     text-align: center;
@@ -109,13 +112,50 @@
 }
 
 #locked_eac_pm-cars-for-sale-box {
-    background-image: url('../designImages/pm_middle_rectangle.jpg');
+    background: url('../designImages/pm_revised_cars_box.jpg') no-repeat center;
+    height: 297px;
 }
 
-#eac_pm-cars-for-sale-box-text{
+#eac_pm-cars-for-sale-box-text {
     color: #ffffff;
-    width: 339px;
-    margin-top: 7px;
-    margin-left: 20px;
+    width: 361px;
+    margin-top: 0px;
+    margin-left: 27px;
+    height: 244px;
     padding-top: 72px;
+    padding-left: 6px;
 }
+
+#locked_eac_pm-mini-about-box1 {
+    text-align: center;
+    border-right: 3px solid #000000;
+}
+
+#locked_eac_pm-mini-about-box1 ul {
+    list-style: none; /* get rid of bullets for list elements */
+    padding-left: 0px; /* remove indentation of list elements */
+}
+
+#locked_eac_pm-mini-about-box1 li {
+    margin-top: 8px;
+}
+
+#locked_eac_pm-mini-about-boxes-row {
+}
+
+#locked_eac_pm-mini-about-boxes-row h1, h2, h3, h4, h5, h6 {
+    background: #840415;
+    width: 242px;
+    color: #ffffff;
+    font-size: .95em;
+    display: block;
+    margin: -15px 0px 0px -7px;
+    height: 40px;
+    text-align: center;
+    padding-top: 10px;
+}
+
+#eac_pm-mini-about-box2 {
+}
+
+#eac_pm-mini-about-box3 {border-left: 3px solid #000000;}

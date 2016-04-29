@@ -1,1 +1,1 @@
-stylesheets=css/eac_pm_layout, css/eac_pm_content_wrappers, css/menus, css/forms;
+stylesheets=css/eac_pm_layout, css/eac_pm_content_wrappers, css/menus, css/forms, css/eac_pm_formatting_classes;

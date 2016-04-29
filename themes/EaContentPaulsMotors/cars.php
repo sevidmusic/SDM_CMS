@@ -99,6 +99,43 @@
 </div>
 <!-- End #locked_eac_pm-cars-main-content-row | .eac_pm-row -->
 
+<!-- #locked_eac_pm-mini-about-boxes-row | .eac_pm-row -->
+<div id="locked_eac_pm-mini-about-boxes-row" class="dev eac_pm-row eac_pm-row-dimensions">
+
+    <!-- #eac_pm-mini-about-box1 -->
+    <div id="locked_eac_pm-mini-about-box1" class="eac_pm-col-4">
+        <h2 class="eac_pm-all-caps">Communities We Serve</h2>
+        <ul>
+            <li>City of Poughkeepsie</li>
+            <li>Town of Poughkeepsie</li>
+            <li>Hyde Park</li>
+            <li>Lagrangeville</li>
+            <li>Pleasant Valley</li>
+            <li>Arlington</li>
+            <li>Spackenkill</li>
+            <li>Highland</li>
+            <li>Central Dutchess County</li>
+        </ul>
+    </div>
+    <!-- End #eac_pm-mini-about-box1 -->
+
+    <!-- #eac_pm-mini-about-box2 -->
+    <div id="eac_pm-mini-about-box2" class="eac_pm-col-4">
+        <h2 class="eac_pm-all-caps">Certifications</h2>
+        <p><?php echo $sdmassembler->sdmAssemblerGetContentHtml('eac_pm-mini-about-box2'); ?>
+    </div>
+    <!-- End #eac_pm-mini-about-box2 -->
+
+    <!-- #eac_pm-mini-about-box3 -->
+    <div id="eac_pm-mini-about-box3" class="eac_pm-col-4">
+        <h2 class="eac_pm-all-caps">55+ Years Of Quality</h2>
+        <p><?php echo $sdmassembler->sdmAssemblerGetContentHtml('eac_pm-mini-about-box3'); ?></p>
+    </div>
+    <!-- End #eac_pm-mini-about-box3 -->
+
+</div>
+<!-- End #locked_eac_pm-mini-about-boxes-row | .eac_pm-row -->
+
 <!-- #locked_eac_pm-footer-row | .eac_pm-row -->
 <div id="locked_eac_pm-footer-row" class="dev eac_pm-row eac_pm-row-dimensions">
 
