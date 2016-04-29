@@ -107,3 +107,15 @@
 
 #locked_eac_pm-row3 {
 }
+
+#locked_eac_pm-cars-for-sale-box {
+    background-image: url('../designImages/pm_middle_rectangle.jpg');
+}
+
+#eac_pm-cars-for-sale-box-text{
+    color: #ffffff;
+    width: 339px;
+    margin-top: 7px;
+    margin-left: 20px;
+    padding-top: 72px;
+}

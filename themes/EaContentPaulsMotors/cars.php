@@ -69,9 +69,26 @@
 </div>
 <!-- End #locked_eac_pm-row2 | .eac_pm-row -->
 
+<!-- #locked_eac_pm-cars-for-sale-row -->
+<div id="locked_eac_pm-cars-for-sale-row" class="eac_pm-row eac_pm-row-dimensions">
 
-<!-- #locked_eac_pm-row3 | .eac_pm-row -->
-<div id="locked_eac_pm-row3" class="dev eac_pm-row eac_pm-row-dimensions">
+    <!-- #locked_eac_pm-cars-for-sale-box -->
+    <div id="locked_eac_pm-cars-for-sale-box" class="eac_pm-col-12">
+
+        <!-- #eac_pm-cars-for-sale-box-text -->
+        <div id="eac_pm-cars-for-sale-box-text">
+            <?php echo $sdmassembler->sdmAssemblerGetContentHtml('eac_pm-cars-for-sale-box'); ?>
+        </div>
+        <!-- End #eac_pm-cars-for-sale-box-text -->
+
+    </div>
+    <!-- End #locked_eac_pm-cars-for-sale-box -->
+
+</div>
+<!-- #locked_eac_pm-cars-for-sale-row -->
+
+<!-- #locked_eac_pm-cars-main-content-row | .eac_pm-row -->
+<div id="locked_eac_pm-cars-main-content-row" class="dev eac_pm-row eac_pm-row-dimensions">
 
     <!-- #main_content -->
     <div id="main_content" class="eac_pm-col-12">
@@ -80,7 +97,7 @@
     <!-- End #main_content -->
 
 </div>
-<!-- End #locked_eac_pm-row3 | .eac_pm-row -->
+<!-- End #locked_eac_pm-cars-main-content-row | .eac_pm-row -->
 
 <!-- #locked_eac_pm-footer-row | .eac_pm-row -->
 <div id="locked_eac_pm-footer-row" class="dev eac_pm-row eac_pm-row-dimensions">
