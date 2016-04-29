@@ -34,7 +34,7 @@
 
 #locked_eac_pm-header-phone-number-text {
     text-align: right;
-    padding: 3px 0px;
+    padding: 1px 0px;
     font-size: 1.6em;
     margin-right: -16px;
 }
@@ -143,7 +143,7 @@
 #locked_eac_pm-mini-about-boxes-row {
 }
 
-#locked_eac_pm-mini-about-boxes-row h1, h2, h3, h4, h5, h6 {
+#locked_eac_pm-mini-about-boxes-row h2 {
     background: #840415;
     width: 242px;
     color: #ffffff;
