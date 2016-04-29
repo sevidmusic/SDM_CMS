@@ -14,7 +14,7 @@
 
 .eac_pm-horizontal-menu li {
     display: inline-block; /* Use inline-block so we can apply margins */
-    margin-left: 42px;
+    margin-left: 22px;
 }
 
 .eac_pm-horizontal-menu a {
