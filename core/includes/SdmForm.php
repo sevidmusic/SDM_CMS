@@ -293,6 +293,13 @@ class SdmForm
         return $formId;
     }
 
+    /**
+     * Extracts classes for a specified form component.
+     *
+     * @param string $component The component to extract classes for. (options: form, submitButton, @todo: formElement)
+     *
+     * @return null|string
+     */
     final private function sdmFormExtractClasses($component = 'form')
     {
         switch ($component) {
