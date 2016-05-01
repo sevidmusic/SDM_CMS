@@ -1,0 +1,27 @@
+
+#phpGlobalStateDisplay {
+    width: 100%;
+    display: block;
+    top: 0px;
+    right: 0px;
+    position: absolute;
+    font-size: .7em;
+    padding: 30px 0px 30px 60px;
+    background: #0c1923;
+    border-radius: 9px;
+    opacity: .9;
+}
+
+#phpGlobalStateButtons {
+    width: 250px;
+    height: 42px;
+    display: block;
+    top: 0px;
+    right: 0px;
+    position: absolute;
+    font-size: .7em;
+    background: #0c1923;
+    border-radius: 9px;
+    opacity: 0.5;
+    padding: 4px 0px 0px 32px;
+}
