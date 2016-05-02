@@ -508,10 +508,24 @@ class SdmForm
                                 break;
                         }
                         break;
-                    /* No submitted value for the element. Use assigned value. */
+                    /* No submitted value for the element (note: this case does not indicate form was not submitted,
+                       just that the element did not have a value submitted.). */
                     default:
-                        /* Assign without modification. */
-                        $value = $element['value'];
+                        /* See if the form was submitted. */
+                        $formSubmitted = filter_input(INPUT_POST,'SdmForm');
+                        /* If the element type is checkbox, and the form has been submitted
+                         * then assume that no checkbox was checked, enforce this assumption
+                         * by switching any default values to non default values.
+                         */
+                        if($element['type'] === 'checkbox' && $formSubmitted !== null) {
+                            $value = array();
+                            foreach($element['value'] as $boxKey => $boxValue) {
+                                $value[$boxKey] = str_replace('default_','', $boxValue);
+                            }
+                        } else { /* For all other elements, just use original value. */
+                            /* Assign without modification. */
+                            $value = $element['value'];
+                        }
                         break;
                 }
                 break;
