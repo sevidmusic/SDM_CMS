@@ -78,18 +78,24 @@ $(document).ready(function () {
     // Hide admin panel when hideAdminPanel button is clicked and decrease height of adminBar
     $("#hideAdminPanel").click(function () {
         $("#adminBarDisplay").css("min-height", "");
-        $("#adminPanelDisplay").slideToggle("slow");
+        $("#adminPanelDisplay").slideUp("slow");
     });
 
     // Show admin panel when showAdminPanel button is clicked and increase #adminBarDisplay height to 100%
     $("#showAdminPanel").click(function () {
         $("#adminBarDisplay").css("min-height", "100%");
-        $("#adminPanelDisplay").slideToggle("slow");
+        $("#adminPanelDisplay").slideDown("slow");
     });
 
     // Hide admin bar when hideAdminBar button is clicked
     $("#hideAdminBar").click(function () {
-        $("#adminBarDisplay").slideToggle("slow");
+        /* Reset height */
+        $("#adminBarDisplay").css("min-height", "");
+        /* Slide admin panel up first to make animation smoother. */
+        $("#adminPanelDisplay").slideUp("slow");
+
+        /* Slide adminBarDisplay up. */
+        $("#adminBarDisplay").slideUp("slow");
         // Reset created space for admin bar at top of page
         $("body").css({"paddingTop": initialBodyProperties.bodyPaddingTop});
         // show showAdminBar button so user can re-enable adminBarDisplay
@@ -98,7 +104,7 @@ $(document).ready(function () {
 
     // Show admin bar when showAdminBar button is clicked
     $("#showAdminBar").click(function () {
-        $("#adminBarDisplay").slideToggle("slow");
+        $("#adminBarDisplay").slideDown("slow");
         // create space for admin bar at top of page
         $("body").css({"paddingTop": newBodyProperties.bodyPaddingTop});
         // hide self when clicked | i.e., hide showAdminBar button when admin bar is shown
