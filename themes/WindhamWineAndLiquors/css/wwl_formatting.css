@@ -1,0 +1,47 @@
+/*
+    Document   : style-classes
+    Created on : Oct 28, 2015, 5:27:39 PM
+    Author     : seviforeman
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+body {
+    background: -webkit-gradient(bottom right, black, #55eeff, black); /* For Chrome and Safari4+ */
+    background: -webkit-linear-gradient(left top, black, #99ccff, black); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(bottom right, black, #99ccff, black); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(bottom right, black, #99ccff, black); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(to bottom right, black, #671E0D, black); /* Standard syntax (must be last) */
+    margin: 0;
+    /** the following three lines prevent bg from repeating **/
+    height: 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    padding-top: 20px;
+}
+
+.WindhamWineAndLiquors {
+    color: #ffffff;
+    font-size: 18px;
+    font-family: serif;
+}
+
+/* Prevent elements from collapsing on window resize on desktops by setting min-width for desktops */
+.row-min-wid-fix {
+    min-width: 1100px;
+}
+
+.rounded {
+    border-radius: 20px;
+}
+
+/* Tablet Styles */
+@media only screen and (min-width: 600px) {
+
+}
+
+/* Desktop Styles */
+@media only screen and (min-width: 768px) {
+
+}
+
