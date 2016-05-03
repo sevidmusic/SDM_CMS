@@ -26,7 +26,7 @@
             ?>    </div>
         <div id="locked-spacer" class="col-1 col-m-1 spacer"></div>
     <?php } ?>
-    <div id="main_content"
+    <div id="main_content" data-wrapper-display-name="Main Content"
          class="<?php echo($sideBarExists === true ? 'col-8 col-m-8' : 'col-12 col-m-12'); ?> rounded">
         <?php
         echo $sdmassembler->sdmAssemblerGetContentHtml('main_content');

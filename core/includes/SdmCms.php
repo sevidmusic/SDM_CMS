@@ -120,8 +120,11 @@ class SdmCms extends SdmCore
                add the wrapper to $data array.
             */
             if (substr(trim($tag->getAttribute('id')), 0, 6) != 'locked' && $tag->getAttribute('id') !== 'Sdm_Cms_Core_Output') {
-                /* Format array so keys are for display, and values for use in code. */
-                $data[ucwords(str_replace(array('-', '_'), ' ', trim($tag->getAttribute('id'))))] = trim($tag->getAttribute('id'));
+                /* If the data-wrapper-display-name attribute exists use it for the wrapper id's key, otherwise
+                   format the id attribute for display and use it as the wrapper id's key. */
+                $wrapperDisplayName = ($tag->getAttribute('data-wrapper-display-name') === '' ? ucwords(str_replace(array('-', '_'), ' ', trim($tag->getAttribute('id')))) : $tag->getAttribute('data-wrapper-display-name'));
+                /* Add wrapper id to the $data array. */
+                $data[$wrapperDisplayName] = trim($tag->getAttribute('id'));
             }
         }
 
