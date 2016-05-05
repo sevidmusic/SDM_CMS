@@ -22,7 +22,7 @@ class SdmMedia
     private $sdmMediaDisplayName;
 
     /** @var $sdmMediaType string The type of media the Sdm Media object represents.
-     * Supported types are: sound, video, image, and canvas
+     * Supported types are: audio, video, image, and canvas
      */
     private $sdmMediaType;
 

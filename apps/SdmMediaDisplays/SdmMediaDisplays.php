@@ -10,8 +10,8 @@
 $sdmMediaDisplay = new SdmMediaDisplay();
 
 /* Define media properties for the media objects to be created. */
-$soundProperties = array(
-    'type' => 'sound',
+$audioProperties = array(
+    'type' => 'audio',
     'displayName' => 'Picking Up',
     'machineName' => '8sdfjkhd83iid99d7y3j9ugd',
     'srcUrl' => 'http://localhost:8888/TestingMedia',
@@ -64,13 +64,13 @@ $canvasProperties = array(
 
 /* Create the media objects */
 
-$soundObject = $sdmMediaDisplay->sdmMediaCreateMediaObject($soundProperties);
+$audioObject = $sdmMediaDisplay->sdmMediaCreateMediaObject($audioProperties);
 $videoObject = $sdmMediaDisplay->sdmMediaCreateMediaObject($videoProperties);
 $imageObject = $sdmMediaDisplay->sdmMediaCreateMediaObject($imageProperties);
 $canvasObject = $sdmMediaDisplay->sdmMediaCreateMediaObject($canvasProperties);
 
-/* Add sound object to display. */
-$sdmMediaDisplay->sdmMediaDisplayAddMediaObject($soundObject);
+/* Add audio object to display. */
+$sdmMediaDisplay->sdmMediaDisplayAddMediaObject($audioObject);
 
 /* Add video object to display. */
 $sdmMediaDisplay->sdmMediaDisplayAddMediaObject($videoObject);
