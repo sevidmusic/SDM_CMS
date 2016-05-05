@@ -132,10 +132,4 @@ class SdmMedia
         return $sdmMediaObject;
     }
 
-    final public function sdmMediaObjectInfo()
-    {
-        return get_object_vars($this);
-    }
-
-
 }
