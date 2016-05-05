@@ -12,8 +12,8 @@ $sdmMediaDisplay = new SdmMediaDisplay();
 /* Define media properties for the media objects to be created. */
 $audioProperties = array(
     'type' => 'audio',
-    'displayName' => 'Picking Up',
-    'machineName' => '8sdfjkhd83iid99d7y3j9ugd',
+    'displayName' => 'Pickin\' Up',
+    'machineName' => 'pickin_up',
     'srcUrl' => 'http://localhost:8888/TestingMedia',
     'srcPath' => '/Applications/MAMP/htdocs/TestingMedia',
     'srcType' => 'local',
@@ -39,7 +39,7 @@ $videoProperties = array(
 $imageProperties = array(
     'type' => 'image',
     'displayName' => 'The First Sdm Media Object',
-    'machineName' => 'sdm_media_object_0',
+    'machineName' => 'my_light',
     'srcUrl' => 'http://localhost:8888/TestingMedia',
     'srcPath' => '/Applications/MAMP/htdocs/TestingMedia',
     'srcType' => 'local',
@@ -96,37 +96,6 @@ $sdmMediaDisplay->sdmMediaDisplayAddMediaObject($canvasObject);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* DEV OUTPUT */
 $sdmMediaDisplayObjects = $sdmMediaDisplay->sdmMediaDisplayGetMediaObjects();
 
@@ -145,5 +114,7 @@ ob_end_clean();
 $output .= htmlspecialchars($out, ENT_QUOTES); // Escape HTML special chars
 
 $output .= '</div></pre>';
+
+//$output .= implode('<br>', $test);
 
 $sdmassembler->sdmAssemblerIncorporateAppOutput($output, array('incpages' => array('SdmMediaDisplays')));
