@@ -20,30 +20,24 @@ class SdmMedia
      * represents, or the title of a movie, etc.
      */
     private $sdmMediaDisplayName;
-
     /** @var $sdmMediaType string The type of media the Sdm Media object represents.
      * Supported types are: audio, video, image, and canvas
      */
     private $sdmMediaType;
-
     /** @var $sdmMediaId int A randomly generated unique id for the Sdm Media object. */
     private $sdmMediaId;
-
     /** @var
      * A unique machine name that can be used as an alternative id to the $sdmMediaId.
      * Unlike the $sdmMediaId, the $sdmMediaMachineName can contain alpha-numeric characters,
      * not just integers.
      */
     private $sdmMediaMachineName;
-
     /** @var $sdmMediaSourceName string
      * The name of the media source file. (NOTE: Do not include the file extension, just the
      * name of the file. */
     private $sdmMediaSourceName;
-
     /** @var $sdmMediaSourceExtension string The file extension of the media source file. */
     private $sdmMediaSourceExtension;
-
     /** @var $sdmMediaSourceUrl string
      * The url to the location of the media source file.
      * e.g., http://www.example.com/path/to/media/source/file
@@ -52,7 +46,6 @@ class SdmMedia
      * not the media source file itself.)
      */
     private $sdmMediaSourceUrl;
-
     /** @var  $sdmMediaSourcePath string
      * The path to the parent directory of the media source file. (only applies to local source types).
      * e.g., path/to/media/source/file
@@ -66,7 +59,6 @@ class SdmMedia
      * this SdmMedia object.
      */
     private $sdmMediaSourcePath;
-
     /** @var $sdmMediaSourceType string
      * The type of source, either 'local' or 'external'. The 'local' type is for media sources that
      * exist locally on the site or the site's server. The 'external' type is for sources that exist
@@ -83,8 +75,6 @@ class SdmMedia
      *   then the 'external' type should be used.
      */
     private $sdmMediaSourceType;
-
-
     /** @var $sdmMediaProtected bool
      * If set to true, then any Sdm Media Display object this Sdm Media object is handled
      * by will attempt to protect the media this Sdm Media object represents from download.
@@ -92,7 +82,6 @@ class SdmMedia
      * by will not make an attempt to protect the media represents from download.
      */
     private $sdmMediaProtected;
-
     /** @var $sdmMediaPublic bool
      * If set to true, then any Sdm Media Display object that handles this Sdm Media object
      * will only display the object in private Sdm Media Display views.
@@ -102,6 +91,93 @@ class SdmMedia
      */
     private $sdmMediaPublic;
 
+    /**
+     * @return string
+     */
+    public function sdmMediaGetSdmMediaDisplayName()
+    {
+        return $this->sdmMediaDisplayName;
+    }
+
+    /**
+     * @return string
+     */
+    public function sdmMediaGetSdmMediaType()
+    {
+        return $this->sdmMediaType;
+    }
+
+    /**
+     * @return int
+     */
+    public function sdmMediaGetSdmMediaId()
+    {
+        return $this->sdmMediaId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function sdmMediaGetSdmMediaMachineName()
+    {
+        return $this->sdmMediaMachineName;
+    }
+
+    /**
+     * @return string
+     */
+    public function sdmMediaGetSdmMediaSourceName()
+    {
+        return $this->sdmMediaSourceName;
+    }
+
+    /**
+     * @return string
+     */
+    public function sdmMediaGetSdmMediaSourceExtension()
+    {
+        return $this->sdmMediaSourceExtension;
+    }
+
+    /**
+     * @return string
+     */
+    public function sdmMediaGetSdmMediaSourceUrl()
+    {
+        return $this->sdmMediaSourceUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function sdmMediaGetSdmMediaSourcePath()
+    {
+        return $this->sdmMediaSourcePath;
+    }
+
+    /**
+     * @return string
+     */
+    public function sdmMediaGetSdmMediaSourceType()
+    {
+        return $this->sdmMediaSourceType;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function sdmMediaIsProtected()
+    {
+        return $this->sdmMediaProtected;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function sdmMediaIsPublic()
+    {
+        return $this->sdmMediaPublic;
+    }
 
     public function sdmMediaCreateMediaObject($properties)
     {

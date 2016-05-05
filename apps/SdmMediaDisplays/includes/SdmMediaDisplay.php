@@ -69,12 +69,23 @@ class SdmMediaDisplay extends SdmMedia
 
     private function sdmMediaDisplayBuildMediaElementHtml(SdmMedia $media)
     {
+
         /*
-        $audioVideo = '<' . $sdmMediaSourceType . ' id="' . $sdmMediaMachineName . '" ' . implode(' ', $sdmMediaHtmlAttributes) . '>';
-        $audioVideo .='<source src="' . $sdmMediaSourceName . $sdmMediaSourceExt . '" type="' . $sdmMediaSourceType . '/' . $sdmMediaSourceExt . '">';
-        $audioVideo .= 'Your browser does not support the audio element.<' . $sdmMediaSourceType . '>';
-        var_dump($audioVideo);
-        */
+          CANVAS
+          <{type} {'attributes'}>Your browser does not support the HTML5 {type} tag.</{type}>
+
+          IMG
+          <{type === image ? img} {src} {attributes}>
+
+
+          AUDIO & VIDEO
+          <{type}>
+            <source src="{src}" type="{type}/{ext}">
+            <source src="{src}" type="{type}/{ext}">
+            Your browser does not support the HTML5 {type} tag. The {type} cannot be played.
+          </{type}>
+
+         */
 
     }
 
