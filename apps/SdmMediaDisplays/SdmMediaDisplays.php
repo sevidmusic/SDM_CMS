@@ -143,6 +143,8 @@ $sdmMediaDisplay->sdmMediaDisplayAddMediaObject($canvasObject);
 /* Build Display */
 $sdmMediaDisplay->sdmMediaDisplayBuildMediaDisplay();
 
+$sdmMediaDisplayHtml = $sdmMediaDisplay->sdmMediaDisplayGetSdmMediaDisplayHtml();
+
 /* DEV OUTPUT */
 $output = '<div style="padding:42px;font-size:.42em;width: 100%; height: 420px;overflow: auto; border: 3px solid #ffffff; border-radius: 9px;"><pre>'; // <pre> is used for correct handling of newlines
 
@@ -162,4 +164,4 @@ $output .= '</div></pre>';
 
 //$output .= implode('<br>', $test);
 
-$sdmassembler->sdmAssemblerIncorporateAppOutput($output, array('incpages' => array('SdmMediaDisplays')));
+$sdmassembler->sdmAssemblerIncorporateAppOutput($output . $sdmMediaDisplayHtml, array('incpages' => array('SdmMediaDisplays')));
