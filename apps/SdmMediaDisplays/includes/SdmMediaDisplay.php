@@ -197,6 +197,8 @@ class SdmMediaDisplay extends SdmMedia
         return true; //@todo : return something more useful
     }
 
+    /**/
+
     /**
      * Builds the ordered array of SdmMedia objects for the display.
      *
@@ -270,6 +272,32 @@ class SdmMediaDisplay extends SdmMedia
         require_once($templateDirPath . '/' . $this->sdmMediaDisplayTemplate . '.php');
         $this->sdmMediaDisplayHtml = ob_get_contents();
         ob_end_clean();
+    }
+
+    public function sdmMediaDisplayCategorizedMedia($options)
+    {
+        $categorizedMediaHtml = '';
+        if (isset($options['wrapperType']) === false) {
+            $options['wrapperType'] = 'div';
+        }
+        switch ($options['wrapperType']) {
+            case 'list':
+                /* Iterate through $orderedMedia array to assemble the display's html from the ordered Sdm Media elements. */
+                foreach (new RecursiveIteratorIterator(new RecursiveArrayIterator($this->sdmMediaDisplayCategorizedMediaObjects)) as $media) {
+                    /* Add media's html to $sdmMediaDisplayHtml property. */
+                    $categorizedMediaHtml .= '<li>' . $media . '</li>';
+                }
+                $categorizedMediaHtml = '<ul>' . $categorizedMediaHtml . '</ul>';
+                break;
+            default:
+                /* Iterate through $orderedMedia array to assemble the display's html from the ordered Sdm Media elements. */
+                foreach (new RecursiveIteratorIterator(new RecursiveArrayIterator($this->sdmMediaDisplayCategorizedMediaObjects)) as $media) {
+                    /* Add media's html to $sdmMediaDisplayHtml property. */
+                    $categorizedMediaHtml .= "<{$options['wrapperType']}>{$media}</{$options['wrapperType']}>";
+                }
+                break;
+        }
+        return $categorizedMediaHtml;
     }
 
 
