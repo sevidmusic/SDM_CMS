@@ -189,24 +189,12 @@ class SdmMediaDisplay extends SdmMedia
     {
         /* Create an ordered array of this display's SdmMedia object's html. Array is ordered
            by category, place, and finally display name. */
-        $orderedMedia = $this->sdmMediaDisplayBuildOrderedMediaObjectArray();
-
-        /* Sort each level of the $orderedMedia array. */
-        $this->sdmMediaDisplaySortCategorizedMediaElements($orderedMedia);
-
-        /* Assign sorted $orderedMedia array to the $sdmMediaDisplayCategorizedMediaObjects property. */
-        $this->sdmMediaDisplayCategorizedMediaObjects = $orderedMedia;
+        $this->sdmMediaDisplayBuildOrderedMediaObjectArray();
 
         /* Load the display's template*/
         $this->sdmMediaDisplayLoadDisplayTemplate();
 
-
-        /* Iterate through $orderedMedia array to assemble the display's html from the ordered Sdm Media elements. */
-        /*foreach (new RecursiveIteratorIterator(new RecursiveArrayIterator($orderedMedia)) as $media) {
-            /* Add media's html to $sdmMediaDisplayHtml property. *
-            $this->sdmMediaDisplayHtml .= $media;
-        }*/
-
+        return true; //@todo : return something more useful
     }
 
     /**
@@ -233,7 +221,13 @@ class SdmMediaDisplay extends SdmMedia
                SdmMediaPlace, and finally SdmMediaDisplayName */
             $orderedMedia[$mediaCategory][$mediaPlace][$mediaDisplayName] = $mediaElementsHtml[$mediaMachineName];
         }
-        return $orderedMedia;
+        /* Sort each level of the $orderedMedia array. */
+        $this->sdmMediaDisplaySortCategorizedMediaElements($orderedMedia);
+
+        /* Assign sorted $orderedMedia array to the $sdmMediaDisplayCategorizedMediaObjects property. */
+        $this->sdmMediaDisplayCategorizedMediaObjects = $orderedMedia;
+
+        return true; // @todo: return something more useful
     }
 
     /**
