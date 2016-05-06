@@ -21,7 +21,7 @@ $audioProperties = array(
     'srcExt' => 'mp3',
     'protected' => false,
     'private' => false,
-    'category' => 'audio_video',
+    'category' => 'audioVideo',
     'place' => 420,
 );
 

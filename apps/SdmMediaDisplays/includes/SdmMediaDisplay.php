@@ -182,10 +182,13 @@ class SdmMediaDisplay extends SdmMedia
             /* Filter SdmMediaDisplay name so only it's alphanumeric characters are used. */
             $mediaDisplayName = preg_replace("/[^a-zA-Z0-9]+/", " ", $mediaProperties['sdmMediaDisplayName']);
             $mediaMachineName = $mediaProperties['sdmMediaMachineName'];
-            /* Assign SdmMedia objects html to the $orderedMedia array by SdmMediaCategory,
+            /* Assign SdmMedia objects html to the $orderedMedia array. Index by SdmMediaCategory,
                SdmMediaPlace, and finally SdmMediaDisplayName */
             $orderedMedia[$mediaCategory][$mediaPlace][$mediaDisplayName] = $mediaElementsHtml[$mediaMachineName];
         }
+
+        /* Sort each level of the $orderedMedia array. */
+        $this->sdmMediaDisplaySortCategorizedMediaElements($orderedMedia);
         var_dump($orderedMedia);
 
         /*  */
@@ -203,6 +206,24 @@ class SdmMediaDisplay extends SdmMedia
     public function sdmMediaDisplayGetMediaObjects()
     {
         return $this->sdmMediaDisplayMedia;
+    }
+
+    /**
+     * Sorts the $orderedMedia array created by sdmMediaDisplayBuildMediaDisplay()
+     * recursively.
+     *
+     * @param $orderedMedia array The $orderedMedia array created by sdmMediaDisplayBuildMediaDisplay().
+     *
+     * @return bool True if sort succeeded, otherwise false.
+     */
+    private function sdmMediaDisplaySortCategorizedMediaElements(&$orderedMedia)
+    {
+        foreach ($orderedMedia as &$arrayLevel) {
+            if (is_array($arrayLevel)) {
+                $this->sdmMediaDisplaySortCategorizedMediaElements($arrayLevel);
+            }
+        }
+        return ksort($orderedMedia);
     }
 
 
