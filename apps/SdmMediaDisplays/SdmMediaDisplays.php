@@ -23,11 +23,11 @@ $audioProperties = array(
     'private' => false,
 );
 
-$videoProperties = array(
-    'type' => 'video',
+$youtubeVideoProperties = array(
+    'type' => 'youtube',
     'displayName' => 'Radiohead - Paranoid Android',
     'machineName' => 'radiohead_paranoid_android',
-    'srcUrl' => 'https://www.youtube.com/watch?v=fHiGbolFFGw',
+    'srcUrl' => 'https://www.youtube.com/embed/sPLEbAVjiLA', // embed url is the only youtube url that works, share and watch urls fail. If embely is implemented this may change, but for now the embed url must be used.
     'srcPath' => null,
     'srcType' => 'external',
     'srcName' => 'MyLight',
@@ -55,7 +55,7 @@ $canvasProperties = array(
     'machineName' => 'html5_canvas_gradient',
     'srcUrl' => 'http://localhost:8888/TestingMedia',
     'srcPath' => '/Applications/MAMP/htdocs/TestingMedia',
-    'srcType' => 'external',
+    'srcType' => 'local',
     'srcName' => 'html5CanvasGradient',
     'srcExt' => 'js',
     'protected' => true,
@@ -68,7 +68,7 @@ $canvasProperties = array(
 $audioObject = $sdmMediaDisplay->sdmMediaCreateMediaObject($audioProperties);
 
 /* Create video SdmMedia object. */
-$videoObject = $sdmMediaDisplay->sdmMediaCreateMediaObject($videoProperties);
+$youtubeVideoObject = $sdmMediaDisplay->sdmMediaCreateMediaObject($youtubeVideoProperties);
 
 /* Create image SdmMedia object. */
 $imageObject = $sdmMediaDisplay->sdmMediaCreateMediaObject($imageProperties);
@@ -82,7 +82,7 @@ $canvasObject = $sdmMediaDisplay->sdmMediaCreateMediaObject($canvasProperties);
 $sdmMediaDisplay->sdmMediaDisplayAddMediaObject($audioObject);
 
 /* Add video object to display. */
-$sdmMediaDisplay->sdmMediaDisplayAddMediaObject($videoObject);
+$sdmMediaDisplay->sdmMediaDisplayAddMediaObject($youtubeVideoObject);
 
 /* Add image object to display. */
 $sdmMediaDisplay->sdmMediaDisplayAddMediaObject($imageObject);
@@ -92,13 +92,19 @@ $sdmMediaDisplay->sdmMediaDisplayAddMediaObject($canvasObject);
 
 
 /** Build display **/
+/* Get SdmMedia object html */
+$sdmMediaDisplayObjects = $sdmMediaDisplay->sdmMediaGetSdmMediaDisplayMediaElementsHtml();
+
+/* Create a string of SdmMedia object html. */
+$sdmMediaDisplayObjectsHtml = implode('<br>', $sdmMediaDisplayObjects);
+
+/* Output strng of SdmMedia object's html to page. */
+$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmMediaDisplayObjectsHtml, array('incpages' => array('SdmMediaDisplays')));
 
 
 
 
 /* DEV OUTPUT */
-$sdmMediaDisplayObjects = $sdmMediaDisplay->sdmMediaDisplayGetMediaObjects();
-
 $output = '<div style="padding:42px;font-size:.42em;width: 100%; height: 420px;overflow: auto; border: 3px solid #ffffff; border-radius: 9px;"><pre>'; // <pre> is used for correct handling of newlines
 
 ob_start();

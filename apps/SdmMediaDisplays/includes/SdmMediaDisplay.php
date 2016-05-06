@@ -30,6 +30,16 @@ class SdmMediaDisplay extends SdmMedia
     }
 
     /**
+     * Returns the SdmMediaDisplayMediaElementsHtml array.
+     * @return array The SdmMediaDisplayMediaElementsHtml array which holds
+     *               the html for the SdmMedia objects.
+     */
+    public function sdmMediaGetSdmMediaDisplayMediaElementsHtml()
+    {
+        return $this->sdmMediaDisplayMediaElementsHtml;
+    }
+
+    /**
      * Returns an array of the Sdm Media objects that belong to this display.
      * @return array Array of Sdm Media objects that belong to this display.
      */
@@ -92,7 +102,7 @@ class SdmMediaDisplay extends SdmMedia
         $sourceType = $media->sdmMediaGetSdmMediaSourceType();
 
         /* Assemble $src from media source url, source name, and source extension based on source type. */
-        switch($sourceType) {
+        switch ($sourceType) {
             case 'local':
                 $src = $sourceUrl . '/' . rawurlencode($sourceName . '.' . $sourceExtension);
                 break;
@@ -106,25 +116,23 @@ class SdmMediaDisplay extends SdmMedia
         switch ($type) {
             case 'audio':
             case 'video':
+                /* Build audio/video element html. */
                 $mediaElementHtml = "<$type id='$machineName' controls><source src='$src'>Your browser does not support the HTML5 $type tag.</$type>";
-                /*
-                <{type}>
-                <source src="{src}" type="{type}/{ext}">
-                <source src="{src}" type="{type}/{ext}">
-                Your browser does not support the HTML5 {type} tag. The {type} cannot be played.
-                </{type}>
-                */
                 break;
             case 'image':
+                /* Build image element html */
                 $mediaElementHtml = "<img id='$machineName' src='$src'>";
-                // <{type === image ? img} {src} {attributes}>
                 break;
             case 'canvas':
+                /* Build canvas element html. */
                 $mediaElementHtml = "<canvas id='$machineName'>Your browser does not support the HTML5 canvas tag.</canvas>";
-                // <{type} {'attributes'}>Your browser does not support the HTML5 {type} tag.</{type}>
+
+                /* Canvas scripts must be loaded after canvas tag is declared. */
+                $mediaElementHtml .= "<script src='$src'></script>";
                 break;
             case 'youtube':
-                // @todo support this type, requires the use of an iframe whose src is the youtube media url
+                /* Build youtube element html */
+                $mediaElementHtml = "<iframe src='$src'></iframe>";
                 break;
             default:
                 error_log('SdmMedia object with id "' . $id . '" was assigned media type "' . $type . '
