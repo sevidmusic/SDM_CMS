@@ -21,6 +21,8 @@ $audioProperties = array(
     'srcExt' => 'mp3',
     'protected' => false,
     'private' => false,
+    'category' => 'audio_video',
+    'place' => 420,
 );
 
 $youtubeVideoProperties = array(
@@ -34,6 +36,8 @@ $youtubeVideoProperties = array(
     'srcExt' => null,
     'protected' => true,
     'private' => true,
+    'category' => 'audioVideo',
+    'place' => 0,
 );
 
 $imageProperties = array(
@@ -47,6 +51,8 @@ $imageProperties = array(
     'srcExt' => 'jpg',
     'protected' => false,
     'private' => true,
+    'category' => 'image',
+    'place' => 1,
 );
 
 $canvasProperties = array(
@@ -60,6 +66,8 @@ $canvasProperties = array(
     'srcExt' => 'js',
     'protected' => true,
     'private' => false,
+    'category' => 'canvas',
+    'place' => 28,
 );
 
 /** Create the media objects **/
@@ -90,19 +98,8 @@ $sdmMediaDisplay->sdmMediaDisplayAddMediaObject($imageObject);
 /* Add canvas object to display. */
 $sdmMediaDisplay->sdmMediaDisplayAddMediaObject($canvasObject);
 
-
-/** Build display **/
-/* Get SdmMedia object html */
-$sdmMediaDisplayObjects = $sdmMediaDisplay->sdmMediaGetSdmMediaDisplayMediaElementsHtml();
-
-/* Create a string of SdmMedia object html. */
-$sdmMediaDisplayObjectsHtml = implode('<br>', $sdmMediaDisplayObjects);
-
-/* Output strng of SdmMedia object's html to page. */
-$sdmassembler->sdmAssemblerIncorporateAppOutput($sdmMediaDisplayObjectsHtml, array('incpages' => array('SdmMediaDisplays')));
-
-
-
+/* Build Display */
+$sdmMediaDisplay->sdmMediaDisplayBuildMediaDisplay();
 
 /* DEV OUTPUT */
 $output = '<div style="padding:42px;font-size:.42em;width: 100%; height: 420px;overflow: auto; border: 3px solid #ffffff; border-radius: 9px;"><pre>'; // <pre> is used for correct handling of newlines

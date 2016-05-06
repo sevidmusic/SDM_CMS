@@ -19,25 +19,25 @@ class SdmMedia
      * The name to use in displays for the Sdm Media object. Could be the name of the song the Sdm Media object
      * represents, or the title of a movie, etc.
      */
-    private $sdmMediaDisplayName;
+    protected $sdmMediaDisplayName;
     /** @var $sdmMediaType string The type of media the Sdm Media object represents.
      * Supported types are: audio, video, youtube, image, and canvas
      */
-    private $sdmMediaType;
+    protected $sdmMediaType;
     /** @var $sdmMediaId int A randomly generated unique id for the Sdm Media object. */
-    private $sdmMediaId;
+    protected $sdmMediaId;
     /** @var
      * A unique machine name that can be used as an alternative id to the $sdmMediaId.
      * Unlike the $sdmMediaId, the $sdmMediaMachineName can contain alpha-numeric characters,
      * not just integers.
      */
-    private $sdmMediaMachineName;
+    protected $sdmMediaMachineName;
     /** @var $sdmMediaSourceName string
      * The name of the media source file. (NOTE: Do not include the file extension, just the
      * name of the file. */
-    private $sdmMediaSourceName;
+    protected $sdmMediaSourceName;
     /** @var $sdmMediaSourceExtension string The file extension of the media source file. */
-    private $sdmMediaSourceExtension;
+    protected $sdmMediaSourceExtension;
     /** @var $sdmMediaSourceUrl string
      * The url to the location of the media source file.
      * e.g., http://www.example.com/path/to/media/source/file
@@ -45,7 +45,7 @@ class SdmMedia
      * the url should point to the location of the media source file,
      * not the media source file itself.)
      */
-    private $sdmMediaSourceUrl;
+    protected $sdmMediaSourceUrl;
     /** @var  $sdmMediaSourcePath string
      * The path to the parent directory of the media source file. (only applies to local source types).
      * e.g., path/to/media/source/file
@@ -58,7 +58,7 @@ class SdmMedia
      * is added to, that the $sdmMediaSourceUrl should always be used to load or reference the media for
      * this SdmMedia object.
      */
-    private $sdmMediaSourcePath;
+    protected $sdmMediaSourcePath;
     /** @var $sdmMediaSourceType string
      * The type of source, either 'local' or 'external'. The 'local' type is for media sources that
      * exist locally on the site or the site's server. The 'external' type is for sources that exist
@@ -74,14 +74,14 @@ class SdmMedia
      * - If the source is a video link from another site, for instance a video on http://www.someOtherSite.com,
      *   then the 'external' type should be used.
      */
-    private $sdmMediaSourceType;
+    protected $sdmMediaSourceType;
     /** @var $sdmMediaProtected bool
      * If set to true, then any Sdm Media Display object this Sdm Media object is handled
      * by will attempt to protect the media this Sdm Media object represents from download.
      * If set to false, then any Sdm Media Display object this Sdm Media object is handled
      * by will not make an attempt to protect the media represents from download.
      */
-    private $sdmMediaProtected;
+    protected $sdmMediaProtected;
     /** @var $sdmMediaPublic bool
      * If set to true, then any Sdm Media Display object that handles this Sdm Media object
      * will only display the object in private Sdm Media Display views.
@@ -89,15 +89,30 @@ class SdmMedia
      * If set to false, then any Sdm Media Display object that handles this Sdm Media object
      * will display this Sdm Media object in public and private Sdm Media Display views.
      */
-    private $sdmMediaPublic;
+    protected $sdmMediaPublic;
 
     /** @var $sdmMediaPlace int An integer that will be used to determine this SdmMedia objects place in
      *       the SdmMediaDisplay.
      */
-    private $sdmMediaPlace;
-
+    protected $sdmMediaPlace;
     /** @var  $sdmMediaCategory string The name of the category to sort this SdmMedia object by in the SdmMediaDisplay. */
-    private $sdmMediaCategory;
+    protected $sdmMediaCategory;
+
+    /**
+     * @return int
+     */
+    public function sdmMediaGetSdmMediaPlace()
+    {
+        return $this->sdmMediaPlace;
+    }
+
+    /**
+     * @return string
+     */
+    public function sdmMediaGetSdmMediaCategory()
+    {
+        return $this->sdmMediaCategory;
+    }
 
     /**
      * @return string
@@ -217,7 +232,7 @@ class SdmMedia
         $sdmMediaObject->sdmMediaPlace = (isset($properties['place']) === true ? $properties['place'] : 0);
 
         /* Media Category | category */
-        $sdmMediaObject->sdmMediaCategory = (isset($properties['category']) === true ? $properties['place'] : 'default');
+        $sdmMediaObject->sdmMediaCategory = (isset($properties['category']) === true ? $properties['category'] : 'default');
 
         /* Return the SdmMedia object. */
         return $sdmMediaObject;

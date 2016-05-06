@@ -19,6 +19,9 @@ class SdmMediaDisplay extends SdmMedia
      */
     private $sdmMediaDisplayTemplate;
 
+    /** @var  $sdmMediaDisplayHtml string Html for the display. */
+    private $sdmMediaDisplay;
+
     /**
      * SdmMediaDisplay constructor. Initializes the sdmMediaDisplayMedia array.
      */
@@ -35,15 +38,6 @@ class SdmMediaDisplay extends SdmMedia
         /* Assign Sdm Media Display template, default template will be used. */
         $this->sdmMediaDisplayTemplate = $SdmMediaDisplayTemplate;
 
-    }
-
-    /**
-     * Returns an array of the Sdm Media objects that belong to this display.
-     * @return array Array of Sdm Media objects that belong to this display.
-     */
-    public function sdmMediaDisplayGetMediaObjects()
-    {
-        return $this->sdmMediaDisplayMedia;
     }
 
     /**
@@ -170,17 +164,45 @@ class SdmMediaDisplay extends SdmMedia
     }
 
     /**
-     *
+     * This method will order the media objects, load the template,
+     * and assigns the resulting html string to the sdmMediaDisplay property.
      */
     public function sdmMediaDisplayBuildMediaDisplay()
     {
+        /* Initialize $orderedMedia array. Organize Sdm Media Elements Html
+           categorically, by place, and finally by display name. */
         $orderedMedia = array();
         $mediaElementsHtml = $this->sdmMediaDisplayMediaElementsHtml;
-        /* Order SdmMedia objects by category and place */
-        foreach ($this->sdmMediaDisplayMedia as $index => $mediaObject) {
-            $orderedMedia[$mediaObject->sdmMediaCategory][$mediaObject->sdmMediaPlace][$mediaObject->sdmMediaDisplayName] = $mediaElementsHtml[$mediaObject->sdmMediaMachineName];
+        $mediaObjects = $this->sdmMediaDisplayGetMediaObjects();
+        foreach ($mediaObjects as $mediaObject) {
+            /* Unpack media object properties */
+            $mediaProperties = get_object_vars($mediaObject);
+            $mediaCategory = $mediaProperties['sdmMediaCategory'];
+            $mediaPlace = $mediaProperties['sdmMediaPlace'];
+            /* Filter SdmMediaDisplay name so only it's alphanumeric characters are used. */
+            $mediaDisplayName = preg_replace("/[^a-zA-Z0-9]+/", " ", $mediaProperties['sdmMediaDisplayName']);
+            $mediaMachineName = $mediaProperties['sdmMediaMachineName'];
+            /* Assign SdmMedia objects html to the $orderedMedia array by SdmMediaCategory,
+               SdmMediaPlace, and finally SdmMediaDisplayName */
+            $orderedMedia[$mediaCategory][$mediaPlace][$mediaDisplayName] = $mediaElementsHtml[$mediaMachineName];
         }
-        return $orderedMedia;
+        var_dump($orderedMedia);
+
+        /*  */
+        /* Iterate through $orderedMedia array to assemble the display's html from the ordered Sdm Media elements. */
+        foreach (new RecursiveIteratorIterator(new RecursiveArrayIterator($orderedMedia)) as $value) {
+            //var_dump($value);
+        }
+
+    }
+
+    /**
+     * Returns an array of the Sdm Media objects that belong to this display.
+     * @return array Array of Sdm Media objects that belong to this display.
+     */
+    public function sdmMediaDisplayGetMediaObjects()
+    {
+        return $this->sdmMediaDisplayMedia;
     }
 
 
