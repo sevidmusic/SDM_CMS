@@ -22,6 +22,12 @@ class SdmMediaDisplay extends SdmMedia
     /** @var  $sdmMediaDisplayHtml string Html for the display. */
     private $sdmMediaDisplayHtml;
 
+    /** @var  $sdmMediaDisplayCategorizedMediaObjects array
+     * Array of this displays SdmMedia object's html organized by SdmMediaCategory,
+     * then SdmMediaPlace, and finally SdmMediaDisplayName
+     */
+    private $sdmMediaDisplayCategorizedMediaObjects;
+
     /**
      * SdmMediaDisplay constructor. Initializes the sdmMediaDisplayMedia array.
      */
@@ -187,6 +193,9 @@ class SdmMediaDisplay extends SdmMedia
 
         /* Sort each level of the $orderedMedia array. */
         $this->sdmMediaDisplaySortCategorizedMediaElements($orderedMedia);
+
+        /* Assign sorted $orderedMedia array to the $sdmMediaDisplayCategorizedMediaObjects property. */
+        $this->sdmMediaDisplayCategorizedMediaObjects = $orderedMedia;
 
         /* Load the display's template*/
         $this->sdmMediaDisplayLoadDisplayTemplate();
