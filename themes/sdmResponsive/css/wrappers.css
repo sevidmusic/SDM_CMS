@@ -12,9 +12,15 @@
     opacity: 0.69;
 }
 
+#locked_side-menu {
+    margin-top: 12px;
+}
+
 /* Tablet Styles */
 @media only screen and (min-width: 600px) {
-
+    #locked_side-menu {
+        margin-too: 42px;
+    }
 }
 
 /* Desktop Styles */
@@ -22,5 +28,9 @@
     /* Wrappers */
     #footer {
         text-align: center;
+    }
+
+    #locked_side-menu {
+        margin-top: 42px;
     }
 }

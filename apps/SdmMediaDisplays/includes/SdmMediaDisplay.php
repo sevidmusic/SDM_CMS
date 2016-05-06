@@ -14,10 +14,15 @@ class SdmMediaDisplay extends SdmMedia
     /** @var  $sdmMediaDisplayMediaElementsHtml array Array of media element html indexed by sdmMediaMachineName */
     private $sdmMediaDisplayMediaElementsHtml;
 
+    /** @var  $sdmMediaDisplayTemplate string
+     * The name of the template file for this display excluding the file extension.
+     */
+    private $sdmMediaDisplayTemplate;
+
     /**
      * SdmMediaDisplay constructor. Initializes the sdmMediaDisplayMedia array.
      */
-    final public function __construct()
+    final public function __construct($SdmMediaDisplayTemplate = 'SdmMediaDisplayDefaultTemplate')
     {
         /* Initialize the sdmMediaDisplayMedia array which will hold the Sdm Media objects
            for this Sdm Media Display. */
@@ -26,6 +31,9 @@ class SdmMediaDisplay extends SdmMedia
            for this Sdm Media Display. Media element html is indexed by the relative SdmMedia object's
            sdmMediaMachineName property.  */
         $this->sdmMediaDisplayMediaElementsHtml = array();
+
+        /* Assign Sdm Media Display template, default template will be used. */
+        $this->sdmMediaDisplayTemplate = $SdmMediaDisplayTemplate;
 
     }
 
@@ -160,5 +168,20 @@ class SdmMediaDisplay extends SdmMedia
     {
         return $this->sdmMediaDisplayMediaElementsHtml;
     }
+
+    /**
+     *
+     */
+    public function sdmMediaDisplayBuildMediaDisplay()
+    {
+        $orderedMedia = array();
+        $mediaElementsHtml = $this->sdmMediaDisplayMediaElementsHtml;
+        /* Order SdmMedia objects by category and place */
+        foreach ($this->sdmMediaDisplayMedia as $index => $mediaObject) {
+            $orderedMedia[$mediaObject->sdmMediaCategory][$mediaObject->sdmMediaPlace][$mediaObject->sdmMediaDisplayName] = $mediaElementsHtml[$mediaObject->sdmMediaMachineName];
+        }
+        return $orderedMedia;
+    }
+
 
 }
