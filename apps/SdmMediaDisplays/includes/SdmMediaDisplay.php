@@ -20,7 +20,7 @@ class SdmMediaDisplay extends SdmMedia
     private $sdmMediaDisplayTemplate;
 
     /** @var  $sdmMediaDisplayHtml string Html for the display. */
-    private $sdmMediaDisplay;
+    private $sdmMediaDisplayHtml;
 
     /**
      * SdmMediaDisplay constructor. Initializes the sdmMediaDisplayMedia array.
@@ -38,10 +38,18 @@ class SdmMediaDisplay extends SdmMedia
         /* Assign Sdm Media Display template, default template will be used. */
         $this->sdmMediaDisplayTemplate = $SdmMediaDisplayTemplate;
 
-        /* Initialize sdmMediaDisplay string. This string will hold the html for the display built
+        /* Initialize sdmMediaDisplayHtml string. This string will hold the html for the display built
            from the SdmMedia objects that belong to this display. */
-        $this->sdmMediaDisplay = '';
+        $this->sdmMediaDisplayHtml = '';
 
+    }
+
+    /**
+     * @return string
+     */
+    public function sdmMediaDisplayGetSdmMediaDisplayHtml()
+    {
+        return $this->sdmMediaDisplayHtml;
     }
 
     /**
@@ -169,7 +177,7 @@ class SdmMediaDisplay extends SdmMedia
 
     /**
      * This method will order the media objects, load the template,
-     * and assigns the resulting html string to the sdmMediaDisplay property.
+     * and assigns the resulting html string to the sdmMediaDisplayHtml property.
      */
     public function sdmMediaDisplayBuildMediaDisplay()
     {
@@ -182,8 +190,8 @@ class SdmMediaDisplay extends SdmMedia
 
         /* Iterate through $orderedMedia array to assemble the display's html from the ordered Sdm Media elements. */
         foreach (new RecursiveIteratorIterator(new RecursiveArrayIterator($orderedMedia)) as $media) {
-            /* Add media's html to $sdmMediaDisplay property. */
-            $this->sdmMediaDisplay .= $media;
+            /* Add media's html to $sdmMediaDisplayHtml property. */
+            $this->sdmMediaDisplayHtml .= $media;
         }
 
     }
