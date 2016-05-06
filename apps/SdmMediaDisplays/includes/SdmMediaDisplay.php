@@ -24,19 +24,9 @@ class SdmMediaDisplay extends SdmMedia
         $this->sdmMediaDisplayMedia = array();
         /* Initialize the sdmMediaDisplayMediaElementsHtml array which will hold the Sdm Media Element's html
            for this Sdm Media Display. Media element html is indexed by the relative SdmMedia object's
-           sdmMediaMachineName prperty.  */
+           sdmMediaMachineName property.  */
         $this->sdmMediaDisplayMediaElementsHtml = array();
 
-    }
-
-    /**
-     * Returns the SdmMediaDisplayMediaElementsHtml array.
-     * @return array The SdmMediaDisplayMediaElementsHtml array which holds
-     *               the html for the SdmMedia objects.
-     */
-    public function sdmMediaGetSdmMediaDisplayMediaElementsHtml()
-    {
-        return $this->sdmMediaDisplayMediaElementsHtml;
     }
 
     /**
@@ -142,8 +132,33 @@ class SdmMediaDisplay extends SdmMedia
                 break;
         }
 
+        /* Count initial number of sdmMediaGetSdmMediaDisplayMediaElementsHtml items */
+        $initialElements = count($this->sdmMediaGetSdmMediaDisplayMediaElementsHtml());
+
         /* Add media element html to the sdmMediaDisplayMediaElementsHtml */
         $this->sdmMediaDisplayMediaElementsHtml[$machineName] = $mediaElementHtml;
+
+        /* Count new number of sdmMediaGetSdmMediaDisplayMediaElementsHtml items */
+        $newElements = count($this->sdmMediaGetSdmMediaDisplayMediaElementsHtml());
+
+        /* If number of new elements is greater then the initial number of elements in the
+           sdmMediaGetSdmMediaDisplayMediaElementsHtml array then SdmMedia object html was
+           constructed successfully, otherwise something went wrong.
+        */
+        $status = ($newElements > $initialElements ? true : false);
+
+        return $status;
+
+    }
+
+    /**
+     * Returns the SdmMediaDisplayMediaElementsHtml array.
+     * @return array The SdmMediaDisplayMediaElementsHtml array which holds
+     *               the html for the SdmMedia objects.
+     */
+    public function sdmMediaGetSdmMediaDisplayMediaElementsHtml()
+    {
+        return $this->sdmMediaDisplayMediaElementsHtml;
     }
 
 }
