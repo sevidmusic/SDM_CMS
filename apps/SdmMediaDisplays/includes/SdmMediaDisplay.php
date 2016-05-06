@@ -169,6 +169,29 @@ class SdmMediaDisplay extends SdmMedia
      */
     public function sdmMediaDisplayBuildMediaDisplay()
     {
+        /* Create an ordered array of this display's SdmMedia object's html. Array is ordered
+           by category, place, and finally display name. */
+        $orderedMedia = $this->sdmMediaDisplayBuildOrderedMediaObjectArray();
+
+        /* Sort each level of the $orderedMedia array. */
+        $this->sdmMediaDisplaySortCategorizedMediaElements($orderedMedia);
+        var_dump($orderedMedia);
+
+        /*  */
+        /* Iterate through $orderedMedia array to assemble the display's html from the ordered Sdm Media elements. */
+        foreach (new RecursiveIteratorIterator(new RecursiveArrayIterator($orderedMedia)) as $value) {
+            //var_dump($value);
+        }
+
+    }
+
+    /**
+     * Builds the ordered array of SdmMedia objects for the display.
+     *
+     * @return array Array of SdmMedia objects ordered by category, place, and display name respectively.
+     */
+    private function sdmMediaDisplayBuildOrderedMediaObjectArray()
+    {
         /* Initialize $orderedMedia array. Organize Sdm Media Elements Html
            categorically, by place, and finally by display name. */
         $orderedMedia = array();
@@ -186,17 +209,7 @@ class SdmMediaDisplay extends SdmMedia
                SdmMediaPlace, and finally SdmMediaDisplayName */
             $orderedMedia[$mediaCategory][$mediaPlace][$mediaDisplayName] = $mediaElementsHtml[$mediaMachineName];
         }
-
-        /* Sort each level of the $orderedMedia array. */
-        $this->sdmMediaDisplaySortCategorizedMediaElements($orderedMedia);
-        var_dump($orderedMedia);
-
-        /*  */
-        /* Iterate through $orderedMedia array to assemble the display's html from the ordered Sdm Media elements. */
-        foreach (new RecursiveIteratorIterator(new RecursiveArrayIterator($orderedMedia)) as $value) {
-            //var_dump($value);
-        }
-
+        return $orderedMedia;
     }
 
     /**
