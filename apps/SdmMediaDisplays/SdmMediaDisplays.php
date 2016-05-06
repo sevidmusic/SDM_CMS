@@ -25,6 +25,21 @@ $audioProperties = array(
     'place' => 420,
 );
 
+$audio2Properties = array(
+    'type' => 'audio',
+    'displayName' => 'I\'ll Be Here - Full Arrangement',
+    'machineName' => 'IllBeHere_FullArrangement',
+    'srcUrl' => 'http://localhost:8888/TestingMedia',
+    'srcPath' => '/Applications/MAMP/htdocs/TestingMedia',
+    'srcType' => 'local',
+    'srcName' => 'IllBeHere_FullArrangement',
+    'srcExt' => 'aiff',
+    'protected' => false,
+    'private' => false,
+    'category' => 'audioVideo',
+    'place' => 420,
+);
+
 $youtubeVideoProperties = array(
     'type' => 'youtube',
     'displayName' => 'Radiohead - Paranoid Android',
@@ -34,6 +49,21 @@ $youtubeVideoProperties = array(
     'srcType' => 'external',
     'srcName' => 'MyLight',
     'srcExt' => null,
+    'protected' => true,
+    'private' => true,
+    'category' => 'audioVideo',
+    'place' => 0,
+);
+
+$videoProperties = array(
+    'type' => 'video',
+    'displayName' => 'Sevi D & The Wilds live at King\'s Lounge',
+    'machineName' => 'sevi_d_the_wilds_live_at_kings_Lounge',
+    'srcUrl' => 'http://localhost:8888/TestingMedia',
+    'srcPath' => '/Applications/MAMP/htdocs/TestingMedia',
+    'srcType' => 'local',
+    'srcName' => 'Sevi D & The Wilds live at King\'s Lounge',
+    'srcExt' => 'm4v',
     'protected' => true,
     'private' => true,
     'category' => 'audioVideo',
@@ -75,8 +105,14 @@ $canvasProperties = array(
 /* Create audio SdmMedia object. */
 $audioObject = $sdmMediaDisplay->sdmMediaCreateMediaObject($audioProperties);
 
-/* Create video SdmMedia object. */
+/* Create audio SdmMedia object. */
+$audioObject2 = $sdmMediaDisplay->sdmMediaCreateMediaObject($audio2Properties);
+
+/* Create youtube video SdmMedia object. */
 $youtubeVideoObject = $sdmMediaDisplay->sdmMediaCreateMediaObject($youtubeVideoProperties);
+
+/* Create video SdmMedia object. */
+$videoObject = $sdmMediaDisplay->sdmMediaCreateMediaObject($videoProperties);
 
 /* Create image SdmMedia object. */
 $imageObject = $sdmMediaDisplay->sdmMediaCreateMediaObject($imageProperties);
@@ -89,8 +125,14 @@ $canvasObject = $sdmMediaDisplay->sdmMediaCreateMediaObject($canvasProperties);
 /* Add audio object to display. */
 $sdmMediaDisplay->sdmMediaDisplayAddMediaObject($audioObject);
 
-/* Add video object to display. */
+/* Add second audio object to display. */
+$sdmMediaDisplay->sdmMediaDisplayAddMediaObject($audioObject2);
+
+/* Add youtube video object to display. */
 $sdmMediaDisplay->sdmMediaDisplayAddMediaObject($youtubeVideoObject);
+
+/* Add video object to display. */
+$sdmMediaDisplay->sdmMediaDisplayAddMediaObject($videoObject);
 
 /* Add image object to display. */
 $sdmMediaDisplay->sdmMediaDisplayAddMediaObject($imageObject);
