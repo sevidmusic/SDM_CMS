@@ -91,6 +91,14 @@ class SdmMedia
      */
     private $sdmMediaPublic;
 
+    /** @var $sdmMediaPlace int An integer that will be used to determine this SdmMedia objects place in
+     *       the SdmMediaDisplay.
+     */
+    private $sdmMediaPlace;
+
+    /** @var  $sdmMediaCategory string The name of the category to sort this SdmMedia object by in the SdmMediaDisplay. */
+    private $sdmMediaCategory;
+
     /**
      * @return string
      */
@@ -204,6 +212,13 @@ class SdmMedia
         $sdmMediaObject->sdmMediaProtected = (isset($properties['protected']) === true ? $properties['protected'] : true);
         /* Media Public | public */
         $sdmMediaObject->sdmMediaPublic = (isset($properties['public']) === true ? $properties['public'] : false);
+
+        /* Media Place | place */
+        $sdmMediaObject->sdmMediaPlace = (isset($properties['place']) === true ? $properties['place'] : 0);
+
+        /* Media Category | category */
+        $sdmMediaObject->sdmMediaCategory = (isset($properties['category']) === true ? $properties['place'] : 'default');
+
         /* Return the SdmMedia object. */
         return $sdmMediaObject;
     }
