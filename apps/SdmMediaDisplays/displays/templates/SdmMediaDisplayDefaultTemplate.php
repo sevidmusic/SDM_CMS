@@ -20,4 +20,7 @@ sdmMediaPublic
 sdmMediaPlace
 sdmMediaCategory
 */
+var_dump($sdmMediaDisplay);
+?>
 
+<p>Template Loaded : )</p>

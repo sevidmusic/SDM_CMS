@@ -188,11 +188,15 @@ class SdmMediaDisplay extends SdmMedia
         /* Sort each level of the $orderedMedia array. */
         $this->sdmMediaDisplaySortCategorizedMediaElements($orderedMedia);
 
+        /* Load the display's template*/
+        $this->sdmMediaDisplayLoadDisplayTemplate();
+
+
         /* Iterate through $orderedMedia array to assemble the display's html from the ordered Sdm Media elements. */
-        foreach (new RecursiveIteratorIterator(new RecursiveArrayIterator($orderedMedia)) as $media) {
-            /* Add media's html to $sdmMediaDisplayHtml property. */
+        /*foreach (new RecursiveIteratorIterator(new RecursiveArrayIterator($orderedMedia)) as $media) {
+            /* Add media's html to $sdmMediaDisplayHtml property. *
             $this->sdmMediaDisplayHtml .= $media;
-        }
+        }*/
 
     }
 
@@ -248,6 +252,21 @@ class SdmMediaDisplay extends SdmMedia
             }
         }
         return ksort($orderedMedia);
+    }
+
+    /**
+     * Loads the display's template file.
+     */
+    private function sdmMediaDisplayLoadDisplayTemplate()
+    {
+        /* Build display based on template using an output buffer to capture the output of require_once() */
+        ob_start();
+        /* Store $this in local var so it can be accessed by template. */
+        $sdmMediaDisplay = $this;
+        $templateDirPath = str_replace('/includes', '', __DIR__) . '/displays/templates';
+        require_once($templateDirPath . '/' . $this->sdmMediaDisplayTemplate . '.php');
+        $this->sdmMediaDisplayHtml = ob_get_contents();
+        ob_end_clean();
     }
 
 
