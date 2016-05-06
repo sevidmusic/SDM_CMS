@@ -38,6 +38,10 @@ class SdmMediaDisplay extends SdmMedia
         /* Assign Sdm Media Display template, default template will be used. */
         $this->sdmMediaDisplayTemplate = $SdmMediaDisplayTemplate;
 
+        /* Initialize sdmMediaDisplay string. This string will hold the html for the display built
+           from the SdmMedia objects that belong to this display. */
+        $this->sdmMediaDisplay = '';
+
     }
 
     /**
@@ -175,12 +179,11 @@ class SdmMediaDisplay extends SdmMedia
 
         /* Sort each level of the $orderedMedia array. */
         $this->sdmMediaDisplaySortCategorizedMediaElements($orderedMedia);
-        var_dump($orderedMedia);
 
-        /*  */
         /* Iterate through $orderedMedia array to assemble the display's html from the ordered Sdm Media elements. */
-        foreach (new RecursiveIteratorIterator(new RecursiveArrayIterator($orderedMedia)) as $value) {
-            //var_dump($value);
+        foreach (new RecursiveIteratorIterator(new RecursiveArrayIterator($orderedMedia)) as $media) {
+            /* Add media's html to $sdmMediaDisplay property. */
+            $this->sdmMediaDisplay .= $media;
         }
 
     }
