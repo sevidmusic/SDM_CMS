@@ -9,7 +9,12 @@
 /* Create New Sdm Media Display | To use a custom template specify its name. */
 $sdmMediaDisplay = new SdmMediaDisplay();
 
-$currentDisplay = ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays' ? 'default' : $sdmassembler->sdmCoreDetermineRequestedPage());
+/** @var $currentDisplay string
+ * The current display is determined by the currently requested page.
+ * It is used to determine if there is display data for the current page,
+ * and which app options array to use if there is.
+ */
+$currentDisplay = $sdmassembler->sdmCoreDetermineRequestedPage();
 
 /* Only build a display if there is SdmMedia data for the currentDisplay (i.e., The current page). */
 if (file_exists(__DIR__ . '/displays/data/' . $currentDisplay) === true) {
@@ -31,27 +36,8 @@ if (file_exists(__DIR__ . '/displays/data/' . $currentDisplay) === true) {
     /* Get Display Html */
     $sdmMediaDisplayHtml = $sdmMediaDisplay->sdmMediaDisplayGetSdmMediaDisplayHtml();
 
-
-    /* Options arrays for different displays */
-    $defaultOptions = array(
-        'incpages' => array('SdmMediaDisplays'),
-        'wrapper' => 'main_content',
-        'roles' => array('root'),
-        'incmethod' => 'overwrite',
-    );
-
-    $homepageOptions = array(
-        'incpages' => array('homepage'),
-        'wrapper' => 'footer',
-        'roles' => array('root'),
-        'incmethod' => 'overwrite',
-    );
-
-    /* Determine which options array to use based on $currentDisplay. */
-    $option = $currentDisplay . 'Options';
-
-    /* Use appropriate options array. */
-    $options = (isset($$option) === true ? $$option : array('incpages' => array('none')));
+    /* Load app output options. */
+    require_once(__DIR__ . '/SdmMediaDisplayOptions.php');
 
     /* Output display */
     $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmMediaDisplayHtml, $options);
