@@ -205,34 +205,34 @@ class SdmMedia implements JsonSerializable
     public function sdmMediaCreateMediaObject($properties)
     {
         $sdmMediaObject = new self();
-        /* Assign a random id to the Sdm Media object. */
-        $sdmMediaObject->sdmMediaId = rand(1000, 9999) . rand(1000, 9999) . rand(1000, 9999) . rand(1000, 9999) . rand(1000, 9999) . rand(1000, 9999);
+        /* Media Display Id | . */
+        $sdmMediaObject->sdmMediaId = (isset($properties['sdmMediaId']) === true ? $properties['sdmMediaId'] : rand(1000, 9999) . rand(1000, 9999) . rand(1000, 9999) . rand(1000, 9999) . rand(1000, 9999) . rand(1000, 9999));
         /* Media Display Name | displayName */
-        $sdmMediaObject->sdmMediaDisplayName = (isset($properties['displayName']) === true ? $properties['displayName'] : null);
+        $sdmMediaObject->sdmMediaDisplayName = (isset($properties['sdmMediaDisplayName']) === true ? $properties['sdmMediaDisplayName'] : null);
         /* Media Type | mediaType */
-        $sdmMediaObject->sdmMediaType = (isset($properties['type']) === true ? $properties['type'] : null);
+        $sdmMediaObject->sdmMediaType = (isset($properties['sdmMediaType']) === true ? $properties['sdmMediaType'] : null);
         /* Media Machine Name | machineName */
-        $sdmMediaObject->sdmMediaMachineName = (isset($properties['machineName']) === true ? $properties['machineName'] : null); // @todo: generate random alphanumeric id if not set
+        $sdmMediaObject->sdmMediaMachineName = (isset($properties['sdmMediaMachineName']) === true ? $properties['sdmMediaMachineName'] : null); // @todo: generate random alphanumeric id if not set
         /* Media Source Name | sourceName */
-        $sdmMediaObject->sdmMediaSourceName = (isset($properties['srcName']) === true ? $properties['srcName'] : null);
+        $sdmMediaObject->sdmMediaSourceName = (isset($properties['sdmMediaSourceName']) === true ? $properties['sdmMediaSourceName'] : null);
         /* Media Source Extension |  */
-        $sdmMediaObject->sdmMediaSourceExtension = (isset($properties['srcExt']) ? $properties['srcExt'] : null);
+        $sdmMediaObject->sdmMediaSourceExtension = (isset($properties['sdmMediaSourceExtension']) ? $properties['sdmMediaSourceExtension'] : null);
         /* Media Src Url | srcUrl */
-        $sdmMediaObject->sdmMediaSourceUrl = (isset($properties['srcUrl']) === true ? $properties['srcUrl'] : null);
+        $sdmMediaObject->sdmMediaSourceUrl = (isset($properties['sdmMediaSourceUrl']) === true ? $properties['sdmMediaSourceUrl'] : null);
         /* Media Src Path | srcPath */
-        $sdmMediaObject->sdmMediaSourcePath = (isset($properties['srcPath']) === true ? $properties['srcPath'] : null);
+        $sdmMediaObject->sdmMediaSourcePath = (isset($properties['sdmMediaSourcePath']) === true ? $properties['sdmMediaSourcePath'] : null);
         /* Source Type | srcType */
-        $sdmMediaObject->sdmMediaSourceType = (isset($properties['srcType']) === true ? $properties['srcType'] : null);
+        $sdmMediaObject->sdmMediaSourceType = (isset($properties['sdmMediaSourceType']) === true ? $properties['sdmMediaSourceType'] : null);
         /* Media Protected | protected */
-        $sdmMediaObject->sdmMediaProtected = (isset($properties['protected']) === true ? $properties['protected'] : true);
+        $sdmMediaObject->sdmMediaProtected = (isset($properties['sdmMediaProtected']) === true ? $properties['sdmMediaProtected'] : true);
         /* Media Public | public */
-        $sdmMediaObject->sdmMediaPublic = (isset($properties['public']) === true ? $properties['public'] : false);
+        $sdmMediaObject->sdmMediaPublic = (isset($properties['sdmMediaPublic']) === true ? $properties['sdmMediaPublic'] : false);
 
         /* Media Place | place */
-        $sdmMediaObject->sdmMediaPlace = (isset($properties['place']) === true ? $properties['place'] : 0);
+        $sdmMediaObject->sdmMediaPlace = (isset($properties['sdmMediaPlace']) === true ? $properties['sdmMediaPlace'] : 0);
 
         /* Media Category | category */
-        $sdmMediaObject->sdmMediaCategory = (isset($properties['category']) === true ? $properties['category'] : 'default');
+        $sdmMediaObject->sdmMediaCategory = (isset($properties['sdmMediaCategory']) === true ? $properties['sdmMediaCategory'] : 'default');
 
         /* Return the SdmMedia object. */
         return $sdmMediaObject;
