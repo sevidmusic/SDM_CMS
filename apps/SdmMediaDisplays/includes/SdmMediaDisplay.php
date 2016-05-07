@@ -6,6 +6,14 @@
  * Date: 5/3/16
  * Time: 6:22 PM
  */
+
+/**
+ * BUGS:
+ * @todo: Fix problem with canvas media. If a canvas media
+ * element is displayed in a template more then once only the first instance
+ * will display because the script is being included redundently. Need to find
+ * a way to add scripts needed by canvas tag to the html head just once.
+ */
 class SdmMediaDisplay extends SdmMedia
 {
     /** @var  $sdmMediaDisplayMedia array Array of Sdm Media objects for this display. */
@@ -274,30 +282,32 @@ class SdmMediaDisplay extends SdmMedia
         ob_end_clean();
     }
 
-    public function sdmMediaDisplayCategorizedMedia($options)
+    /**
+     * Generates a media display for a template based on the current display's media objects.
+     * This method is meant to be called from within a Sdm Media Display template file.
+     * @param $function string|null If set, should be the name of a user defined function that will be called
+     *                              on each media element in the sdmMediaDisplayCategorizedMediaObjects array.
+     * @return string
+     */
+    public function sdmMediaDisplayGenerateMediaDisplay($function = null)
     {
-        $categorizedMediaHtml = '';
-        if (isset($options['wrapperType']) === false) {
-            $options['wrapperType'] = 'div';
-        }
-        switch ($options['wrapperType']) {
-            case 'list':
-                /* Iterate through $orderedMedia array to assemble the display's html from the ordered Sdm Media elements. */
+        $display = array();
+        switch (isset($function) && function_exists($function)) {
+            case true:
                 foreach (new RecursiveIteratorIterator(new RecursiveArrayIterator($this->sdmMediaDisplayCategorizedMediaObjects)) as $media) {
-                    /* Add media's html to $sdmMediaDisplayHtml property. */
-                    $categorizedMediaHtml .= '<li>' . $media . '</li>';
+                    $display[] = call_user_func_array($function, array($media));;
                 }
-                $categorizedMediaHtml = '<ul>' . $categorizedMediaHtml . '</ul>';
+
                 break;
             default:
-                /* Iterate through $orderedMedia array to assemble the display's html from the ordered Sdm Media elements. */
                 foreach (new RecursiveIteratorIterator(new RecursiveArrayIterator($this->sdmMediaDisplayCategorizedMediaObjects)) as $media) {
-                    /* Add media's html to $sdmMediaDisplayHtml property. */
-                    $categorizedMediaHtml .= "<{$options['wrapperType']}>{$media}</{$options['wrapperType']}>";
+                    $display[] = PHP_EOL . $media . PHP_EOL;
                 }
                 break;
+
         }
-        return $categorizedMediaHtml;
+
+        return implode('', $display);
     }
 
 
