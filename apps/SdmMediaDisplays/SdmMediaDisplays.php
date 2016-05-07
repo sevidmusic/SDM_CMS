@@ -62,4 +62,5 @@ if (file_exists(__DIR__ . '/displays/data/' . $currentDisplay) === true) {
 
     /* Output display */
     $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmMediaDisplayHtml, $options);
+
 }
