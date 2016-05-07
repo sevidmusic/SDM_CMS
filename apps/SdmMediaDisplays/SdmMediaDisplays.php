@@ -91,9 +91,10 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
 
     /* Build Form */
     $editDisplayForm->sdmFormBuildForm();
-
-    var_dump($sdmMediaDisplay);
 }
+
+/* Load admin panels */
+require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/SdmMediaDisplaysAdminPanel.php');
 
 
 
