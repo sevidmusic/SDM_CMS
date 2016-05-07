@@ -72,6 +72,7 @@ class SdmForm
     public $formElements;
     public $method;
     public $submitLabel;
+    public $excludeSubmitLabel;
     public $formClasses;
     public $formSubmitButtonClasses;
     public $preserveSubmittedValues;
@@ -103,6 +104,9 @@ class SdmForm
 
         /* If submitLabel set use it, otherwise default to the string 'Submit'. */
         $this->submitLabel = (isset($this->submitLabel) ? $this->submitLabel : 'Submit');
+
+        /* If excludeSubmitLable is set, uset it, otherwise default to false. */
+        $this->excludeSubmitLabel = (isset($this->excludeSubmitLabel) ? $this->excludeSubmitLabel : false);
 
         /* If preserveSubmittedValues is set use it, otherwise default to the boolean false. */
         $this->preserveSubmittedValues = (isset($this->preserveSubmittedValues) ? $this->preserveSubmittedValues : false);
@@ -268,7 +272,7 @@ class SdmForm
             $rootUrl = $this->sdmFormDetermineRootUrl();
         }
 
-        return '<!-- form "' . $this->sdmFormGetFormId() . '" --><form ' . (isset($this->formClasses) ? 'class="' . $this->sdmFormExtractClasses('form') . '"' : '') . ' method="' . $this->method . '" action="' . $rootUrl . '/index.php?page=' . $this->formHandler . '">';
+        return '<!-- form "' . $this->sdmFormGetFormId() . '" --><form id="' . $this->formId . '" ' . (isset($this->formClasses) ? 'class="' . $this->sdmFormExtractClasses('form') . '"' : '') . ' method="' . $this->method . '" action="' . $rootUrl . '/index.php?page=' . $this->formHandler . '">';
     }
 
     /**
@@ -512,15 +516,15 @@ class SdmForm
                        just that the element did not have a value submitted.). */
                     default:
                         /* See if the form was submitted. */
-                        $formSubmitted = filter_input(INPUT_POST,'SdmForm');
+                        $formSubmitted = filter_input(INPUT_POST, 'SdmForm');
                         /* If the element type is checkbox, and the form has been submitted
                          * then assume that no checkbox was checked, enforce this assumption
                          * by switching any default values to non default values.
                          */
-                        if($element['type'] === 'checkbox' && $formSubmitted !== null) {
+                        if ($element['type'] === 'checkbox' && $formSubmitted !== null) {
                             $value = array();
-                            foreach($element['value'] as $boxKey => $boxValue) {
-                                $value[$boxKey] = str_replace('default_','', $boxValue);
+                            foreach ($element['value'] as $boxKey => $boxValue) {
+                                $value[$boxKey] = str_replace('default_', '', $boxValue);
                             }
                         } else { /* For all other elements, just use original value. */
                             /* Assign without modification. */
@@ -1011,8 +1015,10 @@ class SdmForm
             $closingFormHtml .= $actionParams;
         }
 
-        /* Add submit button. */
-        $closingFormHtml .= '<input class="' . $this->sdmFormExtractClasses('submitButton') . '" value="' . $this->submitLabel . '" type="submit"></form><!-- close form ' . $this->sdmFormGetFormId() . ' -->';
+        /* Add submit button unless $sdmFormExcludeSubmitButton is set true. */
+        if ($this->excludeSubmitLabel === false) {
+            $closingFormHtml .= '<input class="' . $this->sdmFormExtractClasses('submitButton') . '" value="' . $this->submitLabel . '" type="submit"></form><!-- close form ' . $this->sdmFormGetFormId() . ' -->';
+        }
 
         return $closingFormHtml;
     }
