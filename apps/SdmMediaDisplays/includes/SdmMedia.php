@@ -13,7 +13,7 @@
  * Defines the properties and methods for a SdmMedia object.
  **
  */
-class SdmMedia
+class SdmMedia implements JsonSerializable
 {
     /** @var $sdmMediaDisplayName string
      * The name to use in displays for the Sdm Media object. Could be the name of the song the Sdm Media object
@@ -238,4 +238,23 @@ class SdmMedia
         return $sdmMediaObject;
     }
 
+    public function jsonSerialize()
+    {
+        return [
+            'sdmMediaId' => $this->sdmMediaId,
+            'sdmMediaMachineName' => $this->sdmMediaMachineName,
+            'sdmMediaDisplayName' => $this->sdmMediaDisplayName,
+            'sdmMediaCategory' => $this->sdmMediaCategory,
+            'sdmMediaId' => $this->sdmMediaId,
+            'sdmMediaPlace' => $this->sdmMediaPlace,
+            'sdmMediaPublic' => $this->sdmMediaPublic,
+            'sdmMediaProtected' => $this->sdmMediaProtected,
+            'sdmMediaSourceType' => $this->sdmMediaSourceType,
+            'sdmMediaSourceName' => $this->sdmMediaSourceName,
+            'sdmMediaSourceExtension' => $this->sdmMediaSourceExtension,
+            'sdmMediaSourcePath' => $this->sdmMediaSourcePath,
+            'sdmMediaSourceUrl' => $this->sdmMediaSourceUrl,
+            'sdmMediaType' => $this->sdmMediaType,
+        ];
+    }
 }
