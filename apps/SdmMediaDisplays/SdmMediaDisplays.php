@@ -6,9 +6,6 @@
  * Time: 5:59 PM
  */
 
-/* Create New Sdm Media Display | To use a custom template specify its name. */
-$sdmMediaDisplay = new SdmMediaDisplay();
-
 /** @var $currentDisplay string
  * The current display is determined by the currently requested page.
  * It is used to determine if there is display data for the current page,
@@ -18,6 +15,8 @@ $currentDisplay = $sdmassembler->sdmCoreDetermineRequestedPage();
 
 /* Only build a display if there is SdmMedia data for the currentDisplay (i.e., The current page). */
 if (file_exists(__DIR__ . '/displays/data/' . $currentDisplay) === true) {
+    /* Create New Sdm Media Display */
+    $sdmMediaDisplay = new SdmMediaDisplay($currentDisplay);
 
     /* Get directory listing of saved media for the current display. */
     $savedMedia = $sdmassembler->sdmCoreGetDirectoryListing("SdmMediaDisplays/displays/data/$currentDisplay", 'apps');
@@ -93,8 +92,7 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
     /* Build Form */
     $editDisplayForm->sdmFormBuildForm();
 
-    /* Incorporate Admin Panel. */
-    $sdmassembler->sdmAssemblerIncorporateAppOutput('<h1>Sdm Media Displays</h1>', array('incpages' => array('SdmMediaDisplays'), 'roles' => array('root'), 'incmethod' => 'prepend'));
+    var_dump($sdmMediaDisplay);
 }
 
 
