@@ -62,4 +62,40 @@ if (file_exists(__DIR__ . '/displays/data/' . $currentDisplay) === true) {
 
     /* Output display */
     $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmMediaDisplayHtml, $options);
+
 }
+
+
+if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
+    /*** Build Admin Panel ***/
+
+    /* Instantiate new form object. */
+    $editDisplayForm = new SdmForm();
+
+    /* Form handler */
+    $editDisplayForm->formHandler = 'SdmMediaDisplays';
+
+    /* Form method */
+    $editDisplayForm->method = 'post';
+
+    /* Determine whether form should preserve submitted values. */
+    $editDisplayForm->preserveSubmittedValues = true;
+
+    /** Form Elements **/
+    $editDisplayForm->sdmFormCreateFormElement('page', 'select', 'Select a page to assign this display to:', $sdmassembler->sdmCoreDetermineAvailablePages(), 0);
+
+    /* Submit button label. */
+    $editDisplayForm->submitLabel = 'Save Changes to Display';
+
+    /* Set form to preserve submitted values. */
+    $editDisplayForm->preserveSubmittedValues = true;
+
+    /* Build Form */
+    $editDisplayForm->sdmFormBuildForm();
+
+    /* Incorporate Admin Panel. */
+    $sdmassembler->sdmAssemblerIncorporateAppOutput('<h1>Sdm Media Displays</h1>', array('incpages' => array('SdmMediaDisplays'), 'roles' => array('root'), 'incmethod' => 'prepend'));
+}
+
+
+
