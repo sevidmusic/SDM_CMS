@@ -18,17 +18,38 @@ $currentDisplay = $sdmassembler->sdmCoreDetermineRequestedPage();
 
 /* Only build a display if there is SdmMedia data for the currentDisplay (i.e., The current page). */
 if (file_exists(__DIR__ . '/displays/data/' . $currentDisplay) === true) {
-    /* Load media from current displays data directory. */
-    $mediaData = file_get_contents(__DIR__ . '/displays/data/' . $currentDisplay . '/533720691427307256093454.json');
 
-    /* Decode media. */
-    $imageProperties = json_decode($mediaData, true);
+    /* Get directory listing of saved media for the current display. */
+    $savedMedia = $sdmassembler->sdmCoreGetDirectoryListing("SdmMediaDisplays/displays/data/$currentDisplay", 'apps');
 
-    /* Create SdmMedia object. */
-    $imageObject = $sdmMediaDisplay->sdmMediaCreateMediaObject($imageProperties);
+    /* Load media objects */
+    $mediaJson = array();
+    foreach ($savedMedia as $mediaJsonFilename) {
+        $badFileNames = array('.', '..');
+        if (in_array($mediaJsonFilename, $badFileNames) === false) {
+            /* Load media from current displays data directory. */
+            $mediaJson[] = file_get_contents(__DIR__ . '/displays/data/' . $currentDisplay . '/' . $mediaJsonFilename);
+        }
+    }
 
-    /* Add SdmMedia object to display. */
-    $sdmMediaDisplay->sdmMediaDisplayAddMediaObject($imageObject);
+    /* Unpack media properties. */
+    $mediaProperties = array();
+    foreach ($mediaJson as $json) {
+        /* Decode media. */
+        $mediaProperties[] = json_decode($json, true);
+    }
+
+
+    /* Create SdmMedia objects for this display. */
+    $mediaObjects = array();
+    foreach ($mediaProperties as $properties) {
+        $mediaObjects[] = $sdmMediaDisplay->sdmMediaCreateMediaObject($properties);
+    }
+
+    /* Add SdmMedia objects to display. */
+    foreach ($mediaObjects as $mediaObject) {
+        $sdmMediaDisplay->sdmMediaDisplayAddMediaObject($mediaObject);
+    }
 
     /* Build Display */
     $sdmMediaDisplay->sdmMediaDisplayBuildMediaDisplay();
