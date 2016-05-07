@@ -29,7 +29,6 @@ $formHtml['openingFormTags'] = $sdmMediaDisplaysAdminForm->sdmFormOpenForm($sdma
 $formHtml['closingFormTags'] = $sdmMediaDisplaysAdminForm->sdmFormCloseForm();
 
 /* Display admin buttons for the current panel */
-$sdmassembler->sdmAssemblerIncorporateAppOutput(implode('', $formHtml) . implode('', $currentPanelsButtons), array('incpages' => array('SdmMediaDisplays')));
-
+$completeFormHtml = implode('', $formHtml) . implode('', $currentPanelsButtons);
 /* Incorporate Admin Panel. */
-$sdmassembler->sdmAssemblerIncorporateAppOutput('<h1>Sdm Media Displays</h1>', array('incpages' => array('SdmMediaDisplays'), 'roles' => array('root'), 'incmethod' => 'prepend'));
+$sdmassembler->sdmAssemblerIncorporateAppOutput('<h1>Sdm Media Displays</h1>' . $completeFormHtml, array('incpages' => array('SdmMediaDisplays'), 'roles' => array('root'), 'incmethod' => 'prepend'));

@@ -16,12 +16,11 @@
 $SdmMediaDisplaysOptions = array(
     'wrapper' => 'main_content',
     'roles' => array('root'),
-    'incmethod' => 'overwrite',
 );
 
 $homepageOptions = array(
     'wrapper' => 'main_content',
-    'incmethod' => 'overwrite',
+    'roles' => array('root')
 );
 
 /* Determine which options array to use based on $currentDisplay. */
