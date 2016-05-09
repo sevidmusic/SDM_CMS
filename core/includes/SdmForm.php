@@ -259,12 +259,17 @@ class SdmForm
     /**
      * Constructs the opening html for the form.
      *
+     * Note: If any of the form's elements are of type 'file', then a the 'enctype' attribute will be
+     *       set to 'multipart/form-data' and the 'post' method will be enforced. This is required for
+     *       html form uploads to work. @see http://www.w3schools.com/php/php_file_upload.asp
+     *
      * @param string $rootUrl The sites root url. Insures requests are made from site of origin.
      *
      * @return string The forms opening html.
      */
     public function sdmFormOpenForm($rootUrl = null)
     {
+        $fileUploadInputExists = (in_array('file', $this->sdmFormListFormElemetnTypes(), true));
         /* If the $rootUrl was not specified attempt to set it to the site's root url for security.
            It is best to specify the $rootUrl. */
         if (!isset($rootUrl)) {
@@ -272,7 +277,20 @@ class SdmForm
             $rootUrl = $this->sdmFormDetermineRootUrl();
         }
 
-        return '<!-- form "' . $this->sdmFormGetFormId() . '" --><form id="' . $this->formId . '" ' . (isset($this->formClasses) ? 'class="' . $this->sdmFormExtractClasses('form') . '"' : '') . ' method="' . $this->method . '" action="' . $rootUrl . '/index.php?page=' . $this->formHandler . '">';
+        return '<!-- form "' . $this->sdmFormGetFormId() . '" --><form id="' . $this->formId . '" ' . (isset($this->formClasses) ? 'class="' . $this->sdmFormExtractClasses('form') . '"' : '') . ' method="' . ($fileUploadInputExists === true ? 'post' : $this->method) . '" ' . ($fileUploadInputExists === true ? 'enctype="multipart/form-data"' : '') . ' action="' . $rootUrl . '/index.php?page=' . $this->formHandler . '">';
+    }
+
+    /**
+     * Returns an array of the form's form element types.
+     * @return array Array of the form's form element types.
+     */
+    public function sdmFormListFormElemetnTypes()
+    {
+        $formElementTypes = array();
+        foreach ($this->formElements as $formElement) {
+            $formElementTypes[] = $formElement['type'];
+        }
+        return $formElementTypes;
     }
 
     /**
