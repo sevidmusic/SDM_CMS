@@ -9,6 +9,11 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
     /* Create the Sdm Media Displays admin form. */
     $sdmMediaDisplaysAdminForm = new SdmForm();
 
+    /* See if there is an admin mode appended to the submitted panel value. If there is store it as the $mode. */
+    $devReqPanel = 'selectDisplayCrud_add';
+    $devPanelMode = strrpos($devReqPanel, '_');
+    $mode = ($devPanelMode === false ? $devReqPanel : substr($devReqPanel, $devPanelMode + 1));
+    var_dump($mode);
     /* Determine which admin panel is currently in use. */
     $defaultPanel = 'displayCrudPanel'; // dev value placeholder for submitted form value 'panel'
     $requestedPanel = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('panel');
