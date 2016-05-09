@@ -56,8 +56,11 @@ $customFormCheckboxItems = array('Initially Selected Checkbox Item' => 'item1', 
 /* Checkbox element .*/
 $customForm->sdmFormCreateFormElement('devCheckbox', 'checkbox', 'Dev Checkbox', $customForm->sdmFormSetDefaultInputValues($customFormCheckboxItems, 'item1'), 4);
 
+/* File element .*/
+$customForm->sdmFormCreateFormElement('devFileUpload', 'file', 'Dev File Upload', void, 5);
+
 /* Hidden element form. */
-$customForm->sdmFormCreateFormElement('devHidden', 'hidden', 'Dev Hidden', 'hidden value', 5);
+$customForm->sdmFormCreateFormElement('devHidden', 'hidden', 'Dev Hidden', 'hidden value', 6);
 
 /* Submit label. */
 $customForm->submitLabel = 'Submit Custom Form';
@@ -94,6 +97,7 @@ $customFormElementsContainer .= $sdmassembler->sdmAssemblerAssembleHtmlElement($
 $customFormElementsContainer .= $sdmassembler->sdmAssemblerAssembleHtmlElement($customForm->sdmFormGetFormElementHtml('devSelect'), $customFormElementAttributes);
 $customFormElementsContainer .= $sdmassembler->sdmAssemblerAssembleHtmlElement($customForm->sdmFormGetFormElementHtml('devRadio'), $customFormElementAttributes);
 $customFormElementsContainer .= $sdmassembler->sdmAssemblerAssembleHtmlElement($customForm->sdmFormGetFormElementHtml('devCheckbox'), $customFormElementAttributes);
+$customFormElementsContainer .= $sdmassembler->sdmAssemblerAssembleHtmlElement($customForm->sdmFormGetFormElementHtml('devFileUpload'), $customFormElementAttributes);
 $customFormElementsContainer .= $sdmassembler->sdmAssemblerAssembleHtmlElement($customForm->sdmFormGetFormElementHtml('devHidden'), $customFormHiddenElementAttributes);
 
 /* Build custom form container */

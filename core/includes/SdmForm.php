@@ -425,6 +425,21 @@ class SdmForm
                     /* Add $formElementsHtml to $this->formElementHtml array. */
                     $formElementsHtml .= $this->formElementHtml[$value['id']];
                     break;
+                case 'file':
+                    /* Supported file types are image/*, audio/*, video/*, and application/javascript */
+                    /* Build element html and add $formElementsHtml to $this->formElementHtml array.
+                       NOTE: file form element types do not use the set the value attribute. The value
+                             attribute is left out pruposefully for security. In additon, most browsers
+                             don't support setting a file input's initial value.
+                             For more info:
+                             @see http://stackoverflow.com/questions/967916/how-to-keep-input-type-file-field-value-after-failed-validation-in-asp-net-mvc
+                             @see http://www.cs.tut.fi/~jkorpela/forms/file.html#value
+                     */
+                    $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><label for="SdmForm[' . $value['id'] . ']">' . $value['element'] . '</label><input name="SdmForm[' . $value['id'] . ']" type="file" accept="audio/*,video/*,image/*, application/javascript"><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+
+                    /*  Add form element html to $this->form  */
+                    $formElementsHtml .= $this->formElementHtml[$value['id']];
+                    break;
                 default:
                     /* Do nothing. */
                     break;
