@@ -20,33 +20,36 @@ function createSdmMediaDisplayAdminButton($id, $name, $value, $label, $otherAttr
     foreach ($otherAttributes as $attributeName => $attributeValue) {
         $attributes[] = "$attributeName='$attributeValue'";
     }
-    return "<button id='$id' name='SdmForm[$name]' type='submit' value='$value' " . implode(' ', $attributes) . ">$label</button>";
+    return "<button id='$id' name='SdmForm[$name]' type='submit' data-referred-by-button='$id' value='$value' " . implode(' ', $attributes) . ">$label</button>";
 }
 
 /* Define buttons for each Sdm Media Displays admin panel. */
 $sdmMediaDisplayAdminPanelButtons = array(
-    'displayCrud' => array(
-        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_editDisplays', 'panel', 'selectDisplayPanel', 'Edit Displays', array('data-referred-by-button' => 'sdmMediaDisplayAdminButton_editDisplays', 'form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
-        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_addDisplays', 'panel', 'selectDisplayPanel', 'Add Displays', array('data-referred-by-button' => 'sdmMediaDisplayAdminButton_addDisplays', 'form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
-        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_deleteDisplays', 'panel', 'deleteDisplayPanel', 'Delete Displays', array('data-referred-by-button' => 'sdmMediaDisplayAdminButton_deleteDisplays', 'form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
+    'displayCrudPanel' => array(
+        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_editDisplays', 'panel', 'selectDisplayPanel', 'Edit Displays', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
+        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_addDisplays', 'panel', 'selectDisplayPanel', 'Add Displays', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
+        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_deleteDisplays', 'panel', 'deleteDisplayPanel', 'Delete Displays', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
     ),
-    'deleteDisplay' => array(
-        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_confirmDeleteDisplay', 'panel', 'displayCrud', 'Delete Display', array('data-referred-by-button' => 'sdmMediaDisplayAdminButton_confirmDeleteDisplay', 'form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
-        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_cancelDeleteDisplay', 'panel', 'displayCrud', 'Cancel', array('data-referred-by-button' => 'sdmMediaDisplayAdminButton_cancelDeleteDisplay', 'form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
+    'deleteDisplayPanel' => array(
+        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_confirmDeleteDisplay', 'panel', 'displayCrudPanel', 'Delete Display', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
+        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_cancelDeleteDisplay', 'panel', 'displayCrudPanel', 'Cancel', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
     ),
-    'mediaCrud' => array(
-        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_editMedia', 'panel', 'editMedia', 'Edit Media', array('data-referred-by-button' => 'sdmMediaDisplayAdminButton_editMedia', 'form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
-        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_addMedia', 'panel', 'editMedia', 'Add Media', array('data-referred-by-button' => 'sdmMediaDisplayAdminButton_editMedia', 'form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
-        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_deleteMedia', 'panel', 'deleteMedia', 'Delete Media', array('data-referred-by-button' => 'sdmMediaDisplayAdminButton_editMedia', 'form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
-        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_saveContinue', 'panel', 'editMedia', 'Save and Continue', array('data-referred-by-button' => 'sdmMediaDisplayAdminButton_saveContinue', 'form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
-        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_saveContinue', 'panel', 'displayCrud', 'Save and Finish', array('data-referred-by-button' => 'sdmMediaDisplayAdminButton_saveFinish', 'form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
+    'mediaCrudPanel' => array(
+        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_editMedia', 'panel', 'editMediaPanel', 'Edit Media', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
+        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_addMedia', 'panel', 'editMediaPanel', 'Add Media', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
+        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_deleteMedia', 'panel', 'deleteMediaPanel', 'Delete Media', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
+        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_saveContinue', 'panel', 'mediaCrudPanel', 'Save and Continue', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
+        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_saveContinue', 'panel', 'displayCrudPanel', 'Save and Finish', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
     ),
-    'deleteMedia' => array(
-        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_confirmDeleteMedia', 'panel', 'editMedia', 'Delete Media', array('data-referred-by-button' => 'sdmMediaDisplayAdminButton_confirmDeleteMedia', 'form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
-        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_cancelDeleteMedia', 'panel', 'editMedia', 'Cancel', array('data-referred-by-button' => 'sdmMediaDisplayAdminButton_cancelDeleteMedia', 'form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
+    'deleteMediaPanel' => array(
+        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_confirmDeleteMedia', 'panel', 'mediaCrudPanel', 'Delete Media', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
+        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_cancelDeleteMedia', 'panel', 'mediaCrudPanel', 'Cancel', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
     ),
     'selectDisplayPanel' => array(
-        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_selectDisplay', 'panel', 'mediaCrud', 'Edit Media for Selected Display', array('data-referred-by-button' => 'sdmMediaDisplayAdminButton_selectDisplay', 'form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
+        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_selectDisplay', 'panel', 'mediaCrudPanel', 'Edit Media for Selected Display', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
+    ),
+    'editMediaPanel' => array(
+        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_saveMedia', 'panel', 'mediaCrudPanel', 'Save Changes to Media', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
     ),
 );
 

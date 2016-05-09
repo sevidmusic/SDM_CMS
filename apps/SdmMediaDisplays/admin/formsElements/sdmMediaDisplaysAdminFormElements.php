@@ -12,7 +12,7 @@ $sdmMediaDisplayAdminPanelFormElements = array(
     'selectDisplayPanel' => array(
         $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('target_display', 'select', 'Select A Display', $pagesAvailableToDisplays, 0),
     ),
-    'editMedia' => array(
+    'editMediaPanel' => array(
         $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaMachineName', 'text', 'Machine Safe Name For Media', '', 4),
         $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaPlace', 'select', 'Position in display relative to other media.', $sdmMediaDisplaysAdminForm->sdmFormSetDefaultInputValues(range(1, 1000), 1), 4),
         $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaProtected', 'radio', 'Protect media from download. (still in development)', $sdmMediaDisplaysAdminForm->sdmFormSetDefaultInputValues(array('Yes' => true, 'No' => false,), false), 4),
