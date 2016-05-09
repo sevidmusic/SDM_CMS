@@ -51,14 +51,18 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
 
     /* Format panel name for display */
     $panelCCName = str_replace('Crud', 'Admin', str_replace('Panel', '', $currentPanel));
+
     /* Convert from camel case to words. */
     preg_match_all('/((?:^|[A-Z])[a-z]+)/', $panelCCName, $panelCCNameMatches);
+
     /* Construct panel name string from camel case to words conversion result, use ucwords()
     so first letter of each word is capitalized. */
     $panelName = ucwords(implode(' ', $panelCCNameMatches[0]));
+
+    /* Display correct panel description based on $currentPanel */
     switch ($currentPanel) {
         case 'displayCrudPanel':
-            $panelDescription = 'Welcome to the Sdm Media Display\'s admin panel. Use the admin panels below to manage the site\s media displays.';
+            $panelDescription = 'Welcome to the Sdm Media Display\'s admin panel. Use the admin panels below to manage the site\'s media displays.';
             break;
         case 'selectDisplayPanel':
             $panelDescription = 'Please select a page for the display to appear on.';
@@ -76,6 +80,7 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
             $panelDescription = 'Are you sure you want to delete this display? WARNING: All the media that belongs to this display will also be deleted!';
             break;
     }
+
     /* Incorporate Admin Panel. */
     $sdmassembler->sdmAssemblerIncorporateAppOutput("<div id='SdmMediaDisplaysAdminPanel' class='SdmMediaDisplaysAdminPanel'><h2>$panelName</h2><p>$panelDescription</p><div style='margin:42px 0px 42px 0px;width:88%;min-height:10px;border-radius:9px;background:#ffffff;opacity:.72;border:2px solid #3498db;'></div>$completeFormHtml</div>", array('incpages' => array('SdmMediaDisplays'), 'roles' => array('root'), 'incmethod' => 'prepend'));
 
