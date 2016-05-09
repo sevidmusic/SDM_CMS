@@ -42,7 +42,27 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
     /* Construct panel name string from camel case to words conversion result, use ucwords()
     so first letter of each word is capitalized. */
     $panelName = ucwords(implode(' ', $panelCCNameMatches[0]));
+    switch ($currentPanel) {
+        case 'displayCrudPanel':
+            $panelDescription = 'Welcome to the Sdm Media Display\'s admin panel. Use the admin panels below to manage the site\s media displays.';
+            break;
+        case 'selectDisplayPanel':
+            $panelDescription = 'Please select a page for the display to appear on.';
+            break;
+        case 'mediaCrudPanel':
+            $panelDescription = 'Use the admin panels below to administer this display\'s media.';
+            break;
+        case 'editMediaPanel':
+            $panelDescription = 'Configure the new or selected media.';
+            break;
+        case 'deleteMediaPanel':
+            $panelDescription = 'Are you sure you want to delete this media?';
+            break;
+        case 'deleteDisplayPanel':
+            $panelDescription = 'Are you sure you want to delete this display? WARNING: All the media that belongs to this display will also be deleted!';
+            break;
+    }
     /* Incorporate Admin Panel. */
-    $sdmassembler->sdmAssemblerIncorporateAppOutput("<div id='SdmMediaDisplaysAdminPanel' class='SdmMediaDisplaysAdminPanel'><h2>$panelName</h2>$completeFormHtml</div>", array('incpages' => array('SdmMediaDisplays'), 'roles' => array('root'), 'incmethod' => 'prepend'));
+    $sdmassembler->sdmAssemblerIncorporateAppOutput("<div id='SdmMediaDisplaysAdminPanel' class='SdmMediaDisplaysAdminPanel'><h2>$panelName</h2><p>$panelDescription</p><div style='margin:42px 0px 42px 0px;width:88%;min-height:10px;border-radius:9px;background:#ffffff;opacity:.72;border:2px solid #3498db;'></div>$completeFormHtml</div>", array('incpages' => array('SdmMediaDisplays'), 'roles' => array('root'), 'incmethod' => 'prepend'));
 
 }
