@@ -8,7 +8,15 @@
 if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
     /* Initialize the Sdm Media Displays admin form. */
     $sdmMediaDisplaysAdminForm = new SdmForm();
-
+    /* Unpack submitted form values regularly reference in code. */
+    if ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit') !== null) {
+        $nameOfDisplayBeingEdited = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit');
+    } elseif ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayName') !== null) {
+        $nameOfDisplayBeingEdited = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayName');
+    } else {
+        $nameOfDisplayBeingEdited = null;
+    }
+    //working | var_dump($nameOfDisplayBeingEdited);
     /* Determine requested panel */
     $requestedPanel = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('panel');
     $defaultPanel = 'displayCrudPanel'; // if no panel specified, show display crud.
@@ -65,10 +73,11 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
             $panelDescription = 'Welcome to the Sdm Media Display\'s admin panel. Use the admin panels below to manage the site\'s media displays.';
             break;
         case 'selectDisplayPanel':
+            $panelName = ($adminMode === 'addDisplays' ? 'Add Display' : 'Edit Displays');
             $panelDescription = ($adminMode === 'addDisplays' ? 'Please select a page for the display to appear on. (If you don\'t see the page you are looking for there may already be a display for it, in which case return to the <a href="' . $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?page=SdmMediaDisplays"><b>Sdm Displays Admin Panel</b></a> and choose "Edit Displays")' : 'Select a display to edit.');
             break;
         case 'mediaCrudPanel':
-            $panelDescription = 'Use the admin panels below to administer this display\'s media.';
+            $panelDescription = 'Use the admin panels below to administer the new <span style="color:#66ff66">' . ucwords($nameOfDisplayBeingEdited) . '</span> display\'s media.';
             break;
         case 'editMediaPanel':
             $panelDescription = 'Configure the new or selected media.';

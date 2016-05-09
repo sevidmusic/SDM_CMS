@@ -46,7 +46,7 @@ $sdmMediaDisplayAdminPanelButtons = array(
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_cancelDeleteMedia', 'panel', 'mediaCrudPanel_cancelDeleteMedia', 'Cancel', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId(), 'style' => 'margin-left:0px;min-width:44%;')),
     ),
     'selectDisplayPanel' => array(
-        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_selectDisplay', 'panel', 'mediaCrudPanel_selectDisplay', 'Edit Media for Selected Display', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId(), 'style' => 'margin-left:0px;min-width:88%;')),
+        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_selectDisplay', 'panel', 'mediaCrudPanel_selectDisplay', 'Edit Media for ' . ($adminMode === 'editDisplays' ? 'Selected' : 'New') . ' Display', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId(), 'style' => 'margin-left:0px;min-width:88%;')),
     ),
     'editMediaPanel' => array(
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_saveMedia', 'panel', 'mediaCrudPanel_saveMedia', 'Save Changes to Media', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId(), 'style' => 'margin-left:0px;min-width:88%;')),
