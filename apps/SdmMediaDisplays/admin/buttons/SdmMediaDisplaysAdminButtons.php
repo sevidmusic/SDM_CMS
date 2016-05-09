@@ -45,12 +45,10 @@ $sdmMediaDisplayAdminPanelButtons = array(
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_confirmDeleteMedia', 'panel', 'editMedia', 'Delete Media', array('data-referred-by-button' => 'sdmMediaDisplayAdminButton_confirmDeleteMedia', 'form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_cancelDeleteMedia', 'panel', 'editMedia', 'Cancel', array('data-referred-by-button' => 'sdmMediaDisplayAdminButton_cancelDeleteMedia', 'form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
     ),
+    'selectDisplayPanel' => array(
+        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_selectDisplay', 'panel', 'mediaCrud', 'Edit Media for Selected Display', array('data-referred-by-button' => 'sdmMediaDisplayAdminButton_selectDisplay', 'form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
+    ),
 );
-
-/* Determine which admin panel is currently in use. */
-$defaultPanel = 'displayCrud'; // dev value placeholder for submitted form value 'panel'
-$requestedPanel = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('panel');
-$currentPanel = ($requestedPanel === null ? $defaultPanel : $requestedPanel); // dev value placeholder for submitted form value 'panel'
 
 /* Get current admin panels buttons. */
 $currentPanelsButtons = array();
@@ -61,9 +59,4 @@ foreach ($sdmMediaDisplayAdminPanelButtons as $panel => $panelButtons) {
         }
     }
 }
-
-// to get the panels buttons use $sdmassembler->sdmAssemblerIncorporateAppOutput(implode('', $currentPanelsButtons));
-
-//$sdmassembler->sdmAssemblerAssembleHtmlElement('', array('elementType' => 'button', 'name' => 'panel', 'value' => 'editDisplay', 'type' => 'submit'))
-
 

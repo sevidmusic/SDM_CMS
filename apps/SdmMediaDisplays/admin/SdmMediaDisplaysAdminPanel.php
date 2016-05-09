@@ -9,6 +9,11 @@
 /* Create the Sdm Media Displays admin form. */
 $sdmMediaDisplaysAdminForm = new SdmForm();
 
+/* Determine which admin panel is currently in use. */
+$defaultPanel = 'displayCrud'; // dev value placeholder for submitted form value 'panel'
+$requestedPanel = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('panel');
+$currentPanel = ($requestedPanel === null ? $defaultPanel : $requestedPanel);
+
 /* SdmMediaDisplays Admin Form | Define form properties. */
 $sdmMediaDisplaysAdminForm->preserveSubmittedValues = true;
 $sdmMediaDisplaysAdminForm->excludeSubmitLabel = true; // exclude default submit label.
@@ -24,8 +29,7 @@ $formHtml = array();
 
 /* Start building form. */
 $formHtml['openingFormTags'] = $sdmMediaDisplaysAdminForm->sdmFormOpenForm($sdmassembler->sdmCoreGetRootDirectoryUrl());
-// FORM ELEMENTS GO HERE //
-/* Finish building form. */
+$formHtml['formElementsHtml'] = implode(PHP_EOL, $currentPanelsFormElements);
 $formHtml['closingFormTags'] = $sdmMediaDisplaysAdminForm->sdmFormCloseForm();
 
 /* Display admin buttons for the current panel */

@@ -1105,7 +1105,7 @@ class SdmForm
 
         /* Push new element into $formElements propert. */
         array_push($this->formElements, $formElement);
-        return ($this->sdmFormRecursiveInArray($id, $this->formElements) === true ? true : false);
+        return ($this->sdmFormRecursiveInArray($id, $this->formElements) === true ? $formElement : false);
     }
 
     /**
