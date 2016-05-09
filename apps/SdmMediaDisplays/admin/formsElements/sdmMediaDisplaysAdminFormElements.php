@@ -6,11 +6,37 @@
  * Time: 12:50 PM
  */
 
-/* Define form elements for each Sdm Media Displays admin panel. */
+/* Determine pages available to displays. */
 $pagesAvailableToDisplays = $sdmassembler->sdmCoreDetermineAvailablePages();
+
+/* Determine available displays */
+$displaysAvailableToEdit = array_diff($sdmassembler->sdmCoreGetDirectoryListing('sdmMediaDisplays/displays/data', 'apps'), array('.', '..', 'SdmMediaDisplays'));
+
+/* Structure an array of available displays for use as form value */
+$displaysAvailableToEditFormValueArray = array_combine($displaysAvailableToEdit, $displaysAvailableToEdit);
+
+/* Structure an array of available pages for use as form value removing any page names that match the
+   name of an available display. */
+foreach ($pagesAvailableToDisplays as $key => $value) {
+    // if page already has a display remove it from the $pagesAvailableToDisplays array
+    if (in_array($value, $displaysAvailableToEdit) === true) {
+        unset($pagesAvailableToDisplays[$key]);
+    }
+}
+
+/** Handle form element assignments that are based on $adminMode **/
+
+/* Check $adminMode to determine whether to show "select display to edit" or or "select page to show display on" form element on the selectDisplayPaenl. */
+if ($adminMode === 'addDisplays') {
+    $selectDisplayFormElement = $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('displayName', 'select', 'Select A Page To Show Display On', $pagesAvailableToDisplays, 0);
+} else {
+    $selectDisplayFormElement = $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('displayToEdit', 'select', 'Select Display', $displaysAvailableToEditFormValueArray, 0);
+}
+
+/* Define form elements for each Sdm Media Displays admin panel. */
 $sdmMediaDisplayAdminPanelFormElements = array(
     'selectDisplayPanel' => array(
-        $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('target_display', 'select', 'Select A Display', $pagesAvailableToDisplays, 0),
+        $selectDisplayFormElement,
     ),
     'editMediaPanel' => array(
         $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaCategory', 'text', 'Category name to organize media by. Media is ordered in display by media\'s category, place, and finally name.', '', 1),
@@ -20,6 +46,7 @@ $sdmMediaDisplayAdminPanelFormElements = array(
         $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaType', 'select', 'Select the media\'s type.', $sdmMediaDisplaysAdminForm->sdmFormSetDefaultInputValues(array('Image' => 'image', 'Audio' => 'audio', 'Video' => 'video', 'Youtube Video' => 'youtube', 'HTML5 Canvas Image/Animation (Javascript file for HTML5 canvas tag)' => 'canvas',), 'audio'), 5),
         $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaSourceUrl', 'text', 'Url To Media | Only set for external media sources. (If youtube url it must be the embed url provided by youtube.)', '', 6),
         $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaSourcePath', 'hidden', $sdmassembler->sdmCoreGetUserAppDirectoryUrl() . '/SdmMediaDisplays/displays/media', '', 4), // devnote: should be stored as /SITEROOT/apps/SdmMediaDisplays/displays/media/DISPLAY/MEDIA when displayed
+        // The commented out form elements below are not needed as the values will be set internally.
         // $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaMachineName', 'text', 'Machine Safe Name For Media', '', 4), // set by file input
         //$sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaProtected', 'radio', 'Protect media from download. (still in development)', $sdmMediaDisplaysAdminForm->sdmFormSetDefaultInputValues(array('Yes' => true, 'No' => false,), false), 4), // still in dev
         //$sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaPublic', 'radio', 'Display media in public views.', $sdmMediaDisplaysAdminForm->sdmFormSetDefaultInputValues(array('Yes' => true, 'No' => false,), true), 4), // still in dev

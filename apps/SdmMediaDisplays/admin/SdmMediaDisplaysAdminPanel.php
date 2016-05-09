@@ -25,7 +25,7 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
     }
 
     // for dev only,  remove once out of dev
-    var_dump(['current panel' => $currentPanel, 'admin mode' => $adminMode, 'admin mode set' => ($extractedPanelMode === false ? false : true)]);
+    //var_dump(['current panel' => $currentPanel, 'admin mode' => $adminMode, 'admin mode set' => ($extractedPanelMode === false ? false : true)]);
     // for dev only,  remove once out of dev
 
     /* SdmMediaDisplays Admin Form | Define form properties. */
@@ -65,7 +65,7 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
             $panelDescription = 'Welcome to the Sdm Media Display\'s admin panel. Use the admin panels below to manage the site\'s media displays.';
             break;
         case 'selectDisplayPanel':
-            $panelDescription = 'Please select a page for the display to appear on.';
+            $panelDescription = ($adminMode === 'addDisplays' ? 'Please select a page for the display to appear on. (If you don\'t see the page you are looking for there may already be a display for it, in which case return to the <a href="' . $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?page=SdmMediaDisplays"><b>Sdm Displays Admin Panel</b></a> and choose "Edit Displays")' : 'Select a display to edit.');
             break;
         case 'mediaCrudPanel':
             $panelDescription = 'Use the admin panels below to administer this display\'s media.';
