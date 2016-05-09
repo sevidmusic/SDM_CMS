@@ -9,6 +9,14 @@
     border-radius: 42px;
 }
 
+#SdmMediaDisplaysAdminPanel label,
+#SdmMediaDisplaysAdminPanel p {
+    width: 88%;
+    overflow: auto;
+    display: inline-block;
+}
+
+
 #SdmMediaDisplaysAdminPanel select,
 #SdmMediaDisplaysAdminPanel input[type="radio"],
 #SdmMediaDisplaysAdminPanel textarea,

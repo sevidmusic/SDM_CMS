@@ -6,18 +6,27 @@
  * Time: 12:00 PM
  */
 if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
-    /* Create the Sdm Media Displays admin form. */
+    /* Initialize the Sdm Media Displays admin form. */
     $sdmMediaDisplaysAdminForm = new SdmForm();
 
-    /* See if there is an admin mode appended to the submitted panel value. If there is store it as the $mode. */
-    $devReqPanel = 'selectDisplayCrud_add';
-    $devPanelMode = strrpos($devReqPanel, '_');
-    $mode = ($devPanelMode === false ? $devReqPanel : substr($devReqPanel, $devPanelMode + 1));
-    var_dump($mode);
-    /* Determine which admin panel is currently in use. */
-    $defaultPanel = 'displayCrudPanel'; // dev value placeholder for submitted form value 'panel'
+    /* Determine requested panel */
     $requestedPanel = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('panel');
+    $defaultPanel = 'displayCrudPanel'; // if no panel specified, show display crud.
     $currentPanel = ($requestedPanel === null ? $defaultPanel : $requestedPanel);
+
+    /* See if there is an admin mode appended to the submitted panel value. If there is extract it and
+       store it as the $adminMode. */
+    $extractedPanelMode = strrpos($requestedPanel, '_');
+    $adminMode = ($extractedPanelMode === false ? 'default' : substr($requestedPanel, $extractedPanelMode + 1));
+
+    /* If there is a mode extracted, remove it from the panel name. */
+    if ($extractedPanelMode !== false) {
+        $currentPanel = str_replace('_' . $adminMode, '', $currentPanel);
+    }
+
+    // for dev only,  remove once out of dev
+    var_dump(['current panel' => $currentPanel, 'admin mode' => $adminMode, 'admin mode set' => ($extractedPanelMode === false ? false : true)]);
+    // for dev only,  remove once out of dev
 
     /* SdmMediaDisplays Admin Form | Define form properties. */
     $sdmMediaDisplaysAdminForm->preserveSubmittedValues = true;
