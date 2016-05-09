@@ -257,4 +257,17 @@ class SdmMedia implements JsonSerializable
             'sdmMediaType' => $this->sdmMediaType,
         ];
     }
+
+    /**
+     * Get an array of the names of the Sdm Media class's property names.
+     * @return array Returns the names of the SdmMedia() class's properties.
+     */
+    public function sdmMediaListMediaPropertyNames() {
+        $properties = get_object_vars($this);
+        $propertyNames = array();
+        foreach($properties as $propertyName => $void) {
+            $propertyNames[] = $propertyName;
+        }
+        return $propertyNames;
+    }
 }

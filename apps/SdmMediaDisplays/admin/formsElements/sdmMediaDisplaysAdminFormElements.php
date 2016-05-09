@@ -22,9 +22,11 @@ $sdmMediaDisplayAdminPanelFormElements = array(
         $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaSourcePath', 'text', 'Path to media files parent directory.', '', 4),
         $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaSourceType', 'select', 'Is the media source external or local? External sources are sources from other sites, such as Youtube. Local sources are stored on the site\'s server.', $sdmMediaDisplaysAdminForm->sdmFormSetDefaultInputValues(array('External (Media resource from another site)' => 'external', 'Local (Media stored locally)' => 'local',), 'audio'), 4),
         $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaSourceUrl', 'text', 'Url To Media (If youtube url it must be the embed url provided by youtube.)', '', 4),
-        $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaType', 'select', 'Select the media\s type.', $sdmMediaDisplaysAdminForm->sdmFormSetDefaultInputValues(array('Audio' => 'audio', 'Video' => 'video', 'Youtube Video' => 'youtube', 'HTML5 Canvas Image/Animation (Javascript file for HTML5 canvas tag)' => 'canvas',), 'audio'), 4),
+        $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaType', 'select', 'Select the media\'s type.', $sdmMediaDisplaysAdminForm->sdmFormSetDefaultInputValues(array('Audio' => 'audio', 'Video' => 'video', 'Youtube Video' => 'youtube', 'HTML5 Canvas Image/Animation (Javascript file for HTML5 canvas tag)' => 'canvas',), 'audio'), 4),
+        $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaCategory', 'text', 'Display category to place media in. Media is ordered in display by category, place, and then name.', '', 4),
     ),
 );
+$sdmMediaObject = new  SdmMedia;
 
 /* Incorporate form elements into the form. */
 $sdmMediaDisplaysAdminForm->sdmFormBuildFormElements();
