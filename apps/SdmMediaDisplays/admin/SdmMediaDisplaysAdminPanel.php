@@ -8,7 +8,7 @@
 if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
     /* Initialize the Sdm Media Displays admin form. */
     $sdmMediaDisplaysAdminForm = new SdmForm();
-    /* Unpack submitted form values regularly reference in code. */
+    /* Unpack submitted form values regularly referenced in code. */
     if ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit') !== null) {
         $nameOfDisplayBeingEdited = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit');
     } elseif ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayPageName') !== null) {
@@ -66,7 +66,7 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
     so first letter of each word is capitalized. */
     $panelName = ucwords(implode(' ', $panelCCNameMatches[0]));
 
-    /* Display correct panel description based on $currentPanel */
+    /* Display correct panel description and, if necessary, load appropriate form handler based on $currentPanel */
     switch ($currentPanel) {
         case 'displayCrudPanel':
             $panelDescription = 'Welcome to the Sdm Media Display\'s admin panel. Use the admin panels below to manage the site\'s media displays.';
@@ -77,6 +77,12 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
             break;
         case 'mediaCrudPanel':
             $panelDescription = 'Use the admin panels below to administer the new <span style="color:#66ff66">' . ucwords($nameOfDisplayBeingEdited) . '</span> display\'s media.';
+            /* load selectDisplayPanel_editDisplays form handler */
+            if ($adminMode === 'editDisplays') {
+                require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/formHandlers/selectDisplayPanel_editDisplays.php');
+            } else {
+                require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/formHandlers/selectDisplayPanel_addDisplays.php');
+            }
             break;
         case 'editMediaPanel':
             $panelDescription = 'Configure the new or selected media.';
