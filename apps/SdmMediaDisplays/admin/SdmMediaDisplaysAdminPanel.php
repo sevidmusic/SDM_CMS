@@ -11,12 +11,11 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
     /* Unpack submitted form values regularly reference in code. */
     if ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit') !== null) {
         $nameOfDisplayBeingEdited = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit');
-    } elseif ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayName') !== null) {
-        $nameOfDisplayBeingEdited = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayName');
+    } elseif ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayPageName') !== null) {
+        $nameOfDisplayBeingEdited = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayPageName');
     } else {
         $nameOfDisplayBeingEdited = null;
     }
-    //working | var_dump($nameOfDisplayBeingEdited);
     /* Determine requested panel */
     $requestedPanel = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('panel');
     $defaultPanel = 'displayCrudPanel'; // if no panel specified, show display crud.
@@ -33,7 +32,7 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
     }
 
     // for dev only,  remove once out of dev
-    //var_dump(['current panel' => $currentPanel, 'admin mode' => $adminMode, 'admin mode set' => ($extractedPanelMode === false ? false : true)]);
+    var_dump(['nameOfDisplayBeingEdited' => $nameOfDisplayBeingEdited, 'current panel' => $currentPanel, 'admin mode' => $adminMode, 'admin mode set' => ($extractedPanelMode === false ? false : true)]);
     // for dev only,  remove once out of dev
 
     /* SdmMediaDisplays Admin Form | Define form properties. */

@@ -28,13 +28,14 @@ foreach ($pagesAvailableToDisplays as $key => $value) {
 
 /* Check $adminMode to determine whether to show "select display to edit" or or "select page to show display on" form element on the selectDisplayPaenl. */
 if ($adminMode === 'addDisplays') {
-    $selectDisplayFormElement = $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('displayName', 'select', 'Select A Page To Show Display On', $pagesAvailableToDisplays, 0);
+    $selectDisplayFormElement = $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('displayPageName', 'select', 'Select A Page To Show Display On', $pagesAvailableToDisplays, 0);
 } else {
     $selectDisplayFormElement = $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('displayToEdit', 'select', 'Select Display', $displaysAvailableToEditFormValueArray, 0);
 }
-
 /* Define form elements for each Sdm Media Displays admin panel. */
 $sdmMediaDisplayAdminPanelFormElements = array(
+    'mediaCrudPanel' => array(),
+    'deleteMediaPanel' => array(),
     'selectDisplayPanel' => array(
         $selectDisplayFormElement,
     ),
@@ -54,6 +55,15 @@ $sdmMediaDisplayAdminPanelFormElements = array(
         //$sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaSourceName', 'text', 'Name of the media file.', '', 4), // set by file input
     ),
 );
+
+// if $nameOfDisplayBeingEdited is set, assign it to all forms as a hidden form element
+if (isset($nameOfDisplayBeingEdited) === true) {
+    foreach ($sdmMediaDisplayAdminPanelFormElements as $panelFormElement => $panelFormElementArray) {
+        if ($panelFormElement !== 'selectDisplayPanel')
+            array_push($sdmMediaDisplayAdminPanelFormElements[$panelFormElement], $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('displayToEdit', 'hidden', '', $nameOfDisplayBeingEdited, 100));
+        array_push($sdmMediaDisplayAdminPanelFormElements[$panelFormElement], $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('displayPageName', 'hidden', '', $nameOfDisplayBeingEdited, 101));
+    }
+}
 $sdmMediaObject = new  SdmMedia;
 
 /* Incorporate form elements into the form. */
