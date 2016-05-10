@@ -32,7 +32,7 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
     }
 
     // for dev only,  remove once out of dev
-    var_dump(['nameOfDisplayBeingEdited' => $nameOfDisplayBeingEdited, 'current panel' => $currentPanel, 'admin mode' => $adminMode, 'admin mode set' => ($extractedPanelMode === false ? false : true)]);
+    $sdmassembler->sdmCoreSdmReadArray(['nameOfDisplayBeingEdited' => $nameOfDisplayBeingEdited, 'current panel' => $currentPanel, 'admin mode' => $adminMode, 'admin mode set' => ($extractedPanelMode === false ? false : true)]);
     // for dev only,  remove once out of dev
 
     /* SdmMediaDisplays Admin Form | Define form properties. */
@@ -85,6 +85,9 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
             $panelDescription = 'Are you sure you want to delete this media?';
             break;
         case 'deleteDisplayPanel':
+            $panelDescription = 'Select a display to be deleted';
+            break;
+        case 'confirmDeleteDisplayPanel':
             $panelDescription = 'Are you sure you want to delete this display? WARNING: All the media that belongs to this display will also be deleted!';
             break;
     }

@@ -27,15 +27,17 @@ foreach ($pagesAvailableToDisplays as $key => $value) {
 /** Handle form element assignments that are based on $adminMode **/
 
 /* Check $adminMode to determine whether to show "select display to edit" or or "select page to show display on" form element on the selectDisplayPaenl. */
-if ($adminMode === 'addDisplays') {
-    $selectDisplayFormElement = $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('displayPageName', 'select', 'Select A Page To Show Display On', $pagesAvailableToDisplays, 0);
-} else {
+if ($adminMode === 'editDisplays' || $adminMode === 'deleteDisplays') {
     $selectDisplayFormElement = $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('displayToEdit', 'select', 'Select Display', $displaysAvailableToEditFormValueArray, 0);
+} else {
+    $selectDisplayFormElement = $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('displayPageName', 'select', 'Select A Page To Show Display On', $pagesAvailableToDisplays, 0);
 }
 /* Define form elements for each Sdm Media Displays admin panel. */
 $sdmMediaDisplayAdminPanelFormElements = array(
     'mediaCrudPanel' => array(),
-    'deleteMediaPanel' => array(),
+    'deleteDisplayPanel' => array(
+        $selectDisplayFormElement,
+    ),
     'selectDisplayPanel' => array(
         $selectDisplayFormElement,
     ),

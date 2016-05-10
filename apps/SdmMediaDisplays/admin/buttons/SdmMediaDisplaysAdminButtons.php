@@ -31,6 +31,9 @@ $sdmMediaDisplayAdminPanelButtons = array(
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_deleteDisplays', 'panel', 'deleteDisplayPanel_deleteDisplays', 'Delete Displays', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
     ),
     'deleteDisplayPanel' => array(
+        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_deleteSelectedDisplay', 'panel', 'confirmDeleteDisplayPanel_deleteSelectedDisplay', 'Delete Selected Display', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId(), 'style' => 'margin-left:0px;min-width:88%;')),
+    ),
+    'confirmDeleteDisplayPanel' => array(
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_confirmDeleteDisplay', 'panel', 'displayCrudPanel_confirmDeleteDisplay', 'Delete Display', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId(), 'style' => 'margin-left:0px;min-width:44%;')),
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_cancelDeleteDisplay', 'panel', 'displayCrudPanel_cancelDeleteDisplay', 'Cancel', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId(), 'style' => 'margin-left:0px;min-width:44%;')),
     ),
