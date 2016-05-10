@@ -335,7 +335,6 @@ class SdmMediaDisplay extends SdmMedia
             $directoryCount = iterator_count($directoryIterator);
             /* If */
             $directoryIsEmpty = ($directoryCount === 0 ? false : true);
-            var_dump(['Directory' => $displayDirectory, 'Iterator Count' => $directoryCount, 'Directory Is Empty' => $directoryIsEmpty]);
             return $directoryIsEmpty;
         }
         return null;

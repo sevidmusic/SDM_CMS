@@ -22,7 +22,7 @@ function createSdmMediaDisplayAdminButton($id, $name, $value, $label, $otherAttr
     }
     return "<button id='$id' name='SdmForm[$name]' type='submit' data-referred-by-button='$id' value='$value' " . implode(' ', $attributes) . ">$label</button>";
 }
-var_dump($sdmMediaDisplay->sdmMediaDisplayHasMedia('homepage'), $nameOfDisplayBeingEdited);
+
 /* Define buttons for each Sdm Media Displays admin panel. */
 $sdmMediaDisplayAdminPanelButtons = array(
     'displayCrudPanel' => array(
@@ -35,7 +35,6 @@ $sdmMediaDisplayAdminPanelButtons = array(
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_cancelDeleteDisplay', 'panel', 'displayCrudPanel_cancelDeleteDisplay', 'Cancel', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId(), 'style' => 'margin-left:0px;min-width:44%;')),
     ),
     'mediaCrudPanel' => array(
-        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_editMedia', 'panel', 'editMediaPanel_editMedia', 'Edit Media', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_addMedia', 'panel', 'editMediaPanel_addMedia', 'Add Media', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_deleteMedia', 'panel', 'deleteMediaPanel_deleteMedia', 'Delete Media', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_saveContinue', 'panel', 'mediaCrudPanel_saveContinue', 'Save and Continue', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
@@ -53,6 +52,11 @@ $sdmMediaDisplayAdminPanelButtons = array(
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_cancelSaveMedia', 'panel', 'mediaCrudPanel_cancelSaveMedia', 'Cancel', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId(), 'style' => 'margin-left:0px;min-width:88%;')),
     ),
 );
+
+/* If the current display being edited has media create edit media button. */
+if ($sdmMediaDisplay->sdmMediaDisplayHasMedia($nameOfDisplayBeingEdited) === true) {
+    array_push($sdmMediaDisplayAdminPanelButtons['mediaCrudPanel'], createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_editMedia', 'panel', 'editMediaPanel_editMedia', 'Edit Media', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())));
+}
 
 /* Get current admin panels buttons. */
 $currentPanelsButtons = array();
