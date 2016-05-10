@@ -24,7 +24,7 @@ if (file_exists(__DIR__ . '/displays/data/' . $currentDisplay) === true) {
     /* Load media objects */
     $mediaJson = array();
     foreach ($savedMedia as $mediaJsonFilename) {
-        $badFileNames = array('.', '..');
+        $badFileNames = array('.', '..', '.DS_Store');
         if (in_array($mediaJsonFilename, $badFileNames) === false) {
             /* Load media from current displays data directory. */
             $mediaJson[] = file_get_contents(__DIR__ . '/displays/data/' . $currentDisplay . '/' . $mediaJsonFilename);

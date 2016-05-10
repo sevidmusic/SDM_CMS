@@ -73,7 +73,7 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
             break;
         case 'selectDisplayPanel':
             $panelName = ($adminMode === 'addDisplays' ? 'Add Display' : 'Edit Displays');
-            $panelDescription = ($adminMode === 'addDisplays' ? 'Please select a page for the display to appear on. (If you don\'t see the page you are looking for there may already be a display for it, in which case return to the <a href="' . $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?page=SdmMediaDisplays"><b>Sdm Displays Admin Panel</b></a> and choose "Edit Displays")' : 'Select a display to edit.');
+            $panelDescription = ($adminMode === 'addDisplays' ? 'Please select a page for the display to appear on. (If you don\'t see the page you are looking for there may already be a display for it, in which case return to the <a href="' . $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?page=SdmMediaDisplays"><b>Sdm Displays Admin Panel</b></a> and choose "Edit Displays.<br><br>If no select list appears then there are no saved displays.' : 'Select a display to edit.');
             break;
         case 'mediaCrudPanel':
             $panelDescription = 'Use the admin panels below to administer the new <span style="color:#66ff66">' . ucwords($nameOfDisplayBeingEdited) . '</span> display\'s media.';

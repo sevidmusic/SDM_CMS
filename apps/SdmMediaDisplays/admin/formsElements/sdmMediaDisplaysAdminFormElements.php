@@ -9,8 +9,8 @@
 /* Determine pages available to displays. */
 $pagesAvailableToDisplays = $sdmassembler->sdmCoreDetermineAvailablePages();
 
-/* Determine available displays */
-$displaysAvailableToEdit = array_diff($sdmassembler->sdmCoreGetDirectoryListing('sdmMediaDisplays/displays/data', 'apps'), array('.', '..', 'SdmMediaDisplays'));
+/* Determine available displays | based on directories in /displays/data  */
+$displaysAvailableToEdit = array_diff($sdmassembler->sdmCoreGetDirectoryListing('sdmMediaDisplays/displays/data', 'apps'), array('.', '..', '.DS_Store', 'SdmMediaDisplays'));
 
 /* Structure an array of available displays for use as form value */
 $displaysAvailableToEditFormValueArray = array_combine($displaysAvailableToEdit, $displaysAvailableToEdit);
@@ -30,11 +30,14 @@ foreach ($pagesAvailableToDisplays as $key => $value) {
 if ($adminMode === 'editDisplays' || $adminMode === 'deleteDisplays') {
     $selectDisplayFormElement = $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('displayToEdit', 'select', 'Select Display', $displaysAvailableToEditFormValueArray, 0);
 } else {
-    $selectDisplayFormElement = $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('displayPageName', 'select', 'Select A Page To Show Display On', $pagesAvailableToDisplays, 0);
+    if (!empty($pagesAvailableToDisplays)) {
+        $selectDisplayFormElement = $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('displayPageName', 'select', 'Select A Page To Show Display On', $pagesAvailableToDisplays, 0);
+    }
 }
 /* Define form elements for each Sdm Media Displays admin panel. */
 $sdmMediaDisplayAdminPanelFormElements = array(
     'mediaCrudPanel' => array(),
+    'deleteMediaPanel' => array(),
     'deleteDisplayPanel' => array(
         $selectDisplayFormElement,
     ),
