@@ -22,7 +22,7 @@ function createSdmMediaDisplayAdminButton($id, $name, $value, $label, $otherAttr
     }
     return "<button id='$id' name='SdmForm[$name]' type='submit' data-referred-by-button='$id' value='$value' " . implode(' ', $attributes) . ">$label</button>";
 }
-
+var_dump($sdmMediaDisplay->sdmMediaDisplayHasMedia('homepage'), $nameOfDisplayBeingEdited);
 /* Define buttons for each Sdm Media Displays admin panel. */
 $sdmMediaDisplayAdminPanelButtons = array(
     'displayCrudPanel' => array(

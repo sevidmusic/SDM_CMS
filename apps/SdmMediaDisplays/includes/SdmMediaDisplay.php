@@ -310,5 +310,34 @@ class SdmMediaDisplay extends SdmMedia
         return implode('', $display);
     }
 
-
+    /**
+     * Check if a directory is empty (a directory with just '.svn' or '.git' is empty)
+     *
+     * Used PHP's RecursiveDirectoryIterator
+     *
+     * Code adopted from last answer on Stackoverflow page @see http://stackoverflow.com/questions/7497733/how-can-use-php-to-check-if-a-directory-is-empty
+     *
+     * NOTE: Will return null if $display is not a directory.
+     *
+     * @param string $display The directory to check.
+     * @return bool True if directory is empty, false if it is not empty. Will return null if $display is not a directory.
+     */
+    public function sdmMediaDisplayHasMedia($display)
+    {
+        /* Create full path to display's data directory */
+        $displayDirectory = str_replace('/includes', '', __DIR__) . '/displays/data/' . $display;
+        /* Make sure $displayDirectory is in fact a displayDirectory. */
+        if (is_dir($displayDirectory) === true) {
+            /* Create new RecursiveDirectoryIterator, will be used to iterate through displayDirectory to see
+               whether or not it is empty. */
+            $directoryIterator = new RecursiveDirectoryIterator($displayDirectory, FilesystemIterator::SKIP_DOTS);
+            /* Count iterator, this number will reflect the number of items in the displayDirectory. */
+            $directoryCount = iterator_count($directoryIterator);
+            /* If */
+            $directoryIsEmpty = ($directoryCount === 0 ? false : true);
+            var_dump(['Directory' => $displayDirectory, 'Iterator Count' => $directoryCount, 'Directory Is Empty' => $directoryIsEmpty]);
+            return $directoryIsEmpty;
+        }
+        return null;
+    }
 }
