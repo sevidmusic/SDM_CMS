@@ -81,7 +81,7 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
         case 'mediaCrudPanel':
             $panelDescription = 'Use the admin panels below to administer the new <span style="color:#66ff66">' . ucwords($nameOfDisplayBeingEdited) . '</span> display\'s media.';
 
-            /* Load mediaList form element */
+            /* Load mediaList form element for all edit modes */
             require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/formsElements/mediaList.php');
 
             if ($editMode === 'edit') {

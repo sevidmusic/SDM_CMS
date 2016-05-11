@@ -13,10 +13,13 @@
  */
 $currentDisplay = $sdmassembler->sdmCoreDetermineRequestedPage();
 
+/* Create an instance of SdmCore() for the SdmMediaDisplay(). */
+$SdmCore = new SdmCore();
+
 /* Only build a display if there is SdmMedia data for the currentDisplay (i.e., The current page). */
 if (file_exists(__DIR__ . '/displays/data/' . $currentDisplay) === true) {
     /* Create New Sdm Media Display */
-    $sdmMediaDisplay = new SdmMediaDisplay($currentDisplay);
+    $sdmMediaDisplay = new SdmMediaDisplay($currentDisplay, $SdmCore);
 
     /* Get directory listing of saved media for the current display. */
     $savedMedia = $sdmassembler->sdmCoreGetDirectoryListing("SdmMediaDisplays/displays/data/$currentDisplay", 'apps');
