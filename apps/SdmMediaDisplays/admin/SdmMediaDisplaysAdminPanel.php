@@ -10,10 +10,13 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
     $sdmMediaDisplaysAdminForm = new SdmForm();
     /* Unpack submitted form values regularly referenced in code. */
     if ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit') !== null) {
+        $editMode = 'edit';
         $nameOfDisplayBeingEdited = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit');
     } elseif ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayPageName') !== null) {
+        $editMode = 'add';
         $nameOfDisplayBeingEdited = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayPageName');
     } else {
+        $editMode = null;
         $nameOfDisplayBeingEdited = null;
     }
     /* Determine requested panel */
@@ -32,7 +35,7 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
     }
 
     // for dev only,  remove once out of dev
-    $sdmassembler->sdmCoreSdmReadArray(['nameOfDisplayBeingEdited' => $nameOfDisplayBeingEdited, 'current panel' => $currentPanel, 'admin mode' => $adminMode, 'admin mode set' => ($extractedPanelMode === false ? false : true)]);
+    $sdmassembler->sdmCoreSdmReadArray(['nameOfDisplayBeingEdited' => $nameOfDisplayBeingEdited, 'current panel' => $currentPanel, 'admin mode' => $adminMode, 'editMode' => $editMode]);
     // for dev only,  remove once out of dev
 
     /* SdmMediaDisplays Admin Form | Define form properties. */
@@ -77,11 +80,16 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
             break;
         case 'mediaCrudPanel':
             $panelDescription = 'Use the admin panels below to administer the new <span style="color:#66ff66">' . ucwords($nameOfDisplayBeingEdited) . '</span> display\'s media.';
-            /* load selectDisplayPanel_editDisplays form handler */
-            if ($adminMode === 'editDisplays') {
+            if ($editMode === 'edit') {
+                /* load edit handlers for this panel */
                 require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/formHandlers/selectDisplayPanel_editDisplays.php');
-            } else {
+            } elseif ($editMode === 'add') {
+                /* load add handlers for this panel */
                 require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/formHandlers/selectDisplayPanel_addDisplays.php');
+            } elseif ($editMode === 'delete') {
+                /* load delete handlers for this panel */
+            } else {
+                // do nothing
             }
             break;
         case 'editMediaPanel':
