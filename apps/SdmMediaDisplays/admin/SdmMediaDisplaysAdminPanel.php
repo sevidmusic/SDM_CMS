@@ -39,11 +39,11 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
     $sdmMediaDisplaysAdminForm->preserveSubmittedValues = true;
     $sdmMediaDisplaysAdminForm->excludeSubmitLabel = true; // exclude default submit label.
 
-    /* Load admin buttons. */
-    require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/buttons/SdmMediaDisplaysAdminButtons.php');
-
     /* Load form elements. */
     require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/formsElements/sdmMediaDisplaysAdminFormElements.php');
+
+    /* Load admin buttons. */
+    require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/buttons/SdmMediaDisplaysAdminButtons.php');
 
     /* Initialize $formHtml. */
     $formHtml = array();
