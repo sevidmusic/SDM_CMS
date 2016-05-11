@@ -47,20 +47,24 @@ $sdmMediaDisplayAdminPanelButtons = array(
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_confirmDeleteMedia', 'panel', 'mediaCrudPanel_confirmDeleteMedia', 'Delete Media', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId(), 'style' => 'margin-left:0px;min-width:44%;')),
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_cancelDeleteMedia', 'panel', 'mediaCrudPanel_cancelDeleteMedia', 'Cancel', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId(), 'style' => 'margin-left:0px;min-width:44%;')),
     ),
-    'selectDisplayPanel' => array(
-        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_selectDisplay', 'panel', 'mediaCrudPanel_selectDisplay', 'Edit Media for ' . ($adminMode === 'editDisplays' ? 'Selected' : 'New') . ' Display', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId(), 'style' => 'margin-left:0px;min-width:88%;')),
-    ),
+    'selectDisplayPanel' => array(/* defined below */),
     'editMediaPanel' => array(
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_saveMedia', 'panel', 'mediaCrudPanel_saveMedia', 'Save Changes to Media', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId(), 'style' => 'margin-left:0px;min-width:88%;')),
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_cancelSaveMedia', 'panel', 'mediaCrudPanel_cancelSaveMedia', 'Cancel', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId(), 'style' => 'margin-left:0px;min-width:88%;')),
     ),
 );
 
-/* If the current display being edited has media create edit media button. */
+/* If the current display being edited has media create edit media button for the mediaCrudPanel. */
 if ($sdmMediaDisplay->sdmMediaDisplayHasMedia($nameOfDisplayBeingEdited) === true) {
     array_push($sdmMediaDisplayAdminPanelButtons['mediaCrudPanel'], createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_editMedia', 'panel', 'editMediaPanel_editMedia', 'Edit Media', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())));
 }
+var_dump($displaysAvailableToEdit, $pagesAvailableToDisplays);
 
+/* Only show edit media items button on selectDisplayPanel for add and edit admin modes if there are
+   pages that do not already have a display assigned to to them or if there are displays available to edit. */
+if ((!empty($pagesAvailableToDisplays) && $adminMode === 'addDisplays') || (!empty($displaysAvailableToEdit) && $adminMode === 'editDisplays')) {
+    array_push($sdmMediaDisplayAdminPanelButtons['selectDisplayPanel'], createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_selectDisplay', 'panel', 'mediaCrudPanel_selectDisplay', 'Edit Media for ' . ($adminMode === 'editDisplays' ? 'Selected' : 'New') . ' Display', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId(), 'style' => 'margin-left:0px;min-width:88%;')));
+}
 /* Get current admin panels buttons. */
 $currentPanelsButtons = array();
 foreach ($sdmMediaDisplayAdminPanelButtons as $panel => $panelButtons) {

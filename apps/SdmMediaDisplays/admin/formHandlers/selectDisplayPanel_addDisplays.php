@@ -9,7 +9,7 @@
 /* Create display directory if it does not already exist. */
 $displayDirectoryPath = $sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/data/' . $nameOfDisplayBeingEdited;
 if (is_dir($displayDirectoryPath) === false) {
-    $status = mkdir($displayDirectoryPath, 777);
+    $status = mkdir($displayDirectoryPath, 0777);
 }
 
 /* If there the display's directory has media in it load it. */
