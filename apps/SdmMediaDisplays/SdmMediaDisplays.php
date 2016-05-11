@@ -21,26 +21,8 @@ if (file_exists(__DIR__ . '/displays/data/' . $currentDisplay) === true) {
     /* Create New Sdm Media Display */
     $sdmMediaDisplay = new SdmMediaDisplay($currentDisplay, $SdmCore);
 
-    /* Get directory listing of saved media for the current display. */
-    $savedMedia = $sdmassembler->sdmCoreGetDirectoryListing("SdmMediaDisplays/displays/data/$currentDisplay", 'apps');
-
-    /* Load media objects */
-    $mediaJson = array();
-    foreach ($savedMedia as $mediaJsonFilename) {
-        $badFileNames = array('.', '..', '.DS_Store');
-        if (in_array($mediaJsonFilename, $badFileNames) === false) {
-            /* Load media from current displays data directory. */
-            $mediaJson[] = file_get_contents(__DIR__ . '/displays/data/' . $currentDisplay . '/' . $mediaJsonFilename);
-        }
-    }
-
-    /* Unpack media properties. */
-    $mediaProperties = array();
-    foreach ($mediaJson as $json) {
-        /* Decode media. */
-        $mediaProperties[] = json_decode($json, true);
-    }
-
+    /* Load media object properties for the media in this display */
+    $mediaProperties = $sdmMediaDisplay->sdmMediaDisplayLoadMediaObjectProperties($currentDisplay);
 
     /* Create SdmMedia objects for this display. */
     $mediaObjects = array();

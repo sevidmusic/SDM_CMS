@@ -347,9 +347,13 @@ class SdmMediaDisplay extends SdmMedia
     }
 
     /**
+     * Returns an array of stored media properties for the media belonging to a specified display.
      *
+     * @param $display string Name of the display whose media's properties are to be returned.
+     *
+     * @return array An array of each media's properties indexed by media's id.
      */
-    public function sdmMediaDisplayListMedia($display)
+    public function sdmMediaDisplayLoadMediaObjectProperties($display)
     {
         /* Get directory listing of saved media for the current display. */
         $savedMedia = $this->SdmCore->sdmCoreGetDirectoryListing("SdmMediaDisplays/displays/data/$display", 'apps');
@@ -360,9 +364,17 @@ class SdmMediaDisplay extends SdmMedia
             $badFileNames = array('.', '..', '.DS_Store');
             if (in_array($mediaJsonFilename, $badFileNames) === false) {
                 /* Load media from current displays data directory. */
-                $mediaJson[] = file_get_contents(__DIR__ . '/displays/data/' . $display . '/' . $mediaJsonFilename);
+                $mediaJson[] = file_get_contents($this->SdmCore->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/data/' . $display . '/' . $mediaJsonFilename);
             }
         }
-        return $mediaJson;
+
+        /* Unpack media properties. */
+        $mediaProperties = array();
+        foreach ($mediaJson as $encodedMediaProperties) {
+            /* Decode media. */
+            $decodedMediaProperties = json_decode($encodedMediaProperties, true);
+            $mediaProperties[$decodedMediaProperties['sdmMediaId']] = $decodedMediaProperties;
+        }
+        return $mediaProperties;
     }
 }

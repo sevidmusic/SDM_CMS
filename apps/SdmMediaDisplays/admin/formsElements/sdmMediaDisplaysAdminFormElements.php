@@ -69,9 +69,10 @@ $sdmMediaDisplayAdminPanelFormElements = array(
 // if $nameOfDisplayBeingEdited is set, assign it to all forms as a hidden form element
 if (isset($nameOfDisplayBeingEdited) === true) {
     foreach ($sdmMediaDisplayAdminPanelFormElements as $panelFormElement => $panelFormElementArray) {
-        if ($panelFormElement !== 'selectDisplayPanel')
+        if ($panelFormElement !== 'selectDisplayPanel') {
             array_push($sdmMediaDisplayAdminPanelFormElements[$panelFormElement], $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('displayToEdit', 'hidden', '', $nameOfDisplayBeingEdited, 100));
-        array_push($sdmMediaDisplayAdminPanelFormElements[$panelFormElement], $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('displayPageName', 'hidden', '', $nameOfDisplayBeingEdited, 101));
+            array_push($sdmMediaDisplayAdminPanelFormElements[$panelFormElement], $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('displayPageName', 'hidden', '', $nameOfDisplayBeingEdited, 101));
+        }
     }
 }
 $sdmMediaObject = new  SdmMedia;
