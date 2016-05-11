@@ -8,10 +8,17 @@
 
 /* If there the display's directory has media in it load it and build a radio form element for each piece of media. */
 if ($sdmMediaDisplay->sdmMediaDisplayHasMedia($nameOfDisplayBeingEdited) === true) {
-    var_dump('loaded media list');
     /* create display for admin panel */
     $mediaListDisplay = new SdmMediaDisplay($nameOfDisplayBeingEdited, $SdmCore);
-    $sdmassembler->sdmCoreSdmReadArray($mediaListDisplay);
+    $displayMediaObjectProperties = $mediaListDisplay->sdmMediaDisplayLoadMediaObjectProperties($nameOfDisplayBeingEdited);
+    foreach ($displayMediaObjectProperties as $mediaObject => $mediaObjectProperties) {
+        //array_push($sdmMediaDisplayAdminPanelFormElements[$panelFormElement], $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('displayToEdit', 'hidden', '', $nameOfDisplayBeingEdited, 100));
+        foreach ($mediaObjectProperties as $mediaPropertyName => $mediaPropertyValue) {
+            $sdmassembler->sdmCoreSdmReadArray($mediaPropertyName . ': ' . $mediaPropertyValue);
+
+        }
+
+    }
 
 
 }
