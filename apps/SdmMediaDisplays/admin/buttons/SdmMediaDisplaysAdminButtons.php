@@ -58,7 +58,7 @@ $sdmMediaDisplayAdminPanelButtons = array(
 if ($sdmMediaDisplay->sdmMediaDisplayHasMedia($nameOfDisplayBeingEdited) === true) {
     array_push($sdmMediaDisplayAdminPanelButtons['mediaCrudPanel'], createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_editMedia', 'panel', 'editMediaPanel_editMedia', 'Edit Media', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())));
 }
-var_dump($displaysAvailableToEdit, $pagesAvailableToDisplays);
+//var_dump($displaysAvailableToEdit, $pagesAvailableToDisplays);
 
 /* Only show edit media items button on selectDisplayPanel for add and edit admin modes if there are
    pages that do not already have a display assigned to to them or if there are displays available to edit. */

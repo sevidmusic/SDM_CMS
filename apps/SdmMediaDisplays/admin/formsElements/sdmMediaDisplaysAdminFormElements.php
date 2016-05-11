@@ -34,6 +34,10 @@ if ($adminMode === 'editDisplays' || $adminMode === 'deleteDisplays') {
         $selectDisplayFormElement = $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('displayPageName', 'select', 'Select A Page To Show Display On', $pagesAvailableToDisplays, 0);
     }
 }
+
+if (!isset($selectDisplayFormElement)) {
+    $selectDisplayFormElement = array();
+}
 /* Define form elements for each Sdm Media Displays admin panel. */
 $sdmMediaDisplayAdminPanelFormElements = array(
     'mediaCrudPanel' => array(),
