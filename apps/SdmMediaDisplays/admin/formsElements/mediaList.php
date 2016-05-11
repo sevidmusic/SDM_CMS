@@ -12,13 +12,14 @@ if ($sdmMediaDisplay->sdmMediaDisplayHasMedia($nameOfDisplayBeingEdited) === tru
     $mediaListDisplay = new SdmMediaDisplay($nameOfDisplayBeingEdited, $SdmCore);
     $displayMediaObjectProperties = $mediaListDisplay->sdmMediaDisplayLoadMediaObjectProperties($nameOfDisplayBeingEdited);
     foreach ($displayMediaObjectProperties as $mediaObject => $mediaObjectProperties) {
-        //array_push($sdmMediaDisplayAdminPanelFormElements[$panelFormElement], $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('displayToEdit', 'hidden', '', $nameOfDisplayBeingEdited, 100));
+        $incrementer = 0;
         foreach ($mediaObjectProperties as $mediaPropertyName => $mediaPropertyValue) {
-            $sdmassembler->sdmCoreSdmReadArray($mediaPropertyName . ': ' . $mediaPropertyValue);
-
+            if ($currentPanel === 'mediaCrudPanel') {
+                array_push($sdmMediaDisplayAdminPanelFormElements['mediaCrudPanel'], $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement($mediaPropertyName, 'hidden', '<!-- ' . $mediaPropertyName . ' -->', $mediaPropertyValue, $incrementer));
+                $incrementer++;
+            }
         }
-
     }
-
+    // $sdmassembler->sdmCoreSdmReadArray($sdmMediaDisplayAdminPanelFormElements);
 
 }
