@@ -16,6 +16,8 @@
  */
 class SdmMediaDisplay extends SdmMedia
 {
+    /* Sdm Core Instance */
+    private $SdmCore;
     /** @var  $sdmMediaDisplayMedia array Array of Sdm Media objects for this display. */
     private $sdmMediaDisplayMedia;
 
@@ -36,11 +38,15 @@ class SdmMediaDisplay extends SdmMedia
      */
     private $sdmMediaDisplayCategorizedMediaObjects;
 
+
     /**
      * SdmMediaDisplay constructor. Initializes the sdmMediaDisplayMedia array.
      */
-    final public function __construct($SdmMediaDisplayTemplate = 'SdmMediaDisplayDefaultTemplate')
+    final public function __construct($SdmMediaDisplayTemplate = 'SdmMediaDisplayDefaultTemplate', SdmCore $SdmCoreObject)
     {
+        /** @var  SdmCore object Injected instance of the SdmCore() class. Used to create correct display paths and urls. */
+        $this->SdmCore = $SdmCoreObject;
+
         /* Initialize the sdmMediaDisplayMedia array which will hold the Sdm Media objects
            for this Sdm Media Display. */
         $this->sdmMediaDisplayMedia = array();
@@ -338,5 +344,25 @@ class SdmMediaDisplay extends SdmMedia
             return $directoryIsEmpty;
         }
         return null;
+    }
+
+    /**
+     *
+     */
+    public function sdmMediaDisplayListMedia($display)
+    {
+        /* Get directory listing of saved media for the current display. */
+        $savedMedia = $this->SdmCore->sdmCoreGetDirectoryListing("SdmMediaDisplays/displays/data/$display", 'apps');
+
+        /* Load media objects */
+        $mediaJson = array();
+        foreach ($savedMedia as $mediaJsonFilename) {
+            $badFileNames = array('.', '..', '.DS_Store');
+            if (in_array($mediaJsonFilename, $badFileNames) === false) {
+                /* Load media from current displays data directory. */
+                $mediaJson[] = file_get_contents(__DIR__ . '/displays/data/' . $display . '/' . $mediaJsonFilename);
+            }
+        }
+        return $mediaJson;
     }
 }
