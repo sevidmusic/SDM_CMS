@@ -77,6 +77,9 @@ if (isset($nameOfDisplayBeingEdited) === true) {
 }
 $sdmMediaObject = new  SdmMedia;
 
+/* Load mediaList form elements for mediaCrudPanel. */
+require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/formsElements/mediaList.php');
+
 /* Incorporate form elements into the form. */
 $sdmMediaDisplaysAdminForm->sdmFormBuildFormElements();
 
