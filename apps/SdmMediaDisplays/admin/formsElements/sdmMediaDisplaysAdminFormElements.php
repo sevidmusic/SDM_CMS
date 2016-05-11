@@ -38,6 +38,7 @@ if ($adminMode === 'editDisplays' || $adminMode === 'deleteDisplays') {
 $sdmMediaDisplayAdminPanelFormElements = array(
     'mediaCrudPanel' => array(),
     'deleteMediaPanel' => array(),
+    'confirmDeleteDisplayPanel' => array(),
     'deleteDisplayPanel' => array(
         $selectDisplayFormElement,
     ),
