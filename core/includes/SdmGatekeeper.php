@@ -213,7 +213,8 @@ class SdmGatekeeper extends SdmCore implements SessionHandlerInterface
         // set our session name | it is important for this to be unique to our site for security reasons
         session_name('sdmsession');
         // how long the session cookie will be valid
-        $maxlifetime = ini_get('session.gc_maxlifetime');
+        $maxlifetime = 3600 * 24 * 2; // set to 2 days
+        // to use ini setting un comment the following : // ini_get('session.gc_maxlifetime');
         // path session cookie will be available on
         $path = '/';
         // domain our session cookie will be available to. | NOTE: Setting this parameter is resulting is session data being lost, until it is discovered how to set the $domain parameter without any problems set to an empty string.
