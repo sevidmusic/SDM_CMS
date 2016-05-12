@@ -95,7 +95,7 @@
 
 .sdmMediaDisplayAdminMediaList {
     float: right;
-    margin-top: 0px;
+    margin-top: 24px;
     padding: 30px;
     background: #5CC77A;
     width: 88%;
@@ -118,11 +118,13 @@
     overflow: visible;
     float: right;
     width: 85%;
-    background: #3498db;
+    /* background: #3498db; */
     padding-top: 20px;
     padding-left: 20px;
     margin-right: 3.73em;
-    border: 3px solid #ffffff;
+    border-width: 3px;
+    border-style: dotted solid;
+    border-color: #ffffff;
     border-radius: 9px;
-    margin-top: 14px;
+    margin-top: 24px;
 }

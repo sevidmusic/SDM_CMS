@@ -45,7 +45,7 @@ if ($sdmMediaDisplay->sdmMediaDisplayHasMedia($nameOfDisplayBeingEdited) === tru
         <div id='$mediaObject->sdmMediaId' class='sdmMediaDisplayAdminMediaList'>
             $mediaTable
         </div><div style='clear: both;'></div>
-        <div id='mediaTableRadioText'>Edit Media \"$mediaObject->sdmMediaDisplayName\"</div>
+        <div id='mediaTableRadioText'>Select Media \"$mediaObject->sdmMediaDisplayName\"</div>
         <!-- End mediaId: $mediaObject->sdmMediaId | mediaDisplayName: $mediaObject->sdmMediaDisplayName -->
         ";
         $mediaFormValues[$mediaFormElementDescription] = $mediaObject->sdmMediaId;
