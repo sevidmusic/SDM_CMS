@@ -16,7 +16,6 @@
     display: inline-block;
 }
 
-
 #SdmMediaDisplaysAdminPanel select,
 #SdmMediaDisplaysAdminPanel input[type="radio"],
 #SdmMediaDisplaysAdminPanel textarea,
@@ -74,4 +73,29 @@
     background-image: -o-linear-gradient(top, #3498db, #46afeb);
     background-image: linear-gradient(to bottom, #3498db, #46afeb);
     text-decoration: none;
+}
+
+.mediaInfoTable {
+    overflow: scroll;
+    width: 78%;
+    float: right;
+    position: relative;
+    display: block;
+    padding: 20px;
+    margin-top: 88px;
+    margin-right: 188px;
+    margin-bottom: -151px;
+    background: #3498db;
+    font-size: .42em;
+    border: 3px solid #ffffff;
+    -webkit-border-radius: 9px;
+    -moz-border-radius: 9px;
+    border-radius: 9px;
+}
+
+.mediaInfoTd {
+    padding: 20px;
+    border: 3px solid #ffffff;
+    border-radius: 3px;
+    min-width: 420px;
 }
