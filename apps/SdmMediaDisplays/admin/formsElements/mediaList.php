@@ -33,12 +33,12 @@ if ($sdmMediaDisplay->sdmMediaDisplayHasMedia($nameOfDisplayBeingEdited) === tru
 
         /* build td elements for each media object's properties and store it in the $mediaInfoTd */
         foreach ($mediaObjectProperties as $mediaPropertyName => $mediaPropertyValue) {
-            $mediaInfoTd['propertyNames'][] = "<td style='$mediaInfoTdStyle' class='mediaInfoTd'>$mediaPropertyName</td>";
+            $mediaInfoTd['propertyNames'][] = "<th style='$mediaInfoTdStyle' class='mediaInfoTd'>$mediaPropertyName</th>";
             $mediaInfoTd['propertyValues'][] = "<td style='$mediaInfoTdStyle' class='mediaInfoTd'>$mediaPropertyValue</td>";
         }
 
         /* Build table of media data from td elements. */
-        $mediaTable = "<table class='mediaInfoTable'><tr>" . implode('', $mediaInfoTd['propertyNames']) . "</tr><tr>" . implode('', $mediaInfoTd['propertyValues']) . "</tr></table>";
+        $mediaTable = "<table class='mediaInfoTable'><caption style='text-align: left;font-size: 2em;letter-spacing: .2em;'>$mediaObject->sdmMediaDisplayName</caption><tr>" . implode('', $mediaInfoTd['propertyNames']) . "</tr><tr>" . implode('', $mediaInfoTd['propertyValues']) . "</tr></table>";
 
         /**/
         /* Create media */ // media id used in key to insure uniqueness in case to media items have same display name
