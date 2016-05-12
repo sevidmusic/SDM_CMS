@@ -52,5 +52,5 @@ if ($sdmMediaDisplay->sdmMediaDisplayHasMedia($nameOfDisplayBeingEdited) === tru
     }
 
     /* Create radio from element to allow selection of a piece of media for editing or deletion. */
-    array_push($sdmMediaDisplayAdminPanelFormElements['mediaCrudPanel'], $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('selectMediaToEdit', 'radio', '<p>Select a piece of media to edit. Use the admin buttons to navigate to the appropriate admin panel after selecting the media you wish to edit.</p>', $mediaFormValues, 20, array('labelTag' => 'div')));
+    array_push($sdmMediaDisplayAdminPanelFormElements['mediaCrudPanel'], $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('selectMediaToEdit', 'radio', '<p>Select a piece of media to edit. Use the admin buttons to navigate to the appropriate admin panel after selecting the media you wish to edit.</p>', $mediaFormValues, 20, array('labelTag' => 'div', 'style' => 'width:14px;')));
 }
