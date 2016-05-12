@@ -17,9 +17,6 @@ if ($sdmMediaDisplay->sdmMediaDisplayHasMedia($nameOfDisplayBeingEdited) === tru
     /* Set initial row color to grey. Color will alternate between black and grey on each loop cycle. */
     $trColor = 'grey';
 
-    /* Initialize $mediaInfoTd array which will hold the td elements for each media object. */
-    $mediaInfoTd = array();
-
     /* Construct form radio form element for each media object. */
     foreach ($displayMediaObjectProperties as $mediaObjectId => $mediaObjectProperties) {
         /* Convert array of $mediaObjectProperties to an object. */
@@ -31,6 +28,8 @@ if ($sdmMediaDisplay->sdmMediaDisplayHasMedia($nameOfDisplayBeingEdited) === tru
         /* Assign $trColor as background color for td. */
         $mediaInfoTdStyle = "background: $trColor;";
 
+        /* Initialize $mediaInfoTd array which will hold the td elements for each media object. */
+        $mediaInfoTd = array();
         /* build td elements for each media object's properties and store it in the $mediaInfoTd */
         foreach ($mediaObjectProperties as $mediaPropertyName => $mediaPropertyValue) {
             $mediaInfoTd['propertyNames'][] = "<th style='$mediaInfoTdStyle' class='mediaInfoTd'>$mediaPropertyName</th>";
@@ -38,11 +37,18 @@ if ($sdmMediaDisplay->sdmMediaDisplayHasMedia($nameOfDisplayBeingEdited) === tru
         }
 
         /* Build table of media data from td elements. */
-        $mediaTable = "<table class='mediaInfoTable'><caption style='text-align: left;font-size: 2em;letter-spacing: .2em;'>$mediaObject->sdmMediaDisplayName</caption><tr>" . implode('', $mediaInfoTd['propertyNames']) . "</tr><tr>" . implode('', $mediaInfoTd['propertyValues']) . "</tr></table>";
+        $mediaTable = "<table class='mediaInfoTable'><caption id='mediaListTableCaption'>$mediaObject->sdmMediaDisplayName</caption><tr>" . implode('', $mediaInfoTd['propertyNames']) . "</tr><tr>" . implode('', $mediaInfoTd['propertyValues']) . "</tr></table>";
 
-        /**/
-        /* Create media */ // media id used in key to insure uniqueness in case to media items have same display name
-        $mediaFormValues['<!-- mediaId: ' . $mediaObject->sdmMediaId . $mediaObject->sdmMediaDisplayName . ' -->' . $mediaTable] = $mediaObject->sdmMediaId;
+        /* Create media */
+        $mediaFormElementDescription = "
+        <!-- mediaId: $mediaObject->sdmMediaId | mediaDisplayName: $mediaObject->sdmMediaDisplayName -->
+        <div id='$mediaObject->sdmMediaId' class='sdmMediaDisplayAdminMediaList'>
+            $mediaTable
+        </div><div style='clear: both;'></div>
+        <div id='mediaTableRadioText'>Edit Media \"$mediaObject->sdmMediaDisplayName\"</div>
+        <!-- End mediaId: $mediaObject->sdmMediaId | mediaDisplayName: $mediaObject->sdmMediaDisplayName -->
+        ";
+        $mediaFormValues[$mediaFormElementDescription] = $mediaObject->sdmMediaId;
     }
 
     /* Create radio from element to allow selection of a piece of media for editing or deletion. */

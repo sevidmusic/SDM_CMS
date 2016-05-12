@@ -76,17 +76,10 @@
 }
 
 .mediaInfoTable {
-    overflow: scroll;
-    width: 78%;
-    float: right;
-    position: relative;
-    display: block;
     padding: 20px;
-    margin-top: 88px;
-    margin-right: 188px;
-    margin-bottom: -151px;
     background: #3498db;
-    font-size: .42em;
+    font-size: .72em;
+    color: #ffffff;
     border: 3px solid #ffffff;
     -webkit-border-radius: 9px;
     -moz-border-radius: 9px;
@@ -98,4 +91,37 @@
     border: 3px solid #ffffff;
     border-radius: 3px;
     min-width: 420px;
+}
+
+.sdmMediaDisplayAdminMediaList {
+    float: right;
+    margin-top: 0px;
+    padding: 30px;
+    background: #5CC77A;
+    width: 88%;
+    overflow: auto;
+    font-family: monospace;
+    border: 3px solid #ffffff;
+    border-radius: 9px;
+    margin-right: 120px;
+}
+
+#mediaListTableCaption {
+    text-align: left;
+    font-size: 2em;
+    letter-spacing: .2em;
+    margin-bottom: 20px;
+}
+
+#mediaTableRadioText {
+    height: 188px;
+    overflow: visible;
+    float: left;
+    width: 88%;
+    background: #3498db;
+    padding-top: 20px;
+    padding-left: 20px;
+    margin-left: 20px;
+    border: 3px solid #ffffff;
+    border-radius: 9px;
 }
