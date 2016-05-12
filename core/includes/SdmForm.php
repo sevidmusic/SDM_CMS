@@ -419,7 +419,7 @@ class SdmForm
                     $this->formElementHtml[$value['id']] = '<!-- form element "SdmForm[' . $value['id'] . ']" --><p id="label-for-SdmForm[' . $value['id'] . ']">' . $value['element'] . '</p>';
                     $radioItems = $this->sdmFormSetFormValue($value);
                     foreach ($radioItems as $radio => $radioValue) {
-                        $this->formElementHtml[$value['id']] .= '<label  for="SdmForm[' . $value['id'] . ']">' . $radio . '</label><input type="radio" name="SdmForm[' . $value['id'] . ']" value="' . (substr($radioValue, 0, 8) === 'default_' ? $this->sdmFormEncode(str_replace('default_', '', $radioValue)) . '" checked="checked"' : $this->sdmFormEncode($radioValue) . '"') . '><br><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
+                        $this->formElementHtml[$value['id']] .= '<' . (isset($value['displayOptions']['labelTag']) === true ? $value['displayOptions']['labelTag'] . ' id="' . $value['id'] . '" ' : 'label for="SdmForm[' . $value['id'] . ']"') . '>' . $radio . '</' . (isset($value['displayOptions']['labelTag']) === true ? $value['displayOptions']['labelTag'] : 'label') . '><input type="radio" name="SdmForm[' . $value['id'] . ']" value="' . (substr($radioValue, 0, 8) === 'default_' ? $this->sdmFormEncode(str_replace('default_', '', $radioValue)) . '" checked="checked"' : $this->sdmFormEncode($radioValue) . '"') . '><br><!-- close form element "SdmForm[' . $value['id'] . ']" -->';
                     }
                     $this->formElementHtml[$value['id']] .= '<br>';
 
@@ -1125,7 +1125,7 @@ class SdmForm
      *
      * @return array An array defining a single form element.
      */
-    public function sdmFormCreateFormElement($id, $type, $element, $value, $place)
+    public function sdmFormCreateFormElement($id, $type, $element, $value, $place, $displayOptions = array())
     {
         /* Create form element. */
         $formElement = array(
@@ -1134,6 +1134,7 @@ class SdmForm
             'element' => $element,
             'value' => $value,
             'place' => $place,
+            'displayOptions' => $displayOptions,
         );
 
         /* Push new element into $formElements propert. */
