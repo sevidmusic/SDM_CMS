@@ -35,7 +35,7 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
     }
 
     // for dev only,  remove once out of dev
-    $sdmassembler->sdmCoreSdmReadArray(['nameOfDisplayBeingEdited' => $nameOfDisplayBeingEdited, 'current panel' => $currentPanel, 'admin mode' => $adminMode, 'editMode' => $editMode]);
+    //$sdmassembler->sdmCoreSdmReadArray(['nameOfDisplayBeingEdited' => $nameOfDisplayBeingEdited, 'current panel' => $currentPanel, 'admin mode' => $adminMode, 'editMode' => $editMode]);
     // for dev only,  remove once out of dev
 
     /* SdmMediaDisplays Admin Form | Define form properties. */
