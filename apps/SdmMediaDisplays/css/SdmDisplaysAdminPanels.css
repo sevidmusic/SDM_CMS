@@ -97,7 +97,7 @@
     float: right;
     margin-top: 24px;
     padding: 30px;
-    background: #5CC77A;
+    background: #0D1A25;
     width: 88%;
     overflow: auto;
     font-family: monospace;
@@ -122,9 +122,9 @@
     padding-top: 20px;
     padding-left: 20px;
     margin-right: 3.73em;
-    border-width: 3px;
-    border-style: dotted solid;
-    border-color: #ffffff;
-    border-radius: 9px;
+    /* border-width: 3px; */
+    /* border-style: dotted solid; */
+    /* border-color: #ffffff; */
+    /* border-radius: 9px; */
     margin-top: 24px;
 }
