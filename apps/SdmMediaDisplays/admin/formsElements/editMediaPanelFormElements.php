@@ -5,6 +5,27 @@
  * Date: 5/13/16
  * Time: 11:23 AM
  */
+$mediaToEdit = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('selectMediaToEdit');
+
+/* create display for admin panel */
+$editMediaPanelDisplay = new SdmMediaDisplay($nameOfDisplayBeingEdited, $SdmCore);
+
+/* Get Media Object properties for the display being edited, and set $addToCurrent parameter to true so they
+   are added to the $editMediaPanelDisplay. */
+$editMediaPanelDisplayMediaObjectProperties = $editMediaPanelDisplay->sdmMediaDisplayLoadMediaObjectProperties($nameOfDisplayBeingEdited, true);
+
+/* Get array of display's media's html strings. */
+$editMediaDisplayElementsHtml = $editMediaPanelDisplay->sdmMediaGetSdmMediaDisplayMediaElementsHtml();
+
+/* Get the media to edit's properties.  */
+$mediaToEditProperties = $editMediaPanelDisplayMediaObjectProperties[$mediaToEdit];
+
+/* Get media to edit's html */
+$mediaToEditsHtml = $editMediaDisplayElementsHtml[$mediaToEditProperties['sdmMediaMachineName']];
+
+var_dump($mediaToEditProperties, $mediaToEditsHtml);
+
+
 $editPanelFormElements = array(
     $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaCategory', 'text', 'Category name to organize media by. Media is ordered in display by media\'s category, place, and finally name.', '', 1),
     $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaPlace', 'select', 'Position in display relative to other media.', $sdmMediaDisplaysAdminForm->sdmFormSetDefaultInputValues(range(1, 1000), 1), 2),
