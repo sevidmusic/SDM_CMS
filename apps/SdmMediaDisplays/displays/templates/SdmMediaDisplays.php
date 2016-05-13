@@ -29,7 +29,9 @@ function defaultSdmMediaDisplayList($media)
     ?>
 </ul>*/
 ?>
-
+<?php
+/*
+?>
 <h1>Custom Generated Display</h1>
 <ul>
     <?php
