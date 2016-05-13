@@ -100,7 +100,7 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
                     $panelDescription = 'Use the form below to edit the media.';
                     break;
                 case 'addMediaPanel':
-                    $panelDescription = 'Adding Media';
+                    $panelDescription = 'Use the form below to add the new media.';
                     break;
             }
             break;

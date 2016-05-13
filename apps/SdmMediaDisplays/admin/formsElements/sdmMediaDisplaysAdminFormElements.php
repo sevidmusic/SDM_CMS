@@ -77,7 +77,11 @@ $currentPanelsFormElements = array();
 foreach ($sdmMediaDisplayAdminPanelFormElements as $panel => $panelFormElements) {
     if ($panel === $currentPanel) {
         foreach ($panelFormElements as $formElement) {
-            $currentPanelsFormElements[] = $sdmMediaDisplaysAdminForm->sdmFormGetFormElementHtml($formElement['id']);
+            if ($formElement['type'] !== 'hidden') {
+                $currentPanelsFormElements[] = '<div style="border: 3px solid white; border-radius: 9px;margin-bottom: 20px; padding: 20px; width: 88%;">' . $sdmMediaDisplaysAdminForm->sdmFormGetFormElementHtml($formElement['id']) . '</div>';
+            } else {
+                $currentPanelsFormElements[] = $sdmMediaDisplaysAdminForm->sdmFormGetFormElementHtml($formElement['id']);
+            }
         }
     }
 }
