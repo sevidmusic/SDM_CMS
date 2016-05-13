@@ -84,6 +84,7 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
                 $panelDescription = 'Select a piece of media from below and then click one of the admin buttons at the bottom of the page to edit the media you selected.';
                 /* load edit handlers for this panel */
                 require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/formHandlers/selectDisplayPanel_editDisplays.php');
+                require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/formHandlers/selectDisplayPanel_editMedia.php');
             } elseif ($editMode === 'add') {
                 $panelDescription = 'Use the admin buttons below to administer the new <span style="color:#66ff66">' . ucwords($nameOfDisplayBeingEdited) . '</span> display\'s media.';
                 /* load add handlers for this panel */
