@@ -38,3 +38,4 @@ function defaultSdmMediaDisplayList($media)
     echo $sdmMediaDisplay->sdmMediaDisplayGenerateMediaDisplay('defaultSdmMediaDisplayList');
     ?>
 </ul>
+*/

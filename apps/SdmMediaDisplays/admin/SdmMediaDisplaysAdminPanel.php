@@ -79,12 +79,13 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
             $panelDescription = ($adminMode === 'addDisplays' ? '<p>Please select a page for the display to appear on.</p><p>If you don\'t see the page you are looking for there may already be a display for it, in which case return to the <a href="' . $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?page=SdmMediaDisplays"><b>Sdm Displays Admin Panel</b></a> and choose "Edit Displays.</p><p>If no select list appears then all the pages available to displays must already have a display assigned to them, in which case you can simply edit the displays by page from the <a href="' . $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?page=SdmMediaDisplays"><b>Sdm Displays Admin Panel</b></a>.</p>' : 'Select a display to edit.');
             break;
         case 'mediaCrudPanel':
-            $panelDescription = 'Use the admin panels below to administer the new <span style="color:#66ff66">' . ucwords($nameOfDisplayBeingEdited) . '</span> display\'s media.';
             /* Load appropriate form handler based on $editMode. */
             if ($editMode === 'edit') {
+                $panelDescription = 'Select a piece of media from below and then click one of the admin buttons at the bottom of the page to edit the media you selected.';
                 /* load edit handlers for this panel */
                 require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/formHandlers/selectDisplayPanel_editDisplays.php');
             } elseif ($editMode === 'add') {
+                $panelDescription = 'Use the admin buttons below to administer the new <span style="color:#66ff66">' . ucwords($nameOfDisplayBeingEdited) . '</span> display\'s media.';
                 /* load add handlers for this panel */
                 require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/formHandlers/selectDisplayPanel_addDisplays.php');
             } elseif ($editMode === 'delete') {
@@ -94,7 +95,14 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
             }
             break;
         case 'editMediaPanel':
-            $panelDescription = 'Configure the new or selected media.';
+            switch ($currentPanel) {
+                case 'editMediaPanel':
+                    $panelDescription = 'Use the form below to edit the media.';
+                    break;
+                case 'addMediaPanel':
+                    $panelDescription = 'Adding Media';
+                    break;
+            }
             break;
         case 'deleteMediaPanel':
             $panelDescription = 'Are you sure you want to delete this media?';
