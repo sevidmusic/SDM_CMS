@@ -7,6 +7,8 @@
  */
 
 if ($adminMode === 'saveMedia') {
-    var_dump('Loaded edit media handler');
+
+    /* Added confirmation message to panel description. */
+    $panelDescription .= '<p>Saved changes to media "' . $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('sdmMediaDisplayName') . '".</p>';
 
 }
