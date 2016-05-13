@@ -65,11 +65,227 @@ class SdmMediaDisplay extends SdmMedia
     }
 
     /**
-     * @return string
+     * Gets displays html.
+     * @return string Returns the html for the display.
      */
     public function sdmMediaDisplayGetSdmMediaDisplayHtml()
     {
         return $this->sdmMediaDisplayHtml;
+    }
+
+    /**
+     * This method will order the media objects, load the template,
+     * and assigns the resulting html string to the sdmMediaDisplayHtml property.
+     */
+    public function sdmMediaDisplayBuildMediaDisplay()
+    {
+        /* Create an ordered array of this display's SdmMedia object's html. Array is ordered
+           by category, place, and finally display name. */
+        $this->sdmMediaDisplayBuildOrderedMediaObjectArray();
+
+        /* Load the display's template*/
+        $this->sdmMediaDisplayLoadDisplayTemplate();
+
+        return true; //@todo : return something more useful
+    }
+
+    /**
+     * Builds the ordered array of SdmMedia objects for the display.
+     *
+     * @return array Array of SdmMedia objects ordered by category, place, and display name respectively.
+     */
+    private function sdmMediaDisplayBuildOrderedMediaObjectArray()
+    {
+        /* Initialize $orderedMedia array. Organize Sdm Media Elements Html
+           categorically, by place, and finally by display name. */
+        $orderedMedia = array();
+        $mediaElementsHtml = $this->sdmMediaDisplayMediaElementsHtml;
+        $mediaObjects = $this->sdmMediaDisplayGetMediaObjects();
+        foreach ($mediaObjects as $mediaObject) {
+            /* Unpack media object properties */
+            $mediaProperties = get_object_vars($mediaObject);
+            $mediaCategory = $mediaProperties['sdmMediaCategory'];
+            $mediaPlace = $mediaProperties['sdmMediaPlace'];
+            /* Filter SdmMediaDisplay name so only it's alphanumeric characters are used. */
+            $mediaDisplayName = preg_replace("/[^a-zA-Z0-9]+/", " ", $mediaProperties['sdmMediaDisplayName']);
+            $mediaMachineName = $mediaProperties['sdmMediaMachineName'];
+            /* Assign SdmMedia objects html to the $orderedMedia array. Index by SdmMediaCategory,
+               SdmMediaPlace, and finally SdmMediaDisplayName */
+            $orderedMedia[$mediaCategory][$mediaPlace][$mediaDisplayName] = $mediaElementsHtml[$mediaMachineName];
+        }
+        /* Sort each level of the $orderedMedia array. */
+        $this->sdmMediaDisplaySortCategorizedMediaElements($orderedMedia);
+
+        /* Assign sorted $orderedMedia array to the $sdmMediaDisplayCategorizedMediaObjects property. */
+        $this->sdmMediaDisplayCategorizedMediaObjects = $orderedMedia;
+
+        return true; // @todo: return something more useful
+    }
+
+    /**
+     * Returns an array of the Sdm Media objects that belong to this display.
+     * @return array Array of Sdm Media objects that belong to this display.
+     */
+    public function sdmMediaDisplayGetMediaObjects()
+    {
+        return $this->sdmMediaDisplayMedia;
+    }
+
+    /**
+     * Sorts the $orderedMedia array created by sdmMediaDisplayBuildMediaDisplay()
+     * recursively.
+     *
+     * @param $orderedMedia array The $orderedMedia array created by sdmMediaDisplayBuildMediaDisplay().
+     *
+     * @return bool True if sort succeeded, otherwise false.
+     */
+    private function sdmMediaDisplaySortCategorizedMediaElements(&$orderedMedia)
+    {
+        foreach ($orderedMedia as &$arrayLevel) {
+            if (is_array($arrayLevel)) {
+                $this->sdmMediaDisplaySortCategorizedMediaElements($arrayLevel);
+            }
+        }
+        return ksort($orderedMedia);
+    }
+
+    /**/
+
+    /**
+     * Loads the display's template file.
+     */
+    private function sdmMediaDisplayLoadDisplayTemplate()
+    {
+        /* Build display based on template using an output buffer to capture the output of require_once() */
+        ob_start();
+        /* Store $this in local var so it can be accessed by template. */
+        $sdmMediaDisplay = $this;
+        $templateDirPath = str_replace('/includes', '', __DIR__) . '/displays/templates';
+        require_once($templateDirPath . '/' . $this->sdmMediaDisplayTemplate . '.php');
+        $this->sdmMediaDisplayHtml = ob_get_contents();
+        ob_end_clean();
+    }
+
+    /**
+     * Generates a media display for a template based on the current display's media objects.
+     * This method is meant to be called from within a Sdm Media Display template file.
+     * @param $function string|null If set, should be the name of a user defined function that will be called
+     *                              on each media element in the sdmMediaDisplayCategorizedMediaObjects array.
+     * @return string
+     */
+    public function sdmMediaDisplayGenerateMediaDisplay($function = null)
+    {
+        $display = array();
+        switch (isset($function) && function_exists($function)) {
+            case true:
+                foreach (new RecursiveIteratorIterator(new RecursiveArrayIterator($this->sdmMediaDisplayCategorizedMediaObjects)) as $media) {
+                    $display[] = call_user_func_array($function, array($media));;
+                }
+
+                break;
+            default:
+                foreach (new RecursiveIteratorIterator(new RecursiveArrayIterator($this->sdmMediaDisplayCategorizedMediaObjects)) as $media) {
+                    $display[] = PHP_EOL . $media . PHP_EOL;
+                }
+                break;
+
+        }
+
+        return implode('', $display);
+    }
+
+    /**
+     * Check if a directory is empty (a directory with just '.svn' or '.git' is empty)
+     *
+     * Used PHP's RecursiveDirectoryIterator
+     *
+     * Code adopted from last answer on Stackoverflow page @see http://stackoverflow.com/questions/7497733/how-can-use-php-to-check-if-a-directory-is-empty
+     *
+     * NOTE: Will return null if $display is not a directory.
+     *
+     * @param string $display The directory to check.
+     * @return bool True if directory is empty, false if it is not empty. Will return null if $display is not a directory.
+     */
+    public function sdmMediaDisplayHasMedia($display)
+    {
+        /* Create full path to display's data directory */
+        $displayDirectory = str_replace('/includes', '', __DIR__) . '/displays/data/' . $display;
+        /* Make sure $displayDirectory is in fact a displayDirectory. */
+        if (is_dir($displayDirectory) === true) {
+            /* Create new RecursiveDirectoryIterator, will be used to iterate through displayDirectory to see
+               whether or not it is empty. */
+            $directoryIterator = new RecursiveDirectoryIterator($displayDirectory, FilesystemIterator::SKIP_DOTS);
+            /* Count iterator, this number will reflect the number of items in the displayDirectory. */
+            $directoryCount = iterator_count($directoryIterator);
+            /* If */
+            $directoryIsEmpty = ($directoryCount === 0 ? false : true);
+            return $directoryIsEmpty;
+        }
+        return null;
+    }
+
+    /**
+     * Returns an array of stored media properties for the media belonging to a specified display.
+     *
+     * @param $display string Name of the display whose media's properties are to be returned.
+     *
+     * @return array An array of each media's properties indexed by media's id.
+     */
+    public function sdmMediaDisplayLoadMediaObjectProperties($display, $addToCurrent = false)
+    {
+        /* Get directory listing of saved media for the current display. */
+        $savedMedia = $this->SdmCore->sdmCoreGetDirectoryListing("SdmMediaDisplays/displays/data/$display", 'apps');
+
+        /* Load media objects */
+        $mediaJson = array();
+
+        /* Load each media's json file and add stored json to $mediaJson array. */
+        foreach ($savedMedia as $mediaJsonFilename) {
+            /** @var  $badFileNames array  Array of files to ignore. @todo: could check file type instead or as well to insure only json files are loaded??? */
+            $badFileNames = array('.', '..', '.DS_Store');
+
+            /* Load media json, ignore $badFileNames*/
+            if (in_array($mediaJsonFilename, $badFileNames) === false) {
+
+                /* Load media from current displays data directory. */
+                $mediaJson[] = file_get_contents($this->SdmCore->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/data/' . $display . '/' . $mediaJsonFilename);
+            }
+        }
+
+        /* If $addToCurrent is set to true add the media to the current SdmMediaDisplay object. */
+        if ($addToCurrent === true) {
+            foreach ($mediaJson as $mediaObjectJson) {
+                /* Create new SdmMedia instance. */
+                $mediaObject = new parent;
+
+                /* Decode $mediaObject json. */
+                $mediaObjectProperties = json_decode($mediaObjectJson);
+
+                /* Set $mediaObject's properties based on properties defined in decoded $mediaObjectJson. */
+                foreach ($mediaObjectProperties as $mediaPropertyName => $mediaPropertyValue) {
+                    /* Set $mediaObject property. */
+                    $mediaObject->{$mediaPropertyName} = $mediaPropertyValue;
+                }
+
+                /* Add $mediaObject to current display */
+                $this->sdmMediaDisplayAddMediaObject($mediaObject);
+            }
+
+        }
+        /* Unpack media properties. */
+        $mediaProperties = array();
+
+        /* Decode each media's json to an array and add the resulting array to $mediaProperties array */
+        foreach ($mediaJson as $encodedMediaProperties) {
+            /* Decode media. */
+            $decodedMediaProperties = json_decode($encodedMediaProperties, true);
+
+            /* Add media properties array to $mediaProperties array. */
+            $mediaProperties[$decodedMediaProperties['sdmMediaId']] = $decodedMediaProperties;
+        }
+
+        /* Return media properties array. */
+        return $mediaProperties;
     }
 
     /**
@@ -193,188 +409,5 @@ class SdmMediaDisplay extends SdmMedia
     public function sdmMediaGetSdmMediaDisplayMediaElementsHtml()
     {
         return $this->sdmMediaDisplayMediaElementsHtml;
-    }
-
-    /**
-     * This method will order the media objects, load the template,
-     * and assigns the resulting html string to the sdmMediaDisplayHtml property.
-     */
-    public function sdmMediaDisplayBuildMediaDisplay()
-    {
-        /* Create an ordered array of this display's SdmMedia object's html. Array is ordered
-           by category, place, and finally display name. */
-        $this->sdmMediaDisplayBuildOrderedMediaObjectArray();
-
-        /* Load the display's template*/
-        $this->sdmMediaDisplayLoadDisplayTemplate();
-
-        return true; //@todo : return something more useful
-    }
-
-    /**/
-
-    /**
-     * Builds the ordered array of SdmMedia objects for the display.
-     *
-     * @return array Array of SdmMedia objects ordered by category, place, and display name respectively.
-     */
-    private function sdmMediaDisplayBuildOrderedMediaObjectArray()
-    {
-        /* Initialize $orderedMedia array. Organize Sdm Media Elements Html
-           categorically, by place, and finally by display name. */
-        $orderedMedia = array();
-        $mediaElementsHtml = $this->sdmMediaDisplayMediaElementsHtml;
-        $mediaObjects = $this->sdmMediaDisplayGetMediaObjects();
-        foreach ($mediaObjects as $mediaObject) {
-            /* Unpack media object properties */
-            $mediaProperties = get_object_vars($mediaObject);
-            $mediaCategory = $mediaProperties['sdmMediaCategory'];
-            $mediaPlace = $mediaProperties['sdmMediaPlace'];
-            /* Filter SdmMediaDisplay name so only it's alphanumeric characters are used. */
-            $mediaDisplayName = preg_replace("/[^a-zA-Z0-9]+/", " ", $mediaProperties['sdmMediaDisplayName']);
-            $mediaMachineName = $mediaProperties['sdmMediaMachineName'];
-            /* Assign SdmMedia objects html to the $orderedMedia array. Index by SdmMediaCategory,
-               SdmMediaPlace, and finally SdmMediaDisplayName */
-            $orderedMedia[$mediaCategory][$mediaPlace][$mediaDisplayName] = $mediaElementsHtml[$mediaMachineName];
-        }
-        /* Sort each level of the $orderedMedia array. */
-        $this->sdmMediaDisplaySortCategorizedMediaElements($orderedMedia);
-
-        /* Assign sorted $orderedMedia array to the $sdmMediaDisplayCategorizedMediaObjects property. */
-        $this->sdmMediaDisplayCategorizedMediaObjects = $orderedMedia;
-
-        return true; // @todo: return something more useful
-    }
-
-    /**
-     * Returns an array of the Sdm Media objects that belong to this display.
-     * @return array Array of Sdm Media objects that belong to this display.
-     */
-    public function sdmMediaDisplayGetMediaObjects()
-    {
-        return $this->sdmMediaDisplayMedia;
-    }
-
-    /**
-     * Sorts the $orderedMedia array created by sdmMediaDisplayBuildMediaDisplay()
-     * recursively.
-     *
-     * @param $orderedMedia array The $orderedMedia array created by sdmMediaDisplayBuildMediaDisplay().
-     *
-     * @return bool True if sort succeeded, otherwise false.
-     */
-    private function sdmMediaDisplaySortCategorizedMediaElements(&$orderedMedia)
-    {
-        foreach ($orderedMedia as &$arrayLevel) {
-            if (is_array($arrayLevel)) {
-                $this->sdmMediaDisplaySortCategorizedMediaElements($arrayLevel);
-            }
-        }
-        return ksort($orderedMedia);
-    }
-
-    /**
-     * Loads the display's template file.
-     */
-    private function sdmMediaDisplayLoadDisplayTemplate()
-    {
-        /* Build display based on template using an output buffer to capture the output of require_once() */
-        ob_start();
-        /* Store $this in local var so it can be accessed by template. */
-        $sdmMediaDisplay = $this;
-        $templateDirPath = str_replace('/includes', '', __DIR__) . '/displays/templates';
-        require_once($templateDirPath . '/' . $this->sdmMediaDisplayTemplate . '.php');
-        $this->sdmMediaDisplayHtml = ob_get_contents();
-        ob_end_clean();
-    }
-
-    /**
-     * Generates a media display for a template based on the current display's media objects.
-     * This method is meant to be called from within a Sdm Media Display template file.
-     * @param $function string|null If set, should be the name of a user defined function that will be called
-     *                              on each media element in the sdmMediaDisplayCategorizedMediaObjects array.
-     * @return string
-     */
-    public function sdmMediaDisplayGenerateMediaDisplay($function = null)
-    {
-        $display = array();
-        switch (isset($function) && function_exists($function)) {
-            case true:
-                foreach (new RecursiveIteratorIterator(new RecursiveArrayIterator($this->sdmMediaDisplayCategorizedMediaObjects)) as $media) {
-                    $display[] = call_user_func_array($function, array($media));;
-                }
-
-                break;
-            default:
-                foreach (new RecursiveIteratorIterator(new RecursiveArrayIterator($this->sdmMediaDisplayCategorizedMediaObjects)) as $media) {
-                    $display[] = PHP_EOL . $media . PHP_EOL;
-                }
-                break;
-
-        }
-
-        return implode('', $display);
-    }
-
-    /**
-     * Check if a directory is empty (a directory with just '.svn' or '.git' is empty)
-     *
-     * Used PHP's RecursiveDirectoryIterator
-     *
-     * Code adopted from last answer on Stackoverflow page @see http://stackoverflow.com/questions/7497733/how-can-use-php-to-check-if-a-directory-is-empty
-     *
-     * NOTE: Will return null if $display is not a directory.
-     *
-     * @param string $display The directory to check.
-     * @return bool True if directory is empty, false if it is not empty. Will return null if $display is not a directory.
-     */
-    public function sdmMediaDisplayHasMedia($display)
-    {
-        /* Create full path to display's data directory */
-        $displayDirectory = str_replace('/includes', '', __DIR__) . '/displays/data/' . $display;
-        /* Make sure $displayDirectory is in fact a displayDirectory. */
-        if (is_dir($displayDirectory) === true) {
-            /* Create new RecursiveDirectoryIterator, will be used to iterate through displayDirectory to see
-               whether or not it is empty. */
-            $directoryIterator = new RecursiveDirectoryIterator($displayDirectory, FilesystemIterator::SKIP_DOTS);
-            /* Count iterator, this number will reflect the number of items in the displayDirectory. */
-            $directoryCount = iterator_count($directoryIterator);
-            /* If */
-            $directoryIsEmpty = ($directoryCount === 0 ? false : true);
-            return $directoryIsEmpty;
-        }
-        return null;
-    }
-
-    /**
-     * Returns an array of stored media properties for the media belonging to a specified display.
-     *
-     * @param $display string Name of the display whose media's properties are to be returned.
-     *
-     * @return array An array of each media's properties indexed by media's id.
-     */
-    public function sdmMediaDisplayLoadMediaObjectProperties($display)
-    {
-        /* Get directory listing of saved media for the current display. */
-        $savedMedia = $this->SdmCore->sdmCoreGetDirectoryListing("SdmMediaDisplays/displays/data/$display", 'apps');
-
-        /* Load media objects */
-        $mediaJson = array();
-        foreach ($savedMedia as $mediaJsonFilename) {
-            $badFileNames = array('.', '..', '.DS_Store');
-            if (in_array($mediaJsonFilename, $badFileNames) === false) {
-                /* Load media from current displays data directory. */
-                $mediaJson[] = file_get_contents($this->SdmCore->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/data/' . $display . '/' . $mediaJsonFilename);
-            }
-        }
-
-        /* Unpack media properties. */
-        $mediaProperties = array();
-        foreach ($mediaJson as $encodedMediaProperties) {
-            /* Decode media. */
-            $decodedMediaProperties = json_decode($encodedMediaProperties, true);
-            $mediaProperties[$decodedMediaProperties['sdmMediaId']] = $decodedMediaProperties;
-        }
-        return $mediaProperties;
     }
 }

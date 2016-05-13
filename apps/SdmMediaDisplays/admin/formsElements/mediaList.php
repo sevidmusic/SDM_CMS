@@ -11,9 +11,10 @@ if ($sdmMediaDisplay->sdmMediaDisplayHasMedia($nameOfDisplayBeingEdited) === tru
     /* create display for admin panel */
     $mediaListDisplay = new SdmMediaDisplay($nameOfDisplayBeingEdited, $SdmCore);
 
-    /* Get Media Object properties for the diplay being edited. */
-    $displayMediaObjectProperties = $mediaListDisplay->sdmMediaDisplayLoadMediaObjectProperties($nameOfDisplayBeingEdited);
-
+    /* Get Media Object properties for the display being edited, and set $addToCurrent parameter to true so they
+       are added to the $mediaListDisplay. */
+    $displayMediaObjectProperties = $mediaListDisplay->sdmMediaDisplayLoadMediaObjectProperties($nameOfDisplayBeingEdited, true);
+    var_dump($mediaListDisplay->sdmMediaDisplayGetMediaObjects());
     /* Set initial row color to grey. Color will alternate between black and grey on each loop cycle. */
     $trColor = 'grey';
 
@@ -37,17 +38,24 @@ if ($sdmMediaDisplay->sdmMediaDisplayHasMedia($nameOfDisplayBeingEdited) === tru
         }
 
         /* Build table of media data from td elements. */
-        $mediaTable = "<table class='mediaInfoTable'><caption id='mediaListTableCaption'>$mediaObject->sdmMediaDisplayName</caption><tr>" . implode('', $mediaInfoTd['propertyNames']) . "</tr><tr>" . implode('', $mediaInfoTd['propertyValues']) . "</tr></table>";
+        $mediaTable = "
+            <table class='mediaInfoTable'>
+                <caption id='mediaListTableCaption'>$mediaObject->sdmMediaDisplayName</caption>
+                    <tr><td colspan='2'><img src='http://localhost:8888/TestingMedia/MyLight.jpg'></td></tr>
+                    <tr>" . implode('', $mediaInfoTd['propertyNames']) . "</tr>
+                    <tr>" . implode('', $mediaInfoTd['propertyValues']) . "</tr>
+            </table>
+            ";
 
         /* Create media */
         $mediaFormElementDescription = "
-        <!-- mediaId: $mediaObject->sdmMediaId | mediaDisplayName: $mediaObject->sdmMediaDisplayName -->
-        <div id='$mediaObject->sdmMediaId' class='sdmMediaDisplayAdminMediaList'>
-            $mediaTable
-        </div><div style='clear: both;'></div>
-        <div id='mediaTableRadioText'>Select Media \"$mediaObject->sdmMediaDisplayName\"</div>
-        <!-- End mediaId: $mediaObject->sdmMediaId | mediaDisplayName: $mediaObject->sdmMediaDisplayName -->
-        ";
+            <!-- mediaId: $mediaObject->sdmMediaId | mediaDisplayName: $mediaObject->sdmMediaDisplayName -->
+            <div id='$mediaObject->sdmMediaId' class='sdmMediaDisplayAdminMediaList'>
+                $mediaTable
+            </div><div style='clear: both;'></div>
+            <div id='mediaTableRadioText'>Select Media \"$mediaObject->sdmMediaDisplayName\"</div>
+            <!-- End mediaId: $mediaObject->sdmMediaId | mediaDisplayName: $mediaObject->sdmMediaDisplayName -->
+            ";
         $mediaFormValues[$mediaFormElementDescription] = $mediaObject->sdmMediaId;
     }
 
