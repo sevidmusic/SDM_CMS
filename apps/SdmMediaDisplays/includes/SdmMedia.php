@@ -90,13 +90,36 @@ class SdmMedia implements JsonSerializable
      * will display this Sdm Media object in public and private Sdm Media Display views.
      */
     protected $sdmMediaPublic;
-
     /** @var $sdmMediaPlace int An integer that will be used to determine this SdmMedia objects place in
      *       the SdmMediaDisplay.
      */
     protected $sdmMediaPlace;
     /** @var  $sdmMediaCategory string The name of the category to sort this SdmMedia object by in the SdmMediaDisplay. */
     protected $sdmMediaCategory;
+
+    /**
+     * @param mixed $sdmMediaMachineName
+     */
+    public function sdmMediaSetMachineName($sdmMediaMachineName)
+    {
+        $this->sdmMediaMachineName = $sdmMediaMachineName;
+    }
+
+    /**
+     * @param string $sdmMediaSourceName
+     */
+    public function sdmMediaSetSourceName($sdmMediaSourceName)
+    {
+        $this->sdmMediaSourceName = $sdmMediaSourceName;
+    }
+
+    /**
+     * @param string $sdmMediaSourceExtension
+     */
+    public function sdmMediaSetSourceExtension($sdmMediaSourceExtension)
+    {
+        $this->sdmMediaSourceExtension = $sdmMediaSourceExtension;
+    }
 
     /**
      * @return int
