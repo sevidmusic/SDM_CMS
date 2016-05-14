@@ -20,6 +20,10 @@ if ($adminMode === 'saveMedia') {
         $newMediaPropertyValues[$submittedEditMediaFormKey] = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue($submittedEditMediaFormKey);
     }
 
+
+    /* Load file upload handler. */
+    require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/formHandlers/fileUploadHandler.php');
+
     /* Create new SdmMedia() object instance. */
     $updateMediaObject = new SdmMedia();
 
