@@ -17,7 +17,32 @@ if ($adminMode === 'saveMedia') {
     /* Add each submitted form value to the $newMediaPropertyValues array. It's ok if values unrelated to the SdmMedia object
        are included because they will simply be ignored on creation of new SdmMedia() object. */
     foreach ($submittedEditMediaFormValues as $submittedEditMediaFormKey => $submittedEditMediaFormValue) {
-        $newMediaPropertyValues[$submittedEditMediaFormKey] = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue($submittedEditMediaFormKey);
+        switch ($submittedEditMediaFormKey) {
+            case 'sdmMediaSourceUrl':
+                /* If sdmMediaSourceType is local, enforce local url, otherwise use supplied. */
+                $newMediaPropertyValues[$submittedEditMediaFormKey] = ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('sdmMediaSourceType') === 'local' ? $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/apps/SdmMediaDisplays/displays/media' : $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue($submittedEditMediaFormKey));//$sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue($submittedEditMediaFormKey);
+                break;
+            case 'sdmMediaId':
+                /**
+                 * Generate new random 20 character numeric id for media objects every time they are edited.
+                 * This is ok because the json file and the relative media file are updated each time media
+                 * is edited.
+                 */
+                $newMediaPropertyValues[$submittedEditMediaFormKey] = rand(1000, 9999) . rand(100, 999) . rand(1, 9999) . rand(1000, 9999) . rand(10000, 99999);
+                break;
+            case 'sdmMediaProtected':
+            case 'sdmMediaPublic':
+                /* For now enforce public and protected using false since these properties
+                   have not yet been implemented. */
+                $newMediaPropertyValues[$submittedEditMediaFormKey] = false;
+                break;
+            default:
+                /* Use submitted value without special processing. */
+                $newMediaPropertyValues[$submittedEditMediaFormKey] = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue($submittedEditMediaFormKey);
+                break;
+        }
+
+        //var_dump($submittedEditMediaFormKey . ' | ' . $newMediaPropertyValues[$submittedEditMediaFormKey]);
     }
 
     /* Load file upload handler. | WARNING: $newMediaPropertyValues must be defined before loading form handler!!! */
@@ -42,10 +67,15 @@ if ($adminMode === 'saveMedia') {
     /* Create new media object from new media property values. */
     $newMediaObject = $updateMediaObject->sdmMediaCreateMediaObject($newMediaPropertyValues);
 
-    /* Set media source name */
+    /** Set Properties that rely on file upload handler. **/
+
+    /* Set media source name based on uploaded file name */
     $newMediaObject->sdmMediaSetSourceName($safeFileName);
 
-    /* Set media source extension */
+    /* Set media source id based on uploaded file name */
+    //$newMediaObject->sdmMediaSetMediaId($safeFileName);
+
+    /* Set media source extension based on uploaded file name */
     $fileExtension = substr($fileName, -3);
     $newMediaObject->sdmMediaSetSourceExtension($fileExtension);
 
