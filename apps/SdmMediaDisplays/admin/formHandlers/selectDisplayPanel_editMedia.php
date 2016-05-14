@@ -73,25 +73,24 @@ if ($adminMode === 'saveMedia') {
     $newMediaObject->sdmMediaSetSourceName($safeFileName);
 
     /* Set media source id based on uploaded file name */
-    //$newMediaObject->sdmMediaSetMediaId($safeFileName);
+    $newMediaObject->sdmMediaSetId($safeFileName);
 
     /* Set media source extension based on uploaded file name */
     $fileExtension = substr($fileName, -3);
     $newMediaObject->sdmMediaSetSourceExtension($fileExtension);
 
-    /* Convert display name to camel case and set as machine name */
+    /* Convert media display name to camel case and set as machine name */
     $camelCaseFileName = str_replace(' ', '', ucfirst(preg_replace("/[^a-z]+/i", "", $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('sdmMediaDisplayName'))));
 
     /* Set  media machine name */
     $newMediaObject->sdmMediaSetMachineName($camelCaseFileName);
 
-    var_dump($newMediaObject);
-
     /* Json encode new media object to prepare for storage. */
     $newMediaObjectJson = json_encode($newMediaObject);
 
     /* Save new media object  */
-    // var_dump($newMediaObject, $newMediaObjectJson);
+    //var_dump($newMediaObject, $newMediaObjectJson);
+    file_put_contents($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/data/' . $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit') . '/' . $safeFileName . '.json', $newMediaObjectJson);
 
     /* Added confirmation message to panel description. */
     $panelDescription .= '<p>Saved changes to media "' . $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('sdmMediaDisplayName') . '".</p>';

@@ -114,6 +114,14 @@ class SdmMedia implements JsonSerializable
     }
 
     /**
+     * @param string $sdmMediaSetId
+     */
+    public function sdmMediaSetId($sdmMediaId)
+    {
+        $this->sdmMediaId = $sdmMediaId;
+    }
+
+    /**
      * @param string $sdmMediaSourceExtension
      */
     public function sdmMediaSetSourceExtension($sdmMediaSourceExtension)
