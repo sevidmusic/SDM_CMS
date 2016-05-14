@@ -518,6 +518,9 @@ class SdmCore
      */
     final public function sdmCoreSdmReadArray($variable, $sub = false, $parent = '')
     {
+        if ($this->sdmCoreSdmReadArrayGetVarName($variable) !== false) {
+            echo('<div style="text-align: center">$' . $this->sdmCoreSdmReadArrayGetVarName($variable) . '</div>');
+        }
         $style = 'border:1px dashed limegreen;border-radius:3px;margin:25px;padding:12px;width:90%;overflow:auto;background:#000000;color:#ffffff;';
         echo '<div style="' . $style . '">';
         echo($sub === false ? '' : "<i style='color:#00CCFF;'>{$parent} (<i style='color:aqua;'>" . gettype($variable) . "</i>) <span style='color:#00BB00;font-size:.7em;'>Element Count: " . count($variable) . "</span> => </i>");
@@ -543,6 +546,29 @@ class SdmCore
         }
         echo '</div>';
         return true;
+    }
+
+    /**
+     * Looks up the name of a variable by it's value in the $GLOBALS array.
+     *
+     * Based on code from stack overflow @see http://stackoverflow.com/questions/255312/how-to-get-a-variable-name-as-a-string-in-php
+     * NOTE: There is a small risk if two vars have the same value that the wrong
+     *       index in the $GLOBALS array will be returned as the variable name.
+     *       Do not rely on this, it is meant to provide information, not to be used
+     *       for testing, development, type or value checks, or any important logic.
+     *
+     * @param $variableValue The value of the variable whose name should be returned.
+     * @return bool|int|string The name of the variable, or false on failure.
+     */
+    final private function sdmCoreSdmReadArrayGetVarName($variableValue)
+    {
+        foreach ($GLOBALS as $var_name => $value) {
+            if ($value === $variableValue) {
+                return $var_name;
+            }
+        }
+
+        return false;
     }
 
     /**
