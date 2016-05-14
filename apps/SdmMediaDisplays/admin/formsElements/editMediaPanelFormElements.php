@@ -40,7 +40,9 @@ if ($currentPanel === 'editMediaPanel') {
                 $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaType', 'select', 'Select the media\'s type.', $sdmMediaDisplaysAdminForm->sdmFormSetDefaultInputValues(array('Image' => 'image', 'Audio' => 'audio', 'Video' => 'video', 'Youtube Video' => 'youtube', 'HTML5 Canvas Image/Animation (Javascript file for HTML5 canvas tag)' => 'canvas',), $mediaToEditProperties['sdmMediaType']), 7),
                 // hidden elements
                 $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaId', 'hidden', '', $mediaToEditProperties['sdmMediaId'], 420),
-                $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaSourcePath', 'hidden', '', $mediaToEditProperties['sdmMediaSourcePath'], 421),
+                // for now, enforce local path
+                $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaSourcePath', 'hidden', '', $sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/media', 421),
+                //$sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaSourcePath', 'hidden', '', $mediaToEditProperties['sdmMediaSourcePath'], 421),
                 $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaProtected', 'hidden', '', $mediaToEditProperties['sdmMediaProtected'], 422),
                 $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaPublic', 'hidden', '', $mediaToEditProperties['sdmMediaPublic'], 423),
             );
