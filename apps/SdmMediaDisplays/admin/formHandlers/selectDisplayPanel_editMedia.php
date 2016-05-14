@@ -8,6 +8,28 @@
 
 if ($adminMode === 'saveMedia') {
 
+    /* Load file upload handler if a file was submitted. */
+    if ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('sdmMediaFile') !== null) {
+        require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/formHandlers/fileUploadHandler.php');
+
+        /** Unpack vars from file upload handler **/
+
+        /* Upload status */
+        $uploadStatus = $fileUploadStatus;
+
+        /* Path file was uploaded to/ */
+        $fileSavedToPath = $savePath;
+
+        /* The unique file name generated on file upload. */
+        $fileName = $uniqueFileName;
+
+        /* Generate a save file name to be used as the sdmMediaSourceName and as the name of the json and media
+           files that are created for this media object. */
+        $safeFileName = substr($uniqueFileName, 0, strpos($uniqueFileName, '.'));
+        var_dump('File uploaded: ' . $uploadStatus, 'File uploaded to path: ' . $fileSavedToPath, 'File uploaded using name: ' . $fileName);
+
+    }
+
     /* Get submitted form values */
     $submittedEditMediaFormValues = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('all');
 
@@ -20,7 +42,7 @@ if ($adminMode === 'saveMedia') {
         switch ($submittedEditMediaFormKey) {
             case 'sdmMediaSourceUrl':
                 /* If sdmMediaSourceType is local, enforce local url, otherwise use supplied. */
-                $newMediaPropertyValues[$submittedEditMediaFormKey] = ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('sdmMediaSourceType') === 'local' ? $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/apps/SdmMediaDisplays/displays/media' : $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue($submittedEditMediaFormKey));//$sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue($submittedEditMediaFormKey);
+                $newMediaPropertyValues[$submittedEditMediaFormKey] = ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('sdmMediaSourceType') === 'local' ? $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/apps/SdmMediaDisplays/displays/media' : $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue($submittedEditMediaFormKey));
                 break;
             case 'sdmMediaId':
                 /**
@@ -41,25 +63,7 @@ if ($adminMode === 'saveMedia') {
                 $newMediaPropertyValues[$submittedEditMediaFormKey] = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue($submittedEditMediaFormKey);
                 break;
         }
-
-        //var_dump($submittedEditMediaFormKey . ' | ' . $newMediaPropertyValues[$submittedEditMediaFormKey]);
     }
-
-    /* Load file upload handler. | WARNING: $newMediaPropertyValues must be defined before loading form handler!!! */
-    require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/formHandlers/fileUploadHandler.php');
-
-    /** Unpack vars from file upload handler **/
-
-    /* Upload status */
-    $uploadStatus = $fileUploadStatus;
-
-    /* Path file was uploaded to/ */
-    $fileSavedToPath = $savePath;
-
-    /* The unique file name generated on file upload. */
-    $fileName = $uniqueFileName;
-    $safeFileName = substr($uniqueFileName, 0, strpos($uniqueFileName, '.'));
-    var_dump('File uploaded: ' . $uploadStatus, 'File uploaded to path: ' . $fileSavedToPath, 'File uploaded using name: ' . $fileName);
 
     /* Create new SdmMedia() object instance. */
     $updateMediaObject = new SdmMedia();
@@ -89,7 +93,7 @@ if ($adminMode === 'saveMedia') {
     $newMediaObjectJson = json_encode($newMediaObject);
 
     /* Save new media object  */
-    //var_dump($newMediaObject, $newMediaObjectJson);
+    var_dump($newMediaObject, $newMediaObjectJson);
     file_put_contents($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/data/' . $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit') . '/' . $safeFileName . '.json', $newMediaObjectJson);
 
     /* Added confirmation message to panel description. */
