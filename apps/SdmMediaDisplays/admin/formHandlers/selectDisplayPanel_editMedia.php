@@ -34,7 +34,7 @@ if ($adminMode === 'saveMedia') {
     $newMediaObjectJson = json_encode($newMediaObject);
 
     /* Save new media object  */
-    var_dump($newMediaObject, $newMediaObjectJson);
+    // var_dump($newMediaObject, $newMediaObjectJson);
 
     /* Added confirmation message to panel description. */
     $panelDescription .= '<p>Saved changes to media "' . $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('sdmMediaDisplayName') . '".</p>';

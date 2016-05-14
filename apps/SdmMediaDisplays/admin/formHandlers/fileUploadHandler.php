@@ -18,28 +18,52 @@
  */
 
 try {
-    /* If file error is unset or if it is an array this request is suspicious. HTTP headers may have
-       have been compromised, do not process! */
+    /* Define valid white list of media types */
+    $validTypes = array(
+        'jpg' => 'image/jpeg',
+        'png' => 'image/png',
+        'gif' => 'image/gif',
+        'json' => 'application/json',
+        'js' => 'application/js',
+        'mp3' => 'audio/mp3',
+        'aiff' => 'audio/aiff',
+        'ogg' => 'audio/ogg',
+        'oga' => 'audio/oga',
+        'mov' => 'video/quicktime',
+        'mp4' => 'video/mp4',
+    );
 
-    // dev
-    $sdmassembler->sdmCoreSdmReadArray(['Error Number (0 is ok):' => $_FILES['SdmForm']['error']['sdmMediaFile']]);
-    // end dev
+    /* Report progress to media upload log. */
+    $sdmMediaUploadLog .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['$validTypes' => $validTypes]) . PHP_EOL;
 
+    /* Report progress to media upload log. */
+    $sdmMediaUploadLog = $sdmassembler->sdmCoreSdmReadArrayBuffered(['$_FILE' => $_FILES]) . PHP_EOL;
+
+    /* Check if $_FILES['SdmForm']['error']['sdmMediaFile'] is unset. */
     $errorsValueSet = isset($_FILES['SdmForm']['error']['sdmMediaFile']);
 
-    // dev
-    $sdmassembler->sdmCoreSdmReadArray(['$errorsValueSet' => $errorsValueSet]);
-    // end dev
+    /* Report progress to media upload log. */
+    $sdmMediaUploadLog .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['$errorsValueSet' => $errorsValueSet]) . PHP_EOL;
 
+    /* Check if $_FILES['SdmForm']['error']['sdmMediaFile'] is an array. */
     $errorsValueManipulated = is_array($_FILES['SdmForm']['error']['sdmMediaFile']);
 
-    // dev
-    $sdmassembler->sdmCoreSdmReadArray(['$errorsValueManipulated' => $errorsValueManipulated]);
-    // end dev
+    /* Report progress to media upload log. */
+    $sdmMediaUploadLog .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['$errorsValueManipulated' => $errorsValueManipulated]) . PHP_EOL;
 
+    /* If $_FILES['SdmForm']['error']['sdmMediaFile'] is unset or if it is an array this request is
+       suspicious. HTTP headers may have have been compromised, do not process! */
     if ($errorsValueSet === false || $errorsValueManipulated === true) {
+        /* Temporarily block user from using the page, and show a message warning them not to hack or pentest. */
         echo '<div style="padding:42px;color: red;font-size:5em;background: #000000; opacity: 1; width: 100%; height: 25000px; z-index:1000;position: absolute; top: 0px; left:0px;">NO HACKING!<br>NO PENTESTING WITHOUT PERMISSION!!!</div>';
-        throw new RuntimeException('SdmMediaDisplay Upload Error: Invalid or corrupted parameters.');
+        $possibleAttackMessage = '<p>SdmMediaDisplay Upload Error: Invalid or corrupted parameters. Possible security breach! It is suggested that you
+        review the SdmMediaDisplay file upload log to try and identify if a breach has in fact occured.</p>
+        <p>You should review the Sdm Media Display upload log, and then review the media files that were uploaded
+         and check that the files are in fact the type of media they claim to be. Whether the files are valid or
+         not depends on the whitelist of media types which currently defines the following valid types: ' . implode(', ', $validTypes) . '.</p>
+         <p>However, some attacks may get past the white list which is why you need to manually go through the media files and make sure they
+         are what they claim to be.</p>' . PHP_EOL;
+        throw new RuntimeException($possibleAttackMessage);
         /* Stop file upload script */
         exit;
     }
@@ -49,12 +73,12 @@ try {
         case UPLOAD_ERR_OK:
             break;
         case UPLOAD_ERR_NO_FILE:
-            throw new RuntimeException('SdmMediaDisplay Upload Error: No file sent.');
+            throw new RuntimeException('SdmMediaDisplay Upload Error: No file sent.' . PHP_EOL);
         case UPLOAD_ERR_INI_SIZE:
         case UPLOAD_ERR_FORM_SIZE:
-            throw new RuntimeException('SdmMediaDisplay Upload Error: Exceeded filesize limit.');
+            throw new RuntimeException('SdmMediaDisplay Upload Error: Exceeded filesize limit.' . PHP_EOL);
         default:
-            throw new RuntimeException('SdmMediaDisplay Upload Error: Unknown errors.');
+            throw new RuntimeException('SdmMediaDisplay Upload Error: Unknown errors.' . PHP_EOL);
     }
 
     /*  Insure file size is not to large and file size not to small.
@@ -72,30 +96,26 @@ try {
      */
     $maxSize = 1000000; // 1000000 === 1000 kilobytes | 1000000 === 1 megabytes
 
-    // dev
-    $sdmassembler->sdmCoreSdmReadArray(['$maxSize' => $maxSize]);
-    // end dev
+    /* Report progress to media upload log. */
+    $sdmMediaUploadLog .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['$maxSize' => $maxSize]) . PHP_EOL;
 
 
     $maxSizeMultiplier = 32;
 
-    // dev
-    $sdmassembler->sdmCoreSdmReadArray(['$maxSizeMultiplier' => $maxSizeMultiplier]);
-    // end dev
+    /* Report progress to media upload log. */
+    $sdmMediaUploadLog .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['$maxSizeMultiplier' => $maxSizeMultiplier]) . PHP_EOL;
 
 
     $minSize = 1000; // 1000 === 1 kilobyte | 1000 = 0.001 megabytes
 
-    // dev
-    $sdmassembler->sdmCoreSdmReadArray(['$minSize' => $minSize]);
-    // end dev
+    /* Report progress to media upload log. */
+    $sdmMediaUploadLog .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['$minSize' => $minSize]) . PHP_EOL;
 
 
     $minSizeMultiplier = 1;
 
-    // dev
-    $sdmassembler->sdmCoreSdmReadArray(['$minSizeMultiplier' => $minSizeMultiplier]);
-    // end dev
+    /* Report progress to media upload log. */
+    $sdmMediaUploadLog .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['$minSizeMultiplier' => $minSizeMultiplier]) . PHP_EOL;
 
 
     /* Get uploaded file size | Kinda sucks to have to rely on http headers here, but
@@ -106,11 +126,11 @@ try {
     */
     $uploadedFileSize = $_FILES['SdmForm']['size']['sdmMediaFile'];
 
-    // dev
-    $sdmassembler->sdmCoreSdmReadArray(['$uploadedFileSize' => $uploadedFileSize]);
-    // end dev
+    /* Report progress to media upload log. */
+    $sdmMediaUploadLog .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['$uploadedFileSize' => $uploadedFileSize]) . PHP_EOL;
 
 
+    /* Make sure file is not to big or to small. */
     if ($uploadedFileSize > ($maxSize * $maxSizeMultiplier) && $uploadedFileSize < ($minSize * $minSizeMultiplier)) {
         throw new RuntimeException('SdmMediaDisplay Upload Error: Exceeded filesize limit.');
     }
@@ -124,51 +144,27 @@ try {
      */
     $loadedFilesInfo = new finfo(FILEINFO_MIME_TYPE);
 
-    // dev
-    $sdmassembler->sdmCoreSdmReadArray(['$loadedFilesInfo' => $loadedFilesInfo]);
-    // end dev
-
-
-    $validTypes = array(
-        'jpg' => 'image/jpeg',
-        'png' => 'image/png',
-        'gif' => 'image/gif',
-        'json' => 'application/json',
-        'js' => 'application/js',
-        'mp3' => 'audio/mp3',
-        'aiff' => 'audio/aiff',
-        'ogg' => 'audio/ogg',
-        'oga' => 'audio/oga',
-        'mov' => 'video/quicktime',
-        'mp4' => 'video/mp4',
-    );
-
-
-    // dev
-    $sdmassembler->sdmCoreSdmReadArray(['$validTypes' => $validTypes]);
-    // end dev
-
+    /* Report progress to media upload log. */
+    $sdmMediaUploadLog .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['$loadedFilesInfo' => $loadedFilesInfo]) . PHP_EOL;
 
     /* Determine uploaded files type. */
     $uploadedFilesType = $loadedFilesInfo->file($_FILES['SdmForm']['tmp_name']['sdmMediaFile']);
 
-    // dev
-    $sdmassembler->sdmCoreSdmReadArray(['$uploadedFilesType' => $uploadedFilesType]);
-    // end dev
+    /* Report progress to media upload log. */
+    $sdmMediaUploadLog .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['$uploadedFilesType' => $uploadedFilesType]) . PHP_EOL;
 
 
     /* Check if file type/extension matches a valid file type, if it does use it, otherwise
        $validFileExt will be set to false. */
     $validFileExt = array_search($uploadedFilesType, $validTypes, true);
 
-    // dev
-    $sdmassembler->sdmCoreSdmReadArray(['$validFileExt' => $validFileExt]);
-    // end dev
+    /* Report progress to media upload log. */
+    $sdmMediaUploadLog .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['$validFileExt' => $validFileExt]) . PHP_EOL;
 
 
     /* If file type is not valid throw an error. */
     if ($validFileExt === false) {
-        throw new RuntimeException('SdmMediaDisplay Upload Error: Invalid file format.');
+        throw new RuntimeException('SdmMediaDisplay Upload Error: Invalid file format.' . PHP_EOL);
     }
 
     /**
@@ -187,33 +183,38 @@ try {
     $uniqueFileName = sprintf('%s.%s', sha1_file($_FILES['SdmForm']['tmp_name']['sdmMediaFile']), $validFileExt);
 
 
-    // dev
-    $sdmassembler->sdmCoreSdmReadArray(['$uniqueFileName' => $uniqueFileName]);
-    // end dev
+    /* Report progress to media upload log. */
+    $sdmMediaUploadLog .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['$uniqueFileName' => $uniqueFileName]);
 
-
+    /* Media file save path. */
     $savePath = $sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/media';
 
-    // dev
-    $sdmassembler->sdmCoreSdmReadArray(['$savePath' => $savePath]);
-    // end dev
-
+    /* Report progress to media upload log. */
+    $sdmMediaUploadLog .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['$savePath' => $savePath]) . PHP_EOL;
 
     /* Attempt to upload and save the file, throw an error if upload fails. */
-    if (!move_uploaded_file($_FILES['SdmForm']['tmp_name']['sdmMediaFile'], $savePath . '/' . $uniqueFileName)) {
+    if (move_uploaded_file($_FILES['SdmForm']['tmp_name']['sdmMediaFile'], $savePath . '/' . $uniqueFileName) !== false) {
+        /* upload succeed. */
+        $fileUploadSuccessMessage = 'Sdm Media Displays File Upload Status: File was uploaded successfully.' . PHP_EOL;
+        /* Report to upload log */
+        $sdmMediaUploadLog .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['Upload Status' => $fileUploadSuccessMessage]);
+        $fileUploadStatus = true;
+    } else {
+        $fileUploadStatus = false;
         throw new RuntimeException('SdmMediaDisplay Upload Error: Failed to move uploaded file.');
     }
-    /* upload succeed. */
-    $fileUploadOutput .= 'File is uploaded successfully.';
-
-    // dev
-    $sdmassembler->sdmCoreSdmReadArray(['$fileUploadOutput' => $fileUploadOutput]);
-    // end dev
-
 
 } catch (RuntimeException $e) {
-
-    /* Catch and log any error messages and assign to $fileUploadOutput. */
-    error_log($e->getMessage());
-
+    /* Catch any error messages, log error message to core error log, and assign to $errorMessages. */
+    $errorMessages = $e->getMessage();
+    error_log($errorMessages);
 }
+
+$sdmMediaUploadLogMessage = (isset($errorMessages) ? $errorMessages . PHP_EOL : 'File Uploaded without any errors.') . $sdmMediaUploadLog;
+
+/* Create message to user based on failure or success*/
+$fileUploadStatusUserDisplayMessage = (isset($errorMessages) ? $errorMessages : $fileUploadSuccessMessage);
+
+/* Log upload. */
+file_put_contents($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/logs/sdmMediaDisplayLog_' . time() . '.html', $sdmMediaUploadLogMessage);
+
