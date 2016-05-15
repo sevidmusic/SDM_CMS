@@ -190,9 +190,6 @@ try {
     /* Report progress to media upload log. */
     $sdmMediaUploadLog .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['$uniqueFileName' => $uniqueFileName]);
 
-    /* Media file save path. */
-    //$savePath = $sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/media';
-
     /* Report progress to media upload log. */
     $sdmMediaUploadLog .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['$savePath' => $savePath]) . PHP_EOL;
 
@@ -216,7 +213,6 @@ try {
 
 /* If not set, use original value, if original value not set use random number. */
 if (!isset($uniqueFileName)) {
-    var_dump($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('sdmMediaSourceName'));
     if ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('sdmMediaSourceName') !== null) {
         $uniqueFileName = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('sdmMediaSourceName') . '.' . $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('sdmMediaSourceExtension');
     } else {
