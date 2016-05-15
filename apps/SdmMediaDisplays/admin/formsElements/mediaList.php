@@ -8,7 +8,7 @@
 
 /* If there the display's directory has media in it load it and build a radio form element for each piece of media. */
 if ($sdmMediaDisplay->sdmMediaDisplayHasMedia($nameOfDisplayBeingEdited) === true && $currentPanel === 'mediaCrudPanel') {
-    /* create display for admin panel */
+    /* create display for mediaList panel */
     $mediaListDisplay = new SdmMediaDisplay($nameOfDisplayBeingEdited, $SdmCore);
 
     /* Get Media Object properties for the display being edited, and set $addToCurrent parameter to true so they

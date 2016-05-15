@@ -6,14 +6,33 @@
  * Time: 4:42 AM
  */
 
-/* Get media id. */
-$mediaToDeltesId = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('selectMediaToEdit');
+if ($adminMode === 'deleteMedia' && $currentPanel === 'deleteMediaPanel') {
+    /* create display for deleteMedia panel */
+    $deleteMediaDisplay = new SdmMediaDisplay($nameOfDisplayBeingEdited, $SdmCore);
 
-/* Determine media path */
-$mediaPath = $sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays';
+    /* Get Media Object properties for the display being edited, and set $addToCurrent parameter to true so they
+       are added to the $deleteMediaDisplay. */
+    $deleteMediaDisplayObjectProperties = $deleteMediaDisplay->sdmMediaDisplayLoadMediaObjectProperties($nameOfDisplayBeingEdited, true);
 
-/* Determine media json path */
-$mediaJsonPath = $sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/data/' . $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit');
+    /* Get media id. */
+    $mediaToDeletesId = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('selectMediaToEdit');
 
-/* DEV */
-var_dump($mediaToDeltesId, $mediaPath, $mediaJsonPath);
+    /* Determine media path */
+    $mediaPath = $deleteMediaDisplayObjectProperties[$mediaToDeletesId]['sdmMediaSourcePath'];
+
+    /* Determine media json path */
+    $mediaJsonPath = str_replace('media', 'data/' . $nameOfDisplayBeingEdited, $mediaPath);
+    var_dump($mediaJsonPath);
+
+    /* Determinre meda source extension */
+    $mediaToDeletesSourceExtension = $deleteMediaDisplayObjectProperties[$mediaToDeletesId]['sdmMediaSourceExtension'];
+    /* */
+    array_push($sdmMediaDisplayAdminPanelFormElements['deleteMediaPanel'], $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaId', 'hidden', '', $mediaToDeletesId, 422));
+    array_push($sdmMediaDisplayAdminPanelFormElements['deleteMediaPanel'], $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaSourcePath', 'hidden', '', $mediaPath, 423));
+    array_push($sdmMediaDisplayAdminPanelFormElements['deleteMediaPanel'], $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('mediaJsonPath', 'hidden', '', $mediaJsonPath, 424));
+    array_push($sdmMediaDisplayAdminPanelFormElements['deleteMediaPanel'], $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaSourceExtension', 'hidden', '', $mediaToDeletsSourceExtension, 425));
+
+    /* DEV */
+    var_dump($mediaToDeletesId, $mediaPath, $mediaJsonPath, /*$sdmMediaDisplayAdminPanelFormElements['deleteMediaPanel'], */
+        $deleteMediaDisplayObjectProperties[$mediaToDeletesId]);
+}
