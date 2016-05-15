@@ -40,7 +40,7 @@ $sdmMediaDisplayAdminPanelButtons = array(
     'mediaCrudPanel' => array(
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_addMedia', 'panel', 'editMediaPanel_addMedia', 'Add Media', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_deleteMedia', 'panel', 'deleteMediaPanel_deleteMedia', 'Delete Selected', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
-        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_saveContinue', 'panel', 'mediaCrudPanel_saveContinue', 'Save and Continue', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
+        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_saveContinue', 'panel', 'mediaCrudPanel_saveContinue', 'Refresh Panel', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_saveFinish', 'panel', 'displayCrudPanel_saveFinish', 'Save and Finish', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
     ),
     'deleteMediaPanel' => array(
