@@ -30,7 +30,7 @@ try {
         'ogg' => 'audio/ogg',
         'oga' => 'audio/oga',
         'mov' => 'video/quicktime',
-        'mp4' => 'video/mp4',
+        'm4v' => 'video/mp4',
     );
 
     /* Report progress to media upload log. */
@@ -100,7 +100,7 @@ try {
     $sdmMediaUploadLog .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['$maxSize' => $maxSize]) . PHP_EOL;
 
 
-    $maxSizeMultiplier = 32;
+    $maxSizeMultiplier = 1000; // set to 1 GB so video to accommodate large audio and video.
 
     /* Report progress to media upload log. */
     $sdmMediaUploadLog .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['$maxSizeMultiplier' => $maxSizeMultiplier]) . PHP_EOL;

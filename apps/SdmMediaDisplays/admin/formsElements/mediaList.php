@@ -50,7 +50,7 @@ if ($sdmMediaDisplay->sdmMediaDisplayHasMedia($nameOfDisplayBeingEdited) === tru
             </table>
             ";
 
-        /* Create media */
+        /* Create media list element description */
         $mediaFormElementDescription = "
             <!-- mediaId: $mediaObject->sdmMediaId | mediaDisplayName: $mediaObject->sdmMediaDisplayName -->
             <div id='$mediaObject->sdmMediaId' class='sdmMediaDisplayAdminMediaList'>
@@ -63,5 +63,5 @@ if ($sdmMediaDisplay->sdmMediaDisplayHasMedia($nameOfDisplayBeingEdited) === tru
     }
 
     /* Create radio from element to allow selection of a piece of media for editing or deletion. */
-    array_push($sdmMediaDisplayAdminPanelFormElements['mediaCrudPanel'], $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('selectMediaToEdit', 'radio', '', $mediaFormValues, 20, array('labelTag' => 'div', 'style' => 'width:14px;')));
+    array_push($sdmMediaDisplayAdminPanelFormElements['mediaCrudPanel'], $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('selectMediaToEdit', 'radio', '', $sdmMediaDisplaysAdminForm->sdmFormSetDefaultInputValues($mediaFormValues, $mediaObject->sdmMediaId), 20, array('labelTag' => 'div', 'style' => 'width:14px;')));
 }

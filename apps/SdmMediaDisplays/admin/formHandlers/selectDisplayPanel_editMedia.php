@@ -7,28 +7,25 @@
  */
 
 if ($adminMode === 'saveMedia') {
-
     /* Load file upload handler if a file was submitted. */
-    if ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('sdmMediaFile') !== null) {
-        require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/formHandlers/fileUploadHandler.php');
+    require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/formHandlers/fileUploadHandler.php');
 
-        /** Unpack vars from file upload handler **/
+    /** Unpack vars from file upload handler **/
 
-        /* Upload status */
-        $uploadStatus = $fileUploadStatus;
+    /* Upload status */
+    $uploadStatus = $fileUploadStatus;
 
-        /* Path file was uploaded to/ */
-        $fileSavedToPath = $savePath;
+    /* Path file was uploaded to/ */
+    $fileSavedToPath = $savePath;
 
-        /* The unique file name generated on file upload. */
-        $fileName = $uniqueFileName;
+    /* The unique file name generated on file upload. */
+    $fileName = $uniqueFileName;
 
-        /* Generate a save file name to be used as the sdmMediaSourceName and as the name of the json and media
-           files that are created for this media object. */
-        $safeFileName = substr($uniqueFileName, 0, strpos($uniqueFileName, '.'));
-        var_dump('File uploaded: ' . $uploadStatus, 'File uploaded to path: ' . $fileSavedToPath, 'File uploaded using name: ' . $fileName);
+    /* Generate a save file name to be used as the sdmMediaSourceName and as the name of the json and media
+       files that are created for this media object. */
+    $safeFileName = substr($uniqueFileName, 0, strpos($uniqueFileName, '.'));
+    var_dump('File uploaded: ' . $uploadStatus, 'File uploaded to path: ' . $fileSavedToPath, 'File uploaded using name: ' . $fileName);
 
-    }
 
     /* Get submitted form values */
     $submittedEditMediaFormValues = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('all');
@@ -84,10 +81,10 @@ if ($adminMode === 'saveMedia') {
     $newMediaObject->sdmMediaSetSourceExtension($fileExtension);
 
     /* Convert media display name to camel case and set as machine name */
-    $camelCaseFileName = str_replace(' ', '', ucfirst(preg_replace("/[^a-z]+/i", "", $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('sdmMediaDisplayName'))));
+    $camelCaseMediaName = str_replace(' ', '', ucfirst(preg_replace("/[^a-z]+/i", "", $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('sdmMediaDisplayName'))));
 
     /* Set  media machine name */
-    $newMediaObject->sdmMediaSetMachineName($camelCaseFileName);
+    $newMediaObject->sdmMediaSetMachineName($camelCaseMediaName);
 
     /* Json encode new media object to prepare for storage. */
     $newMediaObjectJson = json_encode($newMediaObject);

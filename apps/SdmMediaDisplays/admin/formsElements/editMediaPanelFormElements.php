@@ -45,6 +45,10 @@ if ($currentPanel === 'editMediaPanel') {
                 //$sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaSourcePath', 'hidden', '', $mediaToEditProperties['sdmMediaSourcePath'], 421),
                 $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaProtected', 'hidden', '', $mediaToEditProperties['sdmMediaProtected'], 422),
                 $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaPublic', 'hidden', '', $mediaToEditProperties['sdmMediaPublic'], 423),
+                // preserve orgiginal of the following in case new file is not uploaded
+                $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaSourceName', 'hidden', '', $mediaToEditProperties['sdmMediaSourceName'], 424),
+                $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaSourceExtension', 'hidden', '', $mediaToEditProperties['sdmMediaSourceExtension'], 425),
+                $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaId', 'hidden', '', $mediaToEditProperties['sdmMediaId'], 426),
             );
             break;
         case 'addMedia':
