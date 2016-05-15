@@ -34,7 +34,7 @@ try {
     );
 
     /* Report progress to media upload log. */
-    $sdmMediaUploadLog .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['$validTypes' => $validTypes]) . PHP_EOL;
+    $sdmMediaUploadLog = $sdmassembler->sdmCoreSdmReadArrayBuffered(['$validTypes' => $validTypes]) . PHP_EOL;
 
     /* Report progress to media upload log. */
     $sdmMediaUploadLog = $sdmassembler->sdmCoreSdmReadArrayBuffered(['$_FILE' => $_FILES]) . PHP_EOL;
