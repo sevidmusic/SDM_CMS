@@ -77,6 +77,20 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
         case 'selectDisplayPanel':
             $panelName = ($adminMode === 'addDisplays' ? 'Add Display' : 'Edit Displays');
             $panelDescription = ($adminMode === 'addDisplays' ? '<p>Please select a page for the display to appear on.</p><p>If you don\'t see the page you are looking for there may already be a display for it, in which case return to the <a href="' . $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?page=SdmMediaDisplays"><b>Sdm Displays Admin Panel</b></a> and choose "Edit Displays.</p><p>If no select list appears then all the pages available to displays must already have a display assigned to them, in which case you can simply edit the displays by page from the <a href="' . $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?page=SdmMediaDisplays"><b>Sdm Displays Admin Panel</b></a>.</p>' : 'Select a display to edit.');
+
+            /* If adminMode is edit displays, make sure there are displays to edit. If there are not, then
+               $panelDescription rewrite $panelDescription to indicate that to user. */
+            if($adminMode === 'editDisplays') {
+                $displaysExist = true;
+                if(empty($selectDisplayFormElement['value']) === true || isset($selectDisplayFormElement['value']) === false) {
+                    var_dump($selectDisplayFormElement['value']);
+
+                    $displaysExist = false;
+                }
+            }
+            if (isset($displaysExist) && $displaysExist === false) {
+                $panelDescription = "<span>There are no displays to edit. To create one go to the <a href='{$sdmassembler->sdmCoreGetRootDirectoryUrl()}/index.php?page=SdmMediaDisplays'>main Sdm Media Display admin panel</a> and click the \"Add Display\" button.</span>";
+            }
             break;
         case 'mediaCrudPanel':
             /* Load appropriate form handler based on $editMode. */

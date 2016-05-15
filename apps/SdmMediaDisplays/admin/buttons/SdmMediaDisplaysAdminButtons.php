@@ -27,7 +27,7 @@ function createSdmMediaDisplayAdminButton($id, $name, $value, $label, $otherAttr
 $sdmMediaDisplayAdminPanelButtons = array(
     'displayCrudPanel' => array(
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_editDisplays', 'panel', 'selectDisplayPanel_editDisplays', 'Edit Displays', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
-        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_addDisplays', 'panel', 'selectDisplayPanel_addDisplays', 'Add Displays', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
+        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_addDisplays', 'panel', 'selectDisplayPanel_addDisplays', 'Add Display', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_deleteDisplays', 'panel', 'deleteDisplayPanel_deleteDisplays', 'Delete Displays', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
     ),
     'deleteDisplayPanel' => array(
@@ -39,7 +39,6 @@ $sdmMediaDisplayAdminPanelButtons = array(
     ),
     'mediaCrudPanel' => array(
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_addMedia', 'panel', 'editMediaPanel_addMedia', 'Add Media', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
-        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_deleteMedia', 'panel', 'deleteMediaPanel_deleteMedia', 'Delete Selected', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_saveContinue', 'panel', 'mediaCrudPanel_saveContinue', 'Refresh Panel', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_saveFinish', 'panel', 'displayCrudPanel_saveFinish', 'Save and Finish', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
     ),
@@ -54,9 +53,11 @@ $sdmMediaDisplayAdminPanelButtons = array(
     ),
 );
 
-/* If the current display being edited has media create edit media button for the mediaCrudPanel. */
+/* If the current display being edited has media create edit and delete media buttons for the mediaCrudPanel. */
 if ($sdmMediaDisplay->sdmMediaDisplayHasMedia($nameOfDisplayBeingEdited) === true) {
     array_push($sdmMediaDisplayAdminPanelButtons['mediaCrudPanel'], createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_editMedia', 'panel', 'editMediaPanel_editMedia', 'Edit Selected', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())));
+    array_push($sdmMediaDisplayAdminPanelButtons['mediaCrudPanel'], createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_deleteMedia', 'panel', 'deleteMediaPanel_deleteMedia', 'Delete Selected', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())));
+
 }
 
 /* Only show edit media items button on selectDisplayPanel for add and edit admin modes if there are

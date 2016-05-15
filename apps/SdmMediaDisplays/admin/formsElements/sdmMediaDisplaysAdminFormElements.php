@@ -28,7 +28,9 @@ foreach ($pagesAvailableToDisplays as $key => $value) {
 
 /* Check $adminMode to determine whether to show "select display to edit" or or "select page to show display on" form element on the selectDisplayPaenl. */
 if ($adminMode === 'editDisplays' || $adminMode === 'deleteDisplays') {
-    $selectDisplayFormElement = $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('displayToEdit', 'select', 'Select Display', $displaysAvailableToEditFormValueArray, 0);
+    if (!empty($displaysAvailableToEditFormValueArray)) {
+        $selectDisplayFormElement = $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('displayToEdit', 'select', 'Select Display', $displaysAvailableToEditFormValueArray, 0);
+    }
 } else {
     if (!empty($pagesAvailableToDisplays)) {
         $selectDisplayFormElement = $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('displayPageName', 'select', 'Select A Page To Show Display On', $pagesAvailableToDisplays, 0);
@@ -84,7 +86,9 @@ foreach ($sdmMediaDisplayAdminPanelFormElements as $panel => $panelFormElements)
     if ($panel === $currentPanel) {
         foreach ($panelFormElements as $formElement) {
             if ($formElement['type'] !== 'hidden') {
-                $currentPanelsFormElements[] = '<div style="border: 3px solid white; border-radius: 9px;margin-bottom: 20px; padding: 20px; width: 88%;">' . $sdmMediaDisplaysAdminForm->sdmFormGetFormElementHtml($formElement['id']) . '</div>';
+                if ($sdmMediaDisplaysAdminForm->sdmFormGetFormElementHtml($formElement['id']) !== null) {
+                    $currentPanelsFormElements[] = '<div style="border: 3px solid white; border-radius: 9px;margin-bottom: 20px; padding: 20px; width: 88%;">' . $sdmMediaDisplaysAdminForm->sdmFormGetFormElementHtml($formElement['id']) . '</div>';
+                }
             } else {
                 $currentPanelsFormElements[] = $sdmMediaDisplaysAdminForm->sdmFormGetFormElementHtml($formElement['id']);
             }
