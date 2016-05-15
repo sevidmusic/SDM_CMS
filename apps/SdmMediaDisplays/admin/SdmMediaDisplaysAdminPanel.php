@@ -73,6 +73,9 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
     switch ($currentPanel) {
         case 'displayCrudPanel':
             $panelDescription = 'Welcome to the Sdm Media Display\'s admin panel. Use the admin panels below to manage the site\'s media displays.';
+            if ($adminMode === 'confirmDeleteDisplay') {
+                require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/formHandlers/displayCrudPanel_deleteDisplay.php');
+            }
             break;
         case 'selectDisplayPanel':
             $panelName = ($adminMode === 'addDisplays' ? 'Add Display' : 'Edit Displays');
