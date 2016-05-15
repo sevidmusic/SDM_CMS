@@ -26,9 +26,7 @@ function createSdmMediaDisplayAdminButton($id, $name, $value, $label, $otherAttr
 /* Define buttons for each Sdm Media Displays admin panel. */
 $sdmMediaDisplayAdminPanelButtons = array(
     'displayCrudPanel' => array(
-        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_editDisplays', 'panel', 'selectDisplayPanel_editDisplays', 'Edit Displays', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_addDisplays', 'panel', 'selectDisplayPanel_addDisplays', 'Add Display', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
-        createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_deleteDisplays', 'panel', 'deleteDisplayPanel_deleteDisplays', 'Delete Displays', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())),
     ),
     'deleteDisplayPanel' => array(
         createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_deleteSelectedDisplay', 'panel', 'confirmDeleteDisplayPanel_deleteSelectedDisplay', 'Delete Selected Display', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId(), 'style' => 'margin-left:0px;min-width:88%;')),
@@ -53,6 +51,30 @@ $sdmMediaDisplayAdminPanelButtons = array(
     ),
 );
 
+/* Only show edit and delete display buttons if there are displays other then the default. */
+$expectedDirs = array('.', '..', '.DS_Store', 'SdmMediaDisplays');
+
+/* Scan data directory for displays. */
+$displays = scandir($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/data');
+
+/* Check $displays against $expectedDirs, if a display is found that is not an expected directory then display exist. */
+foreach ($displays as $display) {
+    if (!in_array($display, $expectedDirs)) {
+        /* Display found, set $displaysExist to true. */
+        $displaysExist = true;
+        /* A display was found, exit loop. */
+        break;
+    }
+    /* No displays exist. */
+    $displaysExist = false;
+}
+
+if ($displaysExist === true) {
+    var_dump('Displays exist.');
+    array_push($sdmMediaDisplayAdminPanelButtons['displayCrudPanel'], createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_editDisplays', 'panel', 'selectDisplayPanel_editDisplays', 'Edit Displays', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())));
+    array_push($sdmMediaDisplayAdminPanelButtons['displayCrudPanel'], createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_deleteDisplays', 'panel', 'deleteDisplayPanel_deleteDisplays', 'Delete Displays', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())));
+
+}
 /* If the current display being edited has media create edit and delete media buttons for the mediaCrudPanel. */
 if ($sdmMediaDisplay->sdmMediaDisplayHasMedia($nameOfDisplayBeingEdited) === true) {
     array_push($sdmMediaDisplayAdminPanelButtons['mediaCrudPanel'], createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_editMedia', 'panel', 'editMediaPanel_editMedia', 'Edit Selected', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())));
