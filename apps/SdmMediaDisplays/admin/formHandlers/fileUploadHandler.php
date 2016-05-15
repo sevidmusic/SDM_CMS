@@ -67,6 +67,7 @@ try {
          not depends on the whitelist of media types which currently defines the following valid types: ' . implode(', ', $validTypes) . '.</p>
          <p>However, some attacks may get past the white list which is why you need to manually go through the media files and make sure they
          are what they claim to be.</p>' . PHP_EOL;
+        error_log($possibleAttackMessage);
         throw new RuntimeException($possibleAttackMessage);
         /* Stop file upload script */
         exit;
@@ -210,7 +211,7 @@ try {
 } catch (RuntimeException $e) {
     /* Catch any error messages, log error message to core error log, and assign to $errorMessages. */
     $errorMessages = $e->getMessage();
-    error_log($errorMessages);
+    //error_log($errorMessages);
 }
 
 /* If not set, use original value, if original value not set use random number. */
