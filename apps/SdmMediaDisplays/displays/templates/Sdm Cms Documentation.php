@@ -8,7 +8,7 @@
  */
 function assembleSdmCmsDocumentationDisplay($media, $mediaObject)
 {
-    echo '<div id="sdmMediaSdmCmsDocumentationDisplay"><div class="sdmMediaSdmCmsDocumentationDisplayMedia"><h2>' . $mediaObject->sdmMediaGetSdmMediaDisplayName() . '</h2>' . $media . '</div></div>';
+    echo '<div id="sdmMediaSdmCmsDocumentationDisplay"><div class="sdmMediaSdmCmsDocumentationDisplayMedia">' . $media . '</div></div>';
 }
 
 echo $sdmMediaDisplay->sdmMediaDisplayGenerateMediaDisplay('assembleSdmCmsDocumentationDisplay');
