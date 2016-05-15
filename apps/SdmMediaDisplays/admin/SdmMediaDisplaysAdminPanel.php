@@ -8,30 +8,34 @@
 if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
     /* Initialize the Sdm Media Displays admin form. */
     $sdmMediaDisplaysAdminForm = new SdmForm();
-    /* Unpack submitted form values regularly referenced in code. */
-    if ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit') !== null) {
-        $editMode = 'edit';
-        $nameOfDisplayBeingEdited = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit');
-    } elseif ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayPageName') !== null) {
-        $editMode = 'add';
-        $nameOfDisplayBeingEdited = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayPageName');
-    } else {
-        $editMode = null;
-        $nameOfDisplayBeingEdited = null;
-    }
+
     /* Determine requested panel */
     $requestedPanel = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('panel');
     $defaultPanel = 'displayCrudPanel'; // if no panel specified, show display crud.
     $currentPanel = ($requestedPanel === null ? $defaultPanel : $requestedPanel);
 
     /* See if there is an admin mode appended to the submitted panel value. If there is extract it and
-       store it as the $adminMode. */
+           store it as the $adminMode. */
     $extractedPanelMode = strrpos($requestedPanel, '_');
     $adminMode = ($extractedPanelMode === false ? 'default' : substr($requestedPanel, $extractedPanelMode + 1));
 
     /* If there is a mode extracted, remove it from the panel name. */
     if ($extractedPanelMode !== false) {
         $currentPanel = str_replace('_' . $adminMode, '', $currentPanel);
+    }
+    /* Unpack submitted form values regularly referenced in code. */
+    if ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit') !== null && $adminMode !== 'confirmDeleteMedia') {
+        $editMode = 'edit';
+        $nameOfDisplayBeingEdited = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit');
+    } elseif ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayPageName') !== null && $adminMode !== 'confirmDeleteMedia') {
+        $editMode = 'add';
+        $nameOfDisplayBeingEdited = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayPageName');
+    } elseif ($adminMode === 'confirmDeleteMedia') {
+        $editMode = 'delete';
+        $nameOfDisplayBeingEdited = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit');
+    } else {
+        $editMode = null;
+        $nameOfDisplayBeingEdited = null;
     }
 
     /* SdmMediaDisplays Admin Form | Define form properties. */
@@ -86,7 +90,9 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
                 /* load add handlers for this panel */
                 require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/formHandlers/selectDisplayPanel_addDisplays.php');
             } elseif ($editMode === 'delete') {
+                $panelDescription = 'Media was deleted successfully.';
                 /* load delete handlers for this panel */
+                require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/formHandlers/mediaCrudPanel_deleteMedia.php');
             } else {
                 // do nothing
             }
