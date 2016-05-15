@@ -51,10 +51,11 @@ $sdmMediaDisplayAdminPanelFormElements = array(
     ),
     'editMediaPanel' => array(),
 );
+
+/* Load additional edit media panel form elements. */
 require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/formsElements/editMediaPanelFormElements.php');
 
-
-// if $nameOfDisplayBeingEdited is set, assign it to all forms as a hidden form element
+/* If $nameOfDisplayBeingEdited is set, assign it to all forms as a hidden form element */
 if (isset($nameOfDisplayBeingEdited) === true) {
     foreach ($sdmMediaDisplayAdminPanelFormElements as $panelFormElement => $panelFormElementArray) {
         if ($panelFormElement !== 'selectDisplayPanel') {
@@ -63,10 +64,15 @@ if (isset($nameOfDisplayBeingEdited) === true) {
         }
     }
 }
+
+/* Create media object instance to be used by edit media form components.. */
 $sdmMediaObject = new  SdmMedia;
 
 /* Load mediaList form elements for mediaCrudPanel. */
 require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/formsElements/mediaList.php');
+
+/* Load delete media admin panel form elements for mediaCrudPanel. */
+require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/formsElements/deleteMediaFormElements.php');
 
 /* Incorporate form elements into the form. */
 $sdmMediaDisplaysAdminForm->sdmFormBuildFormElements();
