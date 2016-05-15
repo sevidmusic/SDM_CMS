@@ -17,6 +17,10 @@
  * so this script checks the uploaded files type with PHP's loadedFilesInfo() class.
  */
 
+// For now enforce local path
+/* Media file save path. */
+$savePath = $sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/media';
+
 try {
     /* Define valid white list of media types */
     $validTypes = array(
@@ -34,7 +38,7 @@ try {
     );
 
     /* Report progress to media upload log. */
-    $sdmMediaUploadLog .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['$validTypes' => $validTypes]) . PHP_EOL;
+    $sdmMediaUploadLog = $sdmassembler->sdmCoreSdmReadArrayBuffered(['$validTypes' => $validTypes]) . PHP_EOL;
 
     /* Report progress to media upload log. */
     $sdmMediaUploadLog = $sdmassembler->sdmCoreSdmReadArrayBuffered(['$_FILE' => $_FILES]) . PHP_EOL;
@@ -182,12 +186,11 @@ try {
      */
     $uniqueFileName = sprintf('%s.%s', sha1_file($_FILES['SdmForm']['tmp_name']['sdmMediaFile']), $validFileExt);
 
-
     /* Report progress to media upload log. */
     $sdmMediaUploadLog .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['$uniqueFileName' => $uniqueFileName]);
 
     /* Media file save path. */
-    $savePath = $sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/media';
+    //$savePath = $sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/media';
 
     /* Report progress to media upload log. */
     $sdmMediaUploadLog .= $sdmassembler->sdmCoreSdmReadArrayBuffered(['$savePath' => $savePath]) . PHP_EOL;
@@ -208,6 +211,16 @@ try {
     /* Catch any error messages, log error message to core error log, and assign to $errorMessages. */
     $errorMessages = $e->getMessage();
     error_log($errorMessages);
+}
+
+/* If not set, use original value, if original value not set use random number. */
+if (!isset($uniqueFileName)) {
+    var_dump($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('sdmMediaSourceName'));
+    if ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('sdmMediaSourceName') !== null) {
+        $uniqueFileName = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('sdmMediaSourceName') . '.' . $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('sdmMediaSourceExtension');
+    } else {
+        $uniqueFileName = rand(10000, 99999) . rand(10000, 99999) . rand(10000, 99999) . rand(10000, 99999) . rand(10000, 99999);
+    }
 }
 
 $sdmMediaUploadLogMessage = (isset($errorMessages) ? $errorMessages . PHP_EOL : 'File Uploaded without any errors.') . $sdmMediaUploadLog;

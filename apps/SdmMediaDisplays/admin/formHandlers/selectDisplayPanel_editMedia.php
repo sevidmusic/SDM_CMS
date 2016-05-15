@@ -7,13 +7,14 @@
  */
 
 if ($adminMode === 'saveMedia') {
+
+    /* Get submitted form values */
+    $submittedEditMediaFormValues = array_keys($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('all'));
+
     /* Load file upload handler if a file was submitted. */
     require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/formHandlers/fileUploadHandler.php');
 
     /** Unpack vars from file upload handler **/
-
-    /* Upload status */
-    $uploadStatus = $fileUploadStatus;
 
     /* Path file was uploaded to/ */
     $fileSavedToPath = $savePath;
@@ -24,18 +25,13 @@ if ($adminMode === 'saveMedia') {
     /* Generate a save file name to be used as the sdmMediaSourceName and as the name of the json and media
        files that are created for this media object. */
     $safeFileName = substr($uniqueFileName, 0, strpos($uniqueFileName, '.'));
-    var_dump('File uploaded: ' . $uploadStatus, 'File uploaded to path: ' . $fileSavedToPath, 'File uploaded using name: ' . $fileName);
-
-
-    /* Get submitted form values */
-    $submittedEditMediaFormValues = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('all');
 
     /* Initialize array to hold new media property values. */
     $newMediaPropertyValues = array();
 
     /* Add each submitted form value to the $newMediaPropertyValues array. It's ok if values unrelated to the SdmMedia object
        are included because they will simply be ignored on creation of new SdmMedia() object. */
-    foreach ($submittedEditMediaFormValues as $submittedEditMediaFormKey => $submittedEditMediaFormValue) {
+    foreach ($submittedEditMediaFormValues as $submittedEditMediaFormKey) {
         switch ($submittedEditMediaFormKey) {
             case 'sdmMediaSourceUrl':
                 /* If sdmMediaSourceType is local, enforce local url, otherwise use supplied. */
