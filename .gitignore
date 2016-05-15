@@ -16,6 +16,8 @@ apps/SdmMediaDisplays/logs
 
 *.aiff
 
+*.mp3
+
 *.aif
 
 *.m4v

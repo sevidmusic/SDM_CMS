@@ -161,7 +161,16 @@ class SdmMediaDisplay extends SdmMedia
         /* Store $this in local var so it can be accessed by template. */
         $sdmMediaDisplay = $this;
         $templateDirPath = str_replace('/includes', '', __DIR__) . '/displays/templates';
-        require_once($templateDirPath . '/' . $this->sdmMediaDisplayTemplate . '.php');
+        switch(file_exists($templateDirPath . '/' . $this->sdmMediaDisplayTemplate . '.php')) {
+            case true:
+                require_once($templateDirPath . '/' . $this->sdmMediaDisplayTemplate . '.php');
+                break;
+            default:
+                require_once($templateDirPath . '/SdmMediaDisplays.php');
+                break;
+        }
+
+
         $this->sdmMediaDisplayHtml = ob_get_contents();
         ob_end_clean();
     }
