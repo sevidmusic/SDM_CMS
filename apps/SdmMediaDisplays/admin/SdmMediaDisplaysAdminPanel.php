@@ -24,13 +24,13 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
         $currentPanel = str_replace('_' . $adminMode, '', $currentPanel);
     }
     /* Unpack submitted form values regularly referenced in code. */
-    if ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit') !== null && $adminMode !== 'confirmDeleteMedia') {
+    if ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit') !== null && $adminMode !== 'confirmDeleteMedia' && $adminMode !== 'deleteSelectedDisplay') {
         $editMode = 'edit';
         $nameOfDisplayBeingEdited = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit');
-    } elseif ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayPageName') !== null && $adminMode !== 'confirmDeleteMedia') {
+    } elseif ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayPageName') !== null && $adminMode !== 'confirmDeleteMedia' && $adminMode !== 'deleteSelectedDisplay') {
         $editMode = 'add';
         $nameOfDisplayBeingEdited = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayPageName');
-    } elseif ($adminMode === 'confirmDeleteMedia') {
+    } elseif ($adminMode === 'confirmDeleteMedia' || $adminMode === 'deleteSelectedDisplay') { // deleteDisplays
         $editMode = 'delete';
         $nameOfDisplayBeingEdited = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit');
     } else {
@@ -80,9 +80,9 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
 
             /* If adminMode is edit displays, make sure there are displays to edit. If there are not, then
                $panelDescription rewrite $panelDescription to indicate that to user. */
-            if($adminMode === 'editDisplays') {
+            if ($adminMode === 'editDisplays') {
                 $displaysExist = true;
-                if(empty($selectDisplayFormElement['value']) === true || isset($selectDisplayFormElement['value']) === false) {
+                if (empty($selectDisplayFormElement['value']) === true || isset($selectDisplayFormElement['value']) === false) {
                     var_dump($selectDisplayFormElement['value']);
 
                     $displaysExist = false;
@@ -135,5 +135,5 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
     /* Incorporate Admin Panel. */
     $sdmassembler->sdmAssemblerIncorporateAppOutput("<div id='SdmMediaDisplaysAdminPanel' class='SdmMediaDisplaysAdminPanel'><h2 " . ($adminMode === 'addDisplays' ? "style='margin: 0px 0px 0px 0px;padding: 10px 0px 0px 0px;-webkit-margin-after: -42px;'" : '') . ">$panelName</h2><p>$panelDescription</p><div style='margin:42px 0px 42px 0px;width:88%;min-height:10px;border-radius:9px;background:#ffffff;opacity:.72;border:2px solid #3498db;'></div>$completeFormHtml</div>", array('incpages' => array('SdmMediaDisplays'), 'roles' => array('root'), 'incmethod' => 'prepend'));
     //UNCOMMENT TO DEBUG PANEL PARAMETERS: //
-    //var_dump(['$currentPanel' => $currentPanel, '$panelName' => $panelName, '$panelDescription' => $panelDescription, '$adminMode' => $adminMode, '$editMode' => $editMode]);
+    var_dump(['display to edit' => $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit'), '$currentPanel' => $currentPanel, '$panelName' => $panelName, '$panelDescription' => $panelDescription, '$adminMode' => $adminMode, '$editMode' => $editMode]);
 }
