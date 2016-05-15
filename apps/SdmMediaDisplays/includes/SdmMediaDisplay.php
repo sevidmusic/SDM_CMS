@@ -178,8 +178,12 @@ class SdmMediaDisplay extends SdmMedia
         $display = array();
         switch (isset($function) && function_exists($function)) {
             case true:
-                foreach (new RecursiveIteratorIterator(new RecursiveArrayIterator($this->sdmMediaDisplayCategorizedMediaObjects)) as $media) {
-                    $display[] = call_user_func_array($function, array($media));;
+                $mediaObjects = $this->sdmMediaDisplayGetMediaObjects();
+                $incrementer = 0;
+                $iterator = new RecursiveIteratorIterator(new RecursiveArrayIterator($this->sdmMediaDisplayCategorizedMediaObjects));
+                foreach ($iterator as $media) {
+                    $display[] = call_user_func_array($function, array($media, $mediaObjects[$incrementer]));
+                    $incrementer++;
                 }
 
                 break;

@@ -6,10 +6,10 @@
  *
  * @param $media string The $media object's html to wrap in a <li> tag.
  */
-function defaultSdmMediaDisplayDiv($media)
+function assembleHomepageDisplay($media, $mediaObject)
 {
-    echo '<div id="sdmMediaHomepageDisplay"><div class="sdmMediaHomepageDisplayMedia">' . $media . '</div></div>';
+    echo '<div id="sdmMediaHomepageDisplay"><div class="sdmMediaHomepageDisplayMedia"><h2>' . $mediaObject->sdmMediaGetSdmMediaDisplayName() . '</h2>' . $media . '</div></div>';
 }
 
-echo $sdmMediaDisplay->sdmMediaDisplayGenerateMediaDisplay('defaultSdmMediaDisplayDiv');
-?>
+echo $sdmMediaDisplay->sdmMediaDisplayGenerateMediaDisplay('assembleHomepageDisplay');
+
