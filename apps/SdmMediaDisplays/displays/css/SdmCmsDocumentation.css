@@ -1,0 +1,38 @@
+
+#sdmMediaSdmCmsDocumentationDisplay {
+    background: #2BD4F3;
+    width: 28%;
+    margin: 42px auto;
+    border-radius: 18px;
+    border: 8px solid #ffffff;
+}
+
+.sdmMediaSdmCmsDocumentationDisplayMedia {
+    border: 3px solid #000000;
+    border-radius: 9px;
+    padding: .3em;
+    margin: 0px 0px 2em 0px;
+}
+
+.sdmMediaSdmCmsDocumentationDisplayMedia img,
+.sdmMediaSdmCmsDocumentationDisplayMedia iframe,
+.sdmMediaSdmCmsDocumentationDisplayMedia video {
+    width: 96%;
+    margin: 0px auto;
+    padding: 30px 0px 30px 0px;
+    display: block;
+    background: #000000;
+    opacity: 1;
+    margin-top: 10px;
+}
+
+.sdmMediaSdmCmsDocumentationDisplayMedia h2 {
+    text-align: center;
+    background: springgreen;
+    padding: 10px;
+    margin: 0 auto;
+    border: 3px solid #ffffff;
+    -webkit-border-radius: 9px;
+    -moz-border-radius: 9px;
+    border-radius: 9px;
+}
