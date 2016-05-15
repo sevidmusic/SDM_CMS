@@ -8,7 +8,7 @@
  */
 function assembleHomepageDisplay($media, $mediaObject)
 {
-    echo '<div id="sdmMediaHomepageDisplay"><div class="sdmMediaHomepageDisplayMedia"><h2>' . $mediaObject->sdmMediaGetSdmMediaDisplayName() . '</h2>' . $media . '</div></div>';
+    echo '<div id="sdmMediaHomepageDisplay"><div class="sdmMediaHomepageDisplayMedia"><!--PLACEHOLDER FOR $mediaObject->sdmMediaGetSdmMediaDisplayName() -->' . $media . '</div></div>';
 }
 
 echo $sdmMediaDisplay->sdmMediaDisplayGenerateMediaDisplay('assembleHomepageDisplay');
