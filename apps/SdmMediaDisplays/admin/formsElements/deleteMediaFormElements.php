@@ -22,17 +22,16 @@ if ($adminMode === 'deleteMedia' && $currentPanel === 'deleteMediaPanel') {
 
     /* Determine media json path */
     $mediaJsonPath = str_replace('media', 'data/' . $nameOfDisplayBeingEdited, $mediaPath);
-    var_dump($mediaJsonPath);
 
     /* Determinre meda source extension */
     $mediaToDeletesSourceExtension = $deleteMediaDisplayObjectProperties[$mediaToDeletesId]['sdmMediaSourceExtension'];
+
+    /* Determine path to media being deleted. */
+    $pathToMediaBeingDeleted = $mediaPath . '/' . $mediaToDeletesId . '.' . $mediaToDeletesSourceExtension;
+    $pathToMediaBeingDeletedJson = $mediaJsonPath . '/' . $mediaToDeletesId . '.json';
+
     /* */
     array_push($sdmMediaDisplayAdminPanelFormElements['deleteMediaPanel'], $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaId', 'hidden', '', $mediaToDeletesId, 422));
-    array_push($sdmMediaDisplayAdminPanelFormElements['deleteMediaPanel'], $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaSourcePath', 'hidden', '', $mediaPath, 423));
-    array_push($sdmMediaDisplayAdminPanelFormElements['deleteMediaPanel'], $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('mediaJsonPath', 'hidden', '', $mediaJsonPath, 424));
-    array_push($sdmMediaDisplayAdminPanelFormElements['deleteMediaPanel'], $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaSourceExtension', 'hidden', '', $mediaToDeletsSourceExtension, 425));
-
-    /* DEV */
-    var_dump($mediaToDeletesId, $mediaPath, $mediaJsonPath, /*$sdmMediaDisplayAdminPanelFormElements['deleteMediaPanel'], */
-        $deleteMediaDisplayObjectProperties[$mediaToDeletesId]);
+    array_push($sdmMediaDisplayAdminPanelFormElements['deleteMediaPanel'], $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('pathToMediaBeingDeleted', 'hidden', '', $pathToMediaBeingDeleted, 422));
+    array_push($sdmMediaDisplayAdminPanelFormElements['deleteMediaPanel'], $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('pathToMediaBeingDeletedJson', 'hidden', '', $pathToMediaBeingDeletedJson, 422));
 }
