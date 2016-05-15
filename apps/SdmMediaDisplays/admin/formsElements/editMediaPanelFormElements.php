@@ -53,7 +53,7 @@ if ($currentPanel === 'editMediaPanel') {
             break;
         case 'addMedia':
             $editPanelFormElements = array(
-                $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaDisplayName', 'text', '<p>' . $mediaToEditsHtml . '</p><br/>Name or title for the media.', '', 1),
+                $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaDisplayName', 'text', '<br/>Name or title for the media.', '', 1),
                 $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaCategory', 'text', 'Category name to organize media by. Media is ordered in display by media\'s category, place, and finally name.', '', 2),
                 $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaPlace', 'select', 'Media\'s palce. Represents media\'s position in display relative to other media in the same category.', $sdmMediaDisplaysAdminForm->sdmFormSetDefaultInputValues(range(1, 1000), 1), 3),
                 $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaSourceType', 'select', '<p>Is the media source external or local?</p><p>External sources are sources from other sites, such as Youtube. Local sources are, as the name implies, stored locally.<br/><span style="font-size: .5em;">Use local if you are uploading the media.</br>Use external if media is from a url to a site such as youtube.</span></p>', $sdmMediaDisplaysAdminForm->sdmFormSetDefaultInputValues(array('External (Media resource from another site)' => 'external', 'Local (Media stored locally)' => 'local',), 'local'), 4),
@@ -61,10 +61,10 @@ if ($currentPanel === 'editMediaPanel') {
                 $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaSourceUrl', 'text', 'Url To Media | Only set for external media sources. (If youtube url it must be the embed url provided by youtube.)', '', 6),
                 $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaType', 'select', 'Select the media\'s type.', $sdmMediaDisplaysAdminForm->sdmFormSetDefaultInputValues(array('Image' => 'image', 'Audio' => 'audio', 'Video' => 'video', 'Youtube Video' => 'youtube', 'HTML5 Canvas Image/Animation (Javascript file for HTML5 canvas tag)' => 'canvas',), 'image'), 7),
                 // hidden elements
-                $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaId', 'hidden', '', rand(1000, 9999) . rand(1000, 9999) . rand(1000, 9999) . rand(1000, 9999), 420),
                 $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaSourcePath', 'hidden', '', $sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/media', 421),
                 $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaProtected', 'hidden', '', false, 422),
                 $sdmMediaDisplaysAdminForm->sdmFormCreateFormElement('sdmMediaPublic', 'hidden', '', false, 423),
+                // missing properties will be set by file upload handler.
             );
             break;
         default:

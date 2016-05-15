@@ -86,7 +86,6 @@ if ($adminMode === 'saveMedia') {
     $newMediaObjectJson = json_encode($newMediaObject);
 
     /* Save new media object  */
-    var_dump($newMediaObject, $newMediaObjectJson);
     file_put_contents($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/data/' . $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit') . '/' . $safeFileName . '.json', $newMediaObjectJson);
 
     /* Added confirmation message to panel description. */
