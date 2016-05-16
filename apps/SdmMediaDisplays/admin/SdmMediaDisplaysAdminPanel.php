@@ -5,7 +5,48 @@
  * Date: 5/7/16
  * Time: 12:00 PM
  */
-if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
+
+/* Url to Sdm Media Display admin */
+$sdmMediaDisplayAdminUrl = $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?page=SdmMediaDisplays';
+
+/* Required directories for displays and admin panels. */
+$requiredDirectories = array('displays/data', 'displays/data/SdmMediaDisplays', 'displays/media');
+
+/* Sdm Media Displays Path */
+$sdmMediaDisplaysDirectoryPath = $sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays';
+
+$initialSetup = false;
+
+/* Insure required directories exist. */
+foreach ($requiredDirectories as $requiredDirectory) {
+    /* Path to Sdm Media Display's media directory */
+    $requiredDirectoryPath = $sdmMediaDisplaysDirectoryPath . '/' . $requiredDirectory;
+
+    /* Check if media directory exists */
+    $requiredDirectoryExists = is_dir($requiredDirectoryPath);
+
+    /* If required directory does not exist create it. */
+    if ($requiredDirectoryExists !== true) {
+        mkdir($requiredDirectoryPath);
+        $initialSetup = true;
+    }
+}
+
+if ($initialSetup === true) {
+    $initialSetupMessage = "
+        <h2>Sdm Media Displays</h2>
+        <p>Looks like you just enabled this app.</p>
+        <p>Welcome to the Sdm Media Displays app. With the Sdm Media
+        Displays app you will be able to add media to your website's
+        pages, including images, video, embeded video (such as youtube),
+        and HTML 5 canvas scripts.</p>
+        <p>Initial setup complete.
+        <a href='{$sdmassembler->sdmCoreGetRootDirectoryUrl()}/index.php?page=SdmMediaDisplays'>
+        Click here</a> to start creating media displays.</p>";
+    $sdmassembler->sdmAssemblerIncorporateAppOutput($initialSetupMessage, array('incpages' => array('SdmMediaDisplays'), 'incmethod' => 'overwrite'));
+}
+
+if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays' && $initialSetup === false) {
     /* Initialize the Sdm Media Displays admin form. */
     $sdmMediaDisplaysAdminForm = new SdmForm();
 
@@ -133,7 +174,7 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
     }
 
     /* Incorporate Admin Panel. */
-    $sdmassembler->sdmAssemblerIncorporateAppOutput("<div id='SdmMediaDisplaysAdminPanel' class='SdmMediaDisplaysAdminPanel'><h2 " . ($adminMode === 'addDisplays' ? "style='margin: 0px 0px 0px 0px;padding: 10px 0px 0px 0px;-webkit-margin-after: -42px;'" : '') . ">$panelName</h2><p>$panelDescription</p><div style='margin:42px 0px 42px 0px;width:88%;min-height:10px;border-radius:9px;background:#ffffff;opacity:.72;border:2px solid #3498db;'></div>$completeFormHtml</div>", array('incpages' => array('SdmMediaDisplays'), 'roles' => array('root'), 'incmethod' => 'prepend'));
+    $sdmassembler->sdmAssemblerIncorporateAppOutput("<div id='SdmMediaDisplaysAdminPanel' class='SdmMediaDisplaysAdminPanel'><h2>$panelName</h2><p>$panelDescription</p><div class='adminPanelContentSpacer'></div>$completeFormHtml</div>", array('incpages' => array('SdmMediaDisplays'), 'roles' => array('root'), 'incmethod' => 'prepend'));
     //UNCOMMENT TO DEBUG PANEL PARAMETERS: //
     //var_dump(['display to edit' => $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit'), '$currentPanel' => $currentPanel, '$panelName' => $panelName, '$panelDescription' => $panelDescription, '$adminMode' => $adminMode, '$editMode' => $editMode]);
 }

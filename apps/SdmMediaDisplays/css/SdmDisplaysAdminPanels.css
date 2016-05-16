@@ -1,10 +1,10 @@
 /* Buttons*/
 #SdmMediaDisplaysAdminPanel {
     background: #000000;
-    width: 88%;
+    width: 98%;
     /* text-align: center; */
     margin: 0 auto;
-    padding: 32px 0px 88px 225px;
+    padding: 42px;
     border: 9px solid #3498db;
     border-radius: 42px;
 }
@@ -127,4 +127,20 @@
     /* border-color: #ffffff; */
     /* border-radius: 9px; */
     margin-top: 23px;
+}
+
+h2 {
+    margin: 0px 0px 0px 0px;
+    padding: 10px 0px 0px 0px;
+    -webkit-margin-after: -22px;
+}
+
+.adminPanelContentSpacer {
+    margin: 22px 0px 12px 0px;
+    width: 98%;
+    min-height: 5px;
+    border-radius: 9px;
+    background: #ffffff;
+    opacity: .72;
+    border: 2px solid #3498db;
 }
