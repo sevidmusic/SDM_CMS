@@ -27,7 +27,6 @@ if ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit') !=
     $displayToBeDeleted = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit');
     $pathToDisplayDataDirectory = $sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/data';
     $displayDeleted = sdmMediaDisplayDeleteDisplay($pathToDisplayDataDirectory . '/' . $displayToBeDeleted);
-    //var_dump($displayDeleted);
     /* Only remove data directory as media directory may have media that is shared by multiple displays. */
 
 }

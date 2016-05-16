@@ -86,8 +86,6 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
             if ($adminMode === 'editDisplays') {
                 $displaysExist = true;
                 if (empty($selectDisplayFormElement['value']) === true || isset($selectDisplayFormElement['value']) === false) {
-                    var_dump($selectDisplayFormElement['value']);
-
                     $displaysExist = false;
                 }
             }
@@ -100,7 +98,6 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
             if ($editMode === 'edit') {
                 $panelDescription = 'Select a piece of media from below and then click one of the admin buttons at the bottom of the page to edit the media you selected.';
                 /* load edit handlers for this panel */
-                require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/formHandlers/selectDisplayPanel_editDisplays.php');
                 require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/formHandlers/selectDisplayPanel_editMedia.php');
             } elseif ($editMode === 'add') {
                 $panelDescription = 'Use the admin buttons below to administer the new <span style="color:#66ff66">' . ucwords($nameOfDisplayBeingEdited) . '</span> display\'s media.';

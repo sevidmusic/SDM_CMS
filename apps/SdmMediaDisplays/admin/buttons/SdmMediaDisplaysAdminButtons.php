@@ -70,7 +70,6 @@ foreach ($displays as $display) {
 }
 
 if ($displaysExist === true) {
-    var_dump('Displays exist.');
     array_push($sdmMediaDisplayAdminPanelButtons['displayCrudPanel'], createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_editDisplays', 'panel', 'selectDisplayPanel_editDisplays', 'Edit Displays', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())));
     array_push($sdmMediaDisplayAdminPanelButtons['displayCrudPanel'], createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_deleteDisplays', 'panel', 'deleteDisplayPanel_deleteDisplays', 'Delete Displays', array('form' => $sdmMediaDisplaysAdminForm->sdmFormGetFormId())));
 
