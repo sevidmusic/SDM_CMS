@@ -32,6 +32,20 @@ foreach ($requiredDirectories as $requiredDirectory) {
     }
 }
 
+/* Cleanup ghost json data */
+$dataDirectoryListing = $sdmassembler->sdmCoreGetDirectoryListing('SdmMediaDisplays/displays/data', 'apps');
+
+/* Ghost file path */
+foreach ($dataDirectoryListing as $dataDirectoryName) {
+    /* Delete any ghost .json files. */
+    $ghostJsonFilePath = $sdmMediaDisplaysDirectoryPath . '/displays/data/' . $dataDirectoryName . '/.json';
+    if (file_exists($ghostJsonFilePath) === true) {
+        unlink($ghostJsonFilePath);
+        error_log('Sdm Media Displays: Removed ghost json file from ' . $ghostJsonFilePath . '.');
+    }
+
+}
+
 if ($initialSetup === true) {
     $initialSetupMessage = "
         <h2>Sdm Media Displays</h2>
