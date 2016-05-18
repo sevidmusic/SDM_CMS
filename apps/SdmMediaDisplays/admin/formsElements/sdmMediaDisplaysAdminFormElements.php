@@ -9,10 +9,10 @@
 /* Determine pages available to displays. */
 $pagesAvailableToDisplays = $sdmassembler->sdmCoreDetermineAvailablePages();
 
-/* Determine available displays | based on directories in /displays/data  */
+/* Determine available displays. | Based on directories in /displays/data.  */
 $displaysAvailableToEdit = array_diff($sdmassembler->sdmCoreGetDirectoryListing('sdmMediaDisplays/displays/data', 'apps'), array('.', '..', '.DS_Store', 'SdmMediaDisplays'));
 
-/* Structure an array of available displays for use as form value */
+/* Structure an array of available displays for use as form values. */
 $displaysAvailableToEditFormValueArray = array_combine($displaysAvailableToEdit, $displaysAvailableToEdit);
 
 /* Structure an array of available pages for use as form value removing any page names that match the
@@ -24,7 +24,7 @@ foreach ($pagesAvailableToDisplays as $key => $value) {
     }
 }
 
-/** Handle form element assignments that are based on $adminMode **/
+/** Build appropriate form element based on $adminMode **/
 
 /* Check $adminMode to determine whether to show "select display to edit" or or "select page to show display on" form element on the selectDisplayPaenl. */
 if ($adminMode === 'editDisplays' || $adminMode === 'deleteDisplays') {
