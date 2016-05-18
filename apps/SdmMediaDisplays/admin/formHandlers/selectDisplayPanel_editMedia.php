@@ -19,11 +19,11 @@ if ($adminMode === 'saveMedia') {
     /* Path file was uploaded to/ */
     $fileSavedToPath = $savePath;
 
-    /* The unique file name generated on file upload. */
+    /* The unique file name generated on file upload. This includes the file extension. */
     $fileName = $uniqueFileName;
 
     /* Generate a save file name to be used as the sdmMediaSourceName and as the name of the json and media
-       files that are created for this media object. */
+       files that are created for this media object. Does not include file extension. */
     $safeFileName = substr($uniqueFileName, 0, strpos($uniqueFileName, '.'));
 
     /* Initialize array to hold new media property values. */
@@ -36,14 +36,6 @@ if ($adminMode === 'saveMedia') {
             case 'sdmMediaSourceUrl':
                 /* If sdmMediaSourceType is local, enforce local url, otherwise use supplied. */
                 $newMediaPropertyValues[$submittedEditMediaFormKey] = ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('sdmMediaSourceType') === 'local' ? $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/apps/SdmMediaDisplays/displays/media' : $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue($submittedEditMediaFormKey));
-                break;
-            case 'sdmMediaId':
-                /**
-                 * Generate new random 20 character numeric id for media objects every time they are edited.
-                 * This is ok because the json file and the relative media file are updated each time media
-                 * is edited.
-                 */
-                $newMediaPropertyValues[$submittedEditMediaFormKey] = rand(1000, 9999) . rand(100, 999) . rand(1, 9999) . rand(1000, 9999) . rand(10000, 99999);
                 break;
             case 'sdmMediaProtected':
             case 'sdmMediaPublic':
@@ -66,11 +58,29 @@ if ($adminMode === 'saveMedia') {
 
     /** Set Properties that rely on file upload handler. **/
 
-    /* Set media source name based on uploaded file name */
-    $newMediaObject->sdmMediaSetSourceName($safeFileName);
+    switch ($newMediaPropertyValues['sdmMediaSourceType']) {
+        case 'external':
+            /* Set safe file name */
+            $safeFileName = hash('sha256', $newMediaPropertyValues['sdmMediaSourceUrl']);
 
-    /* Set media source id based on uploaded file name */
-    $newMediaObject->sdmMediaSetId($safeFileName);
+            /* Set media source name based on $safeFileName */
+            $newMediaObject->sdmMediaSetSourceName($safeFileName);
+
+            /* Set source path to source url for external media */
+            $newMediaObject->sdmMediaSetSourcePath($newMediaPropertyValues['sdmMediaSourceUrl']);
+
+            /* Set media source id based on uploaded file name */
+            $newMediaObject->sdmMediaSetId($safeFileName);
+            break;
+        default:
+
+            /* Set media source name based on uploaded file name */
+            $newMediaObject->sdmMediaSetSourceName($safeFileName);
+
+            /* Set media source id based on uploaded file name */
+            $newMediaObject->sdmMediaSetId($safeFileName);
+            break;
+    }
 
     /* Set media source extension based on uploaded file name */
     $fileExtension = substr($fileName, -3);
@@ -86,7 +96,7 @@ if ($adminMode === 'saveMedia') {
     $newMediaObjectJson = json_encode($newMediaObject);
 
     /* Save new media object  */
-    file_put_contents($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/data/' . $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit') . '/' . $safeFileName . '.json', $newMediaObjectJson);
+    file_put_contents($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/data/' . $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit') . '/' . $newMediaObject->sdmMediaGetSdmMediaSourceName() . '.json', $newMediaObjectJson);
 
     /* Added confirmation message to panel description. */
     $panelDescription .= '<p>Saved changes to media "' . $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('sdmMediaDisplayName') . '".</p>';

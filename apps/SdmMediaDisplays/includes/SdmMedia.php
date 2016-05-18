@@ -114,6 +114,14 @@ class SdmMedia implements JsonSerializable
     }
 
     /**
+     * @param string $sdmMediaSourcePath
+     */
+    public function sdmMediaSetSourcePath($sdmMediaSourcePath)
+    {
+        $this->sdmMediaSourcePath = $sdmMediaSourcePath;
+    }
+
+    /**
      * @param string $sdmMediaSetId
      */
     public function sdmMediaSetId($sdmMediaId)
