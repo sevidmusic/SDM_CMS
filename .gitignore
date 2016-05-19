@@ -8,6 +8,8 @@ nbproject
 
 apps/SdmMediaDisplays/logs
 
+apps/SdmMediaDisplays/displays/data
+
 # FILES #
 
 .DS_Store
