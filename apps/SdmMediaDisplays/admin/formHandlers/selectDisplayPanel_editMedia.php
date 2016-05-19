@@ -68,6 +68,40 @@ if ($adminMode === 'saveMedia') {
 
             /* Set media source id based on uploaded file name */
             $newMediaObject->sdmMediaSetId($safeFileName);
+
+            /**
+             * Attempts to encode an external media url so it complies to the embed format
+             * of the provider. At the moment this function only supports Vimeo, and Youtube.
+             * Other prover urls will be returned without modification.
+             *
+             * @param string $url The external media url to encode
+             *
+             * @return string The encoded url.
+             */
+            function sdmMediaEncodeExternalMediaUrl($url = 'https://www.youtube.com/watch?v=brj_cFsDc7Y')
+            {
+                /* Determine provider. */
+                $provider = parse_url($url);
+
+                /* Encode url based on provider */
+                switch ($provider['host']) {
+                    case 'youtube.com':
+                    case 'www.youtube.com':
+                        $embedUrl = str_replace('watch?v=', 'embed/', $url);
+                        break;
+                    case 'vimeo.com':
+                        $embedUrl = str_replace('vimeo.com/', 'player.vimeo.com/video/', $url);
+                        break;
+                    default:
+                        $embedUrl = $url;
+                        break;
+                }
+                return $embedUrl;
+            }
+
+            /* Properly encode embed urls for display */
+            $newMediaObject->sdmMediaSetSourceUrl(sdmMediaEncodeExternalMediaUrl($newMediaPropertyValues['sdmMediaSourceUrl']));
+
             break;
         default:
 
