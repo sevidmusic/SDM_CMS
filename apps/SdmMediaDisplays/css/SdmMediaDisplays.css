@@ -10,3 +10,30 @@
     border-radius: 21px;
     z-index: -1000;
 }
+
+
+.coolDefconVideoMediaWrapper {
+    border-radius: 9px;
+    background: #000000;
+    padding: 42px;
+    border: 3px solid #ffffff;
+    width: 24%;
+    height: 420px;
+    min-width: 420px;
+    float: left;
+    overflow: auto;
+    margin: 2% 2% 0px 0px;
+}
+
+.coolDefconVideoMediaWrapper iframe {
+    background: #000000;
+    border-radius: 9px;
+    padding: 0px 0px 0px 0px;
+    margin: 0px;
+    border: none;
+    border-width: 0px;
+}
+
+.coolDefconVideoMediaContainer {
+    width: 100em;
+}
