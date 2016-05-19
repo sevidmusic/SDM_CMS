@@ -82,8 +82,8 @@ if ($adminMode === 'saveMedia') {
             break;
     }
 
-    /* Set media source extension based on uploaded file name */
-    $fileExtension = substr($fileName, -3);
+    /* Set media source extension based on uploaded file name | @todo: validate agaisnt a whitelist of valid extensions. */
+    $fileExtension = substr($fileName, strpos($fileName, ".") + 1);
     $newMediaObject->sdmMediaSetSourceExtension($fileExtension);
 
     /* Convert media display name to camel case and set as machine name */

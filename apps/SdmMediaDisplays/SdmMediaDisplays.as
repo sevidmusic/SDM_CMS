@@ -1,1 +1,1 @@
-stylesheets=css/SdmDisplaysAdminPanels;
+stylesheets=css/SdmDisplaysAdminPanels,css/SdmMediaDisplays;

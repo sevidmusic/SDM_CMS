@@ -10,6 +10,7 @@ apps/SdmMediaDisplays/logs
 
 apps/SdmMediaDisplays/displays/data
 
+apps/SdmMediaDisplays/displays/media
 # FILES #
 
 .DS_Store
