@@ -25,7 +25,7 @@
  *
  */
 
-clearstatcache();
+clearstatcache(true);
 
 /* If core site components have been not been configured, redirect to reset.php. */
 if (!file_exists(__DIR__ . '/core/sdm/data.json')) {

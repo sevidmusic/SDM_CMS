@@ -66,9 +66,6 @@ if ($adminMode === 'saveMedia') {
             /* Set media source name based on $safeFileName */
             $newMediaObject->sdmMediaSetSourceName($safeFileName);
 
-            /* Set source path to source url for external media */
-            $newMediaObject->sdmMediaSetSourcePath($newMediaPropertyValues['sdmMediaSourceUrl']);
-
             /* Set media source id based on uploaded file name */
             $newMediaObject->sdmMediaSetId($safeFileName);
             break;
