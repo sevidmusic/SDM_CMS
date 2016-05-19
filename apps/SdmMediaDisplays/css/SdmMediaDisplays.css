@@ -8,4 +8,5 @@
     left: 19px;
     width: 1637px;
     border-radius: 21px;
+    z-index: -1000;
 }
