@@ -13,21 +13,16 @@
 
 
 /* Options arrays for different displays | variable name format should follow $DISPLAYNAMEOptions*/
+
+/* Default options */
 $SdmMediaDisplaysOptions = array(
     'wrapper' => 'main_content',
-    'roles' => array('root'),
-);
-
-$homepageOptions = array(
-    'wrapper' => 'main_content',
-    'roles' => array('root')
 );
 
 /* Determine which options array to use based on $currentDisplay. */
 $option = $currentDisplay . 'Options';
 
-/* Use appropriate options array. Display options arrays, including the
- *  default, are defined in SdmMediaDisplayOptions.php. If an options array
- *  is not found then the Display will not be shown.
+/* Use appropriate options array. If an options array is not found for the current display
+ * then the default $SdmMediaDisplaysOptions will be used.
  */
-$options = (isset($$option) === true ? $$option : array());
+$options = (isset($$option) === true ? $$option : $SdmMediaDisplaysOptions);
