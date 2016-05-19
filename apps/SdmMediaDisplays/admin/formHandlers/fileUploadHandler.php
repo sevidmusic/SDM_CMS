@@ -22,13 +22,16 @@
 $savePath = $sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/media';
 
 try {
-    /* Define valid white list of media types */
+    /* Define valid white list of media types | @todo: make it possible for types to specify multiple mime types
+       for instance, javscript is often misinterperted as text/plain, or text/javascript even though the standard
+       is application/javascript. So, for compatibility reasons, js should support all three...
+    */
     $validTypes = array(
         'jpg' => 'image/jpeg',
         'png' => 'image/png',
         'gif' => 'image/gif',
         'json' => 'application/json',
-        'js' => 'application/js',
+        'js' => 'text/plain', /* text/plain is what MAMP interprets, even though the standard is application/javascript */
         'mp3' => 'audio/mpeg',
         'aif' => 'audio/x-aiff',
         'aiff' => 'audio/x-aiff',
@@ -209,7 +212,7 @@ try {
 } catch (RuntimeException $e) {
     /* Catch any error messages, log error message to core error log, and assign to $errorMessages. */
     $errorMessages = $e->getMessage();
-    //error_log($errorMessages);
+    error_log($errorMessages);
 }
 
 /* If not set, use original value, if original value not set use random number. */
