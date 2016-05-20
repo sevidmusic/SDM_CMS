@@ -1,4 +1,10 @@
 <?php
+/* DEV CODE | REMOVE THIS CODE ON PRODUCTION SITES!!! */
+ini_set('xdebug.var_display_max_depth', -1);
+ini_set('xdebug.var_display_max_children', -1);
+ini_set('xdebug.var_display_max_data', -1);
+
+/* END DEV CODE */
 
 /**
  * Index file for the Sdm Cms. This file serves all site pages.

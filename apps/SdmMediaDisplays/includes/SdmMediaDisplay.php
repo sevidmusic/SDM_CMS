@@ -195,10 +195,7 @@ class SdmMediaDisplay extends SdmMedia
         $categorizedMediaObjects = $this->sdmMediaDisplayCategorizedMediaObjects;
         switch (isset($function) && function_exists($function)) {
             case true:
-                ini_set('xdebug.var_display_max_depth', -1);
-                ini_set('xdebug.var_display_max_children', -1);
-                ini_set('xdebug.var_display_max_data', -1);
-
+                /* Unpack categorized media objects. */
                 foreach ($categorizedMediaObjects as $category) {
                     foreach ($category as $place) {
                         foreach ($place as $mediaObject) {
@@ -209,6 +206,7 @@ class SdmMediaDisplay extends SdmMedia
                 }
                 break;
             default:
+                /* Unpack categorized media objects. */
                 foreach ($categorizedMediaObjects as $category) {
                     foreach ($category as $place) {
                         foreach ($place as $mediaObject) {
