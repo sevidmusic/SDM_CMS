@@ -12,7 +12,8 @@ function coolDefconVideoDisplays($media, $mediaObject)
     $category = $mediaObject->sdmMediaGetSdmMediaCategory();
     $mediaUrl = $mediaObject->sdmMediaGetSdmMediaSourceUrl();
     $provider = parse_url($mediaUrl);
-    echo "
+    if ($category !== 'Animated Background') {
+        echo "
         <div class='coolDefconVideoMediaContainer'>
             <div class='coolDefconVideoMediaWrapper'>
                 <div class='coolDefconVideoMediaTitle'>
@@ -24,6 +25,9 @@ function coolDefconVideoDisplays($media, $mediaObject)
             </div>
         </div>
         ";
+    } else {
+        echo $media;
+    }
 }
 
 echo $sdmMediaDisplay->sdmMediaDisplayGenerateMediaDisplay('coolDefconVideoDisplays');

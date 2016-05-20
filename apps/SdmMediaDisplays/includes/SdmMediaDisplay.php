@@ -104,14 +104,19 @@ class SdmMediaDisplay extends SdmMedia
         foreach ($mediaObjects as $mediaObject) {
             /* Unpack media object properties */
             $mediaProperties = get_object_vars($mediaObject);
+            /* Determine media category. */
             $mediaCategory = $mediaProperties['sdmMediaCategory'];
+            /* Determine Media Place */
             $mediaPlace = $mediaProperties['sdmMediaPlace'];
             /* Filter SdmMediaDisplay name so only it's alphanumeric characters are used. */
             $mediaDisplayName = preg_replace("/[^a-zA-Z0-9]+/", " ", $mediaProperties['sdmMediaDisplayName']);
+            /* Determine machine name. */
             $mediaMachineName = $mediaProperties['sdmMediaMachineName'];
-            /* Assign SdmMedia objects html to the $orderedMedia array. Index by SdmMediaCategory,
+            /* Assign SdmMedia object to the $orderedMedia array. Index by SdmMediaCategory,
                SdmMediaPlace, and finally SdmMediaDisplayName */
-            $orderedMedia[$mediaCategory][$mediaPlace][$mediaDisplayName] = $mediaElementsHtml[$mediaMachineName];
+            $mediaObject->sdmMediaDynamicallyGeneratedHtml = $mediaElementsHtml[$mediaMachineName];
+            //var_dump($mediaObject);
+            $orderedMedia[$mediaCategory][$mediaPlace][$mediaDisplayName] = $mediaObject;
         }
         /* Sort each level of the $orderedMedia array. */
         $this->sdmMediaDisplaySortCategorizedMediaElements($orderedMedia);
@@ -161,7 +166,7 @@ class SdmMediaDisplay extends SdmMedia
         /* Store $this in local var so it can be accessed by template. */
         $sdmMediaDisplay = $this;
         $templateDirPath = str_replace('/includes', '', __DIR__) . '/displays/templates';
-        switch(file_exists($templateDirPath . '/' . $this->sdmMediaDisplayTemplate . '.php')) {
+        switch (file_exists($templateDirPath . '/' . $this->sdmMediaDisplayTemplate . '.php')) {
             case true:
                 require_once($templateDirPath . '/' . $this->sdmMediaDisplayTemplate . '.php');
                 break;
@@ -184,24 +189,35 @@ class SdmMediaDisplay extends SdmMedia
      */
     public function sdmMediaDisplayGenerateMediaDisplay($function = null)
     {
+        /* Initialize $display array. */
         $display = array();
+        /* Get categorized media objects for this display. */
+        $categorizedMediaObjects = $this->sdmMediaDisplayCategorizedMediaObjects;
         switch (isset($function) && function_exists($function)) {
             case true:
-                $mediaObjects = $this->sdmMediaDisplayGetMediaObjects();
-                $incrementer = 0;
-                $iterator = new RecursiveIteratorIterator(new RecursiveArrayIterator($this->sdmMediaDisplayCategorizedMediaObjects));
-                foreach ($iterator as $media) {
-                    $display[] = call_user_func_array($function, array($media, $mediaObjects[$incrementer]));
-                    $incrementer++;
-                }
+                ini_set('xdebug.var_display_max_depth', -1);
+                ini_set('xdebug.var_display_max_children', -1);
+                ini_set('xdebug.var_display_max_data', -1);
 
+                foreach ($categorizedMediaObjects as $category) {
+                    foreach ($category as $place) {
+                        foreach ($place as $mediaObject) {
+                            /* Call user defined display assembly function, and add returned data to the $display array. */
+                            $display[] = call_user_func_array($function, array($mediaObject->sdmMediaDynamicallyGeneratedHtml, $mediaObject));
+                        }
+                    }
+                }
                 break;
             default:
-                foreach (new RecursiveIteratorIterator(new RecursiveArrayIterator($this->sdmMediaDisplayCategorizedMediaObjects)) as $media) {
-                    $display[] = PHP_EOL . $media . PHP_EOL;
+                foreach ($categorizedMediaObjects as $category) {
+                    foreach ($category as $place) {
+                        foreach ($place as $mediaObject) {
+                            /* Add media's html to $display array. */
+                            $display[] = PHP_EOL . $mediaObject->sdmMediaDynamicallyGeneratedHtml . PHP_EOL;
+                        }
+                    }
                 }
                 break;
-
         }
 
         return implode('', $display);
