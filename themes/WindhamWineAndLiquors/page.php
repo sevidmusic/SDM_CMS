@@ -1,14 +1,35 @@
-<?php
-/**
- * This file defines the basic html structure for the sdmResponsive theme.
- */
-?>
+<!--
+Naming conventions for this theme:
+core wrappers: core_wrapper_name | core wrapper names are mixed case, and use underscores for spaces
+locked wrappers : locked_camelCaseWrapperName | locked wrapper names are camel case, and are prefixed with an acronym of the theme name
+unlocked wrappers : wrapper-name | unlocked wrappers are all lower case and use hyphens for spaces.
+-->
 
-<div id="main_content"
-     class="col-12">
-    <?php
-    echo $sdmassembler->sdmAssemblerGetContentHtml('main_content');
-    ?>
+<!-- Basic row structure
+<div class="row">
+    <div class="col-12"></div>
+</div>
+-->
+
+<!--
+Wrapper: #mainMenu
+Wrapper Classes: wwl_menu,
+Child Wrappers: main-menu
+-->
+<div id="locked_mainMenuWrapper">
+    <div id="main-menu" class="wwl_mainMenu">
+        <?php
+        echo $sdmassembler->sdmAssemblerGetContentHtml('main-menu');
+        ?>
+    </div>
+</div>
+
+<div class="row">
+    <div id="main_content" class="wwl_col-12">
+        <?php
+        echo $sdmassembler->sdmAssemblerGetContentHtml('main_content');
+        ?>
+    </div>
 </div>
 
 <!--
