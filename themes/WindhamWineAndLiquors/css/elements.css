@@ -1,0 +1,5 @@
+
+ul {
+    list-style: none; /* get rid of bullets for list elemetns */
+    padding-left: 0; /* remove indentation of list elements */
+}

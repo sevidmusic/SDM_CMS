@@ -1,0 +1,45 @@
+/*
+    Document   : menus
+    Created on : Oct 28, 2015, 5:20:29 PM
+    Author     : seviforeman
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+a {
+    text-decoration: none;
+}
+
+a:link {
+    color: #500001;
+}
+
+a:visited {
+    color: #500001
+}
+
+a:hover {
+    color: #0099FF;
+}
+
+a:active {
+    color: #0099FF;
+}
+
+/** menu styles **/
+.horizontal-menu {
+    font-size: 1.2em; /* slightly larger then base font-size */
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+
+}
+
+.horizontal-menu li {
+    display: inline-block; /* Use inline-block so we can apply margins */
+    margin: 0 15px 0 15px; /* Align with "col-*" left margins @see [class*="col-"] {} in layout.css for correct pixel measurements, margin left and right for horizontal-menu li {} should = padding in [class*="col-"]{} */
+}
+
+.horizontal-menu a {
+    text-decoration: none;
+}

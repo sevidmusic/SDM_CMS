@@ -1,0 +1,151 @@
+/* Use border-box for box sizing. */
+html {
+    /* older browsers */
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    /* modern browsers */
+    box-sizing: border-box;
+}
+
+/* Make sure border-box sizing is is inherited by pseudo elements */
+*, *:before, *:after {
+    /* older browsers */
+    -webkit-box-sizing: inherit;
+    -moz-box-sizing: inherit;
+    /* moder browsers */
+    box-sizing: inherit;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    /* Permalink - use to edit this gradient: http://colorzilla.com/gradient-editor/#7c0002+0,160000+100 */
+    background: rgb(124, 0, 2); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(124, 0, 2, 1) 0%, rgba(22, 0, 0, 1) 100%); /* FF3.6-15 */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(124, 0, 2, 1)), color-stop(100%, rgba(22, 0, 0, 1))); /* Chrome4-9,Safari4-5 */
+    background: -webkit-linear-gradient(top, rgba(124, 0, 2, 1) 0%, rgba(22, 0, 0, 1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: -o-linear-gradient(top, rgba(124, 0, 2, 1) 0%, rgba(22, 0, 0, 1) 100%); /* Opera 11.10-11.50 */
+    background: -ms-linear-gradient(top, rgba(124, 0, 2, 1) 0%, rgba(22, 0, 0, 1) 100%); /* IE10 preview */
+    background: linear-gradient(to bottom, rgba(124, 0, 2, 1) 0%, rgba(22, 0, 0, 1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#7c0002', endColorstr='#160000', GradientType=0); /* IE6-9 */
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.row {}
+
+/**
+    The columns inside a row are all floating to the left, and are therefore taken out
+    of the flow of the page, and other elements will be placed as if the columns do not
+    exist. To prevent this, add a style that clears the float after each row.
+    (i.e., after each element with class .row)
+**/
+.row:after {
+    clear: both;
+    display: block;
+}
+
+/*
+    Mobile col- widths all 100%
+*/
+[class*="col-"] {
+    width: 100%;
+    float: left;
+}
+
+/* Define base font styles for this theme. */
+.WindhamWineAndLiquors {
+}
+
+/* Tablet */
+@media only screen and (min-width: 720px) {
+
+}
+
+/* Desktop */
+@media only screen and (min-width: 960px) {
+    .row {
+        margin: 0 auto;
+    }
+
+    .wwl_column1 {
+        width: 5%;
+    }
+
+    .wwl_column2 {
+        width: 10%;
+    }
+
+    .wwl_column3 {
+        width: 15%;
+    }
+
+    .wwl_column4 {
+        width: 20%;
+    }
+
+    .wwl_column5 {
+        width: 25%;
+    }
+
+    .wwl_column6 {
+        width: 30%;
+    }
+
+    .wwl_column7 {
+        width: 35%;
+    }
+
+    .wwl_column8 {
+        width: 40%;
+    }
+
+    .wwl_column9 {
+        width: 45%;
+    }
+
+    .wwl_column10 {
+        width: 50%;
+    }
+
+    .wwl_column11 {
+        width: 55%;
+    }
+
+    .wwl_column12 {
+        width: 60%;
+    }
+
+    .wwl_column13 {
+        width: 65%;
+    }
+
+    .wwl_column14 {
+        width: 70%;
+    }
+
+    .wwl_column15 {
+        width: 75%;
+    }
+
+    .wwl_column16 {
+        width: 80%;
+    }
+
+    .wwl_column17 {
+        width: 85%;
+    }
+
+    .wwl_column18 {
+        width: 90%;
+    }
+
+    .wwl_column19 {
+        width: 95%;
+    }
+
+    .wwl_column20 {
+        width: 100%;
+    }
+
+}
