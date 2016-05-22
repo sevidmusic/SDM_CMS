@@ -15,7 +15,7 @@ a:link {
 }
 
 a:visited {
-    color: #500001
+    color: #500001;
 }
 
 a:hover {
@@ -24,6 +24,14 @@ a:hover {
 
 a:active {
     color: #0099FF;
+}
+
+#locked_headerWrapper a:hover {
+    color: #500001;
+}
+
+#locked_headerWrapper a:active {
+    color: #500001;
 }
 
 /** menu styles **/
