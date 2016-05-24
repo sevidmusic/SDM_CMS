@@ -2,6 +2,10 @@
     position: fixed;
     top: 0;
     left: 0;
-    z-index: -1;
-    height: 250px;
+    z-index: -100000;
+    height: 254px;
+}
+
+#facebook-icon {
+    width: 27px;
 }

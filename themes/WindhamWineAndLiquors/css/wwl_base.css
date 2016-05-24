@@ -32,7 +32,9 @@ body {
     background-attachment: fixed;
 }
 
-.row {}
+.row {
+    padding: 0px 88px;
+}
 
 /**
     The columns inside a row are all floating to the left, and are therefore taken out

@@ -5,6 +5,13 @@ locked wrappers : locked_camelCaseWrapperName | locked wrapper names are camel c
 unlocked wrappers : wrapper-name | unlocked wrapper names are all lower case and use hyphens for spaces.
 classes : wwl_className | classes are camel case and are prefixed with"wwl_"
 -->
+<div id="locked_facebookIcon">
+    <a href="https://www.facebook.com/Windham-Wine-Liquors-129183917169813/info/?tab=overview">
+        <img id="facebook-icon"
+             src="<?php echo $sdmassembler->sdmCoreGetCurrentThemeDirectoryUrl(); ?>/media/facebookIcon.png"/>
+        <div id="locked_facebookText">Check Us Out On Facebook</div>
+    </a>
+</div>
 <div id="locked_siteWrapper">
     <div class="border row">
         <div id="locked_headerWrapper" class="border wwl_column20">

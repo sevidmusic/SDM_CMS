@@ -25,3 +25,8 @@
 #locked_footerWrapper {
     text-align: center;
 }
+
+#locked_facebookIcon {
+    font-size: 12px;
+    word-wrap: break-word;
+}

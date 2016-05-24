@@ -3,9 +3,19 @@
     background: #ffffff;
 }
 
+@media only screen and (min-width: 960px) {
+    /* site width */
+    #locked_siteWrapper {
+        width: 1420px;
+        margin: 0 auto;
+        opacity: .97;
+    }
+}
 
 /* Row 1 content wrappers */
 #locked_mainMenuWrapper {
+    margin-top: 72px;
+    margin-left: -17px;
 }
 
 #main-menu {
@@ -23,7 +33,7 @@
 
 /* Row 2 content wrappers */
 #locked_mainContentWrapper {
-    padding: 17px;
+    margin-top: 20px;
 }
 
 #main_content {
@@ -33,12 +43,23 @@
     padding: 42px;
 }
 
-@media only screen and (min-width: 960px) {
-    /* site width */
-    #locked_siteWrapper {
-        width: 1420px;
-        margin: 0 auto;
-        padding: 0px 42px;
-        opacity: .97;
-    }
+#locked_facebookIcon {
+    position: fixed;
+    top: 253px;
+    opacity: .9;
+    left: 0px;
+    overflow: hidden;
+    width: 129px;
+    background: #5f282e;
+    padding: 5px;
+    z-index: 2999;
 }
+
+#locked_facebookText {
+    color: #ffffff;
+    float: right;
+    width: 77px;
+    font-size: 0.9em;
+    margin-top: 3px;
+}
+
