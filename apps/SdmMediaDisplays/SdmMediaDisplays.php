@@ -49,7 +49,7 @@ if (file_exists(__DIR__ . '/displays/data/' . $currentDisplay) === true) {
 
 }
 
-
+/* If current page is the SdmMediaDisplays page show admin panel. */
 if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
     /*** Build Admin Panel ***/
 
@@ -76,10 +76,8 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
 
     /* Build Form */
     $editDisplayForm->sdmFormBuildForm();
+
+    /* Load admin panels */
+    require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/SdmMediaDisplaysAdminPanel.php');
+
 }
-
-/* Load admin panels */
-require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/SdmMediaDisplaysAdminPanel.php');
-
-
-
