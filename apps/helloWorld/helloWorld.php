@@ -8,7 +8,7 @@
 $options = array(
     'wrapper' => 'main_content',
     'incmethod' => 'overwrite',
-    'incpages' => array('all'),
+    'incpages' => array('helloWorld'),
     'ignorepages' => array(''),
     'roles' => array('all'),
 );
