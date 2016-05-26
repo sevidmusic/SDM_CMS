@@ -661,11 +661,19 @@ class SdmAssembler extends SdmNms
      */
     public function sdmAssemblerIncorporateAppOutput($output, array $options = array())
     {
+        /* Determine the calling app. */
+        $debugBacktrace = debug_backtrace();
+        $callingApp = str_replace('.php', '', substr($debugBacktrace[0]['file'], strrpos($debugBacktrace[0]['file'], '/') + 1));
+
+        if ($callingApp === 'helloWorld') {
+            $this->sdmCoreSdmReadArray(['Calling app' => $callingApp]);
+        }
+
         /* Determine the requested page. */
         $requestedPage = $this->sdmCoreDetermineRequestedPage();
 
         /* Filter options array to insure it's integrity. */
-        $this->filterOptionsArray($options);
+        $this->filterOptionsArray($options, $callingApp);
 
         /* Make sure user has permission to use this app. If user does not have permission, then return false. */
         if ($this->sdmAssemblerUserCanUseApp($options) !== true) {
@@ -721,7 +729,7 @@ class SdmAssembler extends SdmNms
      * @return array The filtered options array. This method handles the options array by reference so there is
      * no need to assign it's return value to a variable.
      */
-    final private function filterOptionsArray(&$options)
+    final private function filterOptionsArray(&$options, $callingApp = null)
     {
         /* Review $options array values to insure they exist. If they don't
         then they will be created and assigned a default value */
@@ -741,12 +749,13 @@ class SdmAssembler extends SdmNms
             $options['ignorepages'] = array();
         }
 
-        /* If $options['incpages'] was not set create it and assign an array filled with all pages in
-         the DataObject and with the names of all enabled apps. */
+        /* If $options['incpages'] was not set, first attempt to use the name of the calling app as the only
+           page in incpages, if calling app is null, then assign an array filled with all pages in
+           the DataObject and with the names of all enabled apps. */
         if (!isset($options['incpages'])) {
             $pages = $this->sdmCoreDetermineAvailablePages();
             $enabledApps = json_decode(json_encode($this->sdmCoreDetermineEnabledApps()), true);
-            $options['incpages'] = array_merge($pages, $enabledApps);
+            $options['incpages'] = ($callingApp === null || $callingApp === false || $callingApp === '' ? array_merge($pages, $enabledApps) : array($callingApp));
         }
 
         /* If $options['roles'] is not set create it and assign an array containing the special 'all' value.
@@ -754,7 +763,9 @@ class SdmAssembler extends SdmNms
         if (!isset($options['roles'])) {
             $options['roles'] = array('all');
         }
-
+        if ($callingApp === 'helloWorld') {
+            $this->sdmCoreSdmReadArray(['Options after filter: ' => $options]);
+        }
         /* Return the filtered $options array. */
         return $options;
     }
