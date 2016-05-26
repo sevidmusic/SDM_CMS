@@ -54,10 +54,12 @@
     padding: .13em .2em;
     border: solid #d6efff 4px;
     text-decoration: none;
-    font-size: .9em;
+    font-size: 60%;
     width: 19%;
+    min-width: 110px;
     margin: 2% 6% 3% 7.5%;
     height: 45px;
+    min-height: 53px;
 }
 
 #SdmMediaDisplaysAdminPanel button:hover,

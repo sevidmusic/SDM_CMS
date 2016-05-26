@@ -17,6 +17,7 @@
 /* Default options */
 $SdmMediaDisplaysOptions = array(
     'wrapper' => 'main_content',
+    'incpages' => array($currentDisplay),
 );
 
 /* Determine which options array to use based on $currentDisplay. */

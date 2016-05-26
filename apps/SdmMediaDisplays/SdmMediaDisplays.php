@@ -11,7 +11,7 @@
  * It is used to determine if there is display data for the current page,
  * and which app options array to use if there is.
  */
-$currentDisplay = $sdmassembler->sdmCoreDetermineRequestedPage();
+$currentDisplay = 'homepage';
 
 /* Create an instance of SdmCore() for the SdmMediaDisplay(). */
 $SdmCore = new SdmCore();
