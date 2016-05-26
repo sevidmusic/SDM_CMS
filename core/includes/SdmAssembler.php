@@ -665,9 +665,19 @@ class SdmAssembler extends SdmNms
         $debugBacktrace = debug_backtrace();
         $callingApp = str_replace('.php', '', substr($debugBacktrace[0]['file'], strrpos($debugBacktrace[0]['file'], '/') + 1));
 
-        if ($callingApp === 'helloWorld') {
-            $this->sdmCoreSdmReadArray(['Calling app' => $callingApp]);
-        }
+        /* Log calls in case debugging is needed. */
+        error_log(PHP_EOL . '<p><h1>------ Sdm Assembler Log' . date('l m/d/Y  @ h:i:s') . ' | timestamp: ' . time() . ' ------</h1><p>' . PHP_EOL . $this->sdmCoreSdmReadArrayBuffered(
+                [
+                    'Requested Page:' => $this->sdmCoreDetermineRequestedPage(),
+                    'Call To:' => $debugBacktrace[0]['class'] . $debugBacktrace[0]['type'] . $debugBacktrace[0]['function'] . '()',
+                    'Caller:' => $callingApp,
+                    '$output' => (isset($debugBacktrace[0]['args'][0]) ? $debugBacktrace[0]['args'][0] : 'no value'),
+                    '$options' => (isset($debugBacktrace[0]['args'][1]) ? $debugBacktrace[0]['args'][1] : 'no value'),
+                    'Caller File:' => $debugBacktrace[0]['file'],
+                    'Called on line:' => $debugBacktrace[0]['line'],
+                    'Called On' => date('l m/d/Y  @ h:i:s') . ' | timestamp: ' . time(),
+                ]
+            ) . PHP_EOL, 3, $this->sdmCoreGetCoreDirectoryPath() . '/logs/sdmAssemblerLog.html');
 
         /* Determine the requested page. */
         $requestedPage = $this->sdmCoreDetermineRequestedPage();
@@ -699,8 +709,14 @@ class SdmAssembler extends SdmNms
         /* Insure the target wrapper is accessible via the DataObject. */
         $this->sdmAssemblerPrepareTargetWrapper($options);
 
-        /* Only incorporate app output if requested page matches one of the items in incpages */
-        if (in_array($requestedPage, $options['incpages'], true)) {
+        /* Determine if requested page is in the incpages array. */
+        $requestedPageInIncpages = in_array($requestedPage, $options['incpages'], true);
+
+        /* Determine if the special 'all' value is in the incpages array. */
+        $includeInAllPages = in_array('all', $options['incpages'], true);
+
+        /* Only incorporate app output if requested page matches one of the items in incpages, or if the special 'all' value exists in the incpages array. */
+        if ($requestedPageInIncpages === true || $includeInAllPages === true) {
             switch ($options['incmethod']) {
                 case 'prepend':
                     $this->DataObject->content->$requestedPage->$options['wrapper'] = $output . $this->DataObject->content->$requestedPage->$options['wrapper'];
@@ -758,14 +774,16 @@ class SdmAssembler extends SdmNms
             $options['incpages'] = ($callingApp === null || $callingApp === false || $callingApp === '' ? array_merge($pages, $enabledApps) : array($callingApp));
         }
 
+        /* If all is specified make sure the app is also assigned to incpages in case app is dynamically generated. */
+        if(in_array('all',$options['incpages'], true)) {
+            array_push($options['incpages'], $callingApp);
+        }
         /* If $options['roles'] is not set create it and assign an array containing the special 'all' value.
          If $options['roles'] is empty it will be assumed that no users can see this app output. */
         if (!isset($options['roles'])) {
             $options['roles'] = array('all');
         }
-        if ($callingApp === 'helloWorld') {
-            $this->sdmCoreSdmReadArray(['Options after filter: ' => $options]);
-        }
+
         /* Return the filtered $options array. */
         return $options;
     }

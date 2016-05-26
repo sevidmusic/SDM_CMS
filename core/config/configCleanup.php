@@ -17,3 +17,6 @@ file_put_contents($sdmGatekeeper->sdmCoreGetCoreDirectoryPath() . '/logs/sdm_cor
 
 /* Reset core bad request log. */
 file_put_contents($sdmGatekeeper->sdmCoreGetCoreDirectoryPath() . '/logs/badRequestsLog.log', '', LOCK_EX);
+
+/* Reset sdm assembler log. */
+file_put_contents($sdmGatekeeper->sdmCoreGetCoreDirectoryPath() . '/logs/sdmAssemblerLog.html', '', LOCK_EX);
