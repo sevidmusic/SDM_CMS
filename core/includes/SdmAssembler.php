@@ -661,23 +661,20 @@ class SdmAssembler extends SdmNms
      */
     public function sdmAssemblerIncorporateAppOutput($output, array $options = array())
     {
-        /* Determine the calling app. */
+        /* Debug Data | Determine the calling app. */
         $debugBacktrace = debug_backtrace();
         $callingApp = str_replace('.php', '', substr($debugBacktrace[0]['file'], strrpos($debugBacktrace[0]['file'], '/') + 1));
-
-        /* Log calls in case debugging is needed. */
-        error_log(PHP_EOL . '<p><h1>------ Sdm Assembler Log' . date('l m/d/Y  @ h:i:s') . ' | timestamp: ' . time() . ' ------</h1><p>' . PHP_EOL . $this->sdmCoreSdmReadArrayBuffered(
-                [
-                    'Requested Page:' => $this->sdmCoreDetermineRequestedPage(),
-                    'Call To:' => $debugBacktrace[0]['class'] . $debugBacktrace[0]['type'] . $debugBacktrace[0]['function'] . '()',
-                    'Caller:' => $callingApp,
-                    '$output' => (isset($debugBacktrace[0]['args'][0]) ? $debugBacktrace[0]['args'][0] : 'no value'),
-                    '$options' => (isset($debugBacktrace[0]['args'][1]) ? $debugBacktrace[0]['args'][1] : 'no value'),
-                    'Caller File:' => $debugBacktrace[0]['file'],
-                    'Called on line:' => $debugBacktrace[0]['line'],
-                    'Called On' => date('l m/d/Y  @ h:i:s') . ' | timestamp: ' . time(),
-                ]
-            ) . PHP_EOL, 3, $this->sdmCoreGetCoreDirectoryPath() . '/logs/sdmAssemblerLog.html');
+        $log = array();
+        $log['Calling App Info'] = [
+            'Requested Page:' => $this->sdmCoreDetermineRequestedPage(),
+            'Call To:' => $debugBacktrace[0]['class'] . $debugBacktrace[0]['type'] . $debugBacktrace[0]['function'] . '()',
+            'Caller:' => $callingApp,
+            //disabled, clogged up log | '$output' => (isset($debugBacktrace[0]['args'][0]) ? $debugBacktrace[0]['args'][0] : 'no value'),
+            //disabled, clogged up log | '$options' => (isset($debugBacktrace[0]['args'][1]) ? $debugBacktrace[0]['args'][1] : 'no value'),
+            'Caller File:' => $debugBacktrace[0]['file'],
+            'Called on line:' => $debugBacktrace[0]['line'],
+            'Called On' => date('l m/d/Y  @ h:i:s') . ' | timestamp: ' . time(),
+        ];
 
         /* Determine the requested page. */
         $requestedPage = $this->sdmCoreDetermineRequestedPage();
@@ -687,18 +684,39 @@ class SdmAssembler extends SdmNms
 
         /* Make sure user has permission to use this app. If user does not have permission, then return false. */
         if ($this->sdmAssemblerUserCanUseApp($options) !== true) {
+            $log['errors']['Permission Denied'] = array(
+                'User\'s Role: ' => $this->sdmGatekeeperDetermineUserRole(),
+                'Accepted Roles' => $options['roles'],
+            );
+            /* Log calls in case debugging is needed. */
+            error_log(PHP_EOL . '<p><h1>------ Sdm Assembler Log' . date('l m/d/Y  @ h:i:s') . ' | timestamp: ' . time() . ' ------</h1><p>' . PHP_EOL . $this->sdmCoreSdmReadArrayBuffered($log) . PHP_EOL, 3, $this->sdmCoreGetCoreDirectoryPath() . '/logs/sdmAssemblerLog.' . $callingApp . '.html');
             return false;
         }
 
         /* Check that $requested page was found in core or listed in the $options['incpages'] array */
         $pageFoundInCore = in_array($requestedPage, $this->sdmCoreDetermineAvailablePages(), true);
         $pageFoundInIncpages = in_array($requestedPage, $options['incpages'], true);
-        if ($pageFoundInCore === false && $pageFoundInIncpages === false) {
+
+        if ($pageFoundInCore === false && $pageFoundInIncpages === false && in_array('all', $options['incpages'], true) === false) {
+            $log['errors']['Excluded From Page and \'all\' not specified'] = array(
+                'Pages App Is Included On' => $options['incpages'],
+                'Pages App Is Ignored On' => $options['ignorepages'],
+                'Requested Page' => $requestedPage,
+            );
+            /* Log calls in case debugging is needed. */
+            error_log(PHP_EOL . '<p><h1>------ Sdm Assembler Log' . date('l m/d/Y  @ h:i:s') . ' | timestamp: ' . time() . ' ------</h1><p>' . PHP_EOL . $this->sdmCoreSdmReadArrayBuffered($log) . PHP_EOL, 3, $this->sdmCoreGetCoreDirectoryPath() . '/logs/sdmAssemblerLog.' . $callingApp . '.html');
             return false;
         }
 
         /* Make sure requested page is not in the $options['ignorepages'] array, If it is return false. */
         if (in_array($requestedPage, $options['ignorepages'], true) || in_array('all', $options['ignorepages'], true)) {
+            $log['errors']['Page Ignored'] = array(
+                'Pages App Is Included On' => $options['incpages'],
+                'Pages App Is Ignored On' => $options['ignorepages'],
+                'Requested Page' => $requestedPage,
+            );
+            /* Log calls in case debugging is needed. */
+            error_log(PHP_EOL . '<p><h1>------ Sdm Assembler Log' . date('l m/d/Y  @ h:i:s') . ' | timestamp: ' . time() . ' ------</h1><p>' . PHP_EOL . $this->sdmCoreSdmReadArrayBuffered($log) . PHP_EOL, 3, $this->sdmCoreGetCoreDirectoryPath() . '/logs/sdmAssemblerLog.' . $callingApp . '.html');
             return false;
         }
 
@@ -729,7 +747,6 @@ class SdmAssembler extends SdmNms
                     break;
             }
         }
-
         /* return the modified DataObject. */
         return true;
     }
@@ -775,7 +792,7 @@ class SdmAssembler extends SdmNms
         }
 
         /* If all is specified make sure the app is also assigned to incpages in case app is dynamically generated. */
-        if(in_array('all',$options['incpages'], true)) {
+        if (in_array('all', $options['incpages'], true)) {
             array_push($options['incpages'], $callingApp);
         }
         /* If $options['roles'] is not set create it and assign an array containing the special 'all' value.
