@@ -9,7 +9,7 @@ $options = array(
     'wrapper' => 'main_content',
     'incmethod' => 'overwrite',
     'incpages' => array('helloWorld'),
-    'ignorepages' => array(),
+    'ignorepages' => array(''),
     'roles' => array('all'),
 );
 

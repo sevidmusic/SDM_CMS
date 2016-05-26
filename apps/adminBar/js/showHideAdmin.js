@@ -23,6 +23,7 @@ $(document).ready(function () {
     /* Determine what pages to display admin bar and panel on immediately */
     var displayPages = [
         'admin',
+        /*
         'contentManager',
         'contentManagerAddContentForm',
         'contentManagerEditContentForm',
@@ -55,6 +56,7 @@ $(document).ready(function () {
         'SdmAuthLogin',
         'SdmCoreOverview',
         'SdmErrorLog',
+         */
     ];
 
     // Determine initial body properties

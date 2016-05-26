@@ -21,7 +21,7 @@ $branchname = $explodedstring[2]; //get the one that is always the branch name
 
 $output = "<div style='clear:both;color: #66CCCC; background: #000000; border-radius: 9px; padding: 10px; margin: 0px 0px 20px 0px; text-align: center;'>Current GIT branch: <i style='color: #00CC33; text-transform: uppercase;'>" . $branchname . "</i></div>";
 
-$sdmassembler->sdmAssemblerIncorporateAppOutput($output, array('incmethod' => 'prepend'));
+$sdmassembler->sdmAssemblerIncorporateAppOutput($output, array('incmethod' => 'prepend', 'incpages' => array('all')));
 
 unset($output);
 $output = '

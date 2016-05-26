@@ -52,7 +52,7 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmDevOutput') {
     $output .= $customForm->sdmFormOpenForm() . $customFormContainer . $customForm->sdmFormCloseForm();
 
     /* Display app $output */
-    $sdmassembler->sdmAssemblerIncorporateAppOutput($output, ['incpages' => ['SdmDevOutput']]);
+    $sdmassembler->sdmAssemblerIncorporateAppOutput($output, ['wrapper' => 'main_content', 'roles' => array('root'), 'incpages' => ['SdmDevOutput']]);
 
 
 }

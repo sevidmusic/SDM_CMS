@@ -554,7 +554,7 @@ class SdmAssembler extends SdmNms
                 require_once($this->sdmCoreGetCoreAppDirectoryPath() . $appPath);
                 return true;
             } else if (file_exists($this->sdmCoreGetUserAppDirectoryPath() . $appPath)) {
-                require($this->sdmCoreGetUserAppDirectoryPath() . $appPath);
+                require_once($this->sdmCoreGetUserAppDirectoryPath() . $appPath);
                 return true;
             }
 
@@ -661,26 +661,67 @@ class SdmAssembler extends SdmNms
      */
     public function sdmAssemblerIncorporateAppOutput($output, array $options = array())
     {
+        /* Debug Data | Determine the calling app. */
+        $debugBacktrace = debug_backtrace();
+        $callingApp = str_replace('.php', '', substr($debugBacktrace[0]['file'], strrpos($debugBacktrace[0]['file'], '/') + 1));
+        $log = array();
+        $log['Calling App Info'] = [
+            'Requested Page:' => $this->sdmCoreDetermineRequestedPage(),
+            'Call To:' => $debugBacktrace[0]['class'] . $debugBacktrace[0]['type'] . $debugBacktrace[0]['function'] . '()',
+            'Caller:' => $callingApp,
+            //disabled, clogged up log | '$output' => (isset($debugBacktrace[0]['args'][0]) ? $debugBacktrace[0]['args'][0] : 'no value'),
+            //disabled, clogged up log | '$options' => (isset($debugBacktrace[0]['args'][1]) ? $debugBacktrace[0]['args'][1] : 'no value'),
+            'Caller File:' => $debugBacktrace[0]['file'],
+            'Called on line:' => $debugBacktrace[0]['line'],
+            'Called On' => date('l m/d/Y  @ h:i:s') . ' | timestamp: ' . time(),
+        ];
+
         /* Determine the requested page. */
         $requestedPage = $this->sdmCoreDetermineRequestedPage();
 
         /* Filter options array to insure it's integrity. */
-        $this->filterOptionsArray($options);
+        $this->filterOptionsArray($options, $callingApp);
 
-        /* Make sure user has permission to use this app. If user does not have permission, then return false. */
+        /* Make sure user has permission to use this app. If user does not have permission, then return false.
+         * Note: Role checks are done by other components as well as here, so, if user does not have correct role,
+         *       we may never get here. This is really just an extra layer in case a user withot the proper credentials
+         *       somehow gets here, hoever if they do they may very well get past this too. Security can be frustrating...
+         *       @todo: Make more secure! by doing???...maybe key created uniquly in sdmAssemblerLoadApp()...? hmmm...need answers!
+         */
         if ($this->sdmAssemblerUserCanUseApp($options) !== true) {
+            $log['errors']['Permission Denied'] = array(
+                'User\'s Role: ' => $this->sdmGatekeeperDetermineUserRole(),
+                'Accepted Roles' => $options['roles'],
+            );
+            /* Log calls in case debugging is needed. */
+            error_log(PHP_EOL . '<p><h1>------ Sdm Assembler Log' . date('l m/d/Y  @ h:i:s') . ' | timestamp: ' . time() . ' ------</h1><p>' . PHP_EOL . $this->sdmCoreSdmReadArrayBuffered($log) . PHP_EOL, 3, $this->sdmCoreGetCoreDirectoryPath() . '/logs/sdmAssemblerLog.' . $callingApp . '.html');
             return false;
         }
 
         /* Check that $requested page was found in core or listed in the $options['incpages'] array */
         $pageFoundInCore = in_array($requestedPage, $this->sdmCoreDetermineAvailablePages(), true);
         $pageFoundInIncpages = in_array($requestedPage, $options['incpages'], true);
-        if ($pageFoundInCore === false && $pageFoundInIncpages === false) {
+
+        if ($pageFoundInCore === false && $pageFoundInIncpages === false && in_array('all', $options['incpages'], true) === false) {
+            $log['errors']['Excluded From Page and \'all\' not specified'] = array(
+                'Pages App Is Included On' => $options['incpages'],
+                'Pages App Is Ignored On' => $options['ignorepages'],
+                'Requested Page' => $requestedPage,
+            );
+            /* Log calls in case debugging is needed. */
+            error_log(PHP_EOL . '<p><h1>------ Sdm Assembler Log' . date('l m/d/Y  @ h:i:s') . ' | timestamp: ' . time() . ' ------</h1><p>' . PHP_EOL . $this->sdmCoreSdmReadArrayBuffered($log) . PHP_EOL, 3, $this->sdmCoreGetCoreDirectoryPath() . '/logs/sdmAssemblerLog.' . $callingApp . '.html');
             return false;
         }
 
         /* Make sure requested page is not in the $options['ignorepages'] array, If it is return false. */
         if (in_array($requestedPage, $options['ignorepages'], true) || in_array('all', $options['ignorepages'], true)) {
+            $log['errors']['Page Ignored'] = array(
+                'Pages App Is Included On' => $options['incpages'],
+                'Pages App Is Ignored On' => $options['ignorepages'],
+                'Requested Page' => $requestedPage,
+            );
+            /* Log calls in case debugging is needed. */
+            error_log(PHP_EOL . '<p><h1>------ Sdm Assembler Log' . date('l m/d/Y  @ h:i:s') . ' | timestamp: ' . time() . ' ------</h1><p>' . PHP_EOL . $this->sdmCoreSdmReadArrayBuffered($log) . PHP_EOL, 3, $this->sdmCoreGetCoreDirectoryPath() . '/logs/sdmAssemblerLog.' . $callingApp . '.html');
             return false;
         }
 
@@ -691,8 +732,14 @@ class SdmAssembler extends SdmNms
         /* Insure the target wrapper is accessible via the DataObject. */
         $this->sdmAssemblerPrepareTargetWrapper($options);
 
-        /* Only incorporate app output if requested page matches one of the items in incpages */
-        if (in_array($requestedPage, $options['incpages'], true)) {
+        /* Determine if requested page is in the incpages array. */
+        $requestedPageInIncpages = in_array($requestedPage, $options['incpages'], true);
+
+        /* Determine if the special 'all' value is in the incpages array. */
+        $includeInAllPages = in_array('all', $options['incpages'], true);
+
+        /* Only incorporate app output if requested page matches one of the items in incpages, or if the special 'all' value exists in the incpages array. */
+        if ($requestedPageInIncpages === true || $includeInAllPages === true) {
             switch ($options['incmethod']) {
                 case 'prepend':
                     $this->DataObject->content->$requestedPage->$options['wrapper'] = $output . $this->DataObject->content->$requestedPage->$options['wrapper'];
@@ -705,7 +752,6 @@ class SdmAssembler extends SdmNms
                     break;
             }
         }
-
         /* return the modified DataObject. */
         return true;
     }
@@ -721,7 +767,7 @@ class SdmAssembler extends SdmNms
      * @return array The filtered options array. This method handles the options array by reference so there is
      * no need to assign it's return value to a variable.
      */
-    final private function filterOptionsArray(&$options)
+    final private function filterOptionsArray(&$options, $callingApp = null)
     {
         /* Review $options array values to insure they exist. If they don't
         then they will be created and assigned a default value */
@@ -741,14 +787,19 @@ class SdmAssembler extends SdmNms
             $options['ignorepages'] = array();
         }
 
-        /* If $options['incpages'] was not set create it and assign an array filled with all pages in
-         the DataObject and with the names of all enabled apps. */
+        /* If $options['incpages'] was not set, first attempt to use the name of the calling app as the only
+           page in incpages, if calling app is null, then assign an array filled with all pages in
+           the DataObject and with the names of all enabled apps. */
         if (!isset($options['incpages'])) {
             $pages = $this->sdmCoreDetermineAvailablePages();
             $enabledApps = json_decode(json_encode($this->sdmCoreDetermineEnabledApps()), true);
-            $options['incpages'] = array_merge($pages, $enabledApps);
+            $options['incpages'] = ($callingApp === null || $callingApp === false || $callingApp === '' ? array_merge($pages, $enabledApps) : array($callingApp));
         }
 
+        /* If all is specified make sure the app is also assigned to incpages in case app is dynamically generated. */
+        if (in_array('all', $options['incpages'], true)) {
+            array_push($options['incpages'], $callingApp);
+        }
         /* If $options['roles'] is not set create it and assign an array containing the special 'all' value.
          If $options['roles'] is empty it will be assumed that no users can see this app output. */
         if (!isset($options['roles'])) {

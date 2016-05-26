@@ -80,7 +80,7 @@ if (substr($sdmassembler->sdmCoreDetermineRequestedPage(), 0, 14) === 'contentMa
                         <li><a href="' . $sdmassembler->sdmCoreGetRootDirectoryUrl() . '/index.php?page=contentManagerAdministerAppsForm">Administer Apps</a></li>
                     </ul>
                 </div>
-                ', array('incpages' => array('contentManager')));
+                ', array('incpages' => array('contentManager'), 'roles' => array('root')));
             break;
     }
 }
