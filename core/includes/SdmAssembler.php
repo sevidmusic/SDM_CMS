@@ -554,7 +554,7 @@ class SdmAssembler extends SdmNms
                 require_once($this->sdmCoreGetCoreAppDirectoryPath() . $appPath);
                 return true;
             } else if (file_exists($this->sdmCoreGetUserAppDirectoryPath() . $appPath)) {
-                require($this->sdmCoreGetUserAppDirectoryPath() . $appPath);
+                require_once($this->sdmCoreGetUserAppDirectoryPath() . $appPath);
                 return true;
             }
 
@@ -682,7 +682,12 @@ class SdmAssembler extends SdmNms
         /* Filter options array to insure it's integrity. */
         $this->filterOptionsArray($options, $callingApp);
 
-        /* Make sure user has permission to use this app. If user does not have permission, then return false. */
+        /* Make sure user has permission to use this app. If user does not have permission, then return false.
+         * Note: Role checks are done by other components as well as here, so, if user does not have correct role,
+         *       we may never get here. This is really just an extra layer in case a user withot the proper credentials
+         *       somehow gets here, hoever if they do they may very well get past this too. Security can be frustrating...
+         *       @todo: Make more secure! by doing???...maybe key created uniquly in sdmAssemblerLoadApp()...? hmmm...need answers!
+         */
         if ($this->sdmAssemblerUserCanUseApp($options) !== true) {
             $log['errors']['Permission Denied'] = array(
                 'User\'s Role: ' => $this->sdmGatekeeperDetermineUserRole(),
