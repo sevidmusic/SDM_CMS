@@ -4,7 +4,7 @@
  * Sdm Content Generator user app: This app generates dummy content for the Sdm Cms.
  */
 
-$options = array('incpages' => array('SdmContentGenerator'));
+$options = array('incpages' => array('SdmContentGenerator'), 'roles' => array('root'));
 $output = '<h2>Sdm Content Generator</h2><p>Generates dummy content for the SDM CMS</p>';
 $cm = new SdmCms();
 

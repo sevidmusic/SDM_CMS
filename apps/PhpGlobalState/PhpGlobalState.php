@@ -30,7 +30,7 @@ $output = $sdmassembler->sdmAssemblerAssembleHtmlElement($globals . $vars, ['id'
 $output .= $sdmassembler->sdmAssemblerAssembleHtmlElement($buttons, ['id' => 'phpGlobalStateButtons',]);
 
 // Secure Display //
-$sdmassembler->sdmAssemblerIncorporateAppOutput($output, ['wrapper' => 'Sdm_Cms_Core_Output', 'roles' => array('root')]);
+$sdmassembler->sdmAssemblerIncorporateAppOutput($output, ['incpages' => array('all'), 'wrapper' => 'Sdm_Cms_Core_Output', 'roles' => array('root')]);
 
 // Insecure Display //
 //$sdmassembler->sdmAssemblerIncorporateAppOutput($output, ['wrapper' => 'Sdm_Cms_Core_Output',]);
