@@ -11,7 +11,7 @@
  * It is used to determine if there is display data for the current page,
  * and which app options array to use if there is.
  */
-$currentDisplay = 'homepage';
+$currentDisplay = $sdmassembler->sdmCoreDetermineRequestedPage();
 
 /* Create an instance of SdmCore() for the SdmMediaDisplay(). */
 $SdmCore = new SdmCore();
@@ -51,31 +51,6 @@ if (file_exists(__DIR__ . '/displays/data/' . $currentDisplay) === true) {
 
 /* If current page is the SdmMediaDisplays page show admin panel. */
 if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
-    /*** Build Admin Panel ***/
-
-    /* Instantiate new form object. */
-    $editDisplayForm = new SdmForm();
-
-    /* Form handler */
-    $editDisplayForm->formHandler = 'SdmMediaDisplays';
-
-    /* Form method */
-    $editDisplayForm->method = 'post';
-
-    /* Determine whether form should preserve submitted values. */
-    $editDisplayForm->preserveSubmittedValues = true;
-
-    /** Form Elements **/
-    $editDisplayForm->sdmFormCreateFormElement('page', 'select', 'Select a page to assign this display to:', $sdmassembler->sdmCoreDetermineAvailablePages(), 0);
-
-    /* Submit button label. */
-    $editDisplayForm->submitLabel = 'Save Changes to Display';
-
-    /* Set form to preserve submitted values. */
-    $editDisplayForm->preserveSubmittedValues = true;
-
-    /* Build Form */
-    $editDisplayForm->sdmFormBuildForm();
 
     /* Load admin panels */
     require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/SdmMediaDisplaysAdminPanel.php');

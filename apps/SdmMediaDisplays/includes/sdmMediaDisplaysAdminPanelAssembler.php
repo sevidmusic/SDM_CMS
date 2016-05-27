@@ -18,6 +18,7 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays' && $in
 
     /* Determine requested panel. */
     $requestedPanel = $sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('panel');
+
     /* Default panel. */
     $defaultPanel = 'displayCrudPanel';
 
@@ -37,7 +38,7 @@ if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays' && $in
 
     /** Determine Edit Mode **/
 
-    /* If a display has been celected for editing, and admin mode is not 'confirmDeleteMedia' or
+    /* If a display has been selected for editing, and admin mode is not 'confirmDeleteMedia' or
        'deleteSelectedDisplay' set $editMode to 'edit'. */
     if ($sdmMediaDisplaysAdminForm->sdmFormGetSubmittedFormValue('displayToEdit') !== null && $adminMode !== 'confirmDeleteMedia' && $adminMode !== 'deleteSelectedDisplay') {
         $editMode = 'edit';

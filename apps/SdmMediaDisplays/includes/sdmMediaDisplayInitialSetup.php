@@ -6,7 +6,6 @@
  * Time: 5:19 PM
  */
 
-
 /** Initial Setup **/
 
 /* Set initialSetup to false, if setup is required it will be changed to true internally. */
@@ -43,6 +42,6 @@ if ($initialSetup === true) {
         <p>Initial setup complete.
         <a href='{$sdmassembler->sdmCoreGetRootDirectoryUrl()}/index.php?page=SdmMediaDisplays'>
         Click here</a> to start creating media displays.</p>";
-    $sdmassembler->sdmAssemblerIncorporateAppOutput($initialSetupMessage, array('incpages' => array('SdmMediaDisplays'), 'incmethod' => 'overwrite'));
+    $sdmassembler->sdmAssemblerIncorporateAppOutput($initialSetupMessage, array('roles' => array('root'), 'incpages' => array('SdmMediaDisplays'), 'incmethod' => 'overwrite'));
 }
 
