@@ -11,13 +11,14 @@ class SdmMediaDisplaysAdmin extends SdmForm
     private $adminPanel;
     private $adminMode;
     private $editMode;
-    private $displayBeingEdited;
-    private $adminFormElements;
+    private $displayBeingEdited; // name of display being edited
+    private $adminFormElements; // alias for SdmForm()'s built in formElements array.
     private $adminFormButtons;
     private $initialSetup;
     private $output;
     private $messages;
-    private $sdmCore;
+    private $sdmCore; // local instance of SdmCore
+    private $sdmMediaDisplay; // instance of display being edited created upon instantiation of a SdmMediaDisplaysAdmin() object.
     private $sdmMediaDisplaysDirectoryPath;
     private $sdmMediaDisplaysDirectoryUrl;
     private $sdmMediaDisplaysDataDirectoryPath;
@@ -27,16 +28,17 @@ class SdmMediaDisplaysAdmin extends SdmForm
     private $sdmMediaDisplaysAdminPageUrl;
     private $sdmMediaDisplaysPageUrl;
     private $cronTasksPerformed;
+    private $displaysExist;
 
     public function __construct()
     {
         parent::__construct();
         /* Current admin panel. */
-        $this->adminPanel = (($this->sdmFormGetSubmittedFormValue('adminPanel') !== null) === true ? $this->sdmFormGetSubmittedFormValue('adminPanel') : 'default');
+        $this->adminPanel = (($this->sdmFormGetSubmittedFormValue('adminPanel') !== null) === true ? $this->sdmFormGetSubmittedFormValue('adminPanel') : 'displayCrudPanel');
         /* Current admin mode. */
-        $this->adminMode = (($this->sdmFormGetSubmittedFormValue('adminMode') !== null) === true ? $this->sdmFormGetSubmittedFormValue('adminMode') : 'default');
+        $this->adminMode = (($this->sdmFormGetSubmittedFormValue('adminMode') !== null) === true ? $this->sdmFormGetSubmittedFormValue('adminMode') : null);
         /* Current edit mode. */
-        $this->editMode = (($this->sdmFormGetSubmittedFormValue('editMode') !== null) === true ? $this->sdmFormGetSubmittedFormValue('editMode') : 'default');
+        $this->editMode = (($this->sdmFormGetSubmittedFormValue('editMode') !== null) === true ? $this->sdmFormGetSubmittedFormValue('editMode') : null);
         /* Current display being edited. */
         $this->displayBeingEdited = (($this->sdmFormGetSubmittedFormValue('displayBeingEdited') !== null) === true ? $this->sdmFormGetSubmittedFormValue('displayBeingEdited') : null);
         /* Admin form elements. */
@@ -49,6 +51,8 @@ class SdmMediaDisplaysAdmin extends SdmForm
         $this->messages = (isset($this->messages) === true ? $this->messages : null);
         /* Local instance of SdmCore(). */
         $this->sdmCore = new SdmCore();
+        /* Create local instance of an SdmMediaDisplay() object for the display being edited. */
+        $this->sdmMediaDisplay = new SdmMediaDisplay($this->displayBeingEdited, $this->sdmCore);
         /* Sdm media display's directory path. */
         $this->sdmMediaDisplaysDirectoryPath = $this->sdmCore->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays';
         /* Sdm media display's directory url. */
@@ -65,20 +69,12 @@ class SdmMediaDisplaysAdmin extends SdmForm
         $this->sdmMediaDisplaysAdminPageUrl = $this->sdmCore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=SdmMediaDisplays';
         /* Current display's page url. */
         $this->sdmMediaDisplaysPageUrl = $this->sdmCore->sdmCoreGetUserAppDirectoryUrl() . '/index.php?page=' . $this->displayBeingEdited;
+        /* Initial setup performed. */
+        $this->initialSetup = (isset($this->initialSetup) === true ? $this->initialSetup : $this->performInitialSetup());
         /* Cron tasks performed. */
-        $this->cronTasksPerformed = (isset($this->cronTasksPerformed) ? $this->cronTasksPerformed : false);
-    }
-
-    public function getCurrentAdminPanel()
-    {
-        /* Perform any initial setup required. */
-        $this->performInitialSetup();
-
-        /* Run cron tasks. */
-        $this->runCronTasks();
-
-        /* Return current admin panel's output */
-        return $this->output;
+        $this->cronTasksPerformed = (isset($this->cronTasksPerformed) ? $this->cronTasksPerformed : $this->runCronTasks());
+        /* Displays exist. */
+        $this->displaysExist = (isset($this->displaysExist) === true ? $this->displaysExist : $this->displaysExist());
     }
 
     private function performInitialSetup()
@@ -127,7 +123,8 @@ class SdmMediaDisplaysAdmin extends SdmForm
     private function runCronTasks()
     {
 
-        /* CRON tasks. Run each time Sdm Media Displays admin panel is accessed. */
+        /* Report if cron task were performed. */
+        $this->cronTasksPerformed = false;
 
         /* Get a directory listing of all displays from the data directory. */
         $dataDirectoryListing = $this->sdmCore->sdmCoreGetDirectoryListing('SdmMediaDisplays/displays/data', 'apps');
@@ -149,6 +146,91 @@ class SdmMediaDisplaysAdmin extends SdmForm
 
         }
         return $this->cronTasksPerformed;
+    }
+
+    private function displaysExist()
+    {
+        /* Only show edit and delete display buttons if there are displays other then the default. */
+        $expectedDirs = array('.', '..', '.DS_Store', 'SdmMediaDisplays');
+
+        /* Scan data directory for displays. */
+        $displays = scandir($this->sdmCore->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/data');
+
+        /* Check $displays against $expectedDirs, if a display is found that is not an expected directory then at least on display exists. */
+        foreach ($displays as $display) {
+            if (!in_array($display, $expectedDirs)) {
+                /* Display found, set $displaysExist to true. */
+                $this->displaysExist = true;
+                /* A display was found, exit loop. */
+                break;
+            }
+            /* No displays exist. */
+            $this->displaysExist = false;
+        }
+        return $this->displaysExist;
+    }
+
+    public function getCurrentAdminPanel()
+    {
+        /* If this is not the initial setup assemble admin panel. */
+        if ($this->initialSetup === false) {
+            /* Assemble form elements. */
+            $this->assembleAdminFormElements();
+
+            /* Assemble form buttons. */
+            $this->assembleAdminFormButtons();
+
+        }
+
+        /* Display dev output. */
+        $this->devOutput();
+
+        /* Return current admin panel's output */
+        return $this->output;
+    }
+
+    private function assembleAdminFormElements()
+    {
+        return $this->adminFormElements;
+    }
+
+    private function assembleAdminFormButtons()
+    {
+        return $this->adminFormButtons;
+    }
+
+    private function devOutput()
+    {
+        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['output' => $this->output]);
+        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['adminPanel' => $this->adminPanel]);
+        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['adminMode' => $this->adminMode]);
+        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['editMode' => $this->editMode]);
+        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['displayBeingEdited' => $this->displayBeingEdited]);
+        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['adminFormElements' => $this->adminFormElements]);
+        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['adminFormButtons' => $this->adminFormButtons]);
+        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['initialSetup' => $this->initialSetup]);
+        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['messages' => $this->messages]);
+        //$this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['sdmCore' => $this->sdmCore]);
+        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplay' => $this->sdmMediaDisplay]);
+        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysDirectoryPath' => $this->sdmMediaDisplaysDirectoryPath]);
+        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysDirectoryUrl' => $this->sdmMediaDisplaysDirectoryUrl]);
+        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysDataDirectoryPath' => $this->sdmMediaDisplaysDataDirectoryPath]);
+        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysDataDirectoryUrl' => $this->sdmMediaDisplaysDataDirectoryUrl]);
+        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysMediaDirectoryPath' => $this->sdmMediaDisplaysMediaDirectoryPath]);
+        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysMediaDirectoryUrl' => $this->sdmMediaDisplaysMediaDirectoryUrl]);
+        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysAdminPageUrl' => $this->sdmMediaDisplaysAdminPageUrl]);
+        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysPageUrl' => $this->sdmMediaDisplaysPageUrl]);
+        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['cronTasksPerformed' => $this->cronTasksPerformed]);
+        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['displaysExist' => $this->displaysExist]);
+    }
+
+    private function createSdmMediaDisplayAdminButton($id, $name, $value, $label, $otherAttributes = array())
+    {
+        $attributes = array();
+        foreach ($otherAttributes as $attributeName => $attributeValue) {
+            $attributes[] = "$attributeName='$attributeValue'";
+        }
+        return "<button id='$id' name='SdmForm[$name]' type='submit' data-referred-by-button='$id' value='$value' " . implode(' ', $attributes) . ">$label</button>";
     }
 
 }
