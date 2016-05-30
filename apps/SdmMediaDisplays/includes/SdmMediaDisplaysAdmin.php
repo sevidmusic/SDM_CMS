@@ -32,13 +32,13 @@ class SdmMediaDisplaysAdmin extends SdmForm
     {
         parent::__construct();
         /* Current admin panel. */
-        $this->adminPanel = (isset($this->adminPanel) === true ? $this->adminPanel : 'default');
+        $this->adminPanel = (($this->sdmFormGetSubmittedFormValue('adminPanel') !== null) === true ? $this->sdmFormGetSubmittedFormValue('adminPanel') : 'default');
         /* Current admin mode. */
-        $this->adminMode = (isset($this->adminMode) === true ? $this->adminMode : 'default');
+        $this->adminMode = (($this->sdmFormGetSubmittedFormValue('adminMode') !== null) === true ? $this->sdmFormGetSubmittedFormValue('adminMode') : 'default');
         /* Current edit mode. */
-        $this->editMode = (isset($this->editMode) === true ? $this->editMode : 'default');
+        $this->editMode = (($this->sdmFormGetSubmittedFormValue('editMode') !== null) === true ? $this->sdmFormGetSubmittedFormValue('editMode') : 'default');
         /* Current display being edited. */
-        $this->displayBeingEdited = (isset($this->displayBeingEdited) === true ? $this->displayBeingEdited : 'default');
+        $this->displayBeingEdited = (($this->sdmFormGetSubmittedFormValue('displayBeingEdited') !== null) === true ? $this->sdmFormGetSubmittedFormValue('displayBeingEdited') : null);
         /* Admin form elements. */
         $this->adminFormElements = (isset($this->adminFormElements) === true ? $this->adminFormElements : array());
         /* Admin form buttons. */
