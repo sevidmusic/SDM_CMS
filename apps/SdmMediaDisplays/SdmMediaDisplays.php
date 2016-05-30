@@ -13,6 +13,9 @@
  */
 $currentDisplay = $sdmassembler->sdmCoreDetermineRequestedPage();
 
+/* Load app output options. */
+require_once(__DIR__ . '/SdmMediaDisplayOptions.php');
+
 /* Create an instance of SdmCore() for the SdmMediaDisplay(). */
 $SdmCore = new SdmCore();
 
@@ -41,18 +44,22 @@ if (file_exists(__DIR__ . '/displays/data/' . $currentDisplay) === true) {
     /* Get Display Html */
     $sdmMediaDisplayHtml = $sdmMediaDisplay->sdmMediaDisplayGetSdmMediaDisplayHtml();
 
-    /* Load app output options. */
-    require_once(__DIR__ . '/SdmMediaDisplayOptions.php');
-
     /* Output display */
-    $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmMediaDisplayHtml, $options);
+    $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmMediaDisplayHtml, $currentDisplaysOptions);
 
 }
 
 /* If current page is the SdmMediaDisplays page show admin panel. */
 if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
 
+    $adminPanel = new SdmMediaDisplaysAdmin();
+
+    $output = $adminPanel->getCurrentAdminPanel();
+
+    $sdmassembler->sdmAssemblerIncorporateAppOutput($output, $currentDisplaysOptions);
+
+
     /* Load admin panels */
-    require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/SdmMediaDisplaysAdminPanel.php');
+    //require_once($sdmassembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/admin/SdmMediaDisplaysAdminPanel.php');
 
 }

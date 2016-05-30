@@ -14,16 +14,23 @@
 
 /* Options arrays for different displays | variable name format should follow $DISPLAYNAMEOptions*/
 
-/* Default options */
-$SdmMediaDisplaysOptions = array(
+/* Default output options. */
+$SdmMediaDisplaysDefaultOptions = array(
     'wrapper' => 'main_content',
     'incpages' => array($currentDisplay),
 );
 
+/* Sdm Media Displays Admin Panel output options. */
+$SdmMediaDisplaysOptions = array(
+    'wrapper' => 'main_content',
+    'incpages' => array('SdmMediaDisplays'),
+    'roles' => array('root'),
+);
 /* Determine which options array to use based on $currentDisplay. */
 $option = $currentDisplay . 'Options';
 
 /* Use appropriate options array. If an options array is not found for the current display
- * then the default $SdmMediaDisplaysOptions will be used.
+ * then the default $SdmMediaDisplaysDefaultOptions will be used.
  */
-$options = (isset($$option) === true ? $$option : $SdmMediaDisplaysOptions);
+$options = (isset($$option) === true ? $$option : $SdmMediaDisplaysDefaultOptions);// legacy code
+$currentDisplaysOptions = (isset($$option) === true ? $$option : $SdmMediaDisplaysDefaultOptions);
