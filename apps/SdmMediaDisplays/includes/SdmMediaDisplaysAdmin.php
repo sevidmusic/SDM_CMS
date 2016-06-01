@@ -220,14 +220,16 @@ class SdmMediaDisplaysAdmin extends SdmForm
         switch ($this->adminPanel) {
             case 'displayCrudPanel':
                 $buttons = array(
-                    'addDisplays' => $this->createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_addDisplays', 'adminPanel', 'selectDisplayPanel_addDisplays', 'Add Display', array('form' => $this->sdmFormGetFormId())),
+                    'addDisplay' => $this->createSdmMediaDisplayAdminButton('addDisplayButton', 'adminPanel', 'addDisplay', 'Create New Display', array('form' => $this->sdmFormGetFormId())),
+                    'editDisplays' => $this->createSdmMediaDisplayAdminButton('editDisplaysButton', 'adminPanel', 'editDisplays', 'Edit Displays', array('form' => $this->sdmFormGetFormId())),
+                    'deleteDisplays' => $this->createSdmMediaDisplayAdminButton('deleteDisplaysButton', 'adminPanel', 'deleteDisplays', 'Delete Displays', array('form' => $this->sdmFormGetFormId())),
                 );
                 if ($this->displaysExist === true) {
                     array_merge($this->adminFormButtons, $buttons);
                     break;
                 }
-                array_push($this->adminFormButtons, $buttons['addDisplays']);
-                /* If there aren't any displays proceed */
+                /* If there aren't any displays, only show addDisplaysButton. */
+                array_push($this->adminFormButtons, $buttons['addDisplay']);
                 break;
         }
         return $this->adminFormButtons;
