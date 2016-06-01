@@ -75,6 +75,8 @@ class SdmMediaDisplaysAdmin extends SdmForm
         $this->cronTasksPerformed = (isset($this->cronTasksPerformed) ? $this->cronTasksPerformed : $this->runCronTasks());
         /* Displays exist. */
         $this->displaysExist = (isset($this->displaysExist) === true ? $this->displaysExist : $this->displaysExist());
+        /* Configure From */
+        $this->configureAdminForm();
     }
 
     private function performInitialSetup()
@@ -170,6 +172,15 @@ class SdmMediaDisplaysAdmin extends SdmForm
         return $this->displaysExist;
     }
 
+    private function configureAdminForm()
+    {
+        $this->formHandler = 'SdmMediaDisplays';
+        $this->method = 'post';
+        $this->excludeSubmitLabel = true;
+        $this->preserveSubmittedValues = true;
+        $this->formClasses = 'SdmMediaDisplaysAdminForm';
+    }
+
     public function getCurrentAdminPanel()
     {
         /* If this is not the initial setup assemble admin panel. */
@@ -180,10 +191,16 @@ class SdmMediaDisplaysAdmin extends SdmForm
             /* Assemble form buttons. */
             $this->assembleAdminFormButtons();
 
-            foreach ($this->adminFormButtons as $adminFormButton) {
-                $this->output .= $adminFormButton;
-            }
+            /* Initialize $formHtml array. */
+            $formHtml = array();
 
+            /* Start building form. */
+            $formHtml['openingFormTags'] = $this->sdmFormOpenForm($this->sdmCore->sdmCoreGetRootDirectoryUrl());
+            $formHtml['formElementsHtml'] = implode(PHP_EOL, $this->adminFormElements);
+            $formHtml['closingFormTags'] = $this->sdmFormCloseForm();
+
+            /* Display admin buttons for the current panel */
+            $this->output = implode('', $formHtml) . implode('', $this->adminFormButtons);
         }
 
         /* Display dev output. */
