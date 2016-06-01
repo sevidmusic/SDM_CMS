@@ -180,6 +180,10 @@ class SdmMediaDisplaysAdmin extends SdmForm
             /* Assemble form buttons. */
             $this->assembleAdminFormButtons();
 
+            foreach ($this->adminFormButtons as $adminFormButton) {
+                $this->output .= $adminFormButton;
+            }
+
         }
 
         /* Display dev output. */
@@ -196,7 +200,38 @@ class SdmMediaDisplaysAdmin extends SdmForm
 
     private function assembleAdminFormButtons()
     {
+        switch ($this->adminPanel) {
+            case 'displayCrudPanel':
+                $buttons = array(
+                    'addDisplays' => $this->createSdmMediaDisplayAdminButton('sdmMediaDisplayAdminButton_addDisplays', 'adminPanel', 'selectDisplayPanel_addDisplays', 'Add Display', array('form' => $this->sdmFormGetFormId())),
+                );
+                if ($this->displaysExist === true) {
+                    array_merge($this->adminFormButtons, $buttons);
+                    break;
+                }
+                array_push($this->adminFormButtons, $buttons['addDisplays']);
+                /* If there aren't any displays proceed */
+                break;
+        }
         return $this->adminFormButtons;
+    }
+
+    /**
+     * Creates an html button.
+     * @param $id string The button id.
+     * @param $name string The key used to index the button value in the SdmForm array.
+     * @param $value mixed The value to send when the button is clicked.
+     * @param $label string The text to display on the button.
+     * @param array $otherAttributes Associative array of additional attributes.
+     * @return string Returns a string of html for the button.
+     */
+    private function createSdmMediaDisplayAdminButton($id, $name, $value, $label, $otherAttributes = array())
+    {
+        $attributes = array();
+        foreach ($otherAttributes as $attributeName => $attributeValue) {
+            $attributes[] = "$attributeName='$attributeValue'";
+        }
+        return "<button id='$id' name='SdmForm[$name]' type='submit' data-referred-by-button='$id' value='$value' " . implode(' ', $attributes) . ">$label</button>";
     }
 
     private function devOutput()
@@ -222,15 +257,6 @@ class SdmMediaDisplaysAdmin extends SdmForm
         $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysPageUrl' => $this->sdmMediaDisplaysPageUrl]);
         $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['cronTasksPerformed' => $this->cronTasksPerformed]);
         $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['displaysExist' => $this->displaysExist]);
-    }
-
-    private function createSdmMediaDisplayAdminButton($id, $name, $value, $label, $otherAttributes = array())
-    {
-        $attributes = array();
-        foreach ($otherAttributes as $attributeName => $attributeValue) {
-            $attributes[] = "$attributeName='$attributeValue'";
-        }
-        return "<button id='$id' name='SdmForm[$name]' type='submit' data-referred-by-button='$id' value='$value' " . implode(' ', $attributes) . ">$label</button>";
     }
 
 }
