@@ -12,7 +12,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
     private $adminMode;
     private $editMode;
     private $displayBeingEdited; // name of display being edited
-    private $adminFormElements; // alias for SdmForm()'s built in formElements array.
+    private $adminFormElements; // stores the html for each form element for the current admin panel
     private $adminFormButtons;
     private $initialSetup;
     private $output;
@@ -212,6 +212,21 @@ class SdmMediaDisplaysAdmin extends SdmForm
 
     private function assembleAdminFormElements()
     {
+        /* Determine which form elements to define for the current adminPanel. */
+        switch ($this->adminPanel) {
+            case 'addDisplay':
+                $this->sdmFormCreateFormElement('displayName', 'text', 'Enter a name for this display', '', 1);
+                break;
+        }
+
+        /* Build form elements html */
+        $this->sdmFormBuildFormElements();
+
+        foreach ($this->formElements as $formElement) {
+            array_push($this->adminFormElements, $this->sdmFormGetFormElementHtml($formElement['id']));
+        }
+
+        /* Return adminFormElements for the current adminPanel. */
         return $this->adminFormElements;
     }
 
@@ -234,6 +249,14 @@ class SdmMediaDisplaysAdmin extends SdmForm
                 /* If there aren't any displays, only show addDisplaysButton. */
                 array_push($this->adminFormButtons, $buttons['addDisplay']);
                 break;
+            case 'addDisplay':
+                /* Create buttons for the addDisplay panel*/
+                $buttons = array(
+                    'editMedia' => $this->createSdmMediaDisplayAdminButton('editMediaButton', 'adminPanel', 'editMedia', 'Add Media To New Display', array('form' => $this->sdmFormGetFormId())),
+                );
+                /* Show edit media button. */
+                array_push($this->adminFormButtons, $buttons['editMedia']);
+                break;
         }
         /* Return adminFormButtons. */
         return $this->adminFormButtons;
@@ -254,7 +277,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
         foreach ($otherAttributes as $attributeName => $attributeValue) {
             $attributes[] = "$attributeName='$attributeValue'";
         }
-        return "<button id='$id' name='SdmForm[$name]' type='submit' data-referred-by-button='$id' value='$value' " . implode(' ', $attributes) . ">$label</button>";
+        return "<button id='$id' name='SdmForm[$name]' type='submit' value='$value' " . implode(' ', $attributes) . ">$label</button>";
     }
 
     private function devOutput()
@@ -264,6 +287,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
         $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['adminMode' => $this->adminMode]);
         $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['editMode' => $this->editMode]);
         $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['displayBeingEdited' => $this->displayBeingEdited]);
+        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['formElements' => $this->formElements]);
         $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['adminFormElements' => $this->adminFormElements]);
         $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['adminFormButtons' => $this->adminFormButtons]);
         $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['initialSetup' => $this->initialSetup]);
