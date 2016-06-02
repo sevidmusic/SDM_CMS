@@ -204,7 +204,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
         }
 
         /* Display dev output. */
-        $this->devOutput();
+        //$this->devOutput();
 
         /* Return current admin panel's output */
         return $this->output;
@@ -217,21 +217,25 @@ class SdmMediaDisplaysAdmin extends SdmForm
 
     private function assembleAdminFormButtons()
     {
+        /* Determine which admin panel is in use. */
         switch ($this->adminPanel) {
             case 'displayCrudPanel':
+                /* Create buttons for the displayCrudPanel */
                 $buttons = array(
                     'addDisplay' => $this->createSdmMediaDisplayAdminButton('addDisplayButton', 'adminPanel', 'addDisplay', 'Create New Display', array('form' => $this->sdmFormGetFormId())),
                     'editDisplays' => $this->createSdmMediaDisplayAdminButton('editDisplaysButton', 'adminPanel', 'editDisplays', 'Edit Displays', array('form' => $this->sdmFormGetFormId())),
                     'deleteDisplays' => $this->createSdmMediaDisplayAdminButton('deleteDisplaysButton', 'adminPanel', 'deleteDisplays', 'Delete Displays', array('form' => $this->sdmFormGetFormId())),
                 );
+                /* If there are any displays, show all the displayCrudPanel buttons. */
                 if ($this->displaysExist === true) {
-                    array_merge($this->adminFormButtons, $buttons);
+                    $this->adminFormButtons = $buttons;
                     break;
                 }
                 /* If there aren't any displays, only show addDisplaysButton. */
                 array_push($this->adminFormButtons, $buttons['addDisplay']);
                 break;
         }
+        /* Return adminFormButtons. */
         return $this->adminFormButtons;
     }
 
