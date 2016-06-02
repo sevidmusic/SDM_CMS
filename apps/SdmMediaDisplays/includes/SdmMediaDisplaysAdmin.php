@@ -78,6 +78,8 @@ class SdmMediaDisplaysAdmin extends SdmForm
         $this->displaysExist = (isset($this->displaysExist) === true ? $this->displaysExist : $this->displaysExist());
         /* Configure From */
         $this->configureAdminForm();
+        /* Process any submitted form values from the last submitted admin panel. */
+        $this->processSubmittedValues();
     }
 
     private function performInitialSetup()
@@ -180,6 +182,19 @@ class SdmMediaDisplaysAdmin extends SdmForm
         $this->excludeSubmitLabel = true;
         $this->preserveSubmittedValues = true;
         $this->formClasses = 'SdmMediaDisplaysAdminForm';
+    }
+
+    private function processSubmittedValues()
+    {
+        switch ($this->adminPanel) {
+            case 'editMedia':
+                $pathToCurrentDisplay = $this->sdmMediaDisplaysDataDirectoryPath . '/' . $this->displayBeingEdited;
+                $displayExists = is_dir($pathToCurrentDisplay);
+                if ($displayExists === false) {
+                    mkdir($pathToCurrentDisplay);
+                }
+                break;
+        }
     }
 
     public function getCurrentAdminPanel()
