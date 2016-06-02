@@ -1052,9 +1052,11 @@ class SdmForm
 
         /* Add submit button unless $sdmFormExcludeSubmitButton is set true. */
         if ($this->excludeSubmitLabel === false) {
-            $closingFormHtml .= '<input class="' . $this->sdmFormExtractClasses('submitButton') . '" value="' . $this->submitLabel . '" type="submit"></form><!-- close form ' . $this->sdmFormGetFormId() . ' -->';
+            $closingFormHtml .= '<input class="' . $this->sdmFormExtractClasses('submitButton') . '" value="' . $this->submitLabel . '" type="submit">';
         }
 
+        /* Close form */
+        $closingFormHtml .= '</form><!-- close form ' . $this->sdmFormGetFormId() . ' -->';
         return $closingFormHtml;
     }
 
