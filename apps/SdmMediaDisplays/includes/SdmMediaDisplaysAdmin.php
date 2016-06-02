@@ -217,6 +217,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
 
             /* Display admin buttons for the current panel */
             $this->output = implode('', $formHtml) . implode('', $this->adminFormButtons);
+            var_dump($this->adminPanel);
         }
 
         /* Display dev output. */
@@ -237,6 +238,11 @@ class SdmMediaDisplaysAdmin extends SdmForm
                 $enabledApps = (array)$this->sdmCore->sdmCoreDetermineEnabledApps();
                 $assignablePages = array_merge($allPages, $availablePages, $enabledApps);
                 $this->sdmFormCreateFormElement('assignedPages', 'checkbox', 'Select the pages the display should show up on. If the display should show on all pages check the "all" option', $assignablePages, 2);
+                break;
+            case 'saveMedia':
+            case 'cancelAddEditMedia':
+            case 'editMedia':
+                $this->sdmFormCreateFormElement('displayName', 'hidden', 'Current Display Being Edited', $this->displayBeingEdited, 420);
                 break;
             case 'addMedia':
             case 'editSelectedMedia':
@@ -305,6 +311,8 @@ class SdmMediaDisplaysAdmin extends SdmForm
                 /* Show edit media button. */
                 array_push($this->adminFormButtons, $buttons['editMedia']);
                 break;
+            case 'saveMedia':
+            case 'cancelAddEditMedia':
             case 'editMedia':
                 $buttons = array(
                     'addMedia' => $this->createSdmMediaDisplayAdminButton('addMediaButton', 'adminPanel', 'addMedia', 'Add Media To Display', array('form' => $this->sdmFormGetFormId())),
@@ -316,7 +324,15 @@ class SdmMediaDisplaysAdmin extends SdmForm
                 }
                 array_push($this->adminFormButtons, $buttons['addMedia']);
                 break;
+            case 'addMedia':
+            case 'editSelectedMedia':
+                $this->adminFormButtons = array(
+                    'saveMedia' => $this->createSdmMediaDisplayAdminButton('saveMediaButton', 'adminPanel', 'saveMedia', 'Save Media', array('form' => $this->sdmFormGetFormId())),
+                    'cancel' => $this->createSdmMediaDisplayAdminButton('cancelButton', 'adminPanel', 'cancelAddEditMedia', 'Cancel', array('form' => $this->sdmFormGetFormId())),
+                );
+                break;
         }
+
         /* Return adminFormButtons. */
         return $this->adminFormButtons;
     }
