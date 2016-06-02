@@ -216,6 +216,11 @@ class SdmMediaDisplaysAdmin extends SdmForm
         switch ($this->adminPanel) {
             case 'addDisplay':
                 $this->sdmFormCreateFormElement('displayName', 'text', 'Enter a name for this display', '', 1);
+                $allPages = array('all' => 'all');
+                $availablePages = $this->sdmCore->sdmCoreDetermineAvailablePages();
+                $enabledApps = (array)$this->sdmCore->sdmCoreDetermineEnabledApps();
+                $assignablePages = array_merge($allPages, $availablePages, $enabledApps);
+                $this->sdmFormCreateFormElement('assignedPages', 'checkbox', 'Select the pages the display should show up on. If the display should show on all pages check the "all" option', $assignablePages, 2);
                 break;
         }
 
