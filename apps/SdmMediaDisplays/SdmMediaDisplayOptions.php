@@ -32,5 +32,6 @@ $option = $currentDisplay . 'Options';
 /* Use appropriate options array. If an options array is not found for the current display
  * then the default $SdmMediaDisplaysDefaultOptions will be used.
  */
-$options = (isset($$option) === true ? $$option : $SdmMediaDisplaysDefaultOptions);// legacy code
-$currentDisplaysOptions = (isset($$option) === true ? $$option : $SdmMediaDisplaysDefaultOptions);
+
+//$currentDisplaysOptions = (isset($$option) === true ? $$option : $SdmMediaDisplaysDefaultOptions); use once out of dev
+$currentDisplaysOptions = array('incpages' => array('all'), 'wrapper' => 'main_content');

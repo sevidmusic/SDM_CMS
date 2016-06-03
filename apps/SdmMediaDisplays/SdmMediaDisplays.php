@@ -11,7 +11,7 @@
  * It is used to determine if there is display data for the current page,
  * and which app options array to use if there is.
  */
-$currentDisplay = $sdmassembler->sdmCoreDetermineRequestedPage();
+$currentDisplay = 'Windham Wine And Liquors Backgrounds';
 
 /* Load app output options. */
 require_once(__DIR__ . '/SdmMediaDisplayOptions.php');

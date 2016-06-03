@@ -7,7 +7,7 @@
     /* site width */
     #locked_siteWrapper {
         width: 1420px;
-        margin: 0 auto;
+        margin: 0% 0% 0% 7.6%;
         opacity: .97;
     }
 }
@@ -45,11 +45,11 @@
 
 #locked_facebookIcon {
     position: fixed;
-    top: 253px;
+    top: 26.3%;
     opacity: .9;
     left: 0px;
     overflow: hidden;
-    width: 128px;
+    width: 7.6%;
     background: #5f282e;
     padding: 5px;
     z-index: 2999;
@@ -58,8 +58,8 @@
 #locked_facebookText {
     color: #ffffff;
     float: right;
-    width: 75px;
+    width: 69%;
     font-size: 0.9em;
-    margin-top: 3px;
+    margin-top: 3%;
 }
 

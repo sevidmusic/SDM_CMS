@@ -575,7 +575,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
 
             /* Display admin buttons for the current panel */
             $this->output = implode('', $formHtml) . implode('', $this->adminFormButtons);
-            var_dump($this->adminPanel);
+            //var_dump($this->adminPanel);
         }
 
         /* Display dev output. */

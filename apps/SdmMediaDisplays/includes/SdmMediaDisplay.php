@@ -312,8 +312,15 @@ class SdmMediaDisplay extends SdmMedia
             /* Decode media. */
             $decodedMediaProperties = json_decode($encodedMediaProperties, true);
 
-            /* Add media properties array to $mediaProperties array. */
-            $mediaProperties[$decodedMediaProperties['sdmMediaId']] = $decodedMediaProperties;
+            /* Check $decodedMediaProperties to make sure the json file loaded is for media, not displays. */
+            $decodedPropertyKeys = array_keys($decodedMediaProperties);
+
+            /* If data is not for display, but for media add media properties.*/
+            if (!in_array('displayName', $decodedPropertyKeys)) {
+                /* Add media properties array to $mediaProperties array. */
+                $mediaProperties[$decodedMediaProperties['sdmMediaId']] = $decodedMediaProperties;
+            }
+
         }
 
         /* Return media properties array. */
