@@ -240,9 +240,9 @@ class SdmMediaDisplay extends SdmMedia
         /* Make sure $displayDirectory is in fact a displayDirectory. */
         if (is_dir($displayDirectory) === true) {
             if (file_exists($displayDirectory . '/.DS_Store')) {
-                $adjustForExpextedNonMediaFiles = -1;
+                $adjustForExpectedNonMediaFiles = -2; // -2 to account for .DS_Store and display data file
             } else {
-                $adjustForExpextedNonMediaFiles = 0;
+                $adjustForExpectedNonMediaFiles = -1; // -1 to account for display's data file
             }
             /* Create new RecursiveDirectoryIterator, will be used to iterate through displayDirectory to see
                whether or not it is empty. */
@@ -250,7 +250,7 @@ class SdmMediaDisplay extends SdmMedia
             /* Count iterator, this number will reflect the number of items in the displayDirectory. */
             $directoryCount = iterator_count($directoryIterator);
             /* If */
-            $directoryIsEmpty = (($directoryCount + $adjustForExpextedNonMediaFiles) === 0 ? false : true);
+            $directoryIsEmpty = (($directoryCount + $adjustForExpectedNonMediaFiles) === 0 ? false : true);
             return $directoryIsEmpty;
         }
         return null;
