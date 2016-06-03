@@ -188,11 +188,29 @@ class SdmMediaDisplaysAdmin extends SdmForm
     {
         switch ($this->adminPanel) {
             case 'editMedia':
+                /* Determine path to display being edited. */
                 $pathToCurrentDisplay = $this->sdmMediaDisplaysDataDirectoryPath . '/' . $this->displayBeingEdited;
+
+                /* Make sure display exists */
                 $displayExists = is_dir($pathToCurrentDisplay);
                 if ($displayExists === false) {
                     mkdir($pathToCurrentDisplay);
                 }
+
+                /* Create display id from display name. */
+                $displayId = hash('sha256', $this->displayBeingEdited);
+
+                $displayDataArray = array();
+                $displayDataArray['assignedPages'] = array($this->sdmFormGetSubmittedFormValue('assignedPages'));
+                $displayDataArray['id'] = $displayId;
+                $displayDataArray['displayName'] = $this->displayBeingEdited;
+
+                /* Encode display data */
+                $displayData = json_encode($displayDataArray);
+
+                /* Save display data. */
+                file_put_contents($this->sdmMediaDisplaysDataDirectoryPath . '/' . $this->displayBeingEdited . '/' . $displayId . '.json', $displayData);
+
                 break;
             case 'saveMedia':
                 /* Media file save path. */
