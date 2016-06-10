@@ -463,7 +463,7 @@ class SdmMediaDisplay extends SdmMedia
         $pathToDisplaysData = $this->SdmCore->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/data/' . $display . '/' . hash('sha256', $display) . '.json';
         $displayData = json_decode(file_get_contents($pathToDisplaysData));
         $options = array( // in dev state, the $displayData object will be used to determine these values.
-            'incpages' => array('all'),//$displayData->assignedPages,
+            'incpages' => array('all'),//$displayData->incpages,
             'roles' => array('all'),
             'ignorepages' => array('SdmMediaDisplays'),
             'wrapper' => 'main_content',

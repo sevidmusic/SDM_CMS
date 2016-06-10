@@ -201,7 +201,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
                 $displayId = hash('sha256', $this->displayBeingEdited);
 
                 $displayDataArray = array();
-                $displayDataArray['assignedPages'] = array($this->sdmFormGetSubmittedFormValue('assignedPages'));
+                $displayDataArray['incpages'] = array($this->sdmFormGetSubmittedFormValue('incpages'));
                 $displayDataArray['id'] = $displayId;
                 $displayDataArray['displayName'] = $this->displayBeingEdited;
 
@@ -595,7 +595,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
                 $availablePages = $this->sdmCore->sdmCoreDetermineAvailablePages();
                 $enabledApps = (array)$this->sdmCore->sdmCoreDetermineEnabledApps();
                 $assignablePages = array_merge($allPages, $availablePages, $enabledApps);
-                $this->sdmFormCreateFormElement('assignedPages', 'checkbox', 'Select the pages the display should show up on. If the display should show on all pages check the "all" option', $assignablePages, 2);
+                $this->sdmFormCreateFormElement('incpages', 'checkbox', 'Select the pages the display should show up on. If the display should show on all pages check the "all" option', $assignablePages, 2);
                 break;
             case 'saveMedia':
             case 'cancelAddEditMedia':
