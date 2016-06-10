@@ -38,6 +38,8 @@ class SdmMediaDisplay extends SdmMedia
      */
     private $sdmMediaDisplayCategorizedMediaObjects;
 
+    /* Stores the output options for the display. */
+    private $outputOptions;
 
     /**
      * SdmMediaDisplay constructor. Initializes the sdmMediaDisplayMedia array.
@@ -61,6 +63,12 @@ class SdmMediaDisplay extends SdmMedia
         /* Initialize sdmMediaDisplayHtml string. This string will hold the html for the display built
            from the SdmMedia objects that belong to this display. */
         $this->sdmMediaDisplayHtml = '';
+
+        /* By default, protect display from being viewed by anyone! This is done for security so displays that do not have
+         * their output options configured correctly do not get viewed by the wrong eyes. If a display does not appear, it
+         * may be that the display's data file is corrupted or the options were not probably configured.
+         */
+        $this->outputOptions = array('ignorepages' => array('all'), 'roles' => array('root'));
 
     }
 
@@ -448,5 +456,22 @@ class SdmMediaDisplay extends SdmMedia
     public function sdmMediaGetSdmMediaDisplayMediaElementsHtml()
     {
         return $this->sdmMediaDisplayMediaElementsHtml;
+    }
+
+    public function loadDisplayOutputOptions($display)
+    {
+        $pathToDisplaysData = $this->SdmCore->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/data/' . $display . '/' . hash('sha256', $display) . '.json';
+        $displayData = json_decode(file_get_contents($pathToDisplaysData));
+        $options = array( // in dev state, the $displayData object will be used to determine these values.
+            'incpages' => array('all'),//$displayData->assignedPages,
+            'roles' => array('all'),
+            'ignorepages' => array('SdmMediaDisplays'),
+            'wrapper' => 'main_content',
+        );
+
+        $this->outputOptions = $options;
+
+        return $this->outputOptions;
+        //@todo: TO make this easier, you need to rework the add display admin so the display options are saved with the same options structure expected by the sdmAssembler.
     }
 }
