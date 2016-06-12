@@ -17,7 +17,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
     private $initialSetup;
     private $output;
     private $messages;
-    private $sdmCore; // local instance of SdmCore
+    private $sdmCms; // local instance of SdmCore
     private $sdmMediaDisplay; // instance of display being edited created upon instantiation of a SdmMediaDisplaysAdmin() object.
     private $sdmMediaDisplaysDirectoryPath;
     private $sdmMediaDisplaysDirectoryUrl;
@@ -30,7 +30,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
     private $cronTasksPerformed;
     private $displaysExist;
 
-    public function __construct()
+    public function __construct(SdmCms $sdmCms)
     {
         /* Call SdmForm()'s __constructor() */
         parent::__construct();
@@ -50,14 +50,14 @@ class SdmMediaDisplaysAdmin extends SdmForm
         $this->output = (isset($this->output) === true ? $this->output : 'An error occurred and the Sdm Media Displays admin panel is currently unavailable.');
         /* Admin panel messages. */
         $this->messages = (isset($this->messages) === true ? $this->messages : null);
-        /* Local instance of SdmCore(). */
-        $this->sdmCore = new SdmCore();
+        /* Local instance of SdmCms(). */
+        $this->sdmCms = $sdmCms;
         /* Create local instance of an SdmMediaDisplay() object for the display being edited. */
-        $this->sdmMediaDisplay = new SdmMediaDisplay($this->displayBeingEdited, $this->sdmCore);
+        $this->sdmMediaDisplay = new SdmMediaDisplay($this->displayBeingEdited, $this->sdmCms);
         /* Sdm media display's directory path. */
-        $this->sdmMediaDisplaysDirectoryPath = $this->sdmCore->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays';
+        $this->sdmMediaDisplaysDirectoryPath = $this->sdmCms->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays';
         /* Sdm media display's directory url. */
-        $this->sdmMediaDisplaysDirectoryUrl = $this->sdmCore->sdmCoreGetUserAppDirectoryUrl() . '/SdmMediaDisplays';
+        $this->sdmMediaDisplaysDirectoryUrl = $this->sdmCms->sdmCoreGetUserAppDirectoryUrl() . '/SdmMediaDisplays';
         /* Sdm media display data directory path. */
         $this->sdmMediaDisplaysDataDirectoryPath = $this->sdmMediaDisplaysDirectoryPath . '/displays/data';
         /* Sdm media display data directory url. */
@@ -67,9 +67,9 @@ class SdmMediaDisplaysAdmin extends SdmForm
         /* Sdm media display media directory url. */
         $this->sdmMediaDisplaysMediaDirectoryUrl = $this->sdmMediaDisplaysDirectoryUrl . '/displays/media';
         /* Sdm media display's admin page url. */
-        $this->sdmMediaDisplaysAdminPageUrl = $this->sdmCore->sdmCoreGetRootDirectoryUrl() . '/index.php?page=SdmMediaDisplays';
+        $this->sdmMediaDisplaysAdminPageUrl = $this->sdmCms->sdmCoreGetRootDirectoryUrl() . '/index.php?page=SdmMediaDisplays';
         /* Current display's page url. */
-        $this->sdmMediaDisplaysPageUrl = $this->sdmCore->sdmCoreGetUserAppDirectoryUrl() . '/index.php?page=' . $this->displayBeingEdited;
+        $this->sdmMediaDisplaysPageUrl = $this->sdmCms->sdmCoreGetUserAppDirectoryUrl() . '/index.php?page=' . $this->displayBeingEdited;
         /* Initial setup performed. */
         $this->initialSetup = (isset($this->initialSetup) === true ? $this->initialSetup : $this->performInitialSetup());
         /* Cron tasks performed. */
@@ -118,7 +118,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
                 pages, including images, video, embeded video (such as youtube),
                 and HTML 5 canvas scripts.</p>
                 <p>Initial setup complete.
-                <a href='{$this->sdmCore->sdmCoreGetRootDirectoryUrl()}/index.php?page=SdmMediaDisplays'>
+                <a href='{$this->sdmCms->sdmCoreGetRootDirectoryUrl()}/index.php?page=SdmMediaDisplays'>
                 Click here</a> to start creating media displays.</p>
                 ";
         }
@@ -132,7 +132,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
         $this->cronTasksPerformed = false;
 
         /* Get a directory listing of all displays from the data directory. */
-        $dataDirectoryListing = $this->sdmCore->sdmCoreGetDirectoryListing('SdmMediaDisplays/displays/data', 'apps');
+        $dataDirectoryListing = $this->sdmCms->sdmCoreGetDirectoryListing('SdmMediaDisplays/displays/data', 'apps');
 
         /* Look in each display's data directory and cleanup any ghost .json files that are found. */
         foreach ($dataDirectoryListing as $dataDirectoryName) {
@@ -159,7 +159,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
         $expectedDirs = array('.', '..', '.DS_Store', 'SdmMediaDisplays');
 
         /* Scan data directory for displays. */
-        $displays = scandir($this->sdmCore->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/data');
+        $displays = scandir($this->sdmCms->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/data');
 
         /* Check $displays against $expectedDirs, if a display is found that is not an expected directory then at least on display exists. */
         foreach ($displays as $display) {
@@ -249,22 +249,22 @@ class SdmMediaDisplaysAdmin extends SdmForm
             );
 
             /* Report progress to media upload log. */
-            $sdmMediaUploadLog = $this->sdmCore->sdmCoreSdmReadArrayBuffered(['$validTypes' => $validTypes]) . PHP_EOL;
+            $sdmMediaUploadLog = $this->sdmCms->sdmCoreSdmReadArrayBuffered(['$validTypes' => $validTypes]) . PHP_EOL;
 
             /* Report progress to media upload log. */
-            $sdmMediaUploadLog = $this->sdmCore->sdmCoreSdmReadArrayBuffered(['$_FILE' => $_FILES]) . PHP_EOL;
+            $sdmMediaUploadLog = $this->sdmCms->sdmCoreSdmReadArrayBuffered(['$_FILE' => $_FILES]) . PHP_EOL;
 
             /* Check if $_FILES['SdmForm']['error']['sdmMediaFile'] is unset. */
             $errorsValueSet = isset($_FILES['SdmForm']['error']['sdmMediaFile']);
 
             /* Report progress to media upload log. */
-            $sdmMediaUploadLog .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['$errorsValueSet' => $errorsValueSet]) . PHP_EOL;
+            $sdmMediaUploadLog .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['$errorsValueSet' => $errorsValueSet]) . PHP_EOL;
 
             /* Check if $_FILES['SdmForm']['error']['sdmMediaFile'] is an array. */
             $errorsValueManipulated = is_array($_FILES['SdmForm']['error']['sdmMediaFile']);
 
             /* Report progress to media upload log. */
-            $sdmMediaUploadLog .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['$errorsValueManipulated' => $errorsValueManipulated]) . PHP_EOL;
+            $sdmMediaUploadLog .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['$errorsValueManipulated' => $errorsValueManipulated]) . PHP_EOL;
 
             /* If $_FILES['SdmForm']['error']['sdmMediaFile'] is unset or if it is an array this request is
                suspicious. HTTP headers may have have been compromised, do not process! */
@@ -313,25 +313,25 @@ class SdmMediaDisplaysAdmin extends SdmForm
             $maxSize = 1000000; // 1000000 === 1000 kilobytes | 1000000 === 1 megabytes
 
             /* Report progress to media upload log. */
-            $sdmMediaUploadLog .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['$maxSize' => $maxSize]) . PHP_EOL;
+            $sdmMediaUploadLog .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['$maxSize' => $maxSize]) . PHP_EOL;
 
 
             $maxSizeMultiplier = 1000; // set to 1 GB so video to accommodate large audio and video.
 
             /* Report progress to media upload log. */
-            $sdmMediaUploadLog .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['$maxSizeMultiplier' => $maxSizeMultiplier]) . PHP_EOL;
+            $sdmMediaUploadLog .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['$maxSizeMultiplier' => $maxSizeMultiplier]) . PHP_EOL;
 
 
             $minSize = 1000; // 1000 === 1 kilobyte | 1000 = 0.001 megabytes
 
             /* Report progress to media upload log. */
-            $sdmMediaUploadLog .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['$minSize' => $minSize]) . PHP_EOL;
+            $sdmMediaUploadLog .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['$minSize' => $minSize]) . PHP_EOL;
 
 
             $minSizeMultiplier = 1;
 
             /* Report progress to media upload log. */
-            $sdmMediaUploadLog .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['$minSizeMultiplier' => $minSizeMultiplier]) . PHP_EOL;
+            $sdmMediaUploadLog .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['$minSizeMultiplier' => $minSizeMultiplier]) . PHP_EOL;
 
 
             /* Get uploaded file size | Kinda sucks to have to rely on http headers here, but
@@ -343,7 +343,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
             $uploadedFileSize = $_FILES['SdmForm']['size']['sdmMediaFile'];
 
             /* Report progress to media upload log. */
-            $sdmMediaUploadLog .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['$uploadedFileSize' => $uploadedFileSize]) . PHP_EOL;
+            $sdmMediaUploadLog .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['$uploadedFileSize' => $uploadedFileSize]) . PHP_EOL;
 
 
             /* Make sure file is not to big or to small. */
@@ -361,13 +361,13 @@ class SdmMediaDisplaysAdmin extends SdmForm
             $loadedFilesInfo = new finfo(FILEINFO_MIME_TYPE);
 
             /* Report progress to media upload log. */
-            $sdmMediaUploadLog .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['$loadedFilesInfo' => $loadedFilesInfo]) . PHP_EOL;
+            $sdmMediaUploadLog .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['$loadedFilesInfo' => $loadedFilesInfo]) . PHP_EOL;
 
             /* Determine uploaded files type. */
             $uploadedFilesType = $loadedFilesInfo->file($_FILES['SdmForm']['tmp_name']['sdmMediaFile']);
 
             /* Report progress to media upload log. */
-            $sdmMediaUploadLog .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['$uploadedFilesType' => $uploadedFilesType]) . PHP_EOL;
+            $sdmMediaUploadLog .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['$uploadedFilesType' => $uploadedFilesType]) . PHP_EOL;
 
 
             /* Check if file type/extension matches a valid file type, if it does use it, otherwise
@@ -375,7 +375,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
             $validFileExt = array_search($uploadedFilesType, $validTypes, true);
 
             /* Report progress to media upload log. */
-            $sdmMediaUploadLog .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['$validFileExt' => $validFileExt]) . PHP_EOL;
+            $sdmMediaUploadLog .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['$validFileExt' => $validFileExt]) . PHP_EOL;
 
 
             /* If file type is not valid throw an error. */
@@ -399,17 +399,17 @@ class SdmMediaDisplaysAdmin extends SdmForm
             $uniqueFileName = sprintf('%s.%s', sha1_file($_FILES['SdmForm']['tmp_name']['sdmMediaFile']), $validFileExt);
 
             /* Report progress to media upload log. */
-            $sdmMediaUploadLog .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['$uniqueFileName' => $uniqueFileName]);
+            $sdmMediaUploadLog .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['$uniqueFileName' => $uniqueFileName]);
 
             /* Report progress to media upload log. */
-            $sdmMediaUploadLog .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['$savePath' => $savePath]) . PHP_EOL;
+            $sdmMediaUploadLog .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['$savePath' => $savePath]) . PHP_EOL;
 
             /* Attempt to upload and save the file, throw an error if upload fails. */
             if (move_uploaded_file($_FILES['SdmForm']['tmp_name']['sdmMediaFile'], $savePath . '/' . $uniqueFileName) !== false) {
                 /* upload succeed. */
                 $fileUploadSuccessMessage = 'Sdm Media Displays File Upload Status: File was uploaded successfully.' . PHP_EOL;
                 /* Report to upload log */
-                $sdmMediaUploadLog .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['Upload Status' => $fileUploadSuccessMessage]);
+                $sdmMediaUploadLog .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['Upload Status' => $fileUploadSuccessMessage]);
                 $fileUploadStatus = true;
             } else {
                 $fileUploadStatus = false;
@@ -425,7 +425,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
         $sdmMediaUploadLogMessage = (isset($errorMessages) ? $errorMessages . PHP_EOL : 'File Uploaded without any errors.') . $sdmMediaUploadLog;
 
         /* Log upload. */
-        file_put_contents($this->sdmCore->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/logs/sdmMediaDisplayLog_' . time() . '.html', $sdmMediaUploadLogMessage);
+        file_put_contents($this->sdmCms->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/logs/sdmMediaDisplayLog_' . time() . '.html', $sdmMediaUploadLogMessage);
 
         return ($fileUploadStatus === true ? $uniqueFileName : $fileUploadStatus);
 
@@ -454,7 +454,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
             switch ($submittedEditMediaFormKey) {
                 case 'sdmMediaSourceUrl':
                     /* If sdmMediaSourceType is local, enforce local url, otherwise use supplied. */
-                    $newMediaPropertyValues[$submittedEditMediaFormKey] = ($this->sdmFormGetSubmittedFormValue('sdmMediaSourceType') === 'local' ? $this->sdmCore->sdmCoreGetRootDirectoryUrl() . '/apps/SdmMediaDisplays/displays/media' : $this->sdmFormGetSubmittedFormValue($submittedEditMediaFormKey));
+                    $newMediaPropertyValues[$submittedEditMediaFormKey] = ($this->sdmFormGetSubmittedFormValue('sdmMediaSourceType') === 'local' ? $this->sdmCms->sdmCoreGetRootDirectoryUrl() . '/apps/SdmMediaDisplays/displays/media' : $this->sdmFormGetSubmittedFormValue($submittedEditMediaFormKey));
                     break;
                 case 'sdmMediaProtected':
                 case 'sdmMediaPublic':
@@ -569,7 +569,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
             $formHtml = array();
 
             /* Start building form. */
-            $formHtml['openingFormTags'] = $this->sdmFormOpenForm($this->sdmCore->sdmCoreGetRootDirectoryUrl());
+            $formHtml['openingFormTags'] = $this->sdmFormOpenForm($this->sdmCms->sdmCoreGetRootDirectoryUrl());
             $formHtml['formElementsHtml'] = implode(PHP_EOL, $this->adminFormElements);
             $formHtml['closingFormTags'] = $this->sdmFormCloseForm();
 
@@ -592,8 +592,8 @@ class SdmMediaDisplaysAdmin extends SdmForm
             case 'addDisplay':
                 $this->sdmFormCreateFormElement('displayName', 'text', 'Enter a name for this display', '', 1);
                 $allPages = array('all' => 'all');
-                $availablePages = $this->sdmCore->sdmCoreDetermineAvailablePages();
-                $enabledApps = (array)$this->sdmCore->sdmCoreDetermineEnabledApps();
+                $availablePages = $this->sdmCms->sdmCoreDetermineAvailablePages();
+                $enabledApps = (array)$this->sdmCms->sdmCoreDetermineEnabledApps();
                 $assignablePages = array_merge($allPages, $availablePages, $enabledApps);
                 $this->sdmFormCreateFormElement('incpages', 'checkbox', 'Select the pages the display should show up on. If the display should show on all pages check the "all" option', $assignablePages, 2);
                 break;
@@ -715,28 +715,28 @@ class SdmMediaDisplaysAdmin extends SdmForm
 
     private function devOutput()
     {
-        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['output' => $this->output]);
-        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['adminPanel' => $this->adminPanel]);
-        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['adminMode' => $this->adminMode]);
-        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['editMode' => $this->editMode]);
-        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['displayBeingEdited' => $this->displayBeingEdited]);
-        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['formElements' => $this->formElements]);
-        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['adminFormElements' => $this->adminFormElements]);
-        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['adminFormButtons' => $this->adminFormButtons]);
-        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['initialSetup' => $this->initialSetup]);
-        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['messages' => $this->messages]);
-        //$this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['sdmCore' => $this->sdmCore]);
-        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplay' => $this->sdmMediaDisplay]);
-        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysDirectoryPath' => $this->sdmMediaDisplaysDirectoryPath]);
-        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysDirectoryUrl' => $this->sdmMediaDisplaysDirectoryUrl]);
-        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysDataDirectoryPath' => $this->sdmMediaDisplaysDataDirectoryPath]);
-        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysDataDirectoryUrl' => $this->sdmMediaDisplaysDataDirectoryUrl]);
-        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysMediaDirectoryPath' => $this->sdmMediaDisplaysMediaDirectoryPath]);
-        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysMediaDirectoryUrl' => $this->sdmMediaDisplaysMediaDirectoryUrl]);
-        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysAdminPageUrl' => $this->sdmMediaDisplaysAdminPageUrl]);
-        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysPageUrl' => $this->sdmMediaDisplaysPageUrl]);
-        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['cronTasksPerformed' => $this->cronTasksPerformed]);
-        $this->output .= $this->sdmCore->sdmCoreSdmReadArrayBuffered(['displaysExist' => $this->displaysExist]);
+        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['output' => $this->output]);
+        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['adminPanel' => $this->adminPanel]);
+        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['adminMode' => $this->adminMode]);
+        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['editMode' => $this->editMode]);
+        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['displayBeingEdited' => $this->displayBeingEdited]);
+        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['formElements' => $this->formElements]);
+        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['adminFormElements' => $this->adminFormElements]);
+        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['adminFormButtons' => $this->adminFormButtons]);
+        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['initialSetup' => $this->initialSetup]);
+        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['messages' => $this->messages]);
+        //$this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['sdmCms' => $this->sdmCms]);
+        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplay' => $this->sdmMediaDisplay]);
+        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysDirectoryPath' => $this->sdmMediaDisplaysDirectoryPath]);
+        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysDirectoryUrl' => $this->sdmMediaDisplaysDirectoryUrl]);
+        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysDataDirectoryPath' => $this->sdmMediaDisplaysDataDirectoryPath]);
+        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysDataDirectoryUrl' => $this->sdmMediaDisplaysDataDirectoryUrl]);
+        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysMediaDirectoryPath' => $this->sdmMediaDisplaysMediaDirectoryPath]);
+        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysMediaDirectoryUrl' => $this->sdmMediaDisplaysMediaDirectoryUrl]);
+        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysAdminPageUrl' => $this->sdmMediaDisplaysAdminPageUrl]);
+        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysPageUrl' => $this->sdmMediaDisplaysPageUrl]);
+        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['cronTasksPerformed' => $this->cronTasksPerformed]);
+        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['displaysExist' => $this->displaysExist]);
     }
 
 }

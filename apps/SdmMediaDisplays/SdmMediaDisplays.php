@@ -52,7 +52,7 @@ foreach ($displays as $currentDisplay) {
     /* If current page is the SdmMediaDisplays page show admin panel. */
     if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
 
-        $adminPanel = new SdmMediaDisplaysAdmin();
+        $adminPanel = new SdmMediaDisplaysAdmin(new SdmCms());
 
         $output = $adminPanel->getCurrentAdminPanel();
 
