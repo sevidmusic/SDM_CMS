@@ -643,12 +643,16 @@ class SdmMediaDisplaysAdmin extends SdmForm
         /* Determine which form elements to define for the current adminPanel. */
         switch ($this->adminPanel) {
             case 'addDisplay':
-                $this->sdmFormCreateFormElement('displayName', 'text', 'Enter a name for this display', '', 1);
+                $this->sdmFormCreateFormElement('displayName', 'text', 'Enter a name for this display', '', 0);
                 $allPages = array('all' => 'all');
                 $availablePages = $this->sdmCms->sdmCoreDetermineAvailablePages();
                 $enabledApps = (array)$this->sdmCms->sdmCoreDetermineEnabledApps();
                 $assignablePages = array_merge($allPages, $availablePages, $enabledApps);
+                $this->sdmFormCreateFormElement('incmethod', 'select', 'Select the method the display should be incorporated into the page, append will place it before other content, prepend will place it after, overwrite will force the display to overwrite other content.', $this->sdmFormSetDefaultInputValues(array('Append' => 'append', 'Prepend' => 'prepend', 'Overwrite' => 'overwrite'), ''), 1);
                 $this->sdmFormCreateFormElement('incpages', 'checkbox', 'Select the pages the display should show up on. If the display should show on all pages check the "all" option', $assignablePages, 2);
+                $this->sdmFormCreateFormElement('ignorepages', 'checkbox', 'Select the pages the display should NOT show up on. If the display should be hidden on all pages check the "all" option', $assignablePages, 3);
+                $this->sdmFormCreateFormElement('wrapper', 'select', 'Select the content wrapper the display should be assigned to.', $this->sdmFormSetDefaultInputValues($this->sdmCms->sdmCmsDetermineAvailableWrappers(), 'main_content'), 4);
+                $this->sdmFormCreateFormElement('roles', 'checkbox', 'Select the user roles this display can be viewed by. For instance if only "root" users should see the display select the "root" role.', $this->sdmFormSetDefaultInputValues(array('Root' => 'root', 'Basic User' => 'basicUser', 'All Roles' => 'all'), 'root'), 5);
                 break;
             case 'saveMedia':
             case 'cancelAddEditMedia':
