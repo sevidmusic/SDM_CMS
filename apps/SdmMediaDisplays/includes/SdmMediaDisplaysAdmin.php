@@ -30,6 +30,12 @@ class SdmMediaDisplaysAdmin extends SdmForm
     private $cronTasksPerformed;
     private $displaysExist;
 
+    /**
+     * SdmMediaDisplaysAdmin constructor. Requires an instance of the SdmCms() class be injected
+     * via the first parameter.
+     *
+     * @param SdmCms $sdmCms
+     */
     public function __construct(SdmCms $sdmCms)
     {
         /* Call SdmForm()'s __constructor() */
@@ -82,6 +88,12 @@ class SdmMediaDisplaysAdmin extends SdmForm
         $this->processSubmittedValues();
     }
 
+    /**
+     * Performs initial setup of the Sdm Media Displays app.
+     * Specifically it checks that the data and media directories exist, if they don't
+     * then this method will create them.
+     * @return bool Returns true if initial setup was run, false otherwise.
+     */
     private function performInitialSetup()
     {
         /** Initial Setup **/
@@ -125,6 +137,10 @@ class SdmMediaDisplaysAdmin extends SdmForm
         return $this->initialSetup;
     }
 
+    /**
+     * Runs cron tasks for the Sdm Media Displays app.
+     * @return bool Returns true if cron tasks were run, false otherwise.
+     */
     private function runCronTasks()
     {
 
@@ -153,6 +169,11 @@ class SdmMediaDisplaysAdmin extends SdmForm
         return $this->cronTasksPerformed;
     }
 
+    /**
+     * Determines if any displays exist.
+     *
+     * @return bool Returns true if there are displays, false otherwise.
+     */
     private function displaysExist()
     {
         /* Only show edit and delete display buttons if there are displays other then the default. */
@@ -175,6 +196,11 @@ class SdmMediaDisplaysAdmin extends SdmForm
         return $this->displaysExist;
     }
 
+    /**
+     * Configures the Sdm Media Displays admin form's settings.
+     *
+     * @return Returns true always.
+     */
     private function configureAdminForm()
     {
         $this->formHandler = 'SdmMediaDisplays';
@@ -182,8 +208,12 @@ class SdmMediaDisplaysAdmin extends SdmForm
         $this->excludeSubmitLabel = true;
         $this->preserveSubmittedValues = true;
         $this->formClasses = 'SdmMediaDisplaysAdminForm';
+        return true;
     }
 
+    /**
+     * Process the submitted form values for the various admin panels for the Sdm Media Displays app.
+     */
     private function processSubmittedValues()
     {
         switch ($this->adminPanel) {
@@ -223,6 +253,11 @@ class SdmMediaDisplaysAdmin extends SdmForm
         }
     }
 
+    /**
+     * Handles file uploads for the Sdm Media Displays add media admin panel.
+     *
+     * @return bool|string Returns the name of media file uploaded on success, or false on failure.
+     */
     private function uploadMedia()
     {
         /* Media file save path. */
@@ -238,7 +273,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
                 'png' => 'image/png',
                 'gif' => 'image/gif',
                 'json' => 'application/json',
-                'js' => 'text/plain', /* text/plain is what MAMP interprets, even though the standard is application/javascript */
+                'js' => 'text/plain', /* text/plain is what is often interpreted for js files, even though the standard is application/javascript */
                 'mp3' => 'audio/mpeg',
                 'aif' => 'audio/x-aiff',
                 'aiff' => 'audio/x-aiff',
@@ -431,6 +466,13 @@ class SdmMediaDisplaysAdmin extends SdmForm
 
     }
 
+    /**
+     * @param $uniqueFileName string The name of the media file to save. This name is generated internally by the
+     * uploadMedia() method on successful upload of a local media file.
+     *
+     * @return bool This method is still in development, it will return true or false based on whether or not
+     * the media was successfully saved. @todo: have method return true or false based on succsess.
+     */
     private function saveMediaData($uniqueFileName)
     {
         /* Get submitted form values */
@@ -555,6 +597,11 @@ class SdmMediaDisplaysAdmin extends SdmForm
         return $embedUrl;
     }
 
+    /**
+     * Determines which admin panel should be used and returns the html for it as a string.
+     *
+     * @return string The html string for the current admin panel.
+     */
     public function getCurrentAdminPanel()
     {
         /* If this is not the initial setup assemble admin panel. */
@@ -585,6 +632,12 @@ class SdmMediaDisplaysAdmin extends SdmForm
         return $this->output;
     }
 
+    /**
+     * Assembles the appropriate form elements for the current admin panel. This method adds these elements
+     * to the parent SdmForm() classes form elements array.
+     *
+     * @return array Returns an array of the assembled form elements for the current admin panel.
+     */
     private function assembleAdminFormElements()
     {
         /* Determine which form elements to define for the current adminPanel. */
@@ -642,6 +695,11 @@ class SdmMediaDisplaysAdmin extends SdmForm
         return $this->adminFormElements;
     }
 
+    /**
+     * Assembles the appropriate form buttons for the current admin panel.
+     *
+     * @return array Returns an array of form buttons for the current admin panel.
+     */
     private function assembleAdminFormButtons()
     {
         /* Determine which admin panel is in use. */
@@ -713,6 +771,13 @@ class SdmMediaDisplaysAdmin extends SdmForm
         return "<button id='$id' name='SdmForm[$name]' type='submit' value='$value' " . implode(' ', $attributes) . ">$label</button>";
     }
 
+    /**
+     * This method is to be used soley for development or refactoring of the SdmMediaDisplaysAdmin() class.
+     * Do not use it in production!
+     *
+     * Uses SdmCores()'s  sdmCoreSdmReadArrayBuffered() method to show information related to the
+     * Sdm Media Display admin panel.
+     */
     private function devOutput()
     {
         $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['output' => $this->output]);
@@ -725,7 +790,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
         $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['adminFormButtons' => $this->adminFormButtons]);
         $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['initialSetup' => $this->initialSetup]);
         $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['messages' => $this->messages]);
-        //$this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['sdmCms' => $this->sdmCms]);
+        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['sdmCms' => $this->sdmCms]);
         $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplay' => $this->sdmMediaDisplay]);
         $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysDirectoryPath' => $this->sdmMediaDisplaysDirectoryPath]);
         $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysDirectoryUrl' => $this->sdmMediaDisplaysDirectoryUrl]);
