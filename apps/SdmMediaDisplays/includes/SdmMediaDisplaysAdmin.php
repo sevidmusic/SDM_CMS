@@ -231,7 +231,13 @@ class SdmMediaDisplaysAdmin extends SdmForm
                 $displayId = hash('sha256', $this->displayBeingEdited);
 
                 $displayDataArray = array();
-                $displayDataArray['incpages'] = array($this->sdmFormGetSubmittedFormValue('incpages'));
+                $displayDataArray['options'] = array(
+                    'incpages' => $this->sdmFormGetSubmittedFormValue('incpages'),
+                    'ignorepages' => $this->sdmFormGetSubmittedFormValue('ignorepages'),
+                    'roles' => $this->sdmFormGetSubmittedFormValue('roles'),
+                    'incmethod' => $this->sdmFormGetSubmittedFormValue('incmethod'),
+                    'wrapper' => $this->sdmFormGetSubmittedFormValue('wrapper'),
+                );
                 $displayDataArray['id'] = $displayId;
                 $displayDataArray['displayName'] = $this->displayBeingEdited;
 
@@ -650,9 +656,19 @@ class SdmMediaDisplaysAdmin extends SdmForm
                 $assignablePages = array_merge($allPages, $availablePages, $enabledApps);
                 $this->sdmFormCreateFormElement('incmethod', 'select', 'Select the method the display should be incorporated into the page, append will place it before other content, prepend will place it after, overwrite will force the display to overwrite other content.', $this->sdmFormSetDefaultInputValues(array('Append' => 'append', 'Prepend' => 'prepend', 'Overwrite' => 'overwrite'), ''), 1);
                 $this->sdmFormCreateFormElement('incpages', 'checkbox', 'Select the pages the display should show up on. If the display should show on all pages check the "all" option', $assignablePages, 2);
-                $this->sdmFormCreateFormElement('ignorepages', 'checkbox', 'Select the pages the display should NOT show up on. If the display should be hidden on all pages check the "all" option', $assignablePages, 3);
+                $this->sdmFormCreateFormElement('ignorepages', 'checkbox', 'Select the pages the display should NOT show up on. If the display should be hidden on all pages check the "all" option', $assignablePages, 3, array('style' => 'display: block; float: left; width: 25%;'));
                 $this->sdmFormCreateFormElement('wrapper', 'select', 'Select the content wrapper the display should be assigned to.', $this->sdmFormSetDefaultInputValues($this->sdmCms->sdmCmsDetermineAvailableWrappers(), 'main_content'), 4);
                 $this->sdmFormCreateFormElement('roles', 'checkbox', 'Select the user roles this display can be viewed by. For instance if only "root" users should see the display select the "root" role.', $this->sdmFormSetDefaultInputValues(array('Root' => 'root', 'Basic User' => 'basicUser', 'All Roles' => 'all'), 'root'), 5);
+                /* Create list of available display templates. */
+                $templateDirectoryListing = $this->sdmCms->sdmCoreGetDirectoryListing('SdmMediaDisplays/displays/templates', 'apps');
+                $ignoredListings = array('.', '..', '.DS_Store');
+                $availableTemplates = array();
+                foreach ($templateDirectoryListing as $templateFile) {
+                    if (in_array($templateFile, $ignoredListings) === false) {
+                        $availableTemplates[str_replace('.php', '', $templateFile)] = $templateFile;
+                    }
+                }
+                $this->sdmFormCreateFormElement('template', 'select', 'Select the display template to use for this display. If the display does not require a custom template use the default Sdm Media Displays template.', $this->sdmFormSetDefaultInputValues($availableTemplates, 'SdmMediaDisplays.php'), 6);
                 break;
             case 'saveMedia':
             case 'cancelAddEditMedia':

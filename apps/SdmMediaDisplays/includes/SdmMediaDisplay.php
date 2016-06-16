@@ -458,20 +458,27 @@ class SdmMediaDisplay extends SdmMedia
         return $this->sdmMediaDisplayMediaElementsHtml;
     }
 
+    /**
+     *
+     * Loads a specified display's output options.
+     *
+     * @param $display string The name of the display to load output options for.
+     *
+     * @return array An array representing the output options for the display.
+     *
+     */
     public function loadDisplayOutputOptions($display)
     {
+        /* Path to $display's data directory. */
         $pathToDisplaysData = $this->SdmCore->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/data/' . $display . '/' . hash('sha256', $display) . '.json';
+
+        /* Load and decode the displays json file. This file's name will be the hash of the display's name and will end with the .json extension. */
         $displayData = json_decode(file_get_contents($pathToDisplaysData));
-        $options = array( // in dev state, the $displayData object will be used to determine these values.
-            'incpages' => array('all'),//$displayData->incpages,
-            'roles' => array('all'),
-            'ignorepages' => array('SdmMediaDisplays'),
-            'wrapper' => 'main_content',
-        );
 
-        $this->outputOptions = $options;
+        /* Load the output options for the display, cast to array so structure conforms to the structure expected by the SdmAssembler(). */
+        $this->outputOptions = (array)$displayData->options;
 
+        /* Return the displays output options. */
         return $this->outputOptions;
-        //@todo: TO make this easier, you need to rework the add display admin so the display options are saved with the same options structure expected by the sdmAssembler.
     }
 }
