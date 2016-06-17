@@ -240,6 +240,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
                 );
                 $displayDataArray['id'] = $displayId;
                 $displayDataArray['displayName'] = $this->displayBeingEdited;
+                $displayDataArray['template'] = $this->sdmFormGetSubmittedFormValue('template');
 
                 /* Encode display data */
                 $displayData = json_encode($displayDataArray);

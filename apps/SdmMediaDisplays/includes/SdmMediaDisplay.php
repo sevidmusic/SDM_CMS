@@ -25,7 +25,8 @@ class SdmMediaDisplay extends SdmMedia
     private $sdmMediaDisplayMediaElementsHtml;
 
     /** @var  $sdmMediaDisplayTemplate string
-     * The name of the template file for this display excluding the file extension.
+     * The name of the template file for this display excluding the file extension. This
+     * is set internally on call to sdmMediaDisplayLoadDisplayTemplate() method.
      */
     private $sdmMediaDisplayTemplate;
 
@@ -38,13 +39,19 @@ class SdmMediaDisplay extends SdmMedia
      */
     private $sdmMediaDisplayCategorizedMediaObjects;
 
-    /* Stores the output options for the display. */
+    /** @var $outputOptions array Stores the output options for the display. */
     private $outputOptions;
+
+    /** @var $pathToDisplaysData string Path to $display's data directory. */
+    private $pathToDisplaysData;
+
+    /** @var $displayData object Generic object that represents the unpacked data from the display's data file. */
+    private $displayData;
 
     /**
      * SdmMediaDisplay constructor. Initializes the sdmMediaDisplayMedia array.
      */
-    final public function __construct($SdmMediaDisplayTemplate = 'SdmMediaDisplayDefaultTemplate', SdmCore $SdmCoreObject)
+    final public function __construct($SdmMediaDisplayName, SdmCore $SdmCoreObject)
     {
         /** @var  SdmCore object Injected instance of the SdmCore() class. Used to create correct display paths and urls. */
         $this->SdmCore = $SdmCoreObject;
@@ -57,9 +64,6 @@ class SdmMediaDisplay extends SdmMedia
            sdmMediaMachineName property.  */
         $this->sdmMediaDisplayMediaElementsHtml = array();
 
-        /* Assign Sdm Media Display template, default template will be used. */
-        $this->sdmMediaDisplayTemplate = $SdmMediaDisplayTemplate;
-
         /* Initialize sdmMediaDisplayHtml string. This string will hold the html for the display built
            from the SdmMedia objects that belong to this display. */
         $this->sdmMediaDisplayHtml = '';
@@ -70,6 +74,27 @@ class SdmMediaDisplay extends SdmMedia
          */
         $this->outputOptions = array('ignorepages' => array('all'), 'roles' => array('root'));
 
+        /* Determine path to $display's data directory based on $SdmMediaDisplayName. */
+        $this->pathToDisplaysData = $this->SdmCore->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/data/' . $SdmMediaDisplayName . '/' . hash('sha256', $SdmMediaDisplayName) . '.json';
+
+        /* Load display's data */
+        $this->loadDisplayData();
+
+    }
+
+    /**
+     * Loads the saved display data for the display. This data will include the display's name, the display's
+     * output options, the display's id, and the name of the template assigned to the display.
+     *
+     * @return mixed|object Returns a generic object representing the saved display data for the display.
+     */
+    private function loadDisplayData()
+    {
+        /* Load and decode the displays json file. */
+        $this->displayData = json_decode(file_get_contents($this->pathToDisplaysData));
+
+        /* Return the loaded displayData object. */
+        return $this->displayData;
     }
 
     /**
@@ -123,7 +148,8 @@ class SdmMediaDisplay extends SdmMedia
             /* Assign SdmMedia object to the $orderedMedia array. Index by SdmMediaCategory,
                SdmMediaPlace, and finally SdmMediaDisplayName */
             $mediaObject->sdmMediaDynamicallyGeneratedHtml = $mediaElementsHtml[$mediaMachineName];
-            //var_dump($mediaObject);
+
+            /* Save media object to ordered media array. */
             $orderedMedia[$mediaCategory][$mediaPlace][$mediaDisplayName] = $mediaObject;
         }
         /* Sort each level of the $orderedMedia array. */
@@ -144,6 +170,8 @@ class SdmMediaDisplay extends SdmMedia
         return $this->sdmMediaDisplayMedia;
     }
 
+    /**/
+
     /**
      * Sorts the $orderedMedia array created by sdmMediaDisplayBuildMediaDisplay()
      * recursively.
@@ -162,13 +190,14 @@ class SdmMediaDisplay extends SdmMedia
         return ksort($orderedMedia);
     }
 
-    /**/
-
     /**
      * Loads the display's template file.
      */
     private function sdmMediaDisplayLoadDisplayTemplate()
     {
+        /** Store name of assigned template */
+        $this->sdmMediaDisplayTemplate = $this->displayData->template;
+
         /* Build display based on template using an output buffer to capture the output of require_once() */
         ob_start();
         /* Store $this in local var so it can be accessed by template. */
@@ -182,7 +211,6 @@ class SdmMediaDisplay extends SdmMedia
                 require_once($templateDirPath . '/SdmMediaDisplays.php');
                 break;
         }
-
 
         $this->sdmMediaDisplayHtml = ob_get_contents();
         ob_end_clean();
@@ -238,7 +266,8 @@ class SdmMediaDisplay extends SdmMedia
      *
      * NOTE: Will return null if $display is not a directory.
      *
-     * @param string $display The directory to check.
+     * @param $display string The directory to check.
+     *
      * @return bool True if directory is empty, false if it is not empty. Will return null if $display is not a directory.
      */
     public function sdmMediaDisplayHasMedia($display)
@@ -268,6 +297,9 @@ class SdmMediaDisplay extends SdmMedia
      * Returns an array of stored media properties for the media belonging to a specified display.
      *
      * @param $display string Name of the display whose media's properties are to be returned.
+     *
+     * @param $addToCurrent bool If set to true the media object properties will be added to the current display, if false
+     *                           they won't.
      *
      * @return array An array of each media's properties indexed by media's id.
      */
@@ -467,18 +499,12 @@ class SdmMediaDisplay extends SdmMedia
      * @return array An array representing the output options for the display.
      *
      */
-    public function loadDisplayOutputOptions($display)
+    public function loadDisplayOutputOptions()
     {
-        /* Path to $display's data directory. */
-        $pathToDisplaysData = $this->SdmCore->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/data/' . $display . '/' . hash('sha256', $display) . '.json';
-
-        /* Load and decode the displays json file. This file's name will be the hash of the display's name and will end with the .json extension. */
-        $displayData = json_decode(file_get_contents($pathToDisplaysData));
-
         /* Load the output options for the display, cast to array so structure conforms to the structure expected by the SdmAssembler(). */
-        $this->outputOptions = (array)$displayData->options;
+        $this->outputOptions = (array)$this->displayData->options;
 
-        /* Return the displays output options. */
+        /* Return the display's output options. */
         return $this->outputOptions;
     }
 }

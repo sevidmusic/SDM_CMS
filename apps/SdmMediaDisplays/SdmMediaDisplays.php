@@ -45,7 +45,7 @@ foreach ($displays as $currentDisplay) {
         $sdmMediaDisplayHtml = $sdmMediaDisplay->sdmMediaDisplayGetSdmMediaDisplayHtml();
 
         /* Output display */
-        $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmMediaDisplayHtml, $sdmMediaDisplay->loadDisplayOutputOptions($currentDisplay));
+        $sdmassembler->sdmAssemblerIncorporateAppOutput($sdmMediaDisplayHtml, $sdmMediaDisplay->loadDisplayOutputOptions());
 
     }
 
