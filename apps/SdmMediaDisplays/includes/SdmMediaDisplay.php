@@ -208,10 +208,12 @@ class SdmMediaDisplay extends SdmMedia
 
         switch (file_exists($templateDirPath . '/' . $this->sdmMediaDisplayTemplate)) {
             case true:
-                require_once($templateDirPath . '/' . $this->sdmMediaDisplayTemplate);
+                /* DO NOT USE REQUIRE ONCE OR ELSE THE SAME TEMPLATE WILL NOT BE ABLED TO BE USED BY MULTIPLE DISPLAYS!!!  */
+                require($templateDirPath . '/' . $this->sdmMediaDisplayTemplate);
                 break;
             default:
-                require_once($templateDirPath . '/SdmMediaDisplays.php');
+                /* DO NOT USE REQUIRE ONCE OR ELSE THE SAME TEMPLATE WILL NOT BE ABLED TO BE USED BY MULTIPLE DISPLAYS!!!  */
+                require($templateDirPath . '/SdmMediaDisplays.php');
                 break;
         }
 
