@@ -102,7 +102,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
         $this->initialSetup = false;
 
         /* Required directories for Sdm Media Display's and it's admin panels to work. */
-        $requiredDirectories = array($this->sdmMediaDisplaysDataDirectoryPath, $this->sdmMediaDisplaysMediaDirectoryPath, $this->sdmMediaDisplaysDataDirectoryPath . '/SdmMediaDisplays');
+        $requiredDirectories = array($this->sdmMediaDisplaysDataDirectoryPath, $this->sdmMediaDisplaysMediaDirectoryPath);
 
         /* Insure required directories exist. */
         foreach ($requiredDirectories as $requiredDirectory) {

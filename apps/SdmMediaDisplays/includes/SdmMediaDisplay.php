@@ -198,14 +198,17 @@ class SdmMediaDisplay extends SdmMedia
         /** Store name of assigned template */
         $this->sdmMediaDisplayTemplate = $this->displayData->template;
 
-        /* Build display based on template using an output buffer to capture the output of require_once() */
-        ob_start();
         /* Store $this in local var so it can be accessed by template. */
         $sdmMediaDisplay = $this;
+
         $templateDirPath = str_replace('/includes', '', __DIR__) . '/displays/templates';
-        switch (file_exists($templateDirPath . '/' . $this->sdmMediaDisplayTemplate . '.php')) {
+
+        /* Build display based on template using an output buffer to capture the output of require_once() */
+        ob_start();
+
+        switch (file_exists($templateDirPath . '/' . $this->sdmMediaDisplayTemplate)) {
             case true:
-                require_once($templateDirPath . '/' . $this->sdmMediaDisplayTemplate . '.php');
+                require_once($templateDirPath . '/' . $this->sdmMediaDisplayTemplate);
                 break;
             default:
                 require_once($templateDirPath . '/SdmMediaDisplays.php');
