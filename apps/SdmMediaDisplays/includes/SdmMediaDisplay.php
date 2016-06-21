@@ -191,7 +191,22 @@ class SdmMediaDisplay extends SdmMedia
     }
 
     /**
-     * Loads the display's template file.
+     * Loads the display's template file. Template files define the user function used to structure/format the display of each media
+     * object belonging to the current Sdm Media Display.
+     *
+     * The user function name must match the template name without spaces or else the Sdm Media Display object will not know the name of the
+     * user defined display assembly function to call. i.e., if the template file is "User Template.php" then the user function name should be
+     * "UserTemplate()". This will help prevent naming conflicts that could be created if two templates loaded on the same page defined a user
+     * function with the same name. Since only the user function matching the name of the loaded templates will be called, and two template files
+     * cannot have the same name since that would violate the naming rules of most filesystems, only the user function whose name matches the name
+     * of the template file would be used.
+     *
+     * i.e., if Tempate1.php and Tempalte2.php both define a Template1() user function Template2.php will fail since the
+     * name "Template1()" does not match the name "Template2". Template1.php would work in this scenario since the name
+     * "Template1()" does match "Template1.php" without spaces or the .php extension.
+     *
+     * Note: If a template does not define a user function then the Sdm Media Display will output each media object without any formatting.
+     *
      */
     private function sdmMediaDisplayLoadDisplayTemplate()
     {
@@ -208,14 +223,16 @@ class SdmMediaDisplay extends SdmMedia
 
         switch (file_exists($templateDirPath . '/' . $this->sdmMediaDisplayTemplate)) {
             case true:
-                /* DO NOT USE REQUIRE ONCE OR ELSE THE SAME TEMPLATE WILL NOT BE ABLED TO BE USED BY MULTIPLE DISPLAYS!!!  */
-                require($templateDirPath . '/' . $this->sdmMediaDisplayTemplate);
+                /* Only require once or else PHP will issue a fatal error, "PHP Fatal error:  Cannot redeclare "USER_DEFINED_DISPLAY_ASSEMBLY_FUNCTION_NAME()". */
+                require_once($templateDirPath . '/' . $this->sdmMediaDisplayTemplate);
                 break;
             default:
-                /* DO NOT USE REQUIRE ONCE OR ELSE THE SAME TEMPLATE WILL NOT BE ABLED TO BE USED BY MULTIPLE DISPLAYS!!!  */
-                require($templateDirPath . '/SdmMediaDisplays.php');
+                require_once($templateDirPath . '/SdmMediaDisplays.php');
                 break;
         }
+
+        /* Generate display using custom user display assembly function defined in the display's template file. */
+        echo $this->sdmMediaDisplayGenerateMediaDisplay(str_replace(array(' ', '.php'), '', $this->sdmMediaDisplayTemplate));
 
         $this->sdmMediaDisplayHtml = ob_get_contents();
         ob_end_clean();

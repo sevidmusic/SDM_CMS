@@ -6,7 +6,7 @@
  * Time: 3:09 PM
  */
 
-function ourSelectionsDisplays($media, $mediaObject)
+function OurSelections($media, $mediaObject)
 {
     $mediaHtml = str_replace('<img', '<img width="320"', $media);
     $title = $mediaObject->sdmMediaGetSdmMediaDisplayName();
@@ -26,7 +26,3 @@ function ourSelectionsDisplays($media, $mediaObject)
         echo $media;
     }
 }
-
-echo $sdmMediaDisplay->sdmMediaDisplayGenerateMediaDisplay('ourSelectionsDisplays');
-/* clear display floats */
-echo "<div style='clear: both'></div>";
