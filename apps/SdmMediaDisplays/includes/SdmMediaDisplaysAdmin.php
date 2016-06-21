@@ -23,6 +23,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
     private $sdmMediaDisplaysDirectoryUrl;
     private $sdmMediaDisplaysDataDirectoryPath;
     private $sdmMediaDisplaysDataDirectoryUrl;
+    private $sdmMediaDisplaysDataFilePath;
     private $sdmMediaDisplaysMediaDirectoryPath;
     private $sdmMediaDisplaysMediaDirectoryUrl;
     private $sdmMediaDisplaysAdminPageUrl;
@@ -58,8 +59,6 @@ class SdmMediaDisplaysAdmin extends SdmForm
         $this->messages = (isset($this->messages) === true ? $this->messages : null);
         /* Local instance of SdmCms(). */
         $this->sdmCms = $sdmCms;
-        /* Create local instance of an SdmMediaDisplay() object for the display being edited. */
-        $this->sdmMediaDisplay = new SdmMediaDisplay($this->displayBeingEdited, $this->sdmCms);
         /* Sdm media display's directory path. */
         $this->sdmMediaDisplaysDirectoryPath = $this->sdmCms->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays';
         /* Sdm media display's directory url. */
@@ -68,6 +67,8 @@ class SdmMediaDisplaysAdmin extends SdmForm
         $this->sdmMediaDisplaysDataDirectoryPath = $this->sdmMediaDisplaysDirectoryPath . '/displays/data';
         /* Sdm media display data directory url. */
         $this->sdmMediaDisplaysDataDirectoryUrl = $this->sdmMediaDisplaysDirectoryUrl . '/displays/data';
+        /* Full path to display's data file */
+        $this->sdmMediaDisplaysDataFilePath = $this->sdmMediaDisplaysDataDirectoryPath . '/' . $this->displayBeingEdited . '/' . hash('sha256', $this->displayBeingEdited) . '.json';
         /* Sdm media display media directory path. */
         $this->sdmMediaDisplaysMediaDirectoryPath = $this->sdmMediaDisplaysDirectoryPath . '/displays/media';
         /* Sdm media display media directory url. */
@@ -86,6 +87,11 @@ class SdmMediaDisplaysAdmin extends SdmForm
         $this->configureAdminForm();
         /* Process any submitted form values from the last submitted admin panel. */
         $this->processSubmittedValues();
+        /* Create local instance of an SdmMediaDisplay() object for the display being edited if it exists. */
+        if (file_exists($this->sdmMediaDisplaysDataFilePath)) {
+            var_dump($this->sdmMediaDisplaysDataFilePath);
+            $this->sdmMediaDisplay = new SdmMediaDisplay($this->displayBeingEdited, $this->sdmCms);
+        }
     }
 
     /**
@@ -218,6 +224,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
     {
         switch ($this->adminPanel) {
             case 'editMedia':
+                /* @todo: the paths in this method should reference the paths setup by the constructor where possible. */
                 /* Determine path to display being edited. */
                 $pathToCurrentDisplay = $this->sdmMediaDisplaysDataDirectoryPath . '/' . $this->displayBeingEdited;
 
