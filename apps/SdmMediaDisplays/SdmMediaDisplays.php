@@ -23,11 +23,12 @@ if (is_dir(__DIR__ . '/displays/data') === true) {
         /* Create an instance of SdmCore() for the SdmMediaDisplay(). */
         $SdmCore = new SdmCore();
 
-        /* Only build a display if there is SdmMedia data for the currentDisplay. | A display may exist without any media. | @todo check should actually check if dir is empty */
-        if (file_exists(__DIR__ . '/displays/data/' . $currentDisplay) === true) {
 
-            /* Create New Sdm Media Display */
-            $sdmMediaDisplay = new SdmMediaDisplay($currentDisplay, $SdmCore);
+        /* Create New Sdm Media Display */
+        $sdmMediaDisplay = new SdmMediaDisplay($currentDisplay, $SdmCore);
+
+        /* Only build a display if there is SdmMedia data for the currentDisplay. | A display may exist without any media, in which case it should not be assembled in order to preserve memory and prevent errors. */
+        if ($sdmMediaDisplay->sdmMediaDisplayHasMedia($currentDisplay)) {
 
             /* Load media object properties for the media in this display */
             $mediaProperties = $sdmMediaDisplay->sdmMediaDisplayLoadMediaObjectProperties($currentDisplay);
