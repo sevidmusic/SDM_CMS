@@ -30,14 +30,17 @@ class SdmMediaDisplaysAdmin extends SdmForm
     private $sdmMediaDisplaysPageUrl;
     private $cronTasksPerformed;
     private $displaysExist;
+    private $availableDisplays;
 
     /**
      * SdmMediaDisplaysAdmin constructor. Requires an instance of the SdmCms() class be injected
      * via the first parameter.
      *
      * @param SdmCms $sdmCms
+     *
+     * @param $availableDisplays array Array of available Sdm Media Displays.
      */
-    public function __construct(SdmCms $sdmCms)
+    public function __construct(SdmCms $sdmCms, $availableDisplays)
     {
         /* Call SdmForm()'s __constructor() */
         parent::__construct();
@@ -92,6 +95,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
             var_dump($this->sdmMediaDisplaysDataFilePath);
             $this->sdmMediaDisplay = new SdmMediaDisplay($this->displayBeingEdited, $this->sdmCms);
         }
+        $this->availableDisplays = $availableDisplays;
     }
 
     /**

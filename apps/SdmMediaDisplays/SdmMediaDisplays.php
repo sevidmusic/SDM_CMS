@@ -35,11 +35,11 @@ function determineAvailableDisplays(sdmAssembler $sdmAssembler)
     return $availableDisplays;
 }
 
+/* Determine available displays */
+$availableDisplays = determineAvailableDisplays($sdmassembler);
+
 /* If the data directory exists, attempt to load any displays that exist. */
 if (is_dir(__DIR__ . '/displays/data') === true) {
-
-    /* Determine available displays */
-    $availableDisplays = determineAvailableDisplays($sdmassembler);
 
     /* Process each available display. */
     foreach ($availableDisplays as $currentDisplay) {
@@ -84,7 +84,7 @@ if (is_dir(__DIR__ . '/displays/data') === true) {
 /* If current page is the SdmMediaDisplays page show admin panel. */
 if ($sdmassembler->sdmCoreDetermineRequestedPage() === 'SdmMediaDisplays') {
 
-    $adminPanel = new SdmMediaDisplaysAdmin(new SdmCms());
+    $adminPanel = new SdmMediaDisplaysAdmin(new SdmCms(), $availableDisplays);
 
     $output = $adminPanel->getCurrentAdminPanel();
 
