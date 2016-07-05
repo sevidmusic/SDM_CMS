@@ -15,8 +15,17 @@
  */
 function determineAvailableDisplays(sdmAssembler $sdmAssembler)
 {
-    /* Get a directory listing of available displays. */
-    $displaysDirectoryListing = $sdmAssembler->sdmCoreGetDirectoryListing('SdmMediaDisplays/displays/data', 'apps');
+    /* Only create directory listing of available displays if the data directory exists */
+    switch (is_dir($sdmAssembler->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays/displays/data')) {
+        case true:
+            /* Get a directory listing of available displays. */
+            $displaysDirectoryListing = $sdmAssembler->sdmCoreGetDirectoryListing('SdmMediaDisplays/displays/data', 'apps');
+            break;
+        default:
+            /* If the data directory does not exist set $displaysDirectoryListing to an empty array. */
+            $displaysDirectoryListing = array();
+            break;
+    }
 
     /* Initialize $availableDisplays array. */
     $availableDisplays = array();
