@@ -92,7 +92,6 @@ class SdmMediaDisplaysAdmin extends SdmForm
         $this->processSubmittedValues();
         /* Create local instance of an SdmMediaDisplay() object for the display being edited if it exists. */
         if (file_exists($this->sdmMediaDisplaysDataFilePath)) {
-            var_dump($this->sdmMediaDisplaysDataFilePath);
             $this->sdmMediaDisplay = new SdmMediaDisplay($this->displayBeingEdited, $this->sdmCms);
         }
         $this->availableDisplays = $availableDisplays;
@@ -278,6 +277,11 @@ class SdmMediaDisplaysAdmin extends SdmForm
      */
     private function uploadMedia()
     {
+        /* If media is external, just create the unique filename and return it, no need to try and upload an external media source. */
+        if ($this->sdmFormGetSubmittedFormValue('sdmMediaSourceType') === 'external') {
+            return true;
+        }
+
         /* Media file save path. */
         $savePath = $this->sdmMediaDisplaysMediaDirectoryPath;
 
@@ -548,11 +552,8 @@ class SdmMediaDisplaysAdmin extends SdmForm
                 /* Set media source id based on uploaded file name */
                 $newMediaObject->sdmMediaSetId($safeFileName);
 
-                /* Encode external media source urls */
-                $this->sdmMediaEncodeExternalMediaUrl();
-
-                /* Properly encode embed urls for display */
-                $newMediaObject->sdmMediaSetSourceUrl(sdmMediaEncodeExternalMediaUrl($newMediaPropertyValues['sdmMediaSourceUrl']));
+                /* Properly encode embed urls for display and set source url to properly encoded external url value. */
+                $newMediaObject->sdmMediaSetSourceUrl($this->sdmMediaEncodeExternalMediaUrl($newMediaPropertyValues['sdmMediaSourceUrl']));
 
                 break;
             default:
