@@ -683,6 +683,9 @@ class SdmMediaDisplaysAdmin extends SdmForm
                 }
                 $this->sdmFormCreateFormElement('template', 'select', 'Select the display template to use for this display. If the display does not require a custom template use the default Sdm Media Displays template.', $this->sdmFormSetDefaultInputValues($availableTemplates, 'SdmMediaDisplays.php'), 6);
                 break;
+            case 'editDisplays':
+                $this->sdmFormCreateFormElement('displayName', 'select', 'Select a display to edit.', $this->sdmFormSetDefaultInputValues($this->availableDisplays, ''), 1);
+                break;
             case 'saveMedia':
             case 'cancelAddEditMedia':
             case 'editMedia':
@@ -756,9 +759,17 @@ class SdmMediaDisplaysAdmin extends SdmForm
                 /* Create buttons for the addDisplay panel*/
                 $buttons = array(
                     'editMedia' => $this->createSdmMediaDisplayAdminButton('editMediaButton', 'adminPanel', 'editMedia', 'Add Media To New Display', array('form' => $this->sdmFormGetFormId())),
+                    'cancelAddDisplays' => $this->createSdmMediaDisplayAdminButton('cancelAddDisplaysButton', 'adminPanel', 'displayCrudPanel', 'Cancel', array('form' => $this->sdmFormGetFormId())),
                 );
-                /* Show edit media button. */
-                array_push($this->adminFormButtons, $buttons['editMedia']);
+                /* Show edit media buttons. */
+                $this->adminFormButtons = $buttons;
+                break;
+            case 'editDisplays':
+                $buttons = array(
+                    'editDisplay' => $this->createSdmMediaDisplayAdminButton('editDisplayButton', 'adminPanel', 'editMedia', 'Edit Selected Display', array('form' => $this->sdmFormGetFormId())),
+                    'cancelEditDisplays' => $this->createSdmMediaDisplayAdminButton('cancelEditDisplaysButton', 'adminPanel', 'displayCrudPanel', 'Cancel', array('form' => $this->sdmFormGetFormId())),
+                );
+                $this->adminFormButtons = $buttons;
                 break;
             case 'saveMedia':
             case 'cancelAddEditMedia':
