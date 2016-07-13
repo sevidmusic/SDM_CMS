@@ -30,6 +30,8 @@ class SdmMediaDisplaysAdmin extends SdmForm
     private $sdmMediaDisplaysPageUrl;
     private $cronTasksPerformed;
     private $displaysExist;
+    private $currentDisplayExists;
+    private $pathToCurrentDisplay;
     private $availableDisplays;
 
     /**
@@ -86,6 +88,10 @@ class SdmMediaDisplaysAdmin extends SdmForm
         $this->cronTasksPerformed = (isset($this->cronTasksPerformed) ? $this->cronTasksPerformed : $this->runCronTasks());
         /* Displays exist. */
         $this->displaysExist = (isset($this->displaysExist) === true ? $this->displaysExist : $this->displaysExist());
+        /* Determine path to current display being edited. */
+        $this->pathToCurrentDisplay = $this->sdmMediaDisplaysDataDirectoryPath . '/' . $this->displayBeingEdited;
+        /* Determine if current display exists in the data directory. */
+        $this->currentDisplayExists = is_dir($this->pathToCurrentDisplay);
         /* Configure From */
         $this->configureAdminForm();
         /* Process any submitted form values from the last submitted admin panel. */
@@ -227,14 +233,9 @@ class SdmMediaDisplaysAdmin extends SdmForm
     {
         switch ($this->adminPanel) {
             case 'editMedia':
-                /* @todo: the paths in this method should reference the paths setup by the constructor where possible. */
-                /* Determine path to display being edited. */
-                $pathToCurrentDisplay = $this->sdmMediaDisplaysDataDirectoryPath . '/' . $this->displayBeingEdited;
-
-                /* Make sure display exists */
-                $displayExists = is_dir($pathToCurrentDisplay);
-                if ($displayExists === false) {
-                    mkdir($pathToCurrentDisplay);
+                /* If the current display's data directory does not exist create it. */
+                if ($this->currentDisplayExists === false) {
+                    mkdir($this->pathToCurrentDisplay);
                 }
 
                 /* Create display id from display name. */
@@ -662,6 +663,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
         /* Determine which form elements to define for the current adminPanel. */
         switch ($this->adminPanel) {
             case 'addDisplay':
+            case 'editDisplay':
                 $this->sdmFormCreateFormElement('displayName', 'text', 'Enter a name for this display', '', 0);
                 $allPages = array('all' => 'all');
                 $availablePages = $this->sdmCms->sdmCoreDetermineAvailablePages();
@@ -669,7 +671,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
                 $assignablePages = array_merge($allPages, $availablePages, $enabledApps);
                 $this->sdmFormCreateFormElement('incmethod', 'select', 'Select the method the display should be incorporated into the page, append will place it before other content, prepend will place it after, overwrite will force the display to overwrite other content.', $this->sdmFormSetDefaultInputValues(array('Append' => 'append', 'Prepend' => 'prepend', 'Overwrite' => 'overwrite'), ''), 1);
                 $this->sdmFormCreateFormElement('incpages', 'checkbox', 'Select the pages the display should show up on. If the display should show on all pages check the "all" option', $assignablePages, 2);
-                $this->sdmFormCreateFormElement('ignorepages', 'checkbox', 'Select the pages the display should NOT show up on. If the display should be hidden on all pages check the "all" option', $assignablePages, 3, array('style' => 'display: block; float: left; width: 25%;'));
+                $this->sdmFormCreateFormElement('ignorepages', 'checkbox', 'Select the pages the display should NOT show up on. If the display should be hidden on all pages check the "all" option', $this->sdmFormSetDefaultInputValues($assignablePages, 'SdmMediaDisplays'), 3, array('style' => 'display: block; float: left; width: 25%;')); // @todo: For some reason default value is not being set for this form element...
                 $this->sdmFormCreateFormElement('wrapper', 'select', 'Select the content wrapper the display should be assigned to.', $this->sdmFormSetDefaultInputValues($this->sdmCms->sdmCmsDetermineAvailableWrappers(), 'main_content'), 4);
                 $this->sdmFormCreateFormElement('roles', 'checkbox', 'Select the user roles this display can be viewed by. For instance if only "root" users should see the display select the "root" role.', $this->sdmFormSetDefaultInputValues(array('Root' => 'root', 'Basic User' => 'basicUser', 'All Roles' => 'all'), 'root'), 5);
                 /* Create list of available display templates. */
@@ -756,6 +758,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
                 array_push($this->adminFormButtons, $buttons['addDisplay']);
                 break;
             case 'addDisplay':
+            case 'editDisplay':
                 /* Create buttons for the addDisplay panel*/
                 $buttons = array(
                     'editMedia' => $this->createSdmMediaDisplayAdminButton('editMediaButton', 'adminPanel', 'editMedia', 'Add Media To New Display', array('form' => $this->sdmFormGetFormId())),
@@ -766,7 +769,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
                 break;
             case 'editDisplays':
                 $buttons = array(
-                    'editDisplay' => $this->createSdmMediaDisplayAdminButton('editDisplayButton', 'adminPanel', 'editMedia', 'Edit Selected Display', array('form' => $this->sdmFormGetFormId())),
+                    'editDisplay' => $this->createSdmMediaDisplayAdminButton('editDisplayButton', 'adminPanel', 'editDisplay', 'Edit Selected Display', array('form' => $this->sdmFormGetFormId())),
                     'cancelEditDisplays' => $this->createSdmMediaDisplayAdminButton('cancelEditDisplaysButton', 'adminPanel', 'displayCrudPanel', 'Cancel', array('form' => $this->sdmFormGetFormId())),
                 );
                 $this->adminFormButtons = $buttons;
