@@ -89,9 +89,9 @@ class SdmMediaDisplaysAdmin extends SdmForm
         /* Displays exist. */
         $this->displaysExist = (isset($this->displaysExist) === true ? $this->displaysExist : $this->displaysExist());
         /* Determine path to current display being edited. */
-        $this->pathToCurrentDisplay = $this->sdmMediaDisplaysDataDirectoryPath . '/' . $this->displayBeingEdited;
+        $this->pathToCurrentDisplay = ($this->displayBeingEdited === null ? false : $this->sdmMediaDisplaysDataDirectoryPath . '/' . $this->displayBeingEdited);
         /* Determine if current display exists in the data directory. */
-        $this->currentDisplayExists = is_dir($this->pathToCurrentDisplay);
+        $this->currentDisplayExists = ($this->displayBeingEdited === null ? false : is_dir($this->pathToCurrentDisplay));
         /* Configure From */
         $this->configureAdminForm();
         /* Process any submitted form values from the last submitted admin panel. */
@@ -664,15 +664,33 @@ class SdmMediaDisplaysAdmin extends SdmForm
         switch ($this->adminPanel) {
             case 'addDisplay':
             case 'editDisplay':
+                if ($this->currentDisplayExists === true) {
+                    /* Load display data */
+                    $displayData = json_decode(file_get_contents($this->sdmMediaDisplaysDataFilePath));
+                    //DEV//
+                    $this->sdmCms->sdmCoreSdmReadArray(array(
+                        'Display Data' => $displayData,
+                    ));
+                }
+                /* Create "displayName" form element which determines the name of the display. */
                 $this->sdmFormCreateFormElement('displayName', 'text', 'Enter a name for this display', '', 0);
+                /* Create array holding the value 'all' to be used to indicate that all pages should include the display. */
                 $allPages = array('all' => 'all');
+                /* Create an array of available pages that the display can be assigned to. */
                 $availablePages = $this->sdmCms->sdmCoreDetermineAvailablePages();
+                /* Create array of available apps that the display can be assigned to. */
                 $enabledApps = (array)$this->sdmCms->sdmCoreDetermineEnabledApps();
+                /* Create array of assignable pages from the $allPages, $availablePages, and $enabledApps arrays. */
                 $assignablePages = array_merge($allPages, $availablePages, $enabledApps);
+                /* Create "incmethod" form element which determines how the display is included into the page. */
                 $this->sdmFormCreateFormElement('incmethod', 'select', 'Select the method the display should be incorporated into the page, append will place it before other content, prepend will place it after, overwrite will force the display to overwrite other content.', $this->sdmFormSetDefaultInputValues(array('Append' => 'append', 'Prepend' => 'prepend', 'Overwrite' => 'overwrite'), ''), 1);
+                /* Create "incpages" form element which detemrines which pages the display is included on. */
                 $this->sdmFormCreateFormElement('incpages', 'checkbox', 'Select the pages the display should show up on. If the display should show on all pages check the "all" option', $assignablePages, 2);
+                /* Create "ingorepages" form element which determines which pages the display will not be included on. */
                 $this->sdmFormCreateFormElement('ignorepages', 'checkbox', 'Select the pages the display should NOT show up on. If the display should be hidden on all pages check the "all" option', $this->sdmFormSetDefaultInputValues($assignablePages, 'SdmMediaDisplays'), 3, array('style' => 'display: block; float: left; width: 25%;')); // @todo: For some reason default value is not being set for this form element...
+                /* Create "wrapper" form element which determines which content wrapper the display is assigned to. */
                 $this->sdmFormCreateFormElement('wrapper', 'select', 'Select the content wrapper the display should be assigned to.', $this->sdmFormSetDefaultInputValues($this->sdmCms->sdmCmsDetermineAvailableWrappers(), 'main_content'), 4);
+                /* Create "roles" form element which determines which user roles can view the display. */
                 $this->sdmFormCreateFormElement('roles', 'checkbox', 'Select the user roles this display can be viewed by. For instance if only "root" users should see the display select the "root" role.', $this->sdmFormSetDefaultInputValues(array('Root' => 'root', 'Basic User' => 'basicUser', 'All Roles' => 'all'), 'root'), 5);
                 /* Create list of available display templates. */
                 $templateDirectoryListing = $this->sdmCms->sdmCoreGetDirectoryListing('SdmMediaDisplays/displays/templates', 'apps');
@@ -683,6 +701,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
                         $availableTemplates[str_replace('.php', '', $templateFile)] = $templateFile;
                     }
                 }
+                /* Create "template" form element which determines which template the display will use to format it's output. */
                 $this->sdmFormCreateFormElement('template', 'select', 'Select the display template to use for this display. If the display does not require a custom template use the default Sdm Media Displays template.', $this->sdmFormSetDefaultInputValues($availableTemplates, 'SdmMediaDisplays.php'), 6);
                 break;
             case 'editDisplays':
@@ -816,39 +835,6 @@ class SdmMediaDisplaysAdmin extends SdmForm
             $attributes[] = "$attributeName='$attributeValue'";
         }
         return "<button id='$id' name='SdmForm[$name]' type='submit' value='$value' " . implode(' ', $attributes) . ">$label</button>";
-    }
-
-    /**
-     * This method is to be used soley for development or refactoring of the SdmMediaDisplaysAdmin() class.
-     * Do not use it in production!
-     *
-     * Uses SdmCores()'s  sdmCoreSdmReadArrayBuffered() method to show information related to the
-     * Sdm Media Display admin panel.
-     */
-    private function devOutput()
-    {
-        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['output' => $this->output]);
-        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['adminPanel' => $this->adminPanel]);
-        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['adminMode' => $this->adminMode]);
-        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['editMode' => $this->editMode]);
-        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['displayBeingEdited' => $this->displayBeingEdited]);
-        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['formElements' => $this->formElements]);
-        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['adminFormElements' => $this->adminFormElements]);
-        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['adminFormButtons' => $this->adminFormButtons]);
-        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['initialSetup' => $this->initialSetup]);
-        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['messages' => $this->messages]);
-        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['sdmCms' => $this->sdmCms]);
-        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplay' => $this->sdmMediaDisplay]);
-        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysDirectoryPath' => $this->sdmMediaDisplaysDirectoryPath]);
-        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysDirectoryUrl' => $this->sdmMediaDisplaysDirectoryUrl]);
-        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysDataDirectoryPath' => $this->sdmMediaDisplaysDataDirectoryPath]);
-        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysDataDirectoryUrl' => $this->sdmMediaDisplaysDataDirectoryUrl]);
-        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysMediaDirectoryPath' => $this->sdmMediaDisplaysMediaDirectoryPath]);
-        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysMediaDirectoryUrl' => $this->sdmMediaDisplaysMediaDirectoryUrl]);
-        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysAdminPageUrl' => $this->sdmMediaDisplaysAdminPageUrl]);
-        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['sdmMediaDisplaysPageUrl' => $this->sdmMediaDisplaysPageUrl]);
-        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['cronTasksPerformed' => $this->cronTasksPerformed]);
-        $this->output .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['displaysExist' => $this->displaysExist]);
     }
 
 }
