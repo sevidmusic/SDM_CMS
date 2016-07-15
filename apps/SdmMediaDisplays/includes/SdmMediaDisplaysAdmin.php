@@ -596,7 +596,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
      *
      * @return string The encoded url.
      */
-    private function sdmMediaEncodeExternalMediaUrl($url = 'https://www.youtube.com/watch?v=brj_cFsDc7Y')
+    private function sdmMediaEncodeExternalMediaUrl($url)
     {
         /* Determine provider. */
         $provider = parse_url($url);
@@ -667,13 +667,9 @@ class SdmMediaDisplaysAdmin extends SdmForm
                 if ($this->currentDisplayExists === true) {
                     /* Load display data */
                     $displayData = json_decode(file_get_contents($this->sdmMediaDisplaysDataFilePath));
-                    // DEV //
-                    $this->sdmCms->sdmCoreSdmReadArray(array(
-                        'Display Data' => $displayData,
-                    ));
                 }
                 /* Create "displayName" form element which determines the name of the display. */
-                $this->sdmFormCreateFormElement('displayName', 'text', 'Enter a name for this display', '', 0);
+                $this->sdmFormCreateFormElement('displayName', 'text', 'Enter a name for this display', (isset($displayData) ? $displayData->displayName : ''), 0);
                 /* Create array holding the value 'all' to be used to indicate that all pages should include the display. */
                 $allPages = array('all' => 'all');
                 /* Create an array of available pages that the display can be assigned to. */
@@ -683,15 +679,15 @@ class SdmMediaDisplaysAdmin extends SdmForm
                 /* Create array of assignable pages from the $allPages, $availablePages, and $enabledApps arrays. */
                 $assignablePages = array_merge($allPages, $availablePages, $enabledApps);
                 /* Create "incmethod" form element which determines how the display is included into the page. */
-                $this->sdmFormCreateFormElement('incmethod', 'select', 'Select the method the display should be incorporated into the page, append will place it before other content, prepend will place it after, overwrite will force the display to overwrite other content.', $this->sdmFormSetDefaultInputValues(array('Append' => 'append', 'Prepend' => 'prepend', 'Overwrite' => 'overwrite'), ''), 1);
+                $this->sdmFormCreateFormElement('incmethod', 'select', 'Select the method the display should be incorporated into the page, append will place it before other content, prepend will place it after, overwrite will force the display to overwrite other content.', $this->sdmFormSetDefaultInputValues(array('Append' => 'append', 'Prepend' => 'prepend', 'Overwrite' => 'overwrite'), (isset($displayData) ? $displayData->options->incmethod : 'prepend')), 1);
                 /* Create "incpages" form element which detemrines which pages the display is included on. */
-                $this->sdmFormCreateFormElement('incpages', 'checkbox', 'Select the pages the display should show up on. If the display should show on all pages check the "all" option', $assignablePages, 2);
+                $this->sdmFormCreateFormElement('incpages', 'checkbox', 'Select the pages the display should show up on. If the display should show on all pages check the "all" option', $this->sdmFormSetDefaultInputValues($assignablePages, (isset($displayData) ? $displayData->options->incpages : '')), 2);
                 /* Create "ingorepages" form element which determines which pages the display will not be included on. */
-                $this->sdmFormCreateFormElement('ignorepages', 'checkbox', 'Select the pages the display should NOT show up on. If the display should be hidden on all pages check the "all" option', $this->sdmFormSetDefaultInputValues($assignablePages, 'SdmMediaDisplays'), 3, array('style' => 'display: block; float: left; width: 25%;')); // @todo: For some reason default value is not being set for this form element...
+                $this->sdmFormCreateFormElement('ignorepages', 'checkbox', 'Select the pages the display should NOT show up on. If the display should be hidden on all pages check the "all" option', $this->sdmFormSetDefaultInputValues($assignablePages, (isset($displayData) ? $displayData->options->ignorepages : 'SdmMediaDisplays')), 3);
                 /* Create "wrapper" form element which determines which content wrapper the display is assigned to. */
-                $this->sdmFormCreateFormElement('wrapper', 'select', 'Select the content wrapper the display should be assigned to.', $this->sdmFormSetDefaultInputValues($this->sdmCms->sdmCmsDetermineAvailableWrappers(), 'main_content'), 4);
+                $this->sdmFormCreateFormElement('wrapper', 'select', 'Select the content wrapper the display should be assigned to.', $this->sdmFormSetDefaultInputValues($this->sdmCms->sdmCmsDetermineAvailableWrappers(), (isset($displayData) ? $displayData->options->wrapper : 'main_Content')), 4);
                 /* Create "roles" form element which determines which user roles can view the display. */
-                $this->sdmFormCreateFormElement('roles', 'checkbox', 'Select the user roles this display can be viewed by. For instance if only "root" users should see the display select the "root" role.', $this->sdmFormSetDefaultInputValues(array('Root' => 'root', 'Basic User' => 'basicUser', 'All Roles' => 'all'), 'root'), 5);
+                $this->sdmFormCreateFormElement('roles', 'checkbox', 'Select the user roles this display can be viewed by. For instance if only "root" users should see the display select the "root" role.', $this->sdmFormSetDefaultInputValues(array('Root' => 'root', 'Basic User' => 'basicUser', 'All Roles' => 'all'), (isset($displayData) ? $displayData->options->roles : 'root')), 5);
                 /* Create list of available display templates. */
                 $templateDirectoryListing = $this->sdmCms->sdmCoreGetDirectoryListing('SdmMediaDisplays/displays/templates', 'apps');
                 $ignoredListings = array('.', '..', '.DS_Store');
@@ -702,7 +698,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
                     }
                 }
                 /* Create "template" form element which determines which template the display will use to format it's output. */
-                $this->sdmFormCreateFormElement('template', 'select', 'Select the display template to use for this display. If the display does not require a custom template use the default Sdm Media Displays template.', $this->sdmFormSetDefaultInputValues($availableTemplates, 'SdmMediaDisplays.php'), 6);
+                $this->sdmFormCreateFormElement('template', 'select', 'Select the display template to use for this display. If the display does not require a custom template use the default Sdm Media Displays template.', $this->sdmFormSetDefaultInputValues($availableTemplates, (isset($displayData) ? $displayData->template : 'SdmMediaDisplays.php')), 6);
                 break;
             case 'editDisplays':
                 $this->sdmFormCreateFormElement('displayName', 'select', 'Select a display to edit.', $this->sdmFormSetDefaultInputValues($this->availableDisplays, ''), 1);
