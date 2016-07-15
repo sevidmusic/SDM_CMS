@@ -221,7 +221,11 @@ class SdmMediaDisplaysAdmin extends SdmForm
         $this->formHandler = 'SdmMediaDisplays';
         $this->method = 'post';
         $this->excludeSubmitLabel = true;
-        $this->preserveSubmittedValues = true;
+        /* Since the admin panels use a single SdmForm() object, do not preserve submitted values
+        since no admin panel ever leads back to the same admin panel and preserving submitted values
+        could prevent saved display and media data from correctly pre-populating the admin forms, or
+        lead to values from an one display being set as defaults for another display. */
+        $this->preserveSubmittedValues = false;
         $this->formClasses = 'SdmMediaDisplaysAdminForm';
         return true;
     }
