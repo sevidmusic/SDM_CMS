@@ -330,9 +330,9 @@ class SdmMediaDisplaysAdmin extends SdmForm
 
             /* If $_FILES['SdmForm']['error']['sdmMediaFile'] is unset or if it is an array this request is
                suspicious. HTTP headers may have have been compromised, do not process! */
-            if ($errorsValueSet === false || $errorsValueManipulated === true) {
+            if ($errorsValueSet === false || $errorsValueManipulated === false) {
                 /* Temporarily block user from using the page, and show a message warning them not to hack or pentest. */
-                echo '<div style="padding:42px;color: red;font-size:5em;background: #000000; opacity: 1; width: 100%; height: 25000px; z-index:1000;position: absolute; top: 0px; left:0px;">NO HACKING!<br>NO PENTESTING WITHOUT PERMISSION!!!</div>';
+                echo '<div style="padding:42px;color: red;font-size:3em;background: #000000; opacity: 1; width: 100%; height: 25000px; z-index:1000;position: absolute; top: 0px; left:0px;">NO HACKING!<br>NO PENTESTING WITHOUT PERMISSION!!!</div>';
                 $possibleAttackMessage = '<p>SdmMediaDisplay Upload Error: Invalid or corrupted parameters. Possible security breach! It is suggested that you
                             review the SdmMediaDisplay file upload log to try and identify if a breach has in fact occured.</p>
                             <p>You should review the Sdm Media Display upload log, and then review the media files that were uploaded
@@ -723,7 +723,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
                 /* Name/title of the media */
                 $this->sdmFormCreateFormElement('sdmMediaDisplayName', 'text', '<br/>Name or title for the media.', '', 1);
                 /* Media source type (local or external) */
-            $this->sdmFormCreateFormElement('sdmMediaSourceType', 'select', '<p>Is the media source external or local?</p><p>External sources are sources from other sites, such as Youtube. Local sources, as the name implies, are stored locally.<br/>Use external if media is from a url to a site such as Youtube or Vimeo.<br/>Use local if you are uploading the media.</p>', $this->sdmFormSetDefaultInputValues(array('External (Media resource from another site)' => 'external', 'Local (Media stored locally)' => 'local',), 'local'), 2);
+                $this->sdmFormCreateFormElement('sdmMediaSourceType', 'select', '<p>Is the media source external or local?</p><p>External sources are sources from other sites, such as Youtube. Local sources, as the name implies, are stored locally.<br/>Use external if media is from a url to a site such as Youtube or Vimeo.<br/>Use local if you are uploading the media.</p>', $this->sdmFormSetDefaultInputValues(array('External (Media resource from another site)' => 'external', 'Local (Media stored locally)' => 'local',), 'local'), 2);
                 /* Media file (only used for local media sources). */
                 $this->sdmFormCreateFormElement('sdmMediaFile', 'file', 'Upload media file | Only used for local media sources.', null, 3);
                 /* Media source url (only used for external media sources). */
