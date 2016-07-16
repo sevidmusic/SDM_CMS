@@ -498,7 +498,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
      * uploadMedia() method on successful upload of a local media file.
      *
      * @return bool This method is still in development, it will return true or false based on whether or not
-     * the media was successfully saved. @todo: have method return true or false based on succsess.
+     * the media was successfully saved. @todo: have method return true or false based on success.
      */
     private function saveMediaData($uniqueFileName)
     {
@@ -648,9 +648,6 @@ class SdmMediaDisplaysAdmin extends SdmForm
             $this->output = implode('', $formHtml) . implode('', $this->adminFormButtons);
             //var_dump($this->adminPanel);
         }
-
-        /* Display dev output. */
-        //$this->devOutput();
 
         /* Return current admin panel's output */
         return $this->output;
