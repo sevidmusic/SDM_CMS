@@ -741,6 +741,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
         /* Build form elements html */
         $this->sdmFormBuildFormElements();
 
+        /* Push form element HTML for each of this admin panels form elements into the adminFormElements array. */
         foreach ($this->formElements as $formElement) {
             array_push($this->adminFormElements, $this->sdmFormGetFormElementHtml($formElement['id']));
         }
@@ -777,7 +778,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
             case 'editDisplay':
                 /* Create buttons for the addDisplay panel*/
                 $buttons = array(
-                    'editMedia' => $this->createSdmMediaDisplayAdminButton('editMediaButton', 'adminPanel', 'editMedia', 'Add Media To New Display', array('form' => $this->sdmFormGetFormId())),
+                    'editMedia' => $this->createSdmMediaDisplayAdminButton('editMediaButton', 'adminPanel', 'editMedia', ($this->currentDisplayExists === true ? 'Save Changes and Edit Media' : 'Add Media To New Display'), array('form' => $this->sdmFormGetFormId())),
                     'cancelAddDisplays' => $this->createSdmMediaDisplayAdminButton('cancelAddDisplaysButton', 'adminPanel', 'displayCrudPanel', 'Cancel', array('form' => $this->sdmFormGetFormId())),
                 );
                 /* Show edit media buttons. */
@@ -797,11 +798,14 @@ class SdmMediaDisplaysAdmin extends SdmForm
                     'addMedia' => $this->createSdmMediaDisplayAdminButton('addMediaButton', 'adminPanel', 'addMedia', 'Add Media To Display', array('form' => $this->sdmFormGetFormId())),
                     'editSelectedMedia' => $this->createSdmMediaDisplayAdminButton('editSelectedMediaButton', 'adminPanel', 'editSelectedMedia', 'Edit Selected Media', array('form' => $this->sdmFormGetFormId())),
                     'deleteSelectedMedia' => $this->createSdmMediaDisplayAdminButton('deleteSelectedMediaButton', 'adminPanel', 'deleteSelectedMedia', 'Delete Selected Media', array('form' => $this->sdmFormGetFormId())),
+                    'cancelEditMedia' => $this->createSdmMediaDisplayAdminButton('cancelEditMediaButton', 'adminPanel', 'displayCrudPanel', 'Return To Main Menu', array('form' => $this->sdmFormGetFormId())),
                 );
                 if ($this->sdmMediaDisplay->sdmMediaDisplayHasMedia($this->displayBeingEdited) === true) {
                     $this->adminFormButtons = $buttons;
+                    break;
                 }
                 array_push($this->adminFormButtons, $buttons['addMedia']);
+            array_push($this->adminFormButtons, $buttons['cancelEditMedia']);
                 break;
             case 'addMedia':
             case 'editSelectedMedia':
