@@ -729,15 +729,15 @@ class SdmMediaDisplaysAdmin extends SdmForm
                         $this->sdmMediaDisplay->sdmMediaDisplayAddMediaObject($mediaObject);
                     }
 
-                    /* Create array to be used to populate select media to edit checkbox form element. */
+                    /* Create array of media html to be used to add media previews to radio buttons belonging to mediaToEdit form element. */
                     $media = array_flip($this->sdmMediaDisplay->sdmMediaGetSdmMediaDisplayMediaElementsHtml());
 
                     $availableMedia = array();
                     foreach ($media as $mediaHtml => $mediaName) {
-                        $availableMedia['<!-- Preview Container --><div style="padding: 40px;"><!-- Media HTML --><div>' . str_replace(array('<img ', '<iframe '), array('<img style="width:200px;"', '<iframe style="width:200px;"'), $mediaHtml) . '</div><!-- End Media HTML --><!-- Media Name --><div>' . $mediaName . '</div><!-- End Media Name--></div><!-- End Preview Container -->'] = $mediaName;
+                        $availableMedia['<!-- Preview Container --><div style="padding: 40px;"><!-- Media HTML --><div>' . str_replace(array('<img ', '<iframe ', '<audio ', '<video ', '<canvas '), array('<img style="width:250px;" ', '<iframe style="width:250px;" ', '<audio style="width:250px;" ', '<video style="width:250px;" ', '<canvas style="width:250px;" '), $mediaHtml) . '</div><!-- End Media HTML --><!-- Media Name --><div>' . $mediaName . '</div><!-- End Media Name--></div><!-- End Preview Container -->'] = $mediaName;
                     }
                     /* Create radio buttons for user to select media to edit from. */
-                    $this->sdmFormCreateFormElement('mediaToEdit', 'radio', 'Select a piece of media to edit.', $this->sdmFormSetDefaultInputValues($availableMedia, ''), 2, array('style' => 'position:relative;float:left;margin:-188px 0px 0px 10px;'));
+                    $this->sdmFormCreateFormElement('mediaToEdit', 'radio', 'Select a piece of media to edit.', $this->sdmFormSetDefaultInputValues($availableMedia, ''), 2, array('style' => 'position:relative;float:left;margin:-172px 0px 0px 10px;'));
                 }
                 break;
             case 'addMedia':
