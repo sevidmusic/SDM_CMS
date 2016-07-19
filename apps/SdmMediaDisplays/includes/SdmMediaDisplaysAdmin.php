@@ -332,7 +332,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
 
             /* If $_FILES['SdmForm']['error']['sdmMediaFile'] is unset or if it is an array this request is
                suspicious. HTTP headers may have have been compromised, do not process! */
-            if ($errorsValueSet === false || $errorsValueManipulated === false) {
+            if ($errorsValueSet === false || $errorsValueManipulated === true) {
                 /* Temporarily block user from using the page, and show a message warning them not to hack or pentest. */
                 echo '<div style="padding:42px;color: red;font-size:3em;background: #000000; opacity: 1; width: 100%; height: 25000px; z-index:1000;position: absolute; top: 0px; left:0px;">NO HACKING!<br>NO PENTESTING WITHOUT PERMISSION!!!</div>';
                 $possibleAttackMessage = '<p>SdmMediaDisplay Upload Error: Invalid or corrupted parameters. Possible security breach! It is suggested that you
