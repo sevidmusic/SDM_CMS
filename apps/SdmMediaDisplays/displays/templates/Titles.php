@@ -14,7 +14,7 @@
  * @param $media string  The html for the media. Provided by SdmMediaDisplay() class.
  * @param $mediaObject object The media object. Provided by the SdmMediaDisplay class.
  */
-function TitleAndCategory($media, $mediaObject)
+function Titles($media, $mediaObject)
 {
     $originalTags = array('<img ', '<video ', '<audio ', '<canvas ', '<iframe ');
     $modifiedTags = array('<img style="width: 420px;" ', '<video style="width: 420px;" ', '<audio style="width: 420px;" ', '<canvas style="width: 420px;" ', '<iframe style="width: 420px;" ');
