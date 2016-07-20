@@ -7,13 +7,6 @@
  * Time: 6:22 PM
  */
 
-/**
- * BUGS:
- * @todo: Fix problem with canvas media. If a canvas media
- * element is displayed in a template more then once only the first instance
- * will display because the script is being included redundently. Need to find
- * a way to add scripts needed by canvas tag to the html head just once.
- */
 class SdmMediaDisplay extends SdmMedia
 {
     /* Sdm Core Instance */
@@ -247,6 +240,18 @@ class SdmMediaDisplay extends SdmMedia
      */
     public function sdmMediaDisplayGenerateMediaDisplay($function = null)
     {
+        /* Initialize $displayBefore array which holds output meant to show before media items */
+        $displayBefore = array();
+
+        /* If the template file defines a "Before" function, call it. */
+        switch (isset($function) && function_exists($function . 'Before')) {
+            case true:
+                $displayBefore[] = call_user_func($function . 'Before');
+                break;
+            default:
+                break;
+        }
+
         /* Initialize $display array. */
         $display = array();
         /* Get categorized media objects for this display. */
@@ -276,7 +281,18 @@ class SdmMediaDisplay extends SdmMedia
                 break;
         }
 
-        return implode('', $display);
+        /* Initialize $displayAfter array which holds output meant to show after media items */
+        $displayAfter = array();
+
+        /* If the template file defines a "After" function, call it. */
+        switch (isset($function) && function_exists($function . 'After')) {
+            case true:
+                $displayAfter[] = call_user_func($function . 'After');
+                break;
+            default:
+                break;
+        }
+        return implode('', $displayBefore) . implode('', $display) . implode('', $displayAfter);
     }
 
     /**
