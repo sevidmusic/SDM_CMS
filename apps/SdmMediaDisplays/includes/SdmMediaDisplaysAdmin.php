@@ -724,9 +724,15 @@ class SdmMediaDisplaysAdmin extends SdmForm
                         $mediaObjects[] = $this->sdmMediaDisplay->sdmMediaCreateMediaObject($properties);
                     }
 
+                    /* Initialize array of media ids used as the radio button values for the mediaToEdit form element. | @todo do the same for media names so they can be used in display media previews instead of the machine name. */
+                    $mediaIds = array();
                     /* Add SdmMedia objects to display being edited. */
                     foreach ($mediaObjects as $mediaObject) {
                         $this->sdmMediaDisplay->sdmMediaDisplayAddMediaObject($mediaObject);
+                        /* Use json functions to gain access to $mediaObject's protected properties sdmMediaMachineName and sdmMediaId. */
+                        $mediaData = json_decode(json_encode($mediaObject));
+                        /* Add sdmMediaId to $mediaIds array and index by sdmMediaMachineName */
+                        $mediaIds[$mediaData->sdmMediaMachineName] = $mediaData->sdmMediaId;
                     }
 
                     /* Create array of media html to be used to add media previews to radio buttons belonging to mediaToEdit form element. */
@@ -734,8 +740,9 @@ class SdmMediaDisplaysAdmin extends SdmForm
 
                     $availableMedia = array();
                     foreach ($media as $mediaHtml => $mediaName) {
-                        $availableMedia['<!-- Preview Container --><div style="padding: 40px;"><!-- Media HTML --><div>' . str_replace(array('<img ', '<iframe ', '<audio ', '<video ', '<canvas '), array('<img style="width:250px;" ', '<iframe style="width:250px;" ', '<audio style="width:250px;" ', '<video style="width:250px;" ', '<canvas style="width:250px;" '), $mediaHtml) . '</div><!-- End Media HTML --><!-- Media Name --><div>' . $mediaName . '</div><!-- End Media Name--></div><!-- End Preview Container -->'] = $mediaName;
+                        $availableMedia['<!-- Preview Container --><div style="padding: 40px;"><!-- Media HTML --><div>' . str_replace(array('<img ', '<iframe ', '<audio ', '<video ', '<canvas '), array('<img style="width:250px;" ', '<iframe style="width:250px;" ', '<audio style="width:250px;" ', '<video style="width:250px;" ', '<canvas style="width:250px;" '), $mediaHtml) . '</div><!-- End Media HTML --><!-- Media Name --><div>' . $mediaName . '</div><!-- End Media Name--></div><!-- End Preview Container -->'] = $mediaIds[$mediaName];
                     }
+
                     /* Create radio buttons for user to select media to edit from. */
                     $this->sdmFormCreateFormElement('mediaToEdit', 'radio', 'Select a piece of media to edit.', $this->sdmFormSetDefaultInputValues($availableMedia, ''), 2, array('style' => 'position:relative;float:left;margin:-172px 0px 0px 10px;'));
                 }
@@ -743,7 +750,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
             case 'addMedia':
             case 'editSelectedMedia':
                 /* Hidden form elements */
-
+                var_dump($this->sdmFormGetSubmittedFormValue('mediaToEdit'));
                 /* Create hidden form element to story the name of the display being edited */
                 $this->sdmFormCreateFormElement('displayName', 'hidden', 'Current Display Being Edited', $this->displayBeingEdited, 420);
                 /* Media source path (local path to media file, only used for local media sources) */
