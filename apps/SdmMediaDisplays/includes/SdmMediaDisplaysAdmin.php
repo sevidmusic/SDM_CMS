@@ -724,8 +724,10 @@ class SdmMediaDisplaysAdmin extends SdmForm
                         $mediaObjects[] = $this->sdmMediaDisplay->sdmMediaCreateMediaObject($properties);
                     }
 
-                    /* Initialize array of media ids used as the radio button values for the mediaToEdit form element. | @todo do the same for media names so they can be used in display media previews instead of the machine name. */
+                    /* Initialize array of media ids used as the radio button values for the mediaToEdit form element. */
                     $mediaIds = array();
+                    /* Initialize array of media names used as the radio button text for the mediaToEdit form element. */
+                    $mediaNames = array();
                     /* Add SdmMedia objects to display being edited. */
                     foreach ($mediaObjects as $mediaObject) {
                         $this->sdmMediaDisplay->sdmMediaDisplayAddMediaObject($mediaObject);
@@ -733,14 +735,17 @@ class SdmMediaDisplaysAdmin extends SdmForm
                         $mediaData = json_decode(json_encode($mediaObject));
                         /* Add sdmMediaId to $mediaIds array and index by sdmMediaMachineName */
                         $mediaIds[$mediaData->sdmMediaMachineName] = $mediaData->sdmMediaId;
+                        /* Add sdmMediaName to $mediaNames array and index by sdmMediaMachineName */
+                        $mediaNames[$mediaData->sdmMediaMachineName] = $mediaData->sdmMediaDisplayName;
                     }
 
                     /* Create array of media html to be used to add media previews to radio buttons belonging to mediaToEdit form element. */
                     $media = array_flip($this->sdmMediaDisplay->sdmMediaGetSdmMediaDisplayMediaElementsHtml());
 
+                    /* Initialize $availableMedia array which will hold the radio button html, media preview, and the media id to be used in construction of the mediaToEdit form element. */
                     $availableMedia = array();
                     foreach ($media as $mediaHtml => $mediaName) {
-                        $availableMedia['<!-- Preview Container --><div style="padding: 40px;"><!-- Media HTML --><div>' . str_replace(array('<img ', '<iframe ', '<audio ', '<video ', '<canvas '), array('<img style="width:250px;" ', '<iframe style="width:250px;" ', '<audio style="width:250px;" ', '<video style="width:250px;" ', '<canvas style="width:250px;" '), $mediaHtml) . '</div><!-- End Media HTML --><!-- Media Name --><div>' . $mediaName . '</div><!-- End Media Name--></div><!-- End Preview Container -->'] = $mediaIds[$mediaName];
+                        $availableMedia['<!-- Preview Container --><div style="padding: 40px;"><!-- Media HTML --><div>' . str_replace(array('<img ', '<iframe ', '<audio ', '<video ', '<canvas '), array('<img style="width:250px;" ', '<iframe style="width:250px;" ', '<audio style="width:250px;" ', '<video style="width:250px;" ', '<canvas style="width:250px;" '), $mediaHtml) . '</div><!-- End Media HTML --><!-- Media Name --><div>' . $mediaNames[$mediaName] . '</div><!-- End Media Name--></div><!-- End Preview Container -->'] = $mediaIds[$mediaName];
                     }
 
                     /* Create radio buttons for user to select media to edit from. */
