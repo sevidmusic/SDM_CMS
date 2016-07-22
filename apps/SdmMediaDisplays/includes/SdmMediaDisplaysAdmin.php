@@ -288,7 +288,11 @@ class SdmMediaDisplaysAdmin extends SdmForm
         if ($this->sdmFormGetSubmittedFormValue('sdmMediaSourceType') === 'external') {
             return true;
         }
-
+        /* @TODO: Check if sdmMediaId was passed, if it was then we are probably arriving from the
+         *        editSelectedMedia admin panel, in which case, unless a new file was uploaded, we
+         *        just want to return the original sdmMediaId so that the original data file will be
+         *        updated.
+         */
         /* Media file save path. */
         $savePath = $this->sdmMediaDisplaysMediaDirectoryPath;
 
@@ -573,7 +577,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
                 break;
         }
 
-        /* Set media source extension based on uploaded file name | @todo: validate agaisnt a whitelist of valid extensions. */
+        /* Set media source extension based on uploaded file name | @todo: validate against a white-list of valid extensions. */
         $fileExtension = substr($fileName, strpos($fileName, ".") + 1);
         $newMediaObject->sdmMediaSetSourceExtension($fileExtension);
 
@@ -754,29 +758,28 @@ class SdmMediaDisplaysAdmin extends SdmForm
                 break;
             case 'addMedia':
             case 'editSelectedMedia':
-                /* Hidden form elements */
-                var_dump($this->sdmFormGetSubmittedFormValue('mediaToEdit'));
+                /* If mediaToEdit data file exists, load it so the data can be used to pre-populate the editSelectedMedia admin panel's form. */
+                if (file_exists($this->pathToCurrentDisplay . '/' . $this->sdmFormGetSubmittedFormValue('mediaToEdit') . '.json') === true) {
+                    $mediaData = json_decode(file_get_contents($this->pathToCurrentDisplay . '/' . $this->sdmFormGetSubmittedFormValue('mediaToEdit') . '.json'));
+                }
                 /* Create hidden form element to story the name of the display being edited */
                 $this->sdmFormCreateFormElement('displayName', 'hidden', 'Current Display Being Edited', $this->displayBeingEdited, 420);
                 /* Media source path (local path to media file, only used for local media sources) */
                 $this->sdmFormCreateFormElement('sdmMediaSourcePath', 'hidden', '', $this->sdmMediaDisplaysMediaDirectoryPath, 421);
-
-                /* Editable form elements */
-
                 /* Name/title of the media */
-                $this->sdmFormCreateFormElement('sdmMediaDisplayName', 'text', '<br/>Name or title for the media.', '', 1);
+                $this->sdmFormCreateFormElement('sdmMediaDisplayName', 'text', '<br/>Name or title for the media.', (isset($mediaData) === true ? $mediaData->sdmMediaDisplayName : ''), 1);
                 /* Media source type (local or external) */
-                $this->sdmFormCreateFormElement('sdmMediaSourceType', 'select', '<p>Is the media source external or local?</p><p>External sources are sources from other sites, such as Youtube. Local sources, as the name implies, are stored locally.<br/>Use external if media is from a url to a site such as Youtube or Vimeo.<br/>Use local if you are uploading the media.</p>', $this->sdmFormSetDefaultInputValues(array('External (Media resource from another site)' => 'external', 'Local (Media stored locally)' => 'local',), 'local'), 2);
+                $this->sdmFormCreateFormElement('sdmMediaSourceType', 'select', '<p>Is the media source external or local?</p><p>External sources are sources from other sites, such as Youtube. Local sources, as the name implies, are stored locally.<br/>Use external if media is from a url to a site such as Youtube or Vimeo.<br/>Use local if you are uploading the media.</p>', $this->sdmFormSetDefaultInputValues(array('External (Media resource from another site)' => 'external', 'Local (Media stored locally)' => 'local',), (isset($mediaData) === true ? $mediaData->sdmMediaSourceType : 'local')), 2);
                 /* Media file (only used for local media sources). */
                 $this->sdmFormCreateFormElement('sdmMediaFile', 'file', 'Upload media file | Only used for local media sources.', null, 3);
                 /* Media source url (only used for external media sources). */
-                $this->sdmFormCreateFormElement('sdmMediaSourceUrl', 'text', 'Url To Media | Only set for external media sources. (If youtube url it must be the embed url provided by youtube.)', '', 4);
+                $this->sdmFormCreateFormElement('sdmMediaSourceUrl', 'text', 'Url To Media | Only set for external media sources. (If youtube url it must be the embed url provided by youtube.)', (isset($mediaData) === true ? $mediaData->sdmMediaSourceUrl : ''), 4);
                 /* Media type (i.e., image, audio, etc.) */
-                $this->sdmFormCreateFormElement('sdmMediaType', 'select', 'Select the media\'s type.', $this->sdmFormSetDefaultInputValues(array('Image' => 'image', 'Audio' => 'audio', 'Video' => 'video', 'Embedded Media (Media from another site such as Youtube or Vimeo)' => 'youtube', 'HTML5 Canvas Image/Animation (Javascript file for HTML5 canvas tag)' => 'canvas',), 'image'), 5);
+                $this->sdmFormCreateFormElement('sdmMediaType', 'select', 'Select the media\'s type.', $this->sdmFormSetDefaultInputValues(array('Image' => 'image', 'Audio' => 'audio', 'Video' => 'video', 'Embedded Media (Media from another site such as Youtube or Vimeo)' => 'youtube', 'HTML5 Canvas Image/Animation (Javascript file for HTML5 canvas tag)' => 'canvas',), (isset($mediaData) ? $mediaData->sdmMediaType : 'image')), 5);
                 /* Media category */
-                $this->sdmFormCreateFormElement('sdmMediaCategory', 'text', 'Category name to organize media by. Media is ordered in display by media\'s category, place, and finally name.', '', 6);
+                $this->sdmFormCreateFormElement('sdmMediaCategory', 'text', 'Category name to organize media by. Media is ordered in display by media\'s category, place, and finally name.', (isset($mediaData) === true ? $mediaData->sdmMediaCategory : ''), 6);
                 /* Media place */
-                $this->sdmFormCreateFormElement('sdmMediaPlace', 'select', 'Media\'s palce. Represents media\'s position in display relative to other media in the same category.', $this->sdmFormSetDefaultInputValues(range(1, 1000), 1), 7);
+                $this->sdmFormCreateFormElement('sdmMediaPlace', 'select', 'Media\'s place. Represents media\'s position in display relative to other media in the same category.', $this->sdmFormSetDefaultInputValues(range(1, 1000), (isset($mediaData) === true ? $mediaData->sdmMediaPlace + 1 : 1)), 7);
                 /* NOTE: Properties that do not have a form element defined will be set upon processing submitted form. */
                 break;
         }
