@@ -9,8 +9,6 @@
 class SdmMediaDisplaysAdmin extends SdmForm
 {
     private $adminPanel;
-    private $adminMode;
-    private $editMode;
     private $displayBeingEdited; // name of display being edited
     private $adminFormElements; // stores the html for each form element for the current admin panel
     private $adminFormButtons;
@@ -49,10 +47,6 @@ class SdmMediaDisplaysAdmin extends SdmForm
         parent::__construct();
         /* Current admin panel. */
         $this->adminPanel = (($this->sdmFormGetSubmittedFormValue('adminPanel') !== null) === true ? $this->sdmFormGetSubmittedFormValue('adminPanel') : 'displayCrudPanel');
-        /* Current admin mode. */
-        $this->adminMode = (($this->sdmFormGetSubmittedFormValue('adminMode') !== null) === true ? $this->sdmFormGetSubmittedFormValue('adminMode') : null);
-        /* Current edit mode. */
-        $this->editMode = (($this->sdmFormGetSubmittedFormValue('editMode') !== null) === true ? $this->sdmFormGetSubmittedFormValue('editMode') : null);
         /* Current display being edited. */
         $this->displayBeingEdited = $this->sdmFormGetSubmittedFormValue('displayName');
         /* Admin form elements. */
