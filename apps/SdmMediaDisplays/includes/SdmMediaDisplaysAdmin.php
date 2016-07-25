@@ -280,19 +280,16 @@ class SdmMediaDisplaysAdmin extends SdmForm
     /**
      * Handles file uploads for the Sdm Media Displays add media admin panel.
      *
-     * @return bool|string Returns the name of media file uploaded on success, or false on failure.
+     * @return mixed Returns the name of media file uploaded on success, or false on failure. Will return null
+     *               if no file was selected for upload.
      */
     private function uploadMedia()
     {
-        /* If media is external, just create the unique filename and return it, no need to try and upload an external media source. */
+        /* If media is external, just return true, no need to try and upload an external media source. */
         if ($this->sdmFormGetSubmittedFormValue('sdmMediaSourceType') === 'external') {
             return true;
         }
-        /* @TODO: Check if sdmMediaId was passed, if it was then we are probably arriving from the
-         *        editSelectedMedia admin panel, in which case, unless a new file was uploaded, we
-         *        just want to return the original sdmMediaId so that the original data file will be
-         *        updated.
-         */
+
         /* Media file save path. */
         $savePath = $this->sdmMediaDisplaysMediaDirectoryPath;
 
@@ -466,6 +463,10 @@ class SdmMediaDisplaysAdmin extends SdmForm
              */
             $uniqueFileName = sprintf('%s.%s', sha1_file($_FILES['SdmForm']['tmp_name']['sdmMediaFile']), $validFileExt);
 
+            if ($this->sdmFormGetSubmittedFormValue('originalSdmMediaSourceName') !== null && $this->sdmFormGetSubmittedFormValue('originalSdmMediaSourceExtension') !== null) {
+                $originalMediaFileName = $this->sdmFormGetSubmittedFormValue('originalSdmMediaSourceName') . '.' . $this->sdmFormGetSubmittedFormValue('originalSdmMediaSourceExtension');
+            }
+
             /* Report progress to media upload log. */
             $sdmMediaUploadLog .= $this->sdmCms->sdmCoreSdmReadArrayBuffered(['$uniqueFileName' => $uniqueFileName]);
 
@@ -474,6 +475,11 @@ class SdmMediaDisplaysAdmin extends SdmForm
 
             /* Attempt to upload and save the file, throw an error if upload fails. */
             if (move_uploaded_file($_FILES['SdmForm']['tmp_name']['sdmMediaFile'], $savePath . '/' . $uniqueFileName) !== false) {
+                /* If $originalMediaFileName is set then user is replacing the media objects media file, so, unlink the original file and the original data file.
+                   They will both be recreated based on the new uploaded file. */
+                if (isset($originalMediaFileName)) {
+                    unlink($savePath . '/' . $originalMediaFileName);
+                }
                 /* upload succeed. */
                 $fileUploadSuccessMessage = 'Sdm Media Displays File Upload Status: File was uploaded successfully.' . PHP_EOL;
                 /* Report to upload log */
@@ -516,10 +522,6 @@ class SdmMediaDisplaysAdmin extends SdmForm
         /* The unique file name generated on file upload. This includes the file extension. */
         $fileName = $uniqueFileName;
 
-        /* Generate a save file name to be used as the sdmMediaSourceName and as the name of the json and media
-           files that are created for this media object. Does not include file extension. */
-        $safeFileName = substr($uniqueFileName, 0, strpos($uniqueFileName, '.'));
-
         /* Initialize array to hold new media property values. */
         $newMediaPropertyValues = array();
 
@@ -550,32 +552,40 @@ class SdmMediaDisplaysAdmin extends SdmForm
         /* Create new media object from new media property values. */
         $newMediaObject = $updateMediaObject->sdmMediaCreateMediaObject($newMediaPropertyValues);
 
-        /** Set Properties that rely on file upload handler. **/
+        /* If originalSdmMediaSourceName was submitted set the $originalDataFileName variable and remove original data file. */
+        if ($this->sdmFormGetSubmittedFormValue('originalSdmMediaSourceName') !== null) {
+            $originalDataFileName = $this->sdmFormGetSubmittedFormValue('originalSdmMediaSourceName') . '.json';
+            /* Remove the original data file since it is always created/re-created upon adding or editing a piece of media. */
+            unlink($this->pathToCurrentDisplay . '/' . $originalDataFileName);
+        }
 
+        /* Generate $safeFileName based on whether or not sdmMediaSourceType is 'external' or 'local'. Also, for external
+           media properly encode the sdmMediaSourceUrl */
         switch ($newMediaPropertyValues['sdmMediaSourceType']) {
             case 'external':
                 /* Set safe file name */
                 $safeFileName = hash('sha256', $newMediaPropertyValues['sdmMediaSourceUrl']);
 
-                /* Set media source name based on $safeFileName */
-                $newMediaObject->sdmMediaSetSourceName($safeFileName);
-
-                /* Set media source id based on uploaded file name */
-                $newMediaObject->sdmMediaSetId($safeFileName);
-
-                /* Properly encode embed urls for display and set source url to properly encoded external url value. */
+                /* Properly encode embedded urls for display and set source url to properly encoded external url value. */
                 $newMediaObject->sdmMediaSetSourceUrl($this->sdmMediaEncodeExternalMediaUrl($newMediaPropertyValues['sdmMediaSourceUrl']));
 
                 break;
             default:
+                /* Generate a safe file name from either the $originalDataFileName or the $uniqueFileName to be used as the sdmMediaSourceName,
+                   sdmMediaSourceId, and as the name of the data file for this media object. NOTE: $safeFileName does not include file extension.
+                   Basically, if $uniqueFileName is null and the $originalDataFileName is set, then the user has updated media without
+                   specifying a new file, so use the original data filename, otherwise use the new $uniqueFileName to generate the $safeFileName.
+                 */
+                $safeFileName = ($uniqueFileName === null && isset($originalDataFileName) === true ? substr($originalDataFileName, 0, strpos($originalDataFileName, '.')) : substr($uniqueFileName, 0, strpos($uniqueFileName, '.')));
 
-                /* Set media source name based on uploaded file name */
-                $newMediaObject->sdmMediaSetSourceName($safeFileName);
-
-                /* Set media source id based on uploaded file name */
-                $newMediaObject->sdmMediaSetId($safeFileName);
                 break;
         }
+
+        /* Set media source name based on $safeFileName. */
+        $newMediaObject->sdmMediaSetSourceName($safeFileName);
+
+        /* Set media source id based on $safeFileName. */
+        $newMediaObject->sdmMediaSetId($safeFileName);
 
         /* Set media source extension based on uploaded file name | @todo: validate against a white-list of valid extensions. */
         $fileExtension = substr($fileName, strpos($fileName, ".") + 1);
@@ -758,9 +768,12 @@ class SdmMediaDisplaysAdmin extends SdmForm
                 break;
             case 'addMedia':
             case 'editSelectedMedia':
-                /* If mediaToEdit data file exists, load it so the data can be used to pre-populate the editSelectedMedia admin panel's form. */
-                if (file_exists($this->pathToCurrentDisplay . '/' . $this->sdmFormGetSubmittedFormValue('mediaToEdit') . '.json') === true) {
+                /* If on editSelectedMedia admin panel and mediaToEdit data file exists, load it so the data can be used to pre-populate the editSelectedMedia admin panel's form. */
+                if ($this->adminPanel === 'editSelectedMedia' && file_exists($this->pathToCurrentDisplay . '/' . $this->sdmFormGetSubmittedFormValue('mediaToEdit') . '.json') === true) {
                     $mediaData = json_decode(file_get_contents($this->pathToCurrentDisplay . '/' . $this->sdmFormGetSubmittedFormValue('mediaToEdit') . '.json'));
+                    /* When editing media, store the original sdmMediaSourceName and sdmMediaSourceExtension so it can be used to update the media data upon arriving at the saveMedia admin panel. */
+                    $this->sdmFormCreateFormElement('originalSdmMediaSourceName', 'hidden', 'Original sdmMediaSourceName of the media being edited', $mediaData->sdmMediaSourceName, 517);
+                    $this->sdmFormCreateFormElement('originalSdmMediaSourceExtension', 'hidden', 'Original sdmMediaSourceExtension of the media being edited', $mediaData->sdmMediaSourceExtension, 527);
                 }
                 /* Create hidden form element to story the name of the display being edited */
                 $this->sdmFormCreateFormElement('displayName', 'hidden', 'Current Display Being Edited', $this->displayBeingEdited, 420);
