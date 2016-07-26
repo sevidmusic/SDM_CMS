@@ -6,38 +6,99 @@
  * Date: 5/28/16
  * Time: 3:22 PM
  */
+
+/**
+ * Class SdmMediaDisplaysAdmin Provides the admin functionality for the SdmMediaDisplays app. This class
+ * sets up various admin panels used create and delete displays, and to manage a displays settings and it's media.
+ * It also defines the methods that handle the backend CRUD functionality of each admin panel.
+ */
 class SdmMediaDisplaysAdmin extends SdmForm
 {
+    /** @var $adminPanel string|null The name of the current admin panel. Will be null upon initial arrival on SdmMediaDisplays page. */
     private $adminPanel;
-    private $displayBeingEdited; // name of display being edited
-    private $adminFormElements; // stores the html for each form element for the current admin panel
+
+    /** @var $displayBeingEdited string|null Name of display being edited. Will be null if no display has been selected for editing. */
+    private $displayBeingEdited;
+
+    /** @var $adminFormElements array Array of html for the current admin panel's form elements. */
+    private $adminFormElements;
+
+    /** @var $adminFormButtons array Array of html for the current admin panel's buttons */
     private $adminFormButtons;
+
+    /** @var $initialSetup bool True if initial setup was performed. False if initial setup was not performed.
+     *                          Initial setup is only performed if the data and media directories do not exist.
+     */
     private $initialSetup;
+
+    /** @var $output string Html output for the current admin panel. */
     private $output;
+
+    /** @var $messages string Html for any messages that should be shown to the user. Messages are used to communicate
+     *                        when things happen, for instance whether or not a display or a piece of media was saved
+     *                        successfully.
+     */
     private $messages;
-    private $sdmCms; // local instance of SdmCore
-    private $sdmMediaDisplay; // instance of display being edited created upon instantiation of a SdmMediaDisplaysAdmin() object.
+
+    /** @var SdmCms object Local instance of the SdmCms() class. This object is injected via the first parameter of the __constructor(). */
+    private $sdmCms;
+
+    /** @var SdmMediaDisplay object|null Local instance of the SdmMediaDisplay() class. Only created if a display has been selected for editing.
+     *                                   This object is not injected, but instantiated by the __constructor() if a display has been selected for
+     *                                   editing. If a display has not been selected for editing, i.e., $displayBeingEdited is null, then this
+     *                                   property will be null.
+     */
+    private $sdmMediaDisplay;
+
+    /** @var $sdmMediaDisplaysDirectoryPath string Path to SdmMediaDisplays app directory. */
     private $sdmMediaDisplaysDirectoryPath;
+
+    /** @var $sdmMediaDisplaysDirectoryUrl string Url to SdmMediaDisplays app directory. */
     private $sdmMediaDisplaysDirectoryUrl;
+
+    /** @var $sdmMediaDisplaysDataDirectoryPath string Path to SdmMediaDisplays data directory. */
     private $sdmMediaDisplaysDataDirectoryPath;
+
+    /** @var $sdmMediaDisplaysDataDirectoryUrl string Url to SdmMediaDisplays data directory. */
     private $sdmMediaDisplaysDataDirectoryUrl;
+
+    /** @var $sdmMediaDisplaysDataFilePath string|null Path to $displayBeingEdited's data file. Will be null if $displayBeingEdited is null. */
     private $sdmMediaDisplaysDataFilePath;
+
+    /** @var $sdmMediaDisplaysMediaDirectoryPath string Path to SdmMediaDisplays media directory. */
     private $sdmMediaDisplaysMediaDirectoryPath;
+
+    /** @var $sdmMediaDisplaysMediaDirectoryUrl string Url to SdmMediaDisplays media directory. */
     private $sdmMediaDisplaysMediaDirectoryUrl;
+
+    /** @var $sdmMediaDisplaysAdminPageUrl string Url to SdmMediaDisplays page. */
     private $sdmMediaDisplaysAdminPageUrl;
-    private $sdmMediaDisplaysPageUrl;
+
+    /** @var $cronTasksPerformed bool True if cron tasks were performed, false otherwise. */
     private $cronTasksPerformed;
+
+    /** @var $displaysExist bool True if at least one display exists, false otherwise. */
     private $displaysExist;
+
+    /** @var $currentDisplayExists bool True if $displayBeingEdited exists, false otherwise. */
     private $currentDisplayExists;
+
+    /** @var $pathToCurrentDisplay bool|string  Path to $displayBeingEdited's data directory. Will be false if no display has been
+     *                                          selected for editing, or if the $displayBeingEdited does not exist.
+     */
     private $pathToCurrentDisplay;
+
+    /** @var $availableDisplays array Array of available displays. */
     private $availableDisplays;
+
+    /** @var $displayBeingEditedId string $displayBeingEdited's id. @todo: should be null if $displayBeingEdited is null. */
     private $displayBeingEditedId;
 
     /**
-     * SdmMediaDisplaysAdmin constructor. Requires an instance of the SdmCms() class be injected
-     * via the first parameter.
+     * SdmMediaDisplaysAdmin constructor. Initializes properties that require initialization.
+     * Requires an instance of the SdmCms() class be injected via the first parameter.
      *
-     * @param SdmCms $sdmCms
+     * @param SdmCms $sdmCms Instance of the SdmCms class.
      *
      * @param $availableDisplays array Array of available Sdm Media Displays.
      */
@@ -45,58 +106,33 @@ class SdmMediaDisplaysAdmin extends SdmForm
     {
         /* Call SdmForm()'s __constructor() */
         parent::__construct();
-        /* Current admin panel. */
-        $this->adminPanel = (($this->sdmFormGetSubmittedFormValue('adminPanel') !== null) === true ? $this->sdmFormGetSubmittedFormValue('adminPanel') : 'displayCrudPanel');
-        /* Current display being edited. */
+        $this->adminPanel = ($this->sdmFormGetSubmittedFormValue('adminPanel') !== null ? $this->sdmFormGetSubmittedFormValue('adminPanel') : 'displayCrudPanel');
         $this->displayBeingEdited = $this->sdmFormGetSubmittedFormValue('displayName');
-        /* Admin form elements. */
-        $this->adminFormElements = (isset($this->adminFormElements) === true ? $this->adminFormElements : array());
-        /* Admin form buttons. */
-        $this->adminFormButtons = (isset($this->adminFormButtons) === true ? $this->adminFormButtons : array());
-        /* Current admin panel's output. */
-        $this->output = (isset($this->output) === true ? $this->output : 'An error occurred and the Sdm Media Displays admin panel is currently unavailable.');
-        /* Admin panel messages. */
-        $this->messages = (isset($this->messages) === true ? $this->messages : null);
-        /* Local instance of SdmCms(). */
+        $this->adminFormElements = array();
+        $this->adminFormButtons = array();
         $this->sdmCms = $sdmCms;
-        /* Sdm media display's directory path. */
+        /** THE FOLLOWING PROPERTIES MUST BE INITIALIZED AFTER THE $sdmCms PROPERTY! **/
         $this->sdmMediaDisplaysDirectoryPath = $this->sdmCms->sdmCoreGetUserAppDirectoryPath() . '/SdmMediaDisplays';
-        /* Sdm media display's directory url. */
         $this->sdmMediaDisplaysDirectoryUrl = $this->sdmCms->sdmCoreGetUserAppDirectoryUrl() . '/SdmMediaDisplays';
-        /* Sdm media display data directory path. */
+        /** THE FOLLOWING PROPERTIES MUST BE INITIALIZED AFTER THE $sdmMediaDisplaysDirectoryPath AND $sdmMediaDisplaysDirectoryUrl PROPERTIES! **/
         $this->sdmMediaDisplaysDataDirectoryPath = $this->sdmMediaDisplaysDirectoryPath . '/displays/data';
-        /* Sdm media display data directory url. */
         $this->sdmMediaDisplaysDataDirectoryUrl = $this->sdmMediaDisplaysDirectoryUrl . '/displays/data';
-        /* Full path to display's data file */
-        $this->sdmMediaDisplaysDataFilePath = $this->sdmMediaDisplaysDataDirectoryPath . '/' . $this->displayBeingEdited . '/' . hash('sha256', $this->displayBeingEdited) . '.json';
-        /* Sdm media display media directory path. */
+        $this->sdmMediaDisplaysDataFilePath = ($this->displayBeingEdited === null ? null : $this->sdmMediaDisplaysDataDirectoryPath . '/' . $this->displayBeingEdited . '/' . hash('sha256', $this->displayBeingEdited) . '.json');
         $this->sdmMediaDisplaysMediaDirectoryPath = $this->sdmMediaDisplaysDirectoryPath . '/displays/media';
-        /* Sdm media display media directory url. */
         $this->sdmMediaDisplaysMediaDirectoryUrl = $this->sdmMediaDisplaysDirectoryUrl . '/displays/media';
-        /* Sdm media display's admin page url. */
         $this->sdmMediaDisplaysAdminPageUrl = $this->sdmCms->sdmCoreGetRootDirectoryUrl() . '/index.php?page=SdmMediaDisplays';
-        /* Current display's page url. */
-        $this->sdmMediaDisplaysPageUrl = $this->sdmCms->sdmCoreGetUserAppDirectoryUrl() . '/index.php?page=' . $this->displayBeingEdited;
-        /* Initial setup performed. */
         $this->initialSetup = (isset($this->initialSetup) === true ? $this->initialSetup : $this->performInitialSetup());
-        /* Cron tasks performed. */
         $this->cronTasksPerformed = (isset($this->cronTasksPerformed) ? $this->cronTasksPerformed : $this->runCronTasks());
-        /* Displays exist. */
         $this->displaysExist = (isset($this->displaysExist) === true ? $this->displaysExist : $this->displaysExist());
-        /* Determine path to current display being edited. */
         $this->pathToCurrentDisplay = ($this->displayBeingEdited === null ? false : $this->sdmMediaDisplaysDataDirectoryPath . '/' . $this->displayBeingEdited);
-        /* Determine if current display exists in the data directory. */
         $this->currentDisplayExists = ($this->displayBeingEdited === null ? false : is_dir($this->pathToCurrentDisplay));
-        /* Configure From */
         $this->configureAdminForm();
-        /* Process any submitted form values from the last submitted admin panel. */
         $this->processSubmittedValues();
-        /* Create local instance of an SdmMediaDisplay() object for the display being edited if it exists. */
         if (file_exists($this->sdmMediaDisplaysDataFilePath)) {
             $this->sdmMediaDisplay = new SdmMediaDisplay($this->displayBeingEdited, $this->sdmCms);
         }
         $this->availableDisplays = $availableDisplays;
-        $this->displayBeingEditedId = hash('sha256', $this->displayBeingEdited);
+        $this->displayBeingEditedId = ($this->displayBeingEdited === null ? null : hash('sha256', $this->displayBeingEdited));
     }
 
     /**
@@ -133,7 +169,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
 
         /* Show initial setup message if $this->initialSetup is true. */
         if ($this->initialSetup === true) {
-            $this->output = "
+            $this->output .= "
                 <h2>Sdm Media Displays</h2>
                 <p>Looks like you just enabled this app.</p>
                 <p>Welcome to the Sdm Media Displays app. With the Sdm Media
@@ -210,7 +246,7 @@ class SdmMediaDisplaysAdmin extends SdmForm
     /**
      * Configures the Sdm Media Displays admin form's settings.
      *
-     * @return Returns true always.
+     * @return bool Returns true.
      */
     private function configureAdminForm()
     {
@@ -220,14 +256,16 @@ class SdmMediaDisplaysAdmin extends SdmForm
         /* Since the admin panels use a single SdmForm() object, do not preserve submitted values
         since no admin panel ever leads back to the same admin panel and preserving submitted values
         could prevent saved display and media data from correctly pre-populating the admin forms, or
-        lead to values from an one display being set as defaults for another display. */
+        lead to values from an admin panel being set as defaults for another admin panel. */
         $this->preserveSubmittedValues = false;
         $this->formClasses = 'SdmMediaDisplaysAdminForm';
         return true;
     }
 
     /**
-     * Process the submitted form values for the various admin panels for the Sdm Media Displays app.
+     * Process the submitted form values for the various admin panels. This method does not return
+     * anything since it's purpose is contextual. i.e., The function of this method is different
+     * depending on the current admin panel.
      */
     private function processSubmittedValues()
     {
@@ -257,8 +295,15 @@ class SdmMediaDisplaysAdmin extends SdmForm
                 $displayData = json_encode($displayDataArray);
 
                 /* Save display data. */
-                file_put_contents($this->sdmMediaDisplaysDataDirectoryPath . '/' . $this->displayBeingEdited . '/' . $displayId . '.json', $displayData);
-
+                $displayDataSaved = file_put_contents($this->sdmMediaDisplaysDataDirectoryPath . '/' . $this->displayBeingEdited . '/' . $displayId . '.json', $displayData);
+                switch ($displayDataSaved) {
+                    case false:
+                        $this->messages .= 'An error occurred and the changes to the ' . $this->displayBeingEdited . ' Sdm Media Display could not be saved!';
+                        break;
+                    default:
+                        $this->messages .= 'Saved changes to ' . $this->displayBeingEdited . ' Sdm Media Display.';
+                        break;
+                }
                 break;
             case 'saveMedia':
                 /* Attempt to upload media file. */
@@ -272,10 +317,11 @@ class SdmMediaDisplaysAdmin extends SdmForm
     }
 
     /**
-     * Handles file uploads for the Sdm Media Displays add media admin panel.
+     * Handles media file uploads. All media files, regardless of their parent display, are saved in the media directory.
      *
-     * @return mixed Returns the name of media file uploaded on success, or false on failure. Will return null
-     *               if no file was selected for upload.
+     * @return mixed Returns the name the uploaded media file was saved as on success, or false on failure. If media
+     *               source type is external this method will return true. If media source type is local and no file
+     *               was selected to be uploaded this method will return null.
      */
     private function uploadMedia()
     {
@@ -500,11 +546,15 @@ class SdmMediaDisplaysAdmin extends SdmForm
     }
 
     /**
-     * @param $uniqueFileName string The name of the media file to save. This name is generated internally by the
-     * uploadMedia() method on successful upload of a local media file.
+     * Saves media data in a json file under the $displayBeingEdited's data directory.
      *
-     * @return bool This method is still in development, it will return true or false based on whether or not
-     * the media was successfully saved. @todo: have method return true or false based on success.
+     * @param $uniqueFileName mixed The return value of uploadMedia(). For local files this will be the name
+     *                              of the media file saved by uploadMedia(). For external sources this will
+     *                              be the boolean true. If this value is a string it will be used to generate
+     *                              the name of the json file this media data is saved in, otherwise the name
+     *                              of the json file will be generated internally by this method.
+     *
+     * @return bool Returns true if the media data was successfully saved, returns false on failure.
      */
     private function saveMediaData($uniqueFileName)
     {
@@ -595,18 +645,20 @@ class SdmMediaDisplaysAdmin extends SdmForm
         $newMediaObjectJson = json_encode($newMediaObject);
 
         /* Save new media object  */
-        file_put_contents($this->sdmMediaDisplaysDataDirectoryPath . '/' . $this->displayBeingEdited . '/' . $newMediaObject->sdmMediaGetSdmMediaSourceName() . '.json', $newMediaObjectJson);
+        $saveStatus = file_put_contents($this->sdmMediaDisplaysDataDirectoryPath . '/' . $this->displayBeingEdited . '/' . $newMediaObject->sdmMediaGetSdmMediaSourceName() . '.json', $newMediaObjectJson);
 
         /* Added confirmation message to panel description. */
-        $this->output .= '<p>Saved changes to media "' . $this->sdmFormGetSubmittedFormValue('sdmMediaDisplayName') . '".</p>';
+        $this->messages .= 'Saved changes to media "' . $this->sdmFormGetSubmittedFormValue('sdmMediaDisplayName') . '"';
+
+        return ($saveStatus !== false ? true : false);
     }
 
     /**
      * Attempts to encode an external media url so it complies to the embed format
      * of the provider. At the moment this function only supports Vimeo, and Youtube.
-     * Other prover urls will be returned without modification.
+     * Other provider urls will be returned without modification.
      *
-     * @param string $url The external media url to encode
+     * @param string $url The external media url to encode.
      *
      * @return string The encoded url.
      */
@@ -632,9 +684,9 @@ class SdmMediaDisplaysAdmin extends SdmForm
     }
 
     /**
-     * Determines which admin panel should be used and returns the html for it as a string.
+     * Returns the html for the current admin panel.
      *
-     * @return string The html string for the current admin panel.
+     * @return string The html for the current admin panel.
      */
     public function getCurrentAdminPanel()
     {
@@ -655,12 +707,11 @@ class SdmMediaDisplaysAdmin extends SdmForm
             $formHtml['closingFormTags'] = $this->sdmFormCloseForm();
 
             /* Display admin buttons for the current panel */
-            $this->output = implode('', $formHtml) . implode('', $this->adminFormButtons);
-            //var_dump($this->adminPanel);
+            $this->output .= implode('', $formHtml) . implode('', $this->adminFormButtons);
         }
 
-        /* Return current admin panel's output */
-        return $this->output;
+        /* Return current admin panel's messages and output. */
+        return $this->messages . $this->output;
     }
 
     /**
