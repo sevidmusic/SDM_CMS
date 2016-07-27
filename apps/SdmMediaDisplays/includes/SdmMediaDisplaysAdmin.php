@@ -551,8 +551,15 @@ class SdmMediaDisplaysAdmin extends SdmForm
      * @param $uniqueFileName mixed The return value of uploadMedia(). For local files this will be the name
      *                              of the media file saved by uploadMedia(). For external sources this will
      *                              be the boolean true. If this value is a string it will be used to generate
-     *                              the name of the json file this media data is saved in, otherwise the name
-     *                              of the json file will be generated internally by this method.
+     *                              the name of the json file this media data is saved in, as well as the value
+     *                              saved as the sdmMediaId, sdmMediaSourceName, and sdmMediaSourceExtension
+     *                              otherwise the name of the json file, the sdmMediaId, sdmMediaSourceName,
+     *                              and sdmMediaSourceExtension will be generated internally by this method.
+     *
+     * NOTE: If $uniqueFileName is null then saveMediaData() will check to see if the originalSdmMediaSourceName and
+     * originalSdmMediaSourceExtension form elements were submitted, if they were their values will be used to generate
+     * the name of the json file the media data is saved in, as well as the value saved as the sdmMediaId, sdmMediaSourceName,
+     * and sdmMediaSourceExtension.
      *
      * @return bool Returns true if the media data was successfully saved, returns false on failure.
      */
@@ -631,8 +638,9 @@ class SdmMediaDisplaysAdmin extends SdmForm
         /* Set media source id based on $safeFileName. */
         $newMediaObject->sdmMediaSetId($safeFileName);
 
-        /* Set media source extension based on uploaded file name | @todo: validate against a white-list of valid extensions. */
-        $fileExtension = substr($fileName, strpos($fileName, ".") + 1);
+        /* Set media source extension based on uploaded file name. NOTE: If $fileName is null, then see if the
+           originalSdmMediaSourceExtension form value was submitted, if it was use it's value as the extension. */
+        $fileExtension = ($fileName === null ? $this->sdmFormGetSubmittedFormValue('originalSdmMediaSourceExtension') : substr($fileName, strpos($fileName, ".") + 1));
         $newMediaObject->sdmMediaSetSourceExtension($fileExtension);
 
         /* Convert media display name to camel case and set as machine name */
