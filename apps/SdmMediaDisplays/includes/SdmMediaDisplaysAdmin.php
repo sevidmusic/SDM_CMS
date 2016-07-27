@@ -325,6 +325,12 @@ class SdmMediaDisplaysAdmin extends SdmForm
      */
     private function uploadMedia()
     {
+        /* If originalSdmMediaSourceName was submitted and no file was sent return null since this most likely indicates user has
+           edited media without opting to replace the original media file. */
+        if ($this->sdmFormGetSubmittedFormValue('sdmMediaSourceType') === 'local' && $this->sdmFormGetSubmittedFormValue('originalSdmMediaSourceName') !== null && $_FILES['SdmForm']['error']['sdmMediaFile'] === UPLOAD_ERR_NO_FILE) {
+            return null;
+        }
+
         /* If media is external, just return true, no need to try and upload an external media source. */
         if ($this->sdmFormGetSubmittedFormValue('sdmMediaSourceType') === 'external') {
             return true;
