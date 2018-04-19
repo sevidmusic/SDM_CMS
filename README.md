@@ -1,4 +1,7 @@
 # SDM_CMS
+
+NOTE: I no longer maintain this CMS. Please see the Darling Cms for an example of my current work.
+
 A unique JSON driven CMS. Still in development, this CMS is designed to be easy to use by experienced developers and total tech novices.
 The user interface provided by the core apps makes it easy to build a site without writing a single line of code,
 and for the more hands on users, the SDM CMS can easily be customized and extended via the development of custom
@@ -25,8 +28,6 @@ why not dive in and learn from experience.
 I am very passionate about this project, and will continue to develop and improve the SDM CMS.
 
 I have been fortunate to have the oppurtunity to put the SDM CMS to use, and you can see it in action at the folling websites:
-
-http://www.sevidmusic.com/
 
 http://mimifeldman.com/
 
